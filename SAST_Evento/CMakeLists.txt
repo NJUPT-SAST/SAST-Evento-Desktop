@@ -1,42 +1,42 @@
-cmake_minimum_required(VERSION 3.21.1)
+cmake_minimum_required(VERSION 3.16)
 
-set(BUILD_QDS_COMPONENTS ON CACHE BOOL "Build design studio components")
+project(SAST_Evento VERSION 0.1 LANGUAGES CXX)
 
-project(SAST_EventoApp LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(FLUENTUI_BUILD_EXAMPLES OFF)
+set(FLUENTUI_BUILD_FRAMELESSHEPLER OFF)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick)
 
-find_package(QT NAMES Qt6 COMPONENTS Gui Qml Quick)
-find_package(Qt6 REQUIRED COMPONENTS Core Qml Quick)
+qt_standard_project_setup(REQUIRES 6.5)
 
-# To build this application you need Qt 6.2.0 or higher
-if (Qt6_VERSION VERSION_LESS 6.2.0)
-message(FATAL_ERROR "You need Qt 6.2.0 or newer to build the application.")
-endif()
-
-qt_add_executable(${CMAKE_PROJECT_NAME} src/main.cpp)
-
-# qt_standard_project_setup() requires Qt 6.3 or higher. See https://doc.qt.io/qt-6/qt-standard-project-setup.html for details.
-if (${QT_VERSION_MINOR} GREATER_EQUAL 3)
-qt6_standard_project_setup()
-endif()
-
-qt_add_resources(${CMAKE_PROJECT_NAME} "configuration"
-    PREFIX "/"
-    FILES
-        qtquickcontrols2.conf
+qt_add_executable(appSAST_Evento
+    main.cpp
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
-    Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Gui
-    Qt${QT_VERSION_MAJOR}::Quick
-    Qt${QT_VERSION_MAJOR}::Qml
+qt_add_qml_module(appSAST_Evento
+    URI SAST_Evento
+    VERSION 1.0
+    QML_FILES Main.qml
 )
 
-if (${BUILD_QDS_COMPONENTS})
-    include(${CMAKE_CURRENT_SOURCE_DIR}/qmlcomponents)
-endif ()
+set_target_properties(appSAST_Evento PROPERTIES
+    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE
+)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/qmlmodules)
+target_link_libraries(appSAST_Evento
+    PRIVATE Qt6::Quick
+    fluentuiplugin
+)
+
+install(TARGETS appSAST_Evento
+    BUNDLE DESTINATION .
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+add_subdirectory(FluentUI)
