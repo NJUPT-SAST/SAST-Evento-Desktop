@@ -1,15 +1,3 @@
-# C++ objects and libs
-*.slo
-*.lo
-*.o
-*.a
-*.la
-*.lai
-*.so
-*.so.*
-*.dll
-*.dylib
-
 # Qt-es
 object_script.*.Release
 object_script.*.Debug
@@ -28,9 +16,7 @@ ui_*.h
 *.qmlc
 *.jsc
 Makefile*
-*build-*
-*.qm
-*.prl
+#*build-*
 
 # Qt unit tests
 target_wrapper.*
@@ -45,14 +31,10 @@ target_wrapper.*
 # QtCreator CMake
 CMakeLists.txt.user*
 
-# QtCreator 4.8< compilation database
-compile_commands.json
-
-# QtCreator local machine specific files for imported projects
-*creator.user*
-
-*_qmlcache.qrc
-
-# build and vscode
-/build
-/.vscode
+SAST_Evento/build-preset/plugins.qmltypes
+bin
+.DS_Store
+build
+cmake-build-*
+.idea
+.vscode
