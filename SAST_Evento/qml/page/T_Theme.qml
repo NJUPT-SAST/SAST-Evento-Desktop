@@ -7,7 +7,7 @@ import "qrc:///SAST_Evento/qml/component"
 
 FluScrollablePage{
 
-    title:"Theme"
+    title:lang.theming
 
     FluArea{
         Layout.fillWidth: true
@@ -85,15 +85,4 @@ FluScrollablePage{
             }
         }
     }
-    CodeExpander{
-        Layout.fillWidth: true
-        Layout.topMargin: -1
-        code:'FluTheme.primaryColor = FluColors.Orange
-
-FluTheme.dark = true
-
-FluTheme.nativeText = true'
-    }
-
-
 }

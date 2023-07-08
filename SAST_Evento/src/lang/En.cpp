@@ -5,19 +5,21 @@ En::En(QObject *parent)
 {
     setObjectName("En");
     home("Home");
-    basic_input("Basic Input");
-    form("Form");
-    surface("Surfaces");
-    popus("Popus");
-    navigation("Navigation");
+    timeTable("Time Table");
+    history("History");
+    souvenirCard("Souvenir Card");
+    organize("Organize");
+    manage("Manage");
+    my("My");
     theming("Theming");
-    media("Media");
     dark_mode("Dark Mode");
     sys_dark_mode("Sync with system");
     search("Search");
-    about("About");
+    my("My");
     settings("Settings");
     locale("Locale");
     navigation_view_display_mode("NavigationView Display Mode");
-    other("Other");
+
+    zh("Chinese");
+    en("English");
 }

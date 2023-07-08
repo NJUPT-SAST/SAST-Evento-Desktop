@@ -5,13 +5,14 @@ import QtQuick.Layouts
 import Qt.labs.platform
 import FluentUI
 import SAST_Evento
+
 import "qrc:///SAST_Evento/qml/component"
 import "qrc:///SAST_Evento/qml/global"
 
 CustomWindow {
 
     id:window
-    title: "FluentUI"
+    title: "SAST Evento"
     width: 1000
     height: 640
     closeDestory:false

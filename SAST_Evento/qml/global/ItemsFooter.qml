@@ -12,7 +12,7 @@ FluObject{
     FluPaneItemSeparator{}
 
     FluPaneItem{
-        title:lang.about
+        title:lang.my
         icon:FluentIcons.Contact
         tapFunc:function(){
             FluApp.navigate("/about")

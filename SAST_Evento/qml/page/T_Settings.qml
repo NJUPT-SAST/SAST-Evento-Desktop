@@ -8,7 +8,7 @@ import "qrc:///SAST_Evento/qml/component"
 
 FluScrollablePage{
 
-    title:"Settings"
+    title:lang.settings
 
     FluArea{
         Layout.fillWidth: true
@@ -92,10 +92,10 @@ FluScrollablePage{
             Flow{
                 spacing: 5
                 Repeater{
-                    model: ["Zh","En"]
+                    model: ["Zh", "En"]
                     delegate: FluRadioButton{
                         checked: appInfo.lang.objectName === modelData
-                        text:modelData
+                        text: modelData === "En" ? lang.en : lang.zh
                         clickListener:function(){
                             appInfo.changeLang(modelData)
                         }

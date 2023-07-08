@@ -8,21 +8,22 @@ class Lang : public QObject
 {
     Q_OBJECT
     Q_PROPERTY_AUTO(QString,home);
-    Q_PROPERTY_AUTO(QString,basic_input);
-    Q_PROPERTY_AUTO(QString,form);
-    Q_PROPERTY_AUTO(QString,surface);
-    Q_PROPERTY_AUTO(QString,popus);
-    Q_PROPERTY_AUTO(QString,navigation);
+    Q_PROPERTY_AUTO(QString,timeTable);
+    Q_PROPERTY_AUTO(QString,history);
+    Q_PROPERTY_AUTO(QString,souvenirCard);
+    Q_PROPERTY_AUTO(QString,organize);
+    Q_PROPERTY_AUTO(QString,manage);
+    Q_PROPERTY_AUTO(QString,my);
     Q_PROPERTY_AUTO(QString,theming);
-    Q_PROPERTY_AUTO(QString,media);
     Q_PROPERTY_AUTO(QString,dark_mode);
     Q_PROPERTY_AUTO(QString,sys_dark_mode);
     Q_PROPERTY_AUTO(QString,search);
-    Q_PROPERTY_AUTO(QString,about);
     Q_PROPERTY_AUTO(QString,settings);
     Q_PROPERTY_AUTO(QString,navigation_view_display_mode);
     Q_PROPERTY_AUTO(QString,locale);
-    Q_PROPERTY_AUTO(QString,other);
+
+    Q_PROPERTY_AUTO(QString,zh);
+    Q_PROPERTY_AUTO(QString,en);
 public:
     explicit Lang(QObject *parent = nullptr);
 

@@ -23,78 +23,57 @@ FluObject{
         }
     }
 
-    FluPaneItemExpander{
-        title:lang.basic_input
-        icon:FluentIcons.CheckboxComposite
-        FluPaneItem{
-            id:item_buttons
-            count: 99
-            infoBadge:FluBadge{
-                count: item_buttons.count
-            }
-            title:"Buttons"
-            image:"qrc:/SAST_Evento/res/image/control/Button.png"
-            recentlyUpdated:true
-            desc:"A control that responds to user input and raisesa Click event."
-            onTap:{
-                item_buttons.count = 0
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Buttons.qml")
-            }
+    FluPaneItem{
+        id:item_timeTable
+        count: 9
+        title:lang.timeTable
+        infoBadge:FluBadge{
+            count: item_timeTable.count
         }
-        FluPaneItem{
-            id:item_text
-            title:"Text"
-            count: 5
-            infoBadge:FluBadge{
-                count: item_text.count
-                color: Qt.rgba(82/255,196/255,26/255,1)
+        icon:FluentIcons.Calendar
+        onTap:{
+            if(navigationView.getCurrentUrl()){
+                item_home.count = 0
             }
-            onTap:{
-                item_text.count = 0
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Text.qml")
-            }
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_Home.qml")
         }
-        FluPaneItem{
-            title:"Image"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Image.qml")
-            }
+    }
+
+    FluPaneItem{
+        id:item_history
+        count: 0
+        title:lang.history
+        infoBadge:FluBadge{
+            count: item_history.count
         }
-        FluPaneItem{
-            title:"Slider"
-            image:"qrc:/SAST_Evento/res/image/control/Slider.png"
-            recentlyUpdated:true
-            desc:"A control that lets the user select from a rangeof values by moving a Thumb control along atrack."
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Slider.qml")
+        icon:FluentIcons.Replay
+        onTap:{
+            if(navigationView.getCurrentUrl()){
+                item_home.count = 0
             }
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_Home.qml")
         }
-        FluPaneItem{
-            title:"CheckBox"
-            image:"qrc:/SAST_Evento/res/image/control/Checkbox.png"
-            recentlyUpdated:true
-            desc:"A control that a user can select or clear."
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_CheckBox.qml")
-            }
+    }
+
+    FluPaneItem{
+        id:item_souvenirCard
+        count: 0
+        title:lang.souvenirCard
+        infoBadge:FluBadge{
+            count: item_souvenirCard.count
         }
-        FluPaneItem{
-            title:"RadioButton"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_RadioButton.qml")
+        icon:FluentIcons.Smartcard
+        onTap:{
+            if(navigationView.getCurrentUrl()){
+                item_home.count = 0
             }
-        }
-        FluPaneItem{
-            title:"ToggleSwitch"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_ToggleSwitch.qml")
-            }
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_SouvenirCard.qml")
         }
     }
 
     FluPaneItemExpander{
-        title:lang.form
-        icon:FluentIcons.GridView
+        title:lang.organize
+        icon:FluentIcons.AllApps
         FluPaneItem{
             title:"TextBox"
             onTap:{
@@ -128,8 +107,8 @@ FluObject{
     }
 
     FluPaneItemExpander{
-        title:lang.surface
-        icon:FluentIcons.SurfaceHub
+        title:lang.manage
+        icon:FluentIcons.ViewAll
         FluPaneItem{
             title:"InfoBar"
             image:"qrc:/SAST_Evento/res/image/control/InfoBar.png"
@@ -183,155 +162,15 @@ FluObject{
         }
     }
 
-    FluPaneItemExpander{
-        title:lang.popus
-        icon:FluentIcons.ButtonMenu
-        FluPaneItem{
-            title:"Dialog"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Dialog.qml")
-            }
-        }
-        FluPaneItem{
-            id:item_combobox
-            title:"ComboBox"
-            count: 9
-            infoBadge:FluBadge{
-                count: item_combobox.count
-                color: Qt.rgba(250/255,173/255,20/255,1)
-            }
-            onTap:{
-                item_combobox.count = 0
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_ComboBox.qml")
-            }
-        }
-        FluPaneItem{
-            title:"Tooltip"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Tooltip.qml")
-            }
-        }
-        FluPaneItem{
-            title:"Menu"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Menu.qml")
-            }
-        }
-    }
-
-    FluPaneItemExpander{
-        title:lang.navigation
-        icon:FluentIcons.AllApps
-        FluPaneItem{
-            title:"Pivot"
-            image:"qrc:/SAST_Evento/res/image/control/Pivot.png"
-            recentlyAdded:true
-            order:3
-            desc:"Presents information from different sources in atabbed view."
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Pivot.qml")
-            }
-        }
-        FluPaneItem{
-            title:"BreadcrumbBar"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_BreadcrumbBar.qml")
-            }
-        }
-        FluPaneItem{
-            title:"TabView"
-            image:"qrc:/SAST_Evento/res/image/control/TabView.png"
-            recentlyAdded:true
-            order:1
-            desc:"A control that displays a collection of tabs thatcan be used to display several documents."
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_TabView.qml")
-            }
-        }
-        FluPaneItem{
-            title:"TreeView"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_TreeView.qml")
-            }
-        }
-        FluPaneItem{
-            title:"TableView"
-            image:"qrc:/SAST_Evento/res/image/control/DataGrid.png"
-            recentlyAdded:true
-            order:4
-            desc:"The TableView control provides a flexible way to display a collection of data in rows and columns"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_TableView.qml")
-            }
-        }
-        FluPaneItem{
-            title:"Pagination"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Pagination.qml")
-            }
-        }
-        FluPaneItem{
-            title:"MultiWindow"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_MultiWindow.qml")
-            }
-        }
-        FluPaneItem{
-            title:"FlipView"
-            image:"qrc:/SAST_Evento/res/image/control/FlipView.png"
-            recentlyAdded:true
-            order:2
-            desc:"Presents a collection of items that the user canflip through, one item at a time."
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_FlipView.qml")
-            }
-        }
-    }
-
-    FluPaneItemExpander{
+    FluPaneItem{
+        id:item_theming
         title:lang.theming
+        infoBadge:FluBadge{
+            count: 0
+        }
         icon:FluentIcons.Brightness
-        FluPaneItem{
-            title:"Acrylic"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Acrylic.qml")
-            }
-        }
-        FluPaneItem{
-            title:"Theme"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Theme.qml")
-            }
-        }
-        FluPaneItem{
-            title:"Typography"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Typography.qml")
-            }
-        }
-        FluPaneItem{
-            title:"Awesome"
-            onTap:{
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Awesome.qml")
-            }
-        }
-    }
-
-    FluPaneItemExpander{
-        title:lang.other
-        icon:FluentIcons.Shop
-        FluPaneItem{
-            id:item_other
-            title:"RemoteLoader"
-            count: 99
-            infoBadge:FluBadge{
-                count: item_other.count
-                color: Qt.rgba(82/255,196/255,26/255,1)
-            }
-            onTap:{
-                item_other.count = 0
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_RemoteLoader.qml")
-            }
+        onTap:{
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_Theme.qml")
         }
     }
 
