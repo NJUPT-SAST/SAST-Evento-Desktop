@@ -39,7 +39,7 @@ CustomWindow {
         id: system_tray
         visible: true
         icon.source: "qrc:/SAST_Evento/res/image/favicon.ico"
-        tooltip: "FluentUI"
+        tooltip: "SAST Evento"
         menu: Menu {
             MenuItem {
                 text: "退出"
@@ -188,7 +188,7 @@ CustomWindow {
                 topPadding: FluTools.isMacos() ? 20 : 5
                 displayMode: MainEvent.displayMode
                 logo: "qrc:/SAST_Evento/res/image/favicon.ico"
-                title: "FluentUI"
+                title: "SAST Evento"
                 onLogoClicked: {
                     clickCount += 1
                     if (clickCount === 1) {
