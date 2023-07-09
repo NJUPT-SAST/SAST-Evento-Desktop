@@ -155,8 +155,7 @@ CustomWindow {
                 id: loader
                 lazy: true
                 anchors.fill: parent
-                //                source: "http://localhost:9000/RemoteComponent.qml"
-                source: "https://zhu-zichu.gitee.io/RemoteComponent.qml"
+                source: "qrc:/SAST_Evento/qml/page/T_About.qml"
             }
         }
         front: Item {
