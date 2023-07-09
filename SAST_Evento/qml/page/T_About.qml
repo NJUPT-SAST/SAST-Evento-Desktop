@@ -6,6 +6,8 @@ import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
 Rectangle {
+    anchors.topMargin: 50
+
     ColumnLayout {
         anchors {
             top: parent.top
@@ -16,17 +18,22 @@ Rectangle {
         RowLayout {
             Layout.topMargin: 50
             Layout.leftMargin: 15
+            FluText {
+                text: "关于"
+                font: FluTextStyle.TitleLarge
+                Layout.alignment: Qt.AlignBottom
+            }
+        }
+
+        RowLayout {
+            Layout.leftMargin: 15
             spacing: 14
+
             FluText {
                 text: "SAST Evento"
                 font: FluTextStyle.Title
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        FluApp.navigate("/")
-                    }
-                }
             }
+
             FluText {
                 text: "v%1".arg(appInfo.version)
                 font: FluTextStyle.Body

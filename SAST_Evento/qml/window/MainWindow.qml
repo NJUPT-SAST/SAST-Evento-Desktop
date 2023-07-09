@@ -21,6 +21,27 @@ CustomWindow {
     appBarVisible: false
     launchMode: FluWindow.SingleTask
 
+    property var loginPageRegister: registerForWindowResult("/login")
+    property string password: ""
+
+    Component.onCompleted: {
+        loginPageRegister.launch({
+                                     "username": "zhuzichu"
+                                 })
+    }
+
+    Connections {
+        target: loginPageRegister
+        function onResult(data) {
+            if (data.ok) {
+                password = data.password
+                showSuccess("登录成功")
+                return
+            }
+            showInfo("未登录，请前往“我的”以登录账号")
+        }
+    }
+
     closeFunc: function (event) {
         dialog_close.open()
         event.accepted = false

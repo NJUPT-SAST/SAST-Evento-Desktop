@@ -16,7 +16,7 @@ Window {
             "/about": "qrc:/SAST_Evento/qml/window/AboutWindow.qml",
             "/login": "qrc:/SAST_Evento/qml/window/LoginWindow.qml"
         }
-        FluApp.initialRoute = "/login"
+        FluApp.initialRoute = "/"
         FluApp.run()
     }
 }

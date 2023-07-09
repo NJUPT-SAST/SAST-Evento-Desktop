@@ -11,10 +11,11 @@ CustomWindow {
     width: 400
     height: 400
     fixSize: true
-
+    modality: Qt.ApplicationModal
     closeFunc: function (event) {
-        event.accepted = false
-        dialog_close.open()
+        onResult({
+                     "ok": false
+                 })
     }
 
     onInitArgument: argument => {
@@ -60,27 +61,11 @@ CustomWindow {
                     return
                 }
                 onResult({
+                             "ok": true,
                              "password": textbox_password.text
                          })
-                FluApp.navigate("/")
                 window.hide()
             }
-        }
-    }
-
-    FluContentDialog {
-        id: dialog_close
-        title: "退出"
-        message: "确定要退出程序吗？"
-
-        buttonFlags: FluContentDialog.NeutralButton | FluContentDialog.PositiveButton
-
-        positiveText: "退出"
-        neutralText: "取消"
-
-        onPositiveClicked: {
-            window.deleteWindow()
-            FluApp.closeApp()
         }
     }
 }

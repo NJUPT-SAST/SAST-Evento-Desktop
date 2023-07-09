@@ -10,74 +10,74 @@ FluContentPage {
     title: "Typography"
     rightPadding: 10
 
-    FluArea{
-        anchors{
-            top:parent.top
+    FluArea {
+        anchors {
+            top: parent.top
             left: parent.left
             right: parent.right
             bottom: parent.bottom
             topMargin: 20
         }
         paddings: 10
-        ColumnLayout{
+        ColumnLayout {
             spacing: 0
             scale: textScale
             transformOrigin: Item.TopLeft
-            FluText{
-                id:text_Display
-                text:"Display"
+            FluText {
+                id: text_Display
+                text: "Display"
                 padding: 0
                 font: FluTextStyle.Display
             }
-            FluText{
-                id:text_TitleLarge
-                text:"Title Large"
+            FluText {
+                id: text_TitleLarge
+                text: "Title Large"
                 padding: 0
                 font: FluTextStyle.TitleLarge
             }
-            FluText{
-                id:text_Title
-                text:"Title"
+            FluText {
+                id: text_Title
+                text: "Title"
                 padding: 0
                 font: FluTextStyle.Title
             }
-            FluText{
-                id:text_Subtitle
-                text:"Subtitle"
+            FluText {
+                id: text_Subtitle
+                text: "Subtitle"
                 padding: 0
                 font: FluTextStyle.Subtitle
             }
-            FluText{
-                id:text_BodyStrong
-                text:"Body Strong"
+            FluText {
+                id: text_BodyStrong
+                text: "Body Strong"
                 padding: 0
                 font: FluTextStyle.BodyStrong
             }
-            FluText{
-                id:text_Body
-                text:"Body"
+            FluText {
+                id: text_Body
+                text: "Body"
                 padding: 0
                 font: FluTextStyle.Body
             }
-            FluText{
-                id:text_Caption
-                text:"Caption"
+            FluText {
+                id: text_Caption
+                text: "Caption"
                 padding: 0
                 font: FluTextStyle.Caption
             }
         }
 
-        FluSlider{
-            id:slider
+        FluSlider {
+            id: slider
             orientation: Qt.Vertical
-            anchors{
+            anchors {
                 right: parent.right
                 rightMargin: 45
                 top: parent.top
                 topMargin: 30
             }
-            onValueChanged:{
-                textScale = 1+value/100
+            onValueChanged: {
+                textScale = 1 + value / 100
             }
         }
     }
