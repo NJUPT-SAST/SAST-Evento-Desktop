@@ -97,7 +97,8 @@ FluObject {
             recentlyUpdated: true
             desc: "An inline message to display app-wide statuschange information."
             onTap: {
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_InfoBar.qml")
+                navigationView.push(
+                    "qrc:/SAST_Evento/qml/page/T_RadioButton.qml")
             }
         }
         FluPaneItem {

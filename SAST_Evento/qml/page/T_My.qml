@@ -5,28 +5,26 @@ import QtQuick.Window
 import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
-FluScrollablePage{
+FluScrollablePage {
 
-    title:"Text"
+    title: lang.my
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 60
         paddings: 10
 
-        FluCopyableText{
+        FluCopyableText {
             text: "这是一个可以支持复制的Text"
             anchors.verticalCenter: parent.verticalCenter
         }
-
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluCopyableText{
-    text:"这是一个可以支持复制的Text"
+        code: 'FluCopyableText{
+text:"这是一个可以支持复制的Text"
 }'
     }
-
 }

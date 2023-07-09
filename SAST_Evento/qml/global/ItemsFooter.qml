@@ -3,28 +3,27 @@ pragma Singleton
 import QtQuick
 import FluentUI
 
-FluObject{
+FluObject {
 
     property var navigationView
 
-    id:footer_items
+    id: footer_items
 
-    FluPaneItemSeparator{}
+    FluPaneItemSeparator {}
 
-    FluPaneItem{
-        title:lang.my
-        icon:FluentIcons.Contact
-        tapFunc:function(){
-            FluApp.navigate("/about")
+    FluPaneItem {
+        title: lang.my
+        icon: FluentIcons.Contact
+        onTap: {
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_My.qml")
         }
     }
 
-    FluPaneItem{
-        title:lang.settings
-        icon:FluentIcons.Settings
-        onTap:{
+    FluPaneItem {
+        title: lang.settings
+        icon: FluentIcons.Settings
+        onTap: {
             navigationView.push("qrc:/SAST_Evento/qml/page/T_Settings.qml")
         }
     }
-
 }
