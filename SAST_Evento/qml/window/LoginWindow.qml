@@ -62,6 +62,7 @@ CustomWindow {
                 }
                 onResult({
                              "ok": true,
+                             "username": textbox_uesrname.text,
                              "password": textbox_password.text
                          })
                 window.hide()

@@ -26,7 +26,7 @@ CustomWindow {
 
     Component.onCompleted: {
         loginPageRegister.launch({
-                                     "username": "zhuzichu"
+                                     "username": "admin"
                                  })
     }
 
@@ -35,6 +35,12 @@ CustomWindow {
         function onResult(data) {
             if (data.ok) {
                 password = data.password
+                if (data.username === "admin") {
+                    ItemsOriginal.identity = 1
+                } else {
+                    ItemsOriginal.identity = 2
+                }
+
                 showSuccess("登录成功")
                 return
             }
@@ -88,7 +94,7 @@ CustomWindow {
                      | FluContentDialog.PositiveButton
         onNegativeClicked: {
             window.hide()
-            system_tray.showMessage("友情提示", "SAST Evento已隐藏至托盘,点击托盘可再次激活窗口")
+            system_tray.showMessage("提示", "SAST Evento已隐藏至托盘,点击托盘可再次激活窗口")
         }
         positiveText: "退出"
         neutralText: "取消"
@@ -204,7 +210,7 @@ CustomWindow {
                 //                 pageMode: FluNavigationView.Stack
                 //NoStack模式，每次切换都会销毁之前的页面然后创建一个新的页面，只需消耗少量内存（推荐）
                 pageMode: FluNavigationView.NoStack
-                items: ItemsOriginal
+                // items: ItemsOriginal.item
                 footerItems: ItemsFooter
                 topPadding: FluTools.isMacos() ? 20 : 5
                 displayMode: MainEvent.displayMode
@@ -222,16 +228,20 @@ CustomWindow {
                     width: 280
                     anchors.centerIn: parent
                     iconSource: FluentIcons.Search
-                    items: ItemsOriginal.getSearchData()
                     placeholderText: lang.search
                     onItemClicked: data => {
                                        ItemsOriginal.startPageByItem(data)
                                    }
                 }
-                Component.onCompleted: {
-                    ItemsOriginal.navigationView = nav_view
-                    ItemsFooter.navigationView = nav_view
-                    setCurrentIndex(0)
+
+                Connections {
+                    target: ItemsOriginal
+                    function onSourceChanged() {
+                        ItemsOriginal.item.navigationView = nav_view
+                        ItemsFooter.navigationView = nav_view
+                        nav_view.setCurrentIndex(0)
+                        nav_view.items = ItemsOriginal.item
+                    }
                 }
             }
         }

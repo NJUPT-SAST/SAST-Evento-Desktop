@@ -8,7 +8,6 @@ FluObject {
     property var navigationView
 
     id: footer_items
-
     FluPaneItemSeparator {}
 
     FluPaneItem {
