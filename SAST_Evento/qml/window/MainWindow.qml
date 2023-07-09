@@ -234,11 +234,14 @@ CustomWindow {
                                    }
                 }
 
+                Component.onCompleted: {
+                    ItemsFooter.navigationView = nav_view
+                }
+
                 Connections {
                     target: ItemsOriginal
                     function onSourceChanged() {
                         ItemsOriginal.item.navigationView = nav_view
-                        ItemsFooter.navigationView = nav_view
                         nav_view.setCurrentIndex(0)
                         nav_view.items = ItemsOriginal.item
                     }
