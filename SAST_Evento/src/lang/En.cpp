@@ -5,7 +5,7 @@ En::En(QObject *parent)
 {
     setObjectName("En");
     home("Home");
-    timeTable("Time Table");
+    timesheet("Timesheet");
     history("History");
     souvenirCard("Souvenir Card");
     organize("Organize");
@@ -20,6 +20,22 @@ En::En(QObject *parent)
     locale("Locale");
     navigation_view_display_mode("NavigationView Display Mode");
 
+    createEvent("Create Event");
+    eventInfo("Event Infomation");
+    addTypes("Add Event Type");
+    addGroup("Add Group");
+    statistics("Statistics");
+    uploadSouvenirCard("Upload Souvenir Card");
+    exportTimesheetPictures("Export Timesheet Pictures");
+
     zh("Chinese");
     en("English");
+
+    followSystem("System");
+    light("Light");
+    dark("Dark");
+    openSideBar("Open");
+    compactSideBar("Compact");
+    minimalSideBar("Minimal");
+    automatical("Auto");
 }

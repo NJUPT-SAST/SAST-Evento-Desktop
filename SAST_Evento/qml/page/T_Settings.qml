@@ -6,33 +6,42 @@ import FluentUI
 import "qrc:///SAST_Evento/qml/global"
 import "qrc:///SAST_Evento/qml/component"
 
-FluScrollablePage{
+FluScrollablePage {
 
-    title:lang.settings
+    title: lang.settings
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 128
         paddings: 10
 
-        ColumnLayout{
+        ColumnLayout {
             spacing: 5
-            anchors{
+            anchors {
                 top: parent.top
                 left: parent.left
             }
-            FluText{
-                text:lang.dark_mode
+            FluText {
+                text: lang.dark_mode
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
-            Repeater{
-                model: [{title:"System",mode:FluDarkMode.System},{title:"Light",mode:FluDarkMode.Light},{title:"Dark",mode:FluDarkMode.Dark}]
-                delegate:  FluRadioButton{
-                    checked : FluTheme.darkMode === modelData.mode
-                    text:modelData.title
-                    clickListener:function(){
+            Repeater {
+                model: [{
+                        "title": lang.followSystem,
+                        "mode": FluDarkMode.System
+                    }, {
+                        "title": lang.light,
+                        "mode": FluDarkMode.Light
+                    }, {
+                        "title": lang.dark,
+                        "mode": FluDarkMode.Dark
+                    }]
+                delegate: FluRadioButton {
+                    checked: FluTheme.darkMode === modelData.mode
+                    text: modelData.title
+                    clickListener: function () {
                         FluTheme.darkMode = modelData.mode
                     }
                 }
@@ -40,29 +49,41 @@ FluScrollablePage{
         }
     }
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 160
         paddings: 10
 
-        ColumnLayout{
+        ColumnLayout {
             spacing: 5
-            anchors{
+            anchors {
                 top: parent.top
                 left: parent.left
             }
-            FluText{
-                text:lang.navigation_view_display_mode
+            FluText {
+                text: lang.navigation_view_display_mode
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
-            Repeater{
-                model: [{title:"Open",mode:FluNavigationView.Open},{title:"Compact",mode:FluNavigationView.Compact},{title:"Minimal",mode:FluNavigationView.Minimal},{title:"Auto",mode:FluNavigationView.Auto}]
-                delegate: FluRadioButton{
-                    checked : MainEvent.displayMode===modelData.mode
-                    text:modelData.title
-                    clickListener:function(){
+            Repeater {
+                model: [{
+                        "title": lang.openSideBar,
+                        "mode": FluNavigationView.Open
+                    }, {
+                        "title": lang.compactSideBar,
+                        "mode": FluNavigationView.Compact
+                    }, {
+                        "title": lang.minimalSideBar,
+                        "mode": FluNavigationView.Minimal
+                    }, {
+                        "title": lang.automatical,
+                        "mode": FluNavigationView.Auto
+                    }]
+                delegate: FluRadioButton {
+                    checked: MainEvent.displayMode === modelData.mode
+                    text: modelData.title
+                    clickListener: function () {
                         MainEvent.displayMode = modelData.mode
                     }
                 }
@@ -70,33 +91,33 @@ FluScrollablePage{
         }
     }
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 80
         paddings: 10
 
-        ColumnLayout{
+        ColumnLayout {
             spacing: 10
-            anchors{
+            anchors {
                 top: parent.top
                 left: parent.left
             }
 
-            FluText{
-                text:lang.locale
+            FluText {
+                text: lang.locale
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
 
-            Flow{
+            Flow {
                 spacing: 5
-                Repeater{
+                Repeater {
                     model: ["Zh", "En"]
-                    delegate: FluRadioButton{
+                    delegate: FluRadioButton {
                         checked: appInfo.lang.objectName === modelData
                         text: modelData === "En" ? lang.en : lang.zh
-                        clickListener:function(){
+                        clickListener: function () {
                             appInfo.changeLang(modelData)
                         }
                     }
@@ -104,5 +125,4 @@ FluScrollablePage{
             }
         }
     }
-
 }
