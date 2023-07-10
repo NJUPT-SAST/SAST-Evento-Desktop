@@ -22,6 +22,7 @@ CustomWindow {
     launchMode: FluWindow.SingleTask
 
     property var loginPageRegister: registerForWindowResult("/login")
+    property string username: ""
     property string password: ""
 
     Component.onCompleted: {
@@ -30,11 +31,13 @@ CustomWindow {
                                  })
     }
 
+    //signal loginClose(bool ok, string username, string password)
     Connections {
         target: loginPageRegister
         function onResult(data) {
             if (data.ok) {
                 password = data.password
+                username = data.username
                 if (data.username === "admin") {
                     ItemsOriginal.identity = 1
                 } else {
@@ -42,9 +45,9 @@ CustomWindow {
                 }
 
                 showSuccess("登录成功")
-                return
+            } else {
+                showInfo("未登录，请前往“我的”以登录账号")
             }
-            showInfo("未登录，请前往“我的”以登录账号")
         }
     }
 
