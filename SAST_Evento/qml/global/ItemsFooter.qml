@@ -19,6 +19,14 @@ FluObject {
     }
 
     FluPaneItem {
+        title: lang.theming
+        icon: FluentIcons.Brightness
+        onTap: {
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_Theme.qml")
+        }
+    }
+
+    FluPaneItem {
         title: lang.settings
         icon: FluentIcons.Settings
         onTap: {

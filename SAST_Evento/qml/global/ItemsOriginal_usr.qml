@@ -70,16 +70,4 @@ FluObject {
             navigationView.push("qrc:/SAST_Evento/qml/page/T_SouvenirCard.qml")
         }
     }
-
-    FluPaneItem {
-        id: item_theming
-        title: lang.theming
-        infoBadge: FluBadge {
-            count: 0
-        }
-        icon: FluentIcons.Brightness
-        onTap: {
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_Theme.qml")
-        }
-    }
 }
