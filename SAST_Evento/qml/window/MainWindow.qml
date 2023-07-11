@@ -3,6 +3,7 @@ import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
 import Qt.labs.platform
+import QtCore
 import FluentUI
 import SAST_Evento
 
@@ -22,11 +23,38 @@ CustomWindow {
     appBarVisible: false
     launchMode: FluWindow.SingleTask
 
+    Settings {
+        id: settings
+
+        property var darkMode
+        property int displayMode
+        property string langMode
+        property bool nativeTextSet
+        property bool enableAnimationSet
+        //property var colorSet
+        property string username
+        property string password: ""
+    }
+
     property var loginPageRegister: registerForWindowResult("/login")
 
+    Connections {
+        target: FluTheme
+        function onDarkModeChanged() {
+            settings.darkMode = FluTheme.darkMode
+        }
+    }
+
     Component.onCompleted: {
+        MainEvent.displayMode = settings.value("displayMode",
+                                               FluNavigationView.Auto)
+        FluTheme.darkMode = settings.value("darkMode", FluDarkMode.System)
+        //FluTheme.primaryColor = settings.value("colorSet", FluColors.Blue)
+        FluTheme.enableAnimation = settings.value("enableAnimationSet", true)
+        FluTheme.nativeText = settings.value("nativeTextSet", false)
+        appInfo.changeLang(settings.value("langMode", "Zh"))
         loginPageRegister.launch({
-                                     "username": "admin"
+                                     "username": settings.value("username", "")
                                  })
     }
 
@@ -35,6 +63,7 @@ CustomWindow {
         function onResult(data) {
             if (data.ok) {
                 appInfo.changeIdentity(data.username, data.password)
+                settings.username = data.username
             } else {
                 showInfo("未登录，前往“我的”以登录账号")
             }

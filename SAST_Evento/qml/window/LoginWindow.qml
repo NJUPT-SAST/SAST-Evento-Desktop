@@ -56,6 +56,10 @@ CustomWindow {
             Layout.alignment: Qt.AlignHCenter
             Layout.topMargin: 20
             onClicked: {
+                if (textbox_uesrname.text === "") {
+                    showError("账号为空")
+                    return
+                }
                 if (textbox_password.text === "") {
                     showError("密码为空")
                     return

@@ -2,11 +2,19 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
+import QtCore
 import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
 FluScrollablePage {
     title: lang.my
+
+    Settings {
+        id: settings
+        property string username
+        property string password
+        property bool rememberPsw
+    }
 
     property var loginPageRegister: registerForWindowResult("/login")
 
@@ -15,6 +23,7 @@ FluScrollablePage {
         function onResult(data) {
             if (data.ok) {
                 appInfo.changeIdentity(data.username, data.password)
+                settings.username = data.username
                 //MainWindow.window.showSuccess("登录成功")
             } else {
                 status.text = "未登录"

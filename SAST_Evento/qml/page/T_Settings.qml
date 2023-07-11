@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Window
 import QtQuick.Controls
+import QtCore
 import FluentUI
 import "qrc:///SAST_Evento/qml/global"
 import "qrc:///SAST_Evento/qml/component"
@@ -9,6 +10,13 @@ import "qrc:///SAST_Evento/qml/component"
 FluScrollablePage {
 
     title: lang.settings
+
+    Settings {
+        id: settings
+        property var darkMode
+        property int displayMode
+        property string langMode
+    }
 
     FluArea {
         Layout.fillWidth: true
@@ -84,7 +92,8 @@ FluScrollablePage {
                     checked: MainEvent.displayMode === modelData.mode
                     text: modelData.title
                     clickListener: function () {
-                        MainEvent.displayMode = modelData.mode
+                        settings.displayMode = modelData.mode
+                        MainEvent.displayMode = settings.displayMode
                     }
                 }
             }
@@ -113,12 +122,14 @@ FluScrollablePage {
             Flow {
                 spacing: 5
                 Repeater {
+                    id: langSetting
                     model: ["Zh", "En"]
                     delegate: FluRadioButton {
                         checked: appInfo.lang.objectName === modelData
                         text: modelData === "En" ? lang.en : lang.zh
                         clickListener: function () {
-                            appInfo.changeLang(modelData)
+                            settings.langMode = modelData
+                            appInfo.changeLang(settings.langMode)
                         }
                     }
                 }
