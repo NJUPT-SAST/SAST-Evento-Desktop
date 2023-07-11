@@ -4,11 +4,56 @@ import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
 import "qrc:///SAST_Evento/qml/component"
-import "../window"
 
 FluScrollablePage {
-
     title: lang.my
+
+    property var loginPageRegister: registerForWindowResult("/login")
+
+    Connections {
+        target: loginPageRegister
+        function onResult(data) {
+            if (data.ok) {
+                appInfo.changeIdentity(data.username, data.password)
+                //MainWindow.window.showSuccess("登录成功")
+            } else {
+                status.text = "未登录"
+                loader.sourceComponent = noLogin
+                //MainWindow.window.showInfo("未登录，请前往“我的”以登录账号")
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        if (appInfo.identity.authority === 0) {
+            status.text = "未登录"
+            loader.sourceComponent = noLogin
+            return
+        }
+        status.text = "账号 " + appInfo.identity.username
+        loader.sourceComponent = login
+        if (appInfo.identity.authority === 2)
+            loader.item.text = "管理员"
+        if (appInfo.identity.authority === 1)
+            loader.item.text = "普通用户"
+    }
+
+    Connections {
+        target: appInfo
+        function onLogin() {
+            if (appInfo.identity.authority === 0) {
+                status.text = "未登录"
+                loader.sourceComponent = noLogin
+                return
+            }
+            status.text = "账号 " + appInfo.identity.username
+            loader.sourceComponent = login
+            if (appInfo.identity.authority === 2)
+                loader.item.text = "管理员"
+            if (appInfo.identity.authority === 1)
+                loader.item.text = "普通用户"
+        }
+    }
 
     FluArea {
         Layout.fillWidth: true
@@ -19,7 +64,6 @@ FluScrollablePage {
         FluText {
             id: status
             text: "未登录"
-            //text: MainWindow.username === "" ? "未登录" : "账号 " + MainWindow.username
             font: FluTextStyle.Title
             anchors.top: parent.top
         }
@@ -27,14 +71,12 @@ FluScrollablePage {
             id: loader
             anchors.bottom: parent.bottom
             sourceComponent: noLogin
-            //sourceComponent: MainWindow.username === "" ? noLogin : login
         }
 
         Component {
             id: login
             FluText {
-                id: identity
-                text: "普通用户"
+                text: ""
                 font: FluTextStyle.Body
             }
         }
@@ -47,9 +89,9 @@ FluScrollablePage {
                 anchors.right: parent.right
 
                 onClicked: {
-                    MainWindow.window.loginPageRegister.launch({
-                                                                   "username": "admin"
-                                                               })
+                    loginPageRegister.launch({
+                                                 "username": "admin"
+                                             })
                 }
             }
         }

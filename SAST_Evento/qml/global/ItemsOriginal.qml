@@ -5,17 +5,16 @@ import FluentUI
 
 Loader {
     id: loader
-    source: ""
 
-    property int identity
-
-    onIdentityChanged: {
-        if (identity === 1) {
-            // 管理员
-            loader.source = "qrc:/SAST_Evento/qml/global/ItemsOriginal_manager.qml"
-        } else {
-            // 用户
-            loader.source = "qrc:/SAST_Evento/qml/global/ItemsOriginal_usr.qml"
+    Connections {
+        target: appInfo
+        function onLogin() {
+            if (appInfo.identity.authority === 0)
+                return
+            if (appInfo.identity.authority === 2)
+                loader.source = "qrc:/SAST_Evento/qml/global/ItemsOriginal_manager.qml"
+            if (appInfo.identity.authority === 1)
+                loader.source = "qrc:/SAST_Evento/qml/global/ItemsOriginal_usr.qml"
         }
     }
 

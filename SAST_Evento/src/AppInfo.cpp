@@ -15,14 +15,20 @@ AppInfo::AppInfo(QObject *parent)
 {
     version(VER_STR);
     lang(new Zh());
+    identity(new Identity("", ""));
 }
 
 void AppInfo::init(QQmlApplicationEngine *engine){
     QQmlContext * context = engine->rootContext();
     Lang* lang = this->lang();
+    Identity* identity = this->identity();
     context->setContextProperty("lang",lang);
+    context->setContextProperty("identity",identity);
     QObject::connect(this,&AppInfo::langChanged,this,[=]{
         context->setContextProperty("lang",this->lang());
+    });
+    QObject::connect(this,&AppInfo::identityChanged,this,[=]{
+        context->setContextProperty("identitiy", this->identity());
     });
     context->setContextProperty("appInfo",this);
 }
@@ -38,6 +44,15 @@ void AppInfo::changeLang(const QString& locale){
     }else {
         lang(new En());
     }
+}
+
+void AppInfo::changeIdentity(const QString &username, const QString &password)
+{
+    if (_identity) {
+        _identity->deleteLater();
+    }
+    identity(new Identity(username, password));
+    Q_EMIT this->login();
 }
 
 bool AppInfo::isOwnerProcess(IPC *ipc){

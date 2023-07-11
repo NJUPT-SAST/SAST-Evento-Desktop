@@ -8,6 +8,7 @@ import SAST_Evento
 
 import "qrc:///SAST_Evento/qml/component"
 import "qrc:///SAST_Evento/qml/global"
+import "qrc:///SAST_Evento/qml/page"
 
 CustomWindow {
 
@@ -22,8 +23,6 @@ CustomWindow {
     launchMode: FluWindow.SingleTask
 
     property var loginPageRegister: registerForWindowResult("/login")
-    property string username: ""
-    property string password: ""
 
     Component.onCompleted: {
         loginPageRegister.launch({
@@ -31,23 +30,24 @@ CustomWindow {
                                  })
     }
 
-    //signal loginClose(bool ok, string username, string password)
     Connections {
         target: loginPageRegister
         function onResult(data) {
             if (data.ok) {
-                password = data.password
-                username = data.username
-                if (data.username === "admin") {
-                    ItemsOriginal.identity = 1
-                } else {
-                    ItemsOriginal.identity = 2
-                }
-
-                showSuccess("登录成功")
+                appInfo.changeIdentity(data.username, data.password)
             } else {
-                showInfo("未登录，请前往“我的”以登录账号")
+                showInfo("未登录，前往“我的”以登录账号")
             }
+        }
+    }
+
+    Connections {
+        target: appInfo
+        function onLogin() {
+            if (appInfo.identity.authority === 0)
+                showInfo("未登录，前往“我的”以登录账号")
+            else
+                showSuccess("登录成功")
         }
     }
 

@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     qputenv("QT_QUICK_CONTROLS_STYLE", "Basic");
     FramelessHelper::Quick::initialize();
     QGuiApplication::setOrganizationName("SAST");
-    QGuiApplication::setOrganizationDomain("https://www.github.com");
+    QGuiApplication::setOrganizationDomain("https://www.github/Serein207/SAST-Evento-Desktop.com");
     QGuiApplication::setApplicationName("SAST_Evento");
     QGuiApplication app(argc, argv);
 #ifdef Q_OS_WIN  // 此设置仅在Windows下生效
