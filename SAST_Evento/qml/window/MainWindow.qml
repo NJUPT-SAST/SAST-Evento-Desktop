@@ -246,8 +246,8 @@ CustomWindow {
                     function onSourceChanged() {
                         nav_view.pageMode = FluNavigationView.NoStack
                         ItemsOriginal.item.navigationView = nav_view
-                        nav_view.setCurrentIndex(0)
                         nav_view.items = ItemsOriginal.item
+                        nav_view.setCurrentIndex(0)
                     }
                 }
             }

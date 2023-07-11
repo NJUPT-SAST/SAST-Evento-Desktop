@@ -14,9 +14,9 @@ FluScrollablePage {
         id: model_header
         ListElement {
             icon: "qrc:/SAST_Evento/res/image/ic_home_github.png"
-            title: "FluentUI GitHub"
-            desc: "The latest FluentUI controls and styles for your applications."
-            url: "https://github.com/zhuzichu520/FluentUI"
+            title: "SAST Evento Desktop"
+            desc: "跨平台的SAST Evento客户端 由C++组开发\n\n点击跳转Github项目链接"
+            url: "https://github.com/Serein207/SAST-Evento-Desktop"
         }
     }
 
@@ -46,7 +46,7 @@ FluScrollablePage {
             }
         }
         FluText {
-            text: "FluentUI Gallery"
+            text: "Events Gallery"
             font: FluTextStyle.TitleLarge
             anchors {
                 top: parent.top
@@ -259,7 +259,7 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        ItemsOriginal.item.startPageByItem(modelData)
+                        ItemsOriginal.startPageByItem(modelData)
                     }
                 }
             }
@@ -267,7 +267,7 @@ FluScrollablePage {
     }
 
     FluText {
-        text: "Recently added samples"
+        text: "Recently Events"
         font: FluTextStyle.Title
         Layout.topMargin: 20
         Layout.leftMargin: 20
@@ -285,13 +285,13 @@ FluScrollablePage {
         Connections {
             target: ItemsOriginal
             function onSourceChanged() {
-                model = ItemsOriginal.item.getRecentlyAddedData()
+                model = ItemsOriginal.getRecentlyAddedData()
             }
         }
     }
 
     FluText {
-        text: "Recently updated samples"
+        text: "Hot Events"
         font: FluTextStyle.Title
         Layout.topMargin: 20
         Layout.leftMargin: 20
@@ -309,7 +309,7 @@ FluScrollablePage {
         Connections {
             target: ItemsOriginal
             function onSourceChanged() {
-                model = ItemsOriginal.item.getRecentlyUpdatedData()
+                model = ItemsOriginal.getRecentlyUpdatedData()
             }
         }
     }
