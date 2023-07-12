@@ -13,8 +13,8 @@ FluScrollablePage {
     Settings {
         id: settings
         property var darkMode
-        property bool nativeTextSet
-        property bool enableAnimationSet
+        property string nativeTextSet
+        property string enableAnimationSet
         property int colorIndex
     }
 
@@ -82,10 +82,18 @@ FluScrollablePage {
             }
             FluToggleSwitch {
                 Layout.topMargin: 5
-                checked: FluTheme.nativeText
+
+                //checked: FluTheme.nativeText
                 onClicked: {
                     FluTheme.nativeText = !FluTheme.nativeText
-                    settings.nativeTextSet = FluTheme.nativeText
+                    settings.nativeTextSet = checked.toString()
+                    console.log("nativeText ", FluTheme.nativeText)
+                }
+
+                Component.onCompleted: {
+                    console.log("nativeText ", FluTheme.nativeText)
+                    checked = settings.value("nativeTextSet",
+                                             "false").charAt(0) === 't'
                 }
             }
             FluText {
@@ -94,10 +102,18 @@ FluScrollablePage {
             }
             FluToggleSwitch {
                 Layout.topMargin: 5
-                checked: FluTheme.enableAnimation
+
+                //checked: FluTheme.enableAnimation
                 onClicked: {
                     FluTheme.enableAnimation = !FluTheme.enableAnimation
-                    settings.enableAnimationSet = FluTheme.enableAnimation
+                    settings.enableAnimationSet = checked.toString()
+                    console.log("animation ", FluTheme.enableAnimation)
+                }
+
+                Component.onCompleted: {
+                    console.log("animation ", FluTheme.enableAnimation)
+                    checked = settings.value("enableAnimationSet",
+                                             "true").charAt(0) === 't'
                 }
             }
         }

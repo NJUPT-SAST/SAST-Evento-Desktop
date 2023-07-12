@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtCore
 import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
@@ -18,9 +19,19 @@ CustomWindow {
                  })
     }
 
+    Settings {
+        id: settings
+        property bool rememberPsw
+        property string password
+    }
+
     onInitArgument: argument => {
-                        textbox_uesrname.updateText(argument.username)
-                        textbox_password.focus = true
+                        if (argument.username === "") {
+                            textbox_uesrname.focus = true
+                        } else {
+                            textbox_uesrname.updateText(argument.username)
+                            textbox_password.focus = true
+                        }
                     }
 
     ColumnLayout {
@@ -33,9 +44,7 @@ CustomWindow {
         FluAutoSuggestBox {
             id: textbox_uesrname
             items: [{
-                    "title": "Admin"
-                }, {
-                    "title": "User"
+                    "title": settings.value("username", "")
                 }]
             placeholderText: "账号"
             Layout.preferredWidth: 260
@@ -49,12 +58,26 @@ CustomWindow {
             placeholderText: "密码"
             echoMode: TextInput.Password
             Layout.alignment: Qt.AlignHCenter
+            Keys.onEnterPressed: {
+                btn.clicked()
+            }
+            Keys.onReturnPressed: {
+                btn.clicked()
+            }
+
+            Component.onCompleted: {
+                if (checkBox.checked) {
+                    textbox_password.text = settings.value("password", "")
+                }
+            }
         }
 
         FluFilledButton {
+            id: btn
             text: "登录"
             Layout.alignment: Qt.AlignHCenter
             Layout.topMargin: 20
+            focus: true
             onClicked: {
                 if (textbox_uesrname.text === "") {
                     showError("账号为空")
@@ -64,12 +87,36 @@ CustomWindow {
                     showError("密码为空")
                     return
                 }
+                if (checkBox.checked) {
+                    settings.password = textbox_password.text
+                } else {
+                    settings.password = ""
+                }
+
                 onResult({
                              "ok": true,
                              "username": textbox_uesrname.text,
                              "password": textbox_password.text
                          })
                 window.hide()
+            }
+        }
+
+        FluCheckBox {
+            id: checkBox
+            Layout.topMargin: 10
+            Layout.alignment: Qt.AlignCenter
+            text: "记住密码"
+
+            Component.onCompleted: {
+                if (checked !== settings.rememberPsw) {
+                    checked = settings.rememberPsw
+                }
+            }
+
+            clickListener: function () {
+                checked = !checked
+                settings.rememberPsw = checkBox.checked
             }
         }
     }

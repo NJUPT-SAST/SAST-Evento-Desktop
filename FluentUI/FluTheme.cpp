@@ -29,9 +29,9 @@ FluTheme::FluTheme(QObject *parent)
     connect(this,&FluTheme::darkModeChanged,this,[=]{
         Q_EMIT darkChanged();
     });
-    primaryColor(FluColors::getInstance()->Blue());
     nativeText(false);
-    enableAnimation(false);
+    enableAnimation(true);
+    primaryColor(FluColors::getInstance()->Blue());
     darkMode(Fluent_DarkMode::Fluent_DarkModeType::Light);
     _systemDark = systemDark();
     qApp->installEventFilter(this);

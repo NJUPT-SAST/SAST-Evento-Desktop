@@ -13,7 +13,6 @@ FluScrollablePage {
         id: settings
         property string username
         property string password
-        property bool rememberPsw
     }
 
     property var loginPageRegister: registerForWindowResult("/login")
@@ -24,11 +23,9 @@ FluScrollablePage {
             if (data.ok) {
                 appInfo.changeIdentity(data.username, data.password)
                 settings.username = data.username
-                //MainWindow.window.showSuccess("登录成功")
             } else {
                 status.text = "未登录"
                 loader.sourceComponent = noLogin
-                //MainWindow.window.showInfo("未登录，请前往“我的”以登录账号")
             }
         }
     }
@@ -99,7 +96,8 @@ FluScrollablePage {
 
                 onClicked: {
                     loginPageRegister.launch({
-                                                 "username": "admin"
+                                                 "username": settings.value(
+                                                                 "username", "")
                                              })
                 }
             }

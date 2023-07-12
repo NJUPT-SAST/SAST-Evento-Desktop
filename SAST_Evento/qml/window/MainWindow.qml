@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
+import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import Qt.labs.platform
 import QtCore
@@ -29,11 +30,10 @@ CustomWindow {
         property var darkMode
         property int displayMode
         property string langMode
-        property bool nativeTextSet
-        property bool enableAnimationSet
+        property string nativeTextSet
+        property string enableAnimationSet
         property int colorIndex
         property string username
-        property string password: ""
     }
 
     property var loginPageRegister: registerForWindowResult("/login")
@@ -51,8 +51,10 @@ CustomWindow {
                                                FluNavigationView.Auto)
         FluTheme.darkMode = settings.value("darkMode", FluDarkMode.System)
         FluTheme.primaryColor = list[settings.value("colorIndex", 5)]
-        FluTheme.enableAnimation = settings.value("enableAnimationSet", true)
-        FluTheme.nativeText = settings.value("nativeTextSet", false)
+        FluTheme.nativeText = settings.value("nativeTextSet",
+                                             "false").charAt(0) === 't'
+        FluTheme.enableAnimation = settings.value("enableAnimationSet",
+                                                  "true").charAt(0) === 't'
         appInfo.changeLang(settings.value("langMode", "Zh"))
         loginPageRegister.launch({
                                      "username": settings.value("username", "")
