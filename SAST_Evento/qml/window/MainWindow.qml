@@ -31,7 +31,7 @@ CustomWindow {
         property string langMode
         property bool nativeTextSet
         property bool enableAnimationSet
-        //property var colorSet
+        property int colorIndex
         property string username
         property string password: ""
     }
@@ -46,10 +46,11 @@ CustomWindow {
     }
 
     Component.onCompleted: {
+        var list = [FluColors.Yellow, FluColors.Orange, FluColors.Red, FluColors.Magenta, FluColors.Purple, FluColors.Blue, FluColors.Teal, FluColors.Green]
         MainEvent.displayMode = settings.value("displayMode",
                                                FluNavigationView.Auto)
         FluTheme.darkMode = settings.value("darkMode", FluDarkMode.System)
-        //FluTheme.primaryColor = settings.value("colorSet", FluColors.Blue)
+        FluTheme.primaryColor = list[settings.value("colorIndex", 5)]
         FluTheme.enableAnimation = settings.value("enableAnimationSet", true)
         FluTheme.nativeText = settings.value("nativeTextSet", false)
         appInfo.changeLang(settings.value("langMode", "Zh"))

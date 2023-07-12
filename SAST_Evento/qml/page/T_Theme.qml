@@ -15,7 +15,7 @@ FluScrollablePage {
         property var darkMode
         property bool nativeTextSet
         property bool enableAnimationSet
-        //property var colorSet
+        property int colorIndex
     }
 
     FluArea {
@@ -55,7 +55,7 @@ FluScrollablePage {
                             hoverEnabled: true
                             onClicked: {
                                 FluTheme.primaryColor = modelData
-                                //settings.colorSet = FluTheme.primaryColor
+                                settings.colorIndex = model.index
                             }
                         }
                     }
