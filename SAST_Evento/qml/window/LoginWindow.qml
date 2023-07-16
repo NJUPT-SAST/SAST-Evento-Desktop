@@ -42,8 +42,15 @@ CustomWindow {
         }
 
         Image {
-            source: "qrc:/SAST_Evento/res/image/login.png"
-            Layout.alignment: Qt.AlignCenter
+            source: "qrc:/SAST_Evento/res/image/evento_black.png"
+            sourceSize.width: 450
+            Layout.alignment: Qt.AlignHCenter
+            Component.onCompleted: {
+                if (settings.value("darkMode",
+                                   FluDarkMode.System) === FluDarkMode.Dark) {
+                    source = "qrc:/SAST_Evento/res/image/evento_white.png"
+                }
+            }
         }
 
         FluAutoSuggestBox {
@@ -54,6 +61,7 @@ CustomWindow {
             placeholderText: "账号"
             Layout.preferredWidth: 260
             Layout.alignment: Qt.AlignHCenter
+            Layout.topMargin: 40
         }
 
         FluTextBox {
