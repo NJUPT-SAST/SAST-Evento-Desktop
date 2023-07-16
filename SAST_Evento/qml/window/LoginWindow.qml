@@ -9,8 +9,8 @@ CustomWindow {
 
     id: window
     title: "登录"
-    width: 400
-    height: 400
+    width: 500
+    height: 500
     fixSize: true
     modality: Qt.ApplicationModal
     closeFunc: function (event) {
@@ -39,6 +39,11 @@ CustomWindow {
             left: parent.left
             right: parent.right
             verticalCenter: parent.verticalCenter
+        }
+
+        Image {
+            source: "qrc:/SAST_Evento/res/image/login.png"
+            Layout.alignment: Qt.AlignCenter
         }
 
         FluAutoSuggestBox {
@@ -109,8 +114,10 @@ CustomWindow {
             text: "记住密码"
 
             Component.onCompleted: {
-                if (checked !== settings.rememberPsw) {
-                    checked = settings.rememberPsw
+                if (settings.value("rememberPsw", false).charAt(0) === 't') {
+                    checked = true
+                } else {
+                    checked = false
                 }
             }
 
