@@ -87,11 +87,11 @@ FluScrollablePage {
                 onClicked: {
                     FluTheme.nativeText = !FluTheme.nativeText
                     settings.nativeTextSet = checked.toString()
-                    console.log("nativeText ", FluTheme.nativeText)
+                    //console.log("nativeText ", FluTheme.nativeText)
                 }
 
                 Component.onCompleted: {
-                    console.log("nativeText ", FluTheme.nativeText)
+                    //console.log("nativeText ", FluTheme.nativeText)
                     checked = settings.value("nativeTextSet",
                                              "false").charAt(0) === 't'
                 }
@@ -107,11 +107,11 @@ FluScrollablePage {
                 onClicked: {
                     FluTheme.enableAnimation = !FluTheme.enableAnimation
                     settings.enableAnimationSet = checked.toString()
-                    console.log("animation ", FluTheme.enableAnimation)
+                    //console.log("animation ", FluTheme.enableAnimation)
                 }
 
                 Component.onCompleted: {
-                    console.log("animation ", FluTheme.enableAnimation)
+                    //console.log("animation ", FluTheme.enableAnimation)
                     checked = settings.value("enableAnimationSet",
                                              "true").charAt(0) === 't'
                 }
