@@ -25,26 +25,27 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(FramelessHelper
-    VERSION "2.3.7"
+    VERSION "2.4.0"
     DESCRIPTION "Cross-platform window customization framework for Qt Widgets and Qt Quick."
     HOMEPAGE_URL "https://github.com/wangwenx190/framelesshelper/"
 )
 
 include(CMakeDependentOption)
 
-option(FRAMELESSHELPER_BUILD_STATIC "Build FramelessHelper as a static library." ON)
-option(FRAMELESSHELPER_BUILD_WIDGETS "Build FramelessHelper's Widgets module." OFF)
+# TODO: Use add_feature_info() for every option below? Is it worth doing?
+option(FRAMELESSHELPER_BUILD_STATIC "Build FramelessHelper as a static library." OFF)
+option(FRAMELESSHELPER_BUILD_WIDGETS "Build FramelessHelper's Widgets module." ON)
 option(FRAMELESSHELPER_BUILD_QUICK "Build FramelessHelper's Quick module." ON)
 option(FRAMELESSHELPER_BUILD_EXAMPLES "Build FramelessHelper demo applications." OFF)
 option(FRAMELESSHELPER_EXAMPLES_DEPLOYQT "Deploy the Qt framework after building the demo projects." OFF)
-option(FRAMELESSHELPER_NO_DEBUG_OUTPUT "Suppress the debug messages from FramelessHelper." OFF)
+option(FRAMELESSHELPER_NO_DEBUG_OUTPUT "Suppress the debug messages from FramelessHelper." ON)
 option(FRAMELESSHELPER_NO_BUNDLE_RESOURCE "Do not bundle any resources within FramelessHelper." OFF)
 option(FRAMELESSHELPER_NO_PRIVATE "Do not use any private functionalities from Qt." OFF)
 option(FRAMELESSHELPER_ENABLE_VCLTL "MSVC only: link to the system MSVCRT/UCRT and get rid of API sets." OFF)
 option(FRAMELESSHELPER_ENABLE_YYTHUNKS "MSVC only: dynamic load most Win32 APIs to give better compatibility for old Windows versions." OFF)
 option(FRAMELESSHELPER_NO_PERMISSIVE_CHECKS "MSVC only: disable the additional permissive checks." OFF)
 option(FRAMELESSHELPER_NO_INSTALL "Don't install any files." OFF)
-option(FRAMELESSHELPER_NO_SUMMARY "Don't show CMake configure summary." OFF)
+option(FRAMELESSHELPER_NO_SUMMARY "Don't show CMake configure summary." ON)
 option(FRAMELESSHELPER_ENABLE_SPECTRE "Mitigate Spectre security vulnerabilities." OFF)
 option(FRAMELESSHELPER_ENABLE_EHCONTGUARD "MSVC only: Enable EH Continuation (EHCONT) Metadata." OFF)
 option(FRAMELESSHELPER_ENABLE_INTELCET "Enable Intel CET." OFF)
@@ -53,6 +54,7 @@ option(FRAMELESSHELPER_ENABLE_CFGUARD "Enable Control Flow Guard (CFG)." OFF)
 option(FRAMELESSHELPER_EXAMPLES_STANDALONE "Build the demo projects as standalone CMake projects." OFF)
 cmake_dependent_option(FRAMELESSHELPER_ENABLE_UNIVERSAL_BUILD "macOS only: build universal library/example for Mac." ON APPLE OFF)
 option(FRAMELESSHELPER_FORCE_LTO "Force enable LTO/LTCG even when building static libraries." OFF)
+option(FRAMELESSHELPER_REPRODUCIBLE_OUTPUT "Don't update the build commit and date dynamically." ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui)
@@ -94,10 +96,11 @@ setup_project(
 unset(__extra_flags)
 
 set(PROJECT_VERSION_COMMIT "UNKNOWN")
-get_commit_hash(RESULT PROJECT_VERSION_COMMIT)
-
 set(PROJECT_COMPILE_DATETIME "UNKNOWN")
-string(TIMESTAMP PROJECT_COMPILE_DATETIME UTC)
+if(NOT FRAMELESSHELPER_REPRODUCIBLE_OUTPUT)
+    get_commit_hash(RESULT PROJECT_VERSION_COMMIT)
+    string(TIMESTAMP PROJECT_COMPILE_DATETIME UTC)
+endif()
 
 if(MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(FRAMELESSHELPER_ENABLE_SPECTRE OFF)
@@ -119,6 +122,9 @@ if(MSVC)
         endif()
     endif()
     if(FRAMELESSHELPER_ENABLE_YYTHUNKS)
+        unset(YYTHUNKS_TARGET_OS)
+        unset(YYTHUNKS_TARGET_OS CACHE)
+        #unset(YYTHUNKS_TARGET_OS PARENT_SCOPE)
         set(YYTHUNKS_TARGET_OS "WinXP" CACHE STRING "" FORCE)
         include(cmake/YY-Thunks.cmake)
     endif()
@@ -227,5 +233,6 @@ if(NOT FRAMELESSHELPER_NO_SUMMARY)
     message("Build standalone demo projects: ${FRAMELESSHELPER_EXAMPLES_STANDALONE}")
     message("[macOS]: Build universal library/example: ${FRAMELESSHELPER_ENABLE_UNIVERSAL_BUILD}")
     message("Force enable LTO: ${FRAMELESSHELPER_FORCE_LTO}")
+    message("Make output reproducible: ${FRAMELESSHELPER_REPRODUCIBLE_OUTPUT}")
     message("-----------------------------------------------------------------")
 endif()

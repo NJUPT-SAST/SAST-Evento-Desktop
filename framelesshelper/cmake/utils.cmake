@@ -186,6 +186,16 @@ function(setup_project)
             set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${__ar_dir}" PARENT_SCOPE)
         endif()
     elseif(DEFINED CMAKE_CONFIGURATION_TYPES AND NOT "x${CMAKE_CONFIGURATION_TYPES}" STREQUAL "x")
+        set(__subdir "$<LOWER_CASE:$<CONFIG>>")
+        if(NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+            set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${__bin_dir}/${__subdir}" PARENT_SCOPE)
+        endif()
+        if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+            set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${__lib_dir}/${__subdir}" PARENT_SCOPE)
+        endif()
+        if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
+            set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${__ar_dir}/${__subdir}" PARENT_SCOPE)
+        endif()
         foreach(__type ${CMAKE_CONFIGURATION_TYPES})
             string(TOUPPER ${__type} __type_upper)
             string(TOLOWER ${__type} __type_lower)
@@ -226,8 +236,7 @@ function(setup_project)
         endif()
     else()
         if(NOT DEFINED CMAKE_INSTALL_RPATH)
-            # FIXME: how to detect the actual library installation path?
-            #set(CMAKE_INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}" PARENT_SCOPE)
+            set(CMAKE_INSTALL_RPATH "$ORIGIN/../${__lib_dir}" PARENT_SCOPE)
         endif()
     endif()
     if(PROJ_ARGS_QT_PROJECT)
@@ -468,6 +477,10 @@ function(setup_qt_stuff)
         message(AUTHOR_WARNING "setup_qt_stuff: Unrecognized arguments: ${QT_ARGS_UNPARSED_ARGUMENTS}")
     endif()
     foreach(__target ${QT_ARGS_TARGETS})
+        if(NOT TARGET ${__target})
+            message(AUTHOR_WARNING "${__target} is not a valid CMake target!")
+            continue()
+        endif()
         target_compile_definitions(${__target} PRIVATE
             QT_NO_CAST_TO_ASCII
             QT_NO_CAST_FROM_ASCII
@@ -478,6 +491,8 @@ function(setup_qt_stuff)
             QT_NO_JAVA_STYLE_ITERATORS
             QT_NO_AS_CONST
             QT_NO_QEXCHANGE
+            QT_NO_USING_NAMESPACE
+            QT_NO_CONTEXTLESS_CONNECT
             QT_EXPLICIT_QFILE_CONSTRUCTION_FROM_PATH
             #QT_TYPESAFE_FLAGS # QtQuick private headers prevent us from enabling this flag.
             QT_USE_QSTRINGBUILDER
@@ -519,6 +534,10 @@ function(setup_compile_params)
         message(AUTHOR_WARNING "setup_compile_params: Unrecognized arguments: ${COM_ARGS_UNPARSED_ARGUMENTS}")
     endif()
     foreach(__target ${COM_ARGS_TARGETS})
+        if(NOT TARGET ${__target})
+            message(AUTHOR_WARNING "${__target} is not a valid CMake target!")
+            continue()
+        endif()
         set(__target_type "UNKNOWN")
         get_target_property(__target_type ${__target} TYPE)
         if((__target_type STREQUAL "STATIC_LIBRARY") AND (NOT COM_ARGS_FORCE_LTO))
@@ -558,14 +577,14 @@ function(setup_compile_params)
             )
             if(NOT (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
                 target_compile_options(${__target} PRIVATE
-                    /bigobj /utf-8 $<$<NOT:$<CONFIG:Debug>>:/fp:fast /GT /Gw /Gy /Zc:inline>
+                    /bigobj /utf-8 $<$<CONFIG:Release>:/fp:fast /GT /Gw /Gy /Zc:inline>
                 )
                 target_link_options(${__target} PRIVATE
-                    $<$<NOT:$<CONFIG:Debug>>:/OPT:REF /OPT:ICF /OPT:LBR>
+                    $<$<CONFIG:Release>:/OPT:REF /OPT:ICF /OPT:LBR>
                     /DYNAMICBASE /FIXED:NO /NXCOMPAT /LARGEADDRESSAWARE /WX
                 )
                 if(__target_type STREQUAL "EXECUTABLE")
-                    target_compile_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/GA>)
+                    target_compile_options(${__target} PRIVATE $<$<CONFIG:Release>:/GA>)
                     target_link_options(${__target} PRIVATE /TSAWARE)
                 endif()
                 #if(CMAKE_SIZEOF_VOID_P EQUAL 4)
@@ -590,7 +609,7 @@ function(setup_compile_params)
                     target_compile_options(${__target} PRIVATE $<$<CONFIG:Debug,RelWithDebInfo>:/ZH:SHA_256>)
                 endif()
                 if(MSVC_VERSION GREATER_EQUAL 1925) # Visual Studio 2019 version 16.5
-                    target_compile_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/QIntel-jcc-erratum>)
+                    target_compile_options(${__target} PRIVATE $<$<CONFIG:Release>:/QIntel-jcc-erratum>)
                 endif()
                 if(MSVC_VERSION GREATER_EQUAL 1929) # Visual Studio 2019 version 16.10
                     target_compile_options(${__target} PRIVATE /await:strict)
@@ -601,12 +620,12 @@ function(setup_compile_params)
                     target_compile_options(${__target} PRIVATE /options:strict)
                 endif()
                 if(COM_ARGS_CFGUARD)
-                    target_compile_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/guard:cf>)
-                    target_link_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/GUARD:CF>)
+                    target_compile_options(${__target} PRIVATE $<$<CONFIG:Release>:/guard:cf>)
+                    target_link_options(${__target} PRIVATE $<$<CONFIG:Release>:/GUARD:CF>)
                 endif()
                 if(COM_ARGS_INTELCET)
                     if(MSVC_VERSION GREATER_EQUAL 1920) # Visual Studio 2019 version 16.0
-                        target_link_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/CETCOMPAT>)
+                        target_link_options(${__target} PRIVATE $<$<CONFIG:Release>:/CETCOMPAT>)
                     endif()
                 endif()
                 if(COM_ARGS_SPECTRE)
@@ -618,8 +637,8 @@ function(setup_compile_params)
                 endif()
                 if(COM_ARGS_EHCONTGUARD)
                     if((MSVC_VERSION GREATER_EQUAL 1927) AND (CMAKE_SIZEOF_VOID_P EQUAL 8)) # Visual Studio 2019 version 16.7
-                        target_compile_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/guard:ehcont>)
-                        target_link_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/guard:ehcont>)
+                        target_compile_options(${__target} PRIVATE $<$<CONFIG:Release>:/guard:ehcont>)
+                        target_link_options(${__target} PRIVATE $<$<CONFIG:Release>:/guard:ehcont>)
                     endif()
                 endif()
                 if(COM_ARGS_PERMISSIVE)
@@ -675,49 +694,48 @@ function(setup_compile_params)
         else()
             target_compile_options(${__target} PRIVATE
                 -fthreadsafe-statics
-                $<$<NOT:$<CONFIG:Debug>>:-ffp-contract=fast -fomit-frame-pointer -ffunction-sections -fdata-sections -funroll-all-loops>
+                $<$<CONFIG:Release>:-ffp-contract=fast -fomit-frame-pointer -ffunction-sections -fdata-sections -funroll-all-loops>
             )
             if(APPLE)
                 target_link_options(${__target} PRIVATE
                     -Wl,-fatal_warnings -Wl,-undefined,error
-                    $<$<NOT:$<CONFIG:Debug>>:-Wl,-dead_strip -Wl,-no_data_in_code_info -Wl,-no_function_starts>
+                    $<$<CONFIG:Release>:-Wl,-dead_strip -Wl,-no_data_in_code_info -Wl,-no_function_starts>
                 )
             else()
                 target_link_options(${__target} PRIVATE
                     -Wl,--fatal-warnings -Wl,--build-id=sha1 -Wl,--no-undefined -Wl,--as-needed -Wl,-z,defs
-                    $<$<NOT:$<CONFIG:Debug>>:-Wl,--gc-sections -Wl,-O3 -Wl,--no-keep-memory -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack>
-                    $<$<CONFIG:Release>:-Wl,--strip-all>
+                    $<$<CONFIG:Release>:-Wl,--strip-all -Wl,--gc-sections -Wl,-O3 -Wl,--no-keep-memory -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack>
                 )
             endif()
             if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
                 target_compile_options(${__target} PRIVATE
                     -pipe # Use pipes for communicating between sub-processes. Faster. Have no effect for Clang.
-                    $<$<NOT:$<CONFIG:Debug>>:-Wa,-mbranches-within-32B-boundaries>
+                    $<$<CONFIG:Release>:-Wa,-mbranches-within-32B-boundaries>
                 )
             endif()
             if(COM_ARGS_INTELCET)
                 target_compile_options(${__target} PRIVATE
-                    $<$<NOT:$<CONFIG:Debug>>:-mshstk>
+                    $<$<CONFIG:Release>:-mshstk>
                 )
             endif()
             if(COM_ARGS_CFGUARD)
                 if(MINGW)
                     target_compile_options(${__target} PRIVATE
-                        $<$<NOT:$<CONFIG:Debug>>:-mguard=cf>
+                        $<$<CONFIG:Release>:-mguard=cf>
                     )
                     target_link_options(${__target} PRIVATE
-                        $<$<NOT:$<CONFIG:Debug>>:-mguard=cf>
+                        $<$<CONFIG:Release>:-mguard=cf>
                     )
                 elseif(APPLE OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
                     target_compile_options(${__target} PRIVATE
-                        $<$<NOT:$<CONFIG:Debug>>:-fcf-protection=full>
+                        $<$<CONFIG:Release>:-fcf-protection=full>
                     )
                 endif()
             endif()
             if(COM_ARGS_SPECTRE)
                 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
                     #[[target_compile_options(${__target} PRIVATE
-                        $<$<NOT:$<CONFIG:Debug>>:
+                        $<$<CONFIG:Release>:
                             # These parameters are not compatible with -fcf-protection=full
                             -mindirect-branch=thunk
                             -mfunction-return=thunk
@@ -740,23 +758,23 @@ function(setup_compile_params)
             endif()
             if(__lto_enabled)
                 target_compile_options(${__target} PRIVATE
-                    $<$<NOT:$<CONFIG:Debug>>:-fsplit-lto-unit -fwhole-program-vtables>
+                    $<$<CONFIG:Release>:-fsplit-lto-unit -fwhole-program-vtables>
                 )
                 if(MSVC)
                     target_link_options(${__target} PRIVATE
-                        $<$<NOT:$<CONFIG:Debug>>:/OPT:lldltojobs=all /OPT:lldlto=3> # /lldltocachepolicy:cache_size=10%:cache_size_bytes=40g:cache_size_files=100000
+                        $<$<CONFIG:Release>:/OPT:lldltojobs=all /OPT:lldlto=3> # /lldltocachepolicy:cache_size=10%:cache_size_bytes=40g:cache_size_files=100000
                     )
                 else()
                     target_link_options(${__target} PRIVATE
-                        $<$<NOT:$<CONFIG:Debug>>:-fwhole-program-vtables -Wl,--thinlto-jobs=all -Wl,--lto-O3> # -Wl,--thinlto-cache-policy=cache_size=10%:cache_size_bytes=40g:cache_size_files=100000
+                        $<$<CONFIG:Release>:-fwhole-program-vtables -Wl,--thinlto-jobs=all -Wl,--lto-O3> # -Wl,--thinlto-cache-policy=cache_size=10%:cache_size_bytes=40g:cache_size_files=100000
                     )
                 endif()
             endif()
             #[[target_compile_options(${__target} PRIVATE
-                $<$<NOT:$<CONFIG:Debug>>:-fsanitize=shadow-call-stack -fno-stack-protector>
+                $<$<CONFIG:Release>:-fsanitize=shadow-call-stack -fno-stack-protector>
             )
             target_link_options(${__target} PRIVATE
-                $<$<NOT:$<CONFIG:Debug>>:-fsanitize=shadow-call-stack -fno-stack-protector>
+                $<$<CONFIG:Release>:-fsanitize=shadow-call-stack -fno-stack-protector>
             )]]
             target_compile_options(${__target} PRIVATE
                 -fcolor-diagnostics
@@ -783,51 +801,51 @@ function(setup_compile_params)
                     /Zc:dllexportInlines- # Do not export inline member functions. This is similar to "-fvisibility-inlines-hidden".
                     /Zc:char8_t /Zc:sizedDealloc /Zc:strictStrings /Zc:threadSafeInit /Zc:trigraphs /Zc:twoPhase
                     /clang:-mcx16 # Needed by _InterlockedCompareExchange128() from CPP/WinRT.
-                    $<$<NOT:$<CONFIG:Debug>>:/clang:-mbranches-within-32B-boundaries /clang:-ffp-contract=fast /Gw /Gy /Zc:inline>
+                    $<$<CONFIG:Release>:/clang:-mbranches-within-32B-boundaries /clang:-ffp-contract=fast /Gw /Gy /Zc:inline>
                 )
                 target_link_options(${__target} PRIVATE
                     --color-diagnostics
                     /DYNAMICBASE /FIXED:NO /NXCOMPAT /LARGEADDRESSAWARE
-                    $<$<NOT:$<CONFIG:Debug>>:/OPT:REF /OPT:ICF /OPT:LBR /OPT:lldtailmerge>
+                    $<$<CONFIG:Release>:/OPT:REF /OPT:ICF /OPT:LBR /OPT:lldtailmerge>
                 )
                 if(__target_type STREQUAL "EXECUTABLE")
-                    target_compile_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/GA>)
+                    target_compile_options(${__target} PRIVATE $<$<CONFIG:Release>:/GA>)
                     target_link_options(${__target} PRIVATE /TSAWARE)
                 endif()
                 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
                     target_link_options(${__target} PRIVATE /HIGHENTROPYVA)
                 endif()
                 if(COM_ARGS_CFGUARD)
-                    target_compile_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/guard:cf>)
-                    target_link_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/GUARD:CF>)
+                    target_compile_options(${__target} PRIVATE $<$<CONFIG:Release>:/guard:cf>)
+                    target_link_options(${__target} PRIVATE $<$<CONFIG:Release>:/GUARD:CF>)
                 endif()
                 if(COM_ARGS_INTELCET)
-                    target_link_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/CETCOMPAT>)
+                    target_link_options(${__target} PRIVATE $<$<CONFIG:Release>:/CETCOMPAT>)
                 endif()
                 if(COM_ARGS_EHCONTGUARD)
                     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-                        target_compile_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/guard:ehcont>)
-                        target_link_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/guard:ehcont>)
+                        target_compile_options(${__target} PRIVATE $<$<CONFIG:Release>:/guard:ehcont>)
+                        target_link_options(${__target} PRIVATE $<$<CONFIG:Release>:/guard:ehcont>)
                     endif()
                 endif()
             else()
-                target_link_options(${__target} PRIVATE -fuse-ld=lld -Wl,--color-diagnostics $<$<NOT:$<CONFIG:Debug>>:-Wl,--icf=all>)
+                target_link_options(${__target} PRIVATE -fuse-ld=lld -Wl,--color-diagnostics $<$<CONFIG:Release>:-Wl,--icf=all>)
                 if(APPLE)
                     # TODO: -fobjc-arc, -fobjc-arc-exceptions (http://clang.llvm.org/docs/AutomaticReferenceCounting.html)
                     target_compile_options(${__target} PRIVATE -fobjc-call-cxx-cdtors)
-                    target_link_options(${__target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:-Wl,--strict-auto-link>)
+                    target_link_options(${__target} PRIVATE $<$<CONFIG:Release>:-Wl,--strict-auto-link>)
                 else()
                     target_link_options(${__target} PRIVATE -Wl,-z,keep-text-section-prefix)
                 endif()
                 if(COM_ARGS_SPECTRE)
                     target_compile_options(${__target} PRIVATE
-                        $<$<NOT:$<CONFIG:Debug>>:-mretpoline -mspeculative-load-hardening>
+                        $<$<CONFIG:Release>:-mretpoline -mspeculative-load-hardening>
                     )
                 endif()
                 if(COM_ARGS_CFGUARD)
                     if(NOT APPLE)
                         target_compile_options(${__target} PRIVATE
-                            $<$<NOT:$<CONFIG:Debug>>:-fsanitize=cfi -fsanitize-cfi-cross-dso>
+                            $<$<CONFIG:Release>:-fsanitize=cfi -fsanitize-cfi-cross-dso>
                         )
                     endif()
                 endif()
@@ -847,6 +865,10 @@ function(setup_gui_app)
         message(AUTHOR_WARNING "setup_gui_app: Unrecognized arguments: ${GUI_ARGS_UNPARSED_ARGUMENTS}")
     endif()
     foreach(__target ${GUI_ARGS_TARGETS})
+        if(NOT TARGET ${__target})
+            message(AUTHOR_WARNING "${__target} is not a valid CMake target!")
+            continue()
+        endif()
         set_target_properties(${__target} PROPERTIES
             WIN32_EXECUTABLE TRUE
             MACOSX_BUNDLE TRUE
@@ -884,31 +906,40 @@ function(prepare_package_export)
     endif()
     include(CMakePackageConfigHelpers)
     include(GNUInstallDirs)
+    set(__dir_suffix "")
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(__dir_suffix "64")
+    endif()
+    set(__lib_dir "${CMAKE_INSTALL_LIBDIR}${__dir_suffix}")
+    set(__config_name "${PKG_ARGS_PACKAGE_NAME}Config")
+    set(__config_file "${__config_name}.cmake")
+    set(__version_name "${__config_name}Version")
+    set(__versoin_file "${__version_name}.cmake")
     write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/${PKG_ARGS_PACKAGE_NAME}ConfigVersion.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/${__versoin_file}"
         VERSION ${PKG_ARGS_PACKAGE_VERSION}
         COMPATIBILITY AnyNewerVersion
     )
-    configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/${PKG_ARGS_PACKAGE_NAME}Config.cmake.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/${PKG_ARGS_PACKAGE_NAME}Config.cmake"
-        INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PKG_ARGS_PACKAGE_NAME}"
+    configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/${__config_file}.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/${__config_file}"
+        INSTALL_DESTINATION "${__lib_dir}/cmake/${PKG_ARGS_PACKAGE_NAME}"
         NO_CHECK_REQUIRED_COMPONENTS_MACRO
     )
     if(NOT PKG_ARGS_NO_INSTALL)
         install(FILES
-            "${CMAKE_CURRENT_BINARY_DIR}/${PKG_ARGS_PACKAGE_NAME}Config.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/${PKG_ARGS_PACKAGE_NAME}ConfigVersion.cmake"
-            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PKG_ARGS_PACKAGE_NAME}"
+            "${CMAKE_CURRENT_BINARY_DIR}/${__config_file}"
+            "${CMAKE_CURRENT_BINARY_DIR}/${__versoin_file}"
+            DESTINATION "${__lib_dir}/cmake/${PKG_ARGS_PACKAGE_NAME}"
         )
     endif()
 endfunction()
 
 function(setup_package_export)
     cmake_parse_arguments(PKG_ARGS ""
-        "TARGET;BIN_PATH;LIB_PATH;INCLUDE_PATH;NAMESPACE;PACKAGE_NAME"
-        "PUBLIC_HEADERS;PRIVATE_HEADERS;ALIAS_HEADERS" ${ARGN})
-    if(NOT PKG_ARGS_TARGET)
-        message(AUTHOR_WARNING "setup_package_export: You need to specify a target for this function!")
+        "NAMESPACE;PACKAGE_NAME;COMPONENT"
+        "TARGETS;PUBLIC_HEADERS;PRIVATE_HEADERS;ALIAS_HEADERS" ${ARGN})
+    if(NOT PKG_ARGS_TARGETS)
+        message(AUTHOR_WARNING "setup_package_export: You need to specify at least one target for this function!")
         return()
     endif()
     if(NOT PKG_ARGS_NAMESPACE)
@@ -922,48 +953,96 @@ function(setup_package_export)
     if(PKG_ARGS_UNPARSED_ARGUMENTS)
         message(AUTHOR_WARNING "setup_package_export: Unrecognized arguments: ${PKG_ARGS_UNPARSED_ARGUMENTS}")
     endif()
+    set(__dir_suffix "")
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(__dir_suffix "64")
+    endif()
     include(GNUInstallDirs)
-    set(__bin_dir "${CMAKE_INSTALL_BINDIR}")
-    if(PKG_ARGS_BIN_PATH)
-        set(__bin_dir "${__bin_dir}/${PKG_ARGS_BIN_PATH}")
+    set(__bin_dir "${CMAKE_INSTALL_BINDIR}${__dir_suffix}")
+    set(__lib_dir "${CMAKE_INSTALL_LIBDIR}${__dir_suffix}")
+    set(__ar_dir "${CMAKE_INSTALL_LIBDIR}${__dir_suffix}")
+    set(__cmake_dir "${__lib_dir}/cmake")
+    if((NOT DEFINED CMAKE_BUILD_TYPE OR "x${CMAKE_BUILD_TYPE}" STREQUAL "x") AND NOT "x${CMAKE_CONFIGURATION_TYPES}" STREQUAL "x")
+        set(__subdir "/$<LOWER_CASE:$<CONFIG>>")
+        string(APPEND __bin_dir "${__subdir}")
+        string(APPEND __lib_dir "${__subdir}")
+        string(APPEND __ar_dir "${__subdir}")
     endif()
-    set(__lib_dir "${CMAKE_INSTALL_LIBDIR}")
-    if(PKG_ARGS_LIB_PATH)
-        set(__lib_dir "${__lib_dir}/${PKG_ARGS_LIB_PATH}")
+    set(__inc_dir "${CMAKE_INSTALL_INCLUDEDIR}/${PKG_ARGS_PACKAGE_NAME}")
+    set(__inc_dir_list "${CMAKE_INSTALL_INCLUDEDIR}" "${__inc_dir}")
+    if(PKG_ARGS_COMPONENT)
+        set(__inc_dir "${__inc_dir}/${PKG_ARGS_COMPONENT}")
+        list(APPEND __inc_dir_list "${__inc_dir}")
     endif()
-    set(__inc_dir "${CMAKE_INSTALL_INCLUDEDIR}")
-    if(PKG_ARGS_INCLUDE_PATH)
-        set(__inc_dir "${__inc_dir}/${PKG_ARGS_INCLUDE_PATH}")
-    endif()
-    install(TARGETS ${PKG_ARGS_TARGET}
-        EXPORT ${PKG_ARGS_TARGET}Targets
-        RUNTIME  DESTINATION "${__bin_dir}"
-        LIBRARY  DESTINATION "${__lib_dir}"
-        ARCHIVE  DESTINATION "${__lib_dir}"
-        INCLUDES DESTINATION "${__inc_dir}"
+    set(__inc_priv_dir "${__inc_dir}/private")
+    list(APPEND __inc_dir_list "${__inc_priv_dir}")
+    # If "PKG_ARGS_COMPONENT" is not defined, it's OK, it will be treated as an empty string.
+    set(__export_name "${PKG_ARGS_PACKAGE_NAME}${PKG_ARGS_COMPONENT}Targets")
+    set(__export_file "${__export_name}.cmake")
+    install(
+        TARGETS ${PKG_ARGS_TARGETS}
+        EXPORT ${__export_name}
+        PUBLIC_HEADER DESTINATION "${__inc_dir}"
+        PRIVATE_HEADER DESTINATION "${__inc_priv_dir}"
+        INCLUDES DESTINATION ${__inc_dir_list}
+        BUNDLE DESTINATION .
+        RUNTIME DESTINATION "${__bin_dir}"
+        LIBRARY DESTINATION "${__lib_dir}"
+        ARCHIVE DESTINATION "${__ar_dir}"
     )
-    export(EXPORT ${PKG_ARGS_TARGET}Targets
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PKG_ARGS_TARGET}Targets.cmake"
+    export(EXPORT ${__export_name}
+        FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/${__export_file}"
         NAMESPACE ${PKG_ARGS_NAMESPACE}::
     )
     if(PKG_ARGS_PUBLIC_HEADERS)
         install(FILES ${PKG_ARGS_PUBLIC_HEADERS} DESTINATION "${__inc_dir}")
     endif()
     if(PKG_ARGS_PRIVATE_HEADERS)
-        install(FILES ${PKG_ARGS_PRIVATE_HEADERS} DESTINATION "${__inc_dir}/private")
+        install(FILES ${PKG_ARGS_PRIVATE_HEADERS} DESTINATION "${__inc_priv_dir}")
     endif()
     if(PKG_ARGS_ALIAS_HEADERS)
         install(FILES ${PKG_ARGS_ALIAS_HEADERS} DESTINATION "${__inc_dir}")
     endif()
-    install(EXPORT ${PKG_ARGS_TARGET}Targets
-        FILE ${PKG_ARGS_TARGET}Targets.cmake
+    install(EXPORT ${__export_name}
+        FILE ${__export_file}
         NAMESPACE ${PKG_ARGS_NAMESPACE}::
-        DESTINATION "${__lib_dir}/cmake/${PKG_ARGS_PACKAGE_NAME}"
+        DESTINATION "${__cmake_dir}/${PKG_ARGS_PACKAGE_NAME}"
+    )
+endfunction()
+
+function(install2)
+    cmake_parse_arguments(arg "" "" "TARGETS" ${ARGN})
+    if(NOT arg_TARGETS)
+        message(AUTHOR_WARNING "install2: you have to specify at least one target!")
+        return()
+    endif()
+    if(arg_UNPARSED_ARGUMENTS)
+        message(AUTHOR_WARNING "install2: Unrecognized arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+    set(__dir_suffix "")
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(__dir_suffix "64")
+    endif()
+    include(GNUInstallDirs)
+    set(__bin_dir "${CMAKE_INSTALL_BINDIR}${__dir_suffix}")
+    set(__lib_dir "${CMAKE_INSTALL_LIBDIR}${__dir_suffix}")
+    set(__ar_dir "${CMAKE_INSTALL_LIBDIR}${__dir_suffix}")
+    if((NOT DEFINED CMAKE_BUILD_TYPE OR "x${CMAKE_BUILD_TYPE}" STREQUAL "x") AND NOT "x${CMAKE_CONFIGURATION_TYPES}" STREQUAL "x")
+        set(__subdir "/$<LOWER_CASE:$<CONFIG>>")
+        string(APPEND __bin_dir "${__subdir}")
+        string(APPEND __lib_dir "${__subdir}")
+        string(APPEND __ar_dir "${__subdir}")
+    endif()
+    install(TARGETS ${arg_TARGETS}
+        BUNDLE  DESTINATION .
+        RUNTIME DESTINATION "${__bin_dir}"
+        LIBRARY DESTINATION "${__lib_dir}"
+        ARCHIVE DESTINATION "${__ar_dir}"
     )
 endfunction()
 
 function(deploy_qt_runtime)
-    cmake_parse_arguments(DEPLOY_ARGS "NO_INSTALL" "TARGET;QML_SOURCE_DIR;QML_IMPORT_DIR" "" ${ARGN})
+    cmake_parse_arguments(DEPLOY_ARGS "NO_INSTALL" "TARGET;QML_SOURCE_DIR;QML_IMPORT_DIR;TRANSLATION_DEPLOY_DIR;QML_DEPLOY_DIR;PLUGIN_DEPLOY_DIR" "" ${ARGN})
     if(NOT DEPLOY_ARGS_TARGET)
         message(AUTHOR_WARNING "deploy_qt_runtime: You need to specify a target for this function!")
         return()
@@ -992,29 +1071,40 @@ function(deploy_qt_runtime)
         return()
     endif()
     set(__is_quick_app FALSE)
+    set(__full_deploy_command "")
     if(WIN32)
-        set(__old_deploy_params)
+        set(__old_deploy_params "")
         if(QT_VERSION_MAJOR LESS 6)
             set(__old_deploy_params
-                --no-webkit2
-                #--no-angle
+                --no-webkit2 # Only needed by some very old Qt5 versions, we don't want it.
+                #--no-angle # We'll most likely need ANGLE when we use OpenGL, so we'd better ship it.
             )
         endif()
-        set(__quick_deploy_params)
+        if(QT_VERSION VERSION_LESS "6.5")
+            set(__old_deploy_params
+                ${__old_deploy_params}
+                --no-virtualkeyboard # windeployqt always copy virtual keyboard libraries if they can be found. But almost all Qt applications don't need them, we also don't want them either.
+            )
+        endif()
+        set(__quick_deploy_params "")
         if(DEPLOY_ARGS_QML_SOURCE_DIR)
             set(__is_quick_app TRUE)
             set(__quick_deploy_params
                 --qmldir "${DEPLOY_ARGS_QML_SOURCE_DIR}"
             )
-            if(QT_VERSION VERSION_GREATER_EQUAL "6.6") # FIXME
+            set(__qml_dir "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/../qml")
+            if(DEPLOY_ARGS_QML_DEPLOY_DIR)
+                set(__qml_dir "${DEPLOY_ARGS_QML_DEPLOY_DIR}")
+            endif()
+            if(QT_VERSION VERSION_GREATER_EQUAL "6.5")
                 set(__quick_deploy_params
                     ${__quick_deploy_params}
-                    --qml-deploy-dir "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/../qml"
+                    --qml-deploy-dir "${__qml_dir}"
                 )
             else()
                 set(__quick_deploy_params
                     ${__quick_deploy_params}
-                    --dir "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/../qml"
+                    --dir "${__qml_dir}"
                 )
             endif()
         endif()
@@ -1025,32 +1115,46 @@ function(deploy_qt_runtime)
                 --qmlimport "${DEPLOY_ARGS_QML_IMPORT_DIR}"
             )
         endif()
-        set(__extra_deploy_params)
-        if(QT_VERSION VERSION_GREATER_EQUAL "6.6") # FIXME
+        set(__extra_deploy_params "")
+        if(QT_VERSION VERSION_GREATER_EQUAL "6.5")
+            set(__translations_dir "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/../translations")
+            if(DEPLOY_ARGS_TRANSLATION_DEPLOY_DIR)
+                set(__translations_dir "${DEPLOY_ARGS_TRANSLATION_DEPLOY_DIR}")
+            endif()
             set(__extra_deploy_params
-                --translationdir "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/../translations"
+                --translationdir "${__translations_dir}"
             )
         endif()
-        add_custom_command(TARGET ${DEPLOY_ARGS_TARGET} POST_BUILD COMMAND
-            "${__deploy_tool}"
-            $<$<CONFIG:Debug>:--debug>
-            $<$<CONFIG:MinSizeRel,Release,RelWithDebInfo>:--release>
-            --libdir "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>"
-            --plugindir "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/../plugins"
-            #--no-translations
-            #--no-system-d3d-compiler
-            --no-virtualkeyboard
-            --no-compiler-runtime
-            #--no-opengl-sw
-            --force
-            #--verbose 0
+        set(__plugins_dir "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/../plugins")
+        if(DEPLOY_ARGS_PLUGIN_DEPLOY_DIR)
+            set(__plugins_dir "${DEPLOY_ARGS_PLUGIN_DEPLOY_DIR}")
+        endif()
+        set(__extra_deploy_params
+            ${__extra_deploy_params}
+            --plugindir "${__plugins_dir}" # windeployqt by default will copy all plugins to the application root folder which is very bad.
+        )
+        set(__full_deploy_params
+            $<$<CONFIG:Debug>:--debug> # Sometimes windeployqt can't determine the build type, we tell it explicitly.
+            $<$<NOT:$<CONFIG:Debug>>:--release> # Same as above.
+            --libdir "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>" # Explicitly set the library deploy path (where to copy Qt6XXX.dll) because if may be affected by other parameters we use.
+            #--no-translations # It's better to ship Qt translations altogether, otherwise the strings from Qt will stay English.
+            #--no-system-d3d-compiler # QtGui will need d3dcompiler_XX.dll. If we don't ship them, you'll have to make sure the target machine has these libraries.
+            #--no-compiler-runtime # The target machine may not installed the same MSVC runtime as the develop machine, so it's better to ship it as well.
+            --compiler-runtime # Tell windeployqt we need the MSVC runtime explicitly, otherwise it may not copy it.
+            --no-opengl-sw # Mesa3D library llvmpipe backend, mostly for PCs without GPU support. We don't need it.
+            --force # Always overwrite existing files, to make sure we always get the most updated files.
+            --verbose 2 # Output detailed running log, to help locate the deploy issues if any.
             ${__quick_deploy_params}
             ${__old_deploy_params}
             ${__extra_deploy_params}
+        )
+        set(__full_deploy_command
+            "${__deploy_tool}"
+            ${__full_deploy_params}
             "$<TARGET_FILE:${DEPLOY_ARGS_TARGET}>"
         )
     elseif(APPLE)
-        set(__quick_deploy_params)
+        set(__quick_deploy_params "")
         if(DEPLOY_ARGS_QML_SOURCE_DIR)
             set(__is_quick_app TRUE)
             set(__quick_deploy_params
@@ -1064,43 +1168,31 @@ function(deploy_qt_runtime)
                 -qmlimport="${DEPLOY_ARGS_QML_IMPORT_DIR}"
             )
         endif()
-        add_custom_command(TARGET ${DEPLOY_ARGS_TARGET} POST_BUILD COMMAND
-            "${__deploy_tool}"
-            "$<TARGET_BUNDLE_DIR:${DEPLOY_ARGS_TARGET}>"
-            #-verbose=0
+        set(__full_deploy_params
+            -verbose=2
             ${__quick_deploy_params}
         )
+        set(__full_deploy_command
+            "${__deploy_tool}"
+            "$<TARGET_BUNDLE_DIR:${DEPLOY_ARGS_TARGET}>"
+            ${__full_deploy_params}
+        )
     elseif(UNIX)
-        # TODO
+        # TODO: Linux
     endif()
-    #[[add_custom_command(TARGET ${DEPLOY_ARGS_TARGET} POST_BUILD COMMAND
-        "${CMAKE_COMMAND}"
-        -E copy
-        "${CMAKE_CURRENT_LIST_DIR}/qt.conf" # FIXME
-        "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>"
-    )]]
-    if(MSVC)
-        add_custom_command(TARGET ${DEPLOY_ARGS_TARGET} POST_BUILD COMMAND
-            "${CMAKE_COMMAND}"
-            -E rm -f
-            "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/$<TARGET_FILE_BASE_NAME:${DEPLOY_ARGS_TARGET}>.manifest"
-        )
-    endif()
-    add_custom_command(TARGET ${DEPLOY_ARGS_TARGET} POST_BUILD COMMAND
-        "${CMAKE_COMMAND}"
-        -E rm -rf
-        "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/translations"
-        "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/qml/translations"
-        "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>/../qml/translations"
+    set(__deploy_target ${DEPLOY_ARGS_TARGET}_deployqt)
+    add_custom_target(${__deploy_target}
+        COMMAND ${__full_deploy_command}
+        WORKING_DIRECTORY "$<TARGET_FILE_DIR:${DEPLOY_ARGS_TARGET}>"
+        COMMENT "Deploying Qt dependencies for target ${DEPLOY_ARGS_TARGET} ..."
+        #VERBATIM # This parameter actually makes our command line unusable ...
     )
+    # Normally CMake will do this for us automatically, but in case it doesn't ...
+    add_dependencies(${__deploy_target} ${DEPLOY_ARGS_TARGET})
     if(NOT DEPLOY_ARGS_NO_INSTALL)
-        include(GNUInstallDirs)
-        install(TARGETS ${DEPLOY_ARGS_TARGET}
-            BUNDLE  DESTINATION .
-            RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-        )
+        install2(TARGETS ${DEPLOY_ARGS_TARGET})
         if(QT_VERSION VERSION_GREATER_EQUAL "6.3")
-            set(__deploy_script)
+            set(__deploy_script "")
             if(${__is_quick_app})
                 qt_generate_deploy_qml_app_script(
                     TARGET ${DEPLOY_ARGS_TARGET}
@@ -1434,6 +1526,9 @@ endfunction()
 
 function(query_qt_paths)
     cmake_parse_arguments(QT_ARGS "" "SDK_DIR;BIN_DIR;DOC_DIR;INCLUDE_DIR;LIB_DIR;PLUGINS_DIR;QML_DIR;TRANSLATIONS_DIR" "" ${ARGN})
+    if(QT_ARGS_UNPARSED_ARGUMENTS)
+        message(AUTHOR_WARNING "query_qt_paths: Unrecognized arguments: ${QT_ARGS_UNPARSED_ARGUMENTS}")
+    endif()
     find_package(QT NAMES Qt6 Qt5 QUIET COMPONENTS Core)
     find_package(Qt${QT_VERSION_MAJOR} QUIET COMPONENTS Core)
     if(NOT (Qt6_FOUND OR Qt5_FOUND))
@@ -1473,6 +1568,9 @@ endfunction()
 
 function(query_qt_library_info)
     cmake_parse_arguments(QT_ARGS "" "STATIC;SHARED;VERSION" "" ${ARGN})
+    if(QT_ARGS_UNPARSED_ARGUMENTS)
+        message(AUTHOR_WARNING "query_qt_library_info: Unrecognized arguments: ${QT_ARGS_UNPARSED_ARGUMENTS}")
+    endif()
     find_package(QT NAMES Qt6 Qt5 QUIET COMPONENTS Core)
     find_package(Qt${QT_VERSION_MAJOR} QUIET COMPONENTS Core)
     if(NOT (Qt6_FOUND OR Qt5_FOUND))
@@ -1506,6 +1604,9 @@ function(dump_target_info)
     if(NOT arg_TARGETS)
         message(AUTHOR_WARNING "dump_target_info: you have to specify at least one target!")
         return()
+    endif()
+    if(arg_UNPARSED_ARGUMENTS)
+        message(AUTHOR_WARNING "dump_target_info: Unrecognized arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
     foreach(__target ${arg_TARGETS})
         if(NOT TARGET ${__target})

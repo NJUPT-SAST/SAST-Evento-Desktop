@@ -11,26 +11,17 @@ FluPopup {
     property string neutralText: "Neutral"
     property string negativeText: "Negative"
     property string positiveText: "Positive"
+    property int delayTime: 100
     signal neutralClicked
     signal negativeClicked
     signal positiveClicked
-    enum ButtonFlag{
-        NegativeButton=1
-        ,NeutralButton=2
-        ,PositiveButton=4
-    }
-    property int buttonFlags: FluContentDialog.NegativeButton | FluContentDialog.PositiveButton
-    property var minWidth: {
-        if(Window.window==null)
-            return 400
-        return  Math.min(Window.window.width,400)
-    }
+    property int buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
     focus: true
+    implicitWidth: 400
+    implicitHeight: text_title.height + text_message.height + layout_actions.height
     Rectangle {
         id:layout_content
         anchors.fill: parent
-        implicitWidth:minWidth
-        implicitHeight: text_title.height + text_message.height + layout_actions.height
         color: 'transparent'
         radius:5
         FluText{
@@ -66,7 +57,7 @@ FluPopup {
             id:layout_actions
             height: 68
             radius: 5
-            color: FluTheme.dark ? Qt.rgba(32/255,32/255,32/255, blurBackground ? blurOpacity - 0.4 : 1) : Qt.rgba(243/255,243/255,243/255,blurBackground ? blurOpacity - 0.4 : 1)
+            color: FluTheme.dark ? Qt.rgba(32/255,32/255,32/255,1) : Qt.rgba(243/255,243/255,243/255,1)
             anchors{
                 top:text_message.bottom
                 left: parent.left
@@ -84,35 +75,54 @@ FluPopup {
                     id:neutral_btn
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    visible: popup.buttonFlags&FluContentDialog.NeutralButton
+                    visible: popup.buttonFlags&FluContentDialogType.NeutralButton
                     text: neutralText
                     onClicked: {
                         popup.close()
-                        neutralClicked()
+                        timer_delay.targetFlags = FluContentDialogType.NeutralButton
+                        timer_delay.restart()
                     }
                 }
                 FluButton{
                     id:negative_btn
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    visible: popup.buttonFlags&FluContentDialog.NegativeButton
+                    visible: popup.buttonFlags&FluContentDialogType.NegativeButton
                     text: negativeText
                     onClicked: {
                         popup.close()
-                        negativeClicked()
+                        timer_delay.targetFlags = FluContentDialogType.NegativeButton
+                        timer_delay.restart()
                     }
                 }
                 FluFilledButton{
                     id:positive_btn
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    visible: popup.buttonFlags&FluContentDialog.PositiveButton
+                    visible: popup.buttonFlags&FluContentDialogType.PositiveButton
                     text: positiveText
                     onClicked: {
                         popup.close()
-                        positiveClicked()
+                        timer_delay.targetFlags = FluContentDialogType.PositiveButton
+                        timer_delay.restart()
                     }
                 }
+            }
+        }
+    }
+    Timer{
+        property int targetFlags
+        id:timer_delay
+        interval: popup.delayTime
+        onTriggered: {
+            if(targetFlags === FluContentDialogType.NegativeButton){
+                negativeClicked()
+            }
+            if(targetFlags === FluContentDialogType.NeutralButton){
+                neutralClicked()
+            }
+            if(targetFlags === FluContentDialogType.PositiveButton){
+                positiveClicked()
             }
         }
     }

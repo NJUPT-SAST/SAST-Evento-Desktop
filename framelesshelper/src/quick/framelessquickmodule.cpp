@@ -84,12 +84,14 @@ void FramelessHelper::Quick::registerTypes(QQmlEngine *engine)
     // @uri org.wangwenx190.FramelessHelper
     qmlRegisterUncreatableType<QuickGlobal>(QUICK_URI_FULL, "FramelessHelperConstants",
         FRAMELESSHELPER_STRING_LITERAL("The FramelessHelperConstants namespace is not creatable, you can only use it to access it's enums."));
+
     qmlRegisterSingletonType<FramelessQuickUtils>(QUICK_URI_EXPAND("FramelessUtils"),
         [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
             Q_UNUSED(engine);
             Q_UNUSED(scriptEngine);
             return new FramelessQuickUtils;
         });
+
     qmlRegisterAnonymousType<QuickChromePalette>(QUICK_URI_SHORT);
 
     qmlRegisterType<FramelessQuickHelper>(QUICK_URI_EXPAND("FramelessHelper"));

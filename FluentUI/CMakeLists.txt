@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(fluentuiplugin LANGUAGES CXX)
-
+if (FLUENTUI_BUILD_STATIC_LIB)
+    project(fluentui LANGUAGES CXX)
+else()
+    project(fluentuiplugin LANGUAGES CXX)
+endif()
 #配置通用编译
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
 endif()
 
-#设置QML插件输出目录->D:\Qt\6.4.3\msvc2019_64\qml\FluentUI
-set(QML_PLUGIN_DIRECTORY ${CMAKE_PREFIX_PATH}/qml/FluentUI)
-
 #设置版本号
-add_definitions(-DVERSION=1,3,7,3)
+add_definitions(-DVERSION=1,4,0,0)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Qml)
 
@@ -39,7 +39,7 @@ foreach(filepath ${QML_PATHS})
 endforeach(filepath)
 
 #遍历所有资源文件
-file(GLOB_RECURSE RES_PATHS *.png *.jpg *.svg *.ico *.ttf *.webp)
+file(GLOB_RECURSE RES_PATHS *.png *.jpg *.svg *.ico *.ttf *.webp qmldir)
 foreach(filepath ${RES_PATHS})
     string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
     list(APPEND resource_files ${filename})
@@ -51,17 +51,24 @@ foreach(filepath IN LISTS qml_files resource_files)
     set_source_files_properties(${filepath} PROPERTIES QT_RESOURCE_ALIAS ${filename})
 endforeach()
 
-#Qt6.5 设置policy
-if(QT_KNOWN_POLICY_QTP0001)
-    qt_policy(SET QTP0001 OLD)
+#添加qml模块
+if (FLUENTUI_BUILD_STATIC_LIB)
+    set(LIB_TYPE "STATIC")
+else()
+    set(LIB_TYPE "SHARED")
+endif()
+qt_add_library(${PROJECT_NAME} ${LIB_TYPE})
+
+if (FLUENTUI_BUILD_STATIC_LIB)
+    set(PLUGIN_TARGET_NAME "")
+else()
+    #如果是动态库，则使用插件目标作为其自己的支持目标来定义 QML 模块，在这种情况下，模块必须在运行时动态加载，并且不能由其他目标直接链接到
+    set(PLUGIN_TARGET_NAME ${PROJECT_NAME})
 endif()
 
-#添加qml模块
-qt_add_library(fluentuiplugin SHARED)
-qt_add_qml_module(fluentuiplugin
-    #没有下面这行代码就会生成fluentuiplugin.dll与fluentuipluginplugin.dll两个动态库
-    PLUGIN_TARGET fluentuiplugin
-    OUTPUT_DIRECTORY ${QML_PLUGIN_DIRECTORY}
+qt_add_qml_module(${PROJECT_NAME}
+    PLUGIN_TARGET ${PLUGIN_TARGET_NAME}
+    OUTPUT_DIRECTORY ${FLUENTUI_QML_PLUGIN_DIRECTORY}
     VERSION 1.0
     URI "FluentUI"
     #修改qmltypes文件名称。默认fluentuiplugin.qmltypes，使用默认名称有时候import FluentUI会爆红，所以修改成plugins.qmltypes
@@ -72,11 +79,11 @@ qt_add_qml_module(fluentuiplugin
 )
 
 #链接库
-target_link_libraries(fluentuiplugin PUBLIC
+target_link_libraries(${PROJECT_NAME} PUBLIC
     Qt::CorePrivate
     Qt::QuickPrivate
     Qt::QmlPrivate
 )
 
 #安装
-install(DIRECTORY ${QML_PLUGIN_DIRECTORY} DESTINATION ${CMAKE_INSTALL_PREFIX}/imports)
+install(DIRECTORY ${FLUENTUI_QML_PLUGIN_DIRECTORY} DESTINATION ${CMAKE_INSTALL_PREFIX}/imports)

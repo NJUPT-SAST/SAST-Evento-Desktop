@@ -32,7 +32,7 @@ FluTheme::FluTheme(QObject *parent)
     nativeText(false);
     enableAnimation(true);
     primaryColor(FluColors::getInstance()->Blue());
-    darkMode(Fluent_DarkMode::Fluent_DarkModeType::Light);
+    darkMode(FluThemeType::DarkMode::Light);
     _systemDark = systemDark();
     qApp->installEventFilter(this);
 }
@@ -67,11 +67,11 @@ bool FluTheme::systemDark()
 }
 
 bool FluTheme::dark(){
-    if(_darkMode == Fluent_DarkMode::Fluent_DarkModeType::Dark){
+    if(_darkMode == FluThemeType::DarkMode::Dark){
         return true;
-    }else if(_darkMode == Fluent_DarkMode::Fluent_DarkModeType::Light){
+    }else if(_darkMode == FluThemeType::DarkMode::Light){
         return false;
-    }else if(_darkMode == Fluent_DarkMode::Fluent_DarkModeType::System){
+    }else if(_darkMode == FluThemeType::DarkMode::System){
         return _systemDark;
     }else{
         return false;

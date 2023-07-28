@@ -21,16 +21,19 @@ FluStatusView {
         asynchronous: true
         onStatusChanged: {
             if(status === Loader.Error){
-                control.statusMode = FluStatusView.Error
+                control.statusMode = FluStatusViewType.Error
             }else if(status === Loader.Loading){
-                control.statusMode = FluStatusView.Loading
+                control.statusMode = FluStatusViewType.Loading
             }else{
-                control.statusMode = FluStatusView.Success
+                control.statusMode = FluStatusViewType.Success
             }
         }
     }
     function reload(){
         var timestamp = Date.now();
         loader.source = control.source+"?"+timestamp
+    }
+    function itemLodaer(){
+        return loader
     }
 }

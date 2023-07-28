@@ -11,6 +11,7 @@ Button{
     height: 36
     implicitWidth: width
     implicitHeight: height
+    property alias colorValue: container.colorValue
     background:
         Rectangle{
         id:layout_color
@@ -74,5 +75,8 @@ Button{
             popup.x = -(popup.width-control.width)/2
             popup.open()
         }
+    }
+    function setColor(color){
+        container.setColor(color)
     }
 }
