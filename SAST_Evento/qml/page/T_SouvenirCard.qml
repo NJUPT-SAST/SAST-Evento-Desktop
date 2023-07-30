@@ -5,7 +5,7 @@ import QtQuick.Controls
 import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
-FluScrollablePage{
+FluScrollablePage {
     title: lang.souvenirCard
     FluArea {
         Layout.fillWidth: true
@@ -13,15 +13,13 @@ FluScrollablePage{
         height: 380
         paddings: 10
 
-        FluStatusView{
+        FluStatusView {
             anchors.fill: parent
-            statusMode: FluStatusView.Empty
-            Rectangle{
+            statusMode: FluStatusViewType.Empty
+            Rectangle {
                 anchors.fill: parent
-                color:FluTheme.primaryColor.dark
+                color: FluTheme.primaryColor.dark
             }
         }
     }
-
 }
-
