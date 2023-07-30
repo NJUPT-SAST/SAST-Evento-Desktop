@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(SAST_Evento VERSION 0.1 LANGUAGES CXX)
+project(SAST_Evento_Desktop VERSION 0.1 LANGUAGES CXX)
 
 option(FLUENTUI_BUILD_EXAMPLES "Build FluentUI demo applications." ON)
 option(FLUENTUI_BUILD_FRAMELESSHEPLER "Build FramelessHelper." ON)

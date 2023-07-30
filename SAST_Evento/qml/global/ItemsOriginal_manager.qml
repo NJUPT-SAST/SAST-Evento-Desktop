@@ -69,6 +69,8 @@ FluObject {
             }
             navigationView.push("qrc:/SAST_Evento/qml/page/T_SouvenirCard.qml")
         }
+        recentlyAdded: true
+        recentlyUpdated: true
     }
 
     FluPaneItemExpander {
@@ -79,6 +81,8 @@ FluObject {
             onTap: {
                 navigationView.push("qrc:/SAST_Evento/qml/page/T_TextBox.qml")
             }
+            recentlyUpdated: true
+            recentlyAdded: true
         }
         FluPaneItem {
             title: lang.eventInfo

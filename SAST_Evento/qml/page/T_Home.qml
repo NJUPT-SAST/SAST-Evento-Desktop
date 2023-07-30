@@ -46,7 +46,7 @@ FluScrollablePage {
             }
         }
         FluText {
-            text: "Events Gallery"
+            text: "活动广场"
             font: FluTextStyle.TitleLarge
             anchors {
                 top: parent.top
@@ -261,7 +261,7 @@ FluScrollablePage {
     }
 
     FluText {
-        text: "Recently Events"
+        text: "正在进行的活动"
         font: FluTextStyle.Title
         Layout.topMargin: 20
         Layout.leftMargin: 20
@@ -285,7 +285,7 @@ FluScrollablePage {
     }
 
     FluText {
-        text: "Hot Events"
+        text: "最新活动"
         font: FluTextStyle.Title
         Layout.topMargin: 20
         Layout.leftMargin: 20
