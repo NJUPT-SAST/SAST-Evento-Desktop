@@ -51,6 +51,11 @@ foreach(filepath IN LISTS qml_files resource_files)
     set_source_files_properties(${filepath} PROPERTIES QT_RESOURCE_ALIAS ${filename})
 endforeach()
 
+#Qt6.5 设置policy
+if(QT_KNOWN_POLICY_QTP0001)
+    qt_policy(SET QTP0001 OLD)
+endif()
+
 #添加qml模块
 if (FLUENTUI_BUILD_STATIC_LIB)
     set(LIB_TYPE "STATIC")

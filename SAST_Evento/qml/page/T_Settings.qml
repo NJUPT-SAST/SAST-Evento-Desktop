@@ -38,13 +38,13 @@ FluScrollablePage {
             Repeater {
                 model: [{
                         "title": lang.followSystem,
-                        "mode": FluDarkMode.System
+                        "mode": FluThemeType.System
                     }, {
                         "title": lang.light,
-                        "mode": FluDarkMode.Light
+                        "mode": FluThemeType.Light
                     }, {
                         "title": lang.dark,
-                        "mode": FluDarkMode.Dark
+                        "mode": FluThemeType.Dark
                     }]
                 delegate: FluRadioButton {
                     checked: FluTheme.darkMode === modelData.mode
@@ -77,16 +77,16 @@ FluScrollablePage {
             Repeater {
                 model: [{
                         "title": lang.openSideBar,
-                        "mode": FluNavigationView.Open
+                        "mode": FluNavigationViewType.Open
                     }, {
                         "title": lang.compactSideBar,
-                        "mode": FluNavigationView.Compact
+                        "mode": FluNavigationViewType.Compact
                     }, {
                         "title": lang.minimalSideBar,
-                        "mode": FluNavigationView.Minimal
+                        "mode": FluNavigationViewType.Minimal
                     }, {
                         "title": lang.automatical,
-                        "mode": FluNavigationView.Auto
+                        "mode": FluNavigationViewType.Auto
                     }]
                 delegate: FluRadioButton {
                     checked: MainEvent.displayMode === modelData.mode

@@ -21,8 +21,7 @@ CustomWindow {
 
     Settings {
         id: settings
-        property bool rememberPsw
-        property string password
+        property int darkMode
     }
 
     onInitArgument: argument => {
@@ -47,7 +46,7 @@ CustomWindow {
             Layout.alignment: Qt.AlignHCenter
             Component.onCompleted: {
                 if (settings.value("darkMode",
-                                   FluDarkMode.System) === FluDarkMode.Dark) {
+                                   FluThemeType.System) === FluThemeType.Dark) {
                     source = "qrc:/SAST_Evento/res/image/evento_white.png"
                 }
             }
@@ -77,12 +76,6 @@ CustomWindow {
             Keys.onReturnPressed: {
                 btn.clicked()
             }
-
-            Component.onCompleted: {
-                if (checkBox.checked) {
-                    textbox_password.text = settings.value("password", "")
-                }
-            }
         }
 
         FluFilledButton {
@@ -100,11 +93,6 @@ CustomWindow {
                     showError("密码为空")
                     return
                 }
-                if (checkBox.checked) {
-                    settings.password = textbox_password.text
-                } else {
-                    settings.password = ""
-                }
 
                 onResult({
                              "ok": true,
@@ -112,26 +100,6 @@ CustomWindow {
                              "password": textbox_password.text
                          })
                 window.hide()
-            }
-        }
-
-        FluCheckBox {
-            id: checkBox
-            Layout.topMargin: 10
-            Layout.alignment: Qt.AlignCenter
-            text: "记住密码"
-
-            Component.onCompleted: {
-                if (settings.value("rememberPsw", false).charAt(0) === 't') {
-                    checked = true
-                } else {
-                    checked = false
-                }
-            }
-
-            clickListener: function () {
-                checked = !checked
-                settings.rememberPsw = checkBox.checked
             }
         }
     }

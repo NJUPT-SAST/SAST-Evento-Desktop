@@ -70,9 +70,9 @@ FluScrollablePage {
                 checked: FluTheme.dark
                 onClicked: {
                     if (FluTheme.dark) {
-                        FluTheme.darkMode = FluDarkMode.Light
+                        FluTheme.darkMode = FluThemeType.Light
                     } else {
-                        FluTheme.darkMode = FluDarkMode.Dark
+                        FluTheme.darkMode = FluThemeType.Dark
                     }
                 }
             }
@@ -86,14 +86,13 @@ FluScrollablePage {
                 //checked: FluTheme.nativeText
                 onClicked: {
                     FluTheme.nativeText = !FluTheme.nativeText
-                    settings.nativeTextSet = checked.toString()
+                    settings.nativeTextSet = checked
                     //console.log("nativeText ", FluTheme.nativeText)
                 }
 
                 Component.onCompleted: {
                     //console.log("nativeText ", FluTheme.nativeText)
-                    checked = settings.value("nativeTextSet",
-                                             "false").charAt(0) === 't'
+                    checked = settings.value("nativeTextSet", false)
                 }
             }
             FluText {
@@ -106,14 +105,13 @@ FluScrollablePage {
                 //checked: FluTheme.enableAnimation
                 onClicked: {
                     FluTheme.enableAnimation = !FluTheme.enableAnimation
-                    settings.enableAnimationSet = checked.toString()
+                    settings.enableAnimationSet = checked
                     //console.log("animation ", FluTheme.enableAnimation)
                 }
 
                 Component.onCompleted: {
                     //console.log("animation ", FluTheme.enableAnimation)
-                    checked = settings.value("enableAnimationSet",
-                                             "true").charAt(0) === 't'
+                    checked = settings.value("enableAnimationSet", true)
                 }
             }
         }

@@ -5,82 +5,81 @@ import QtQuick.Window
 import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
-FluScrollablePage{
+FluScrollablePage {
 
-    title:"StatusView"
+    title: "StatusView"
 
-    FluArea{
-        id:layout_actions
+    FluArea {
+        id: layout_actions
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 50
         paddings: 10
-        RowLayout{
+        RowLayout {
             spacing: 14
-            FluDropDownButton{
-                id:btn_status_mode
+            FluDropDownButton {
+                id: btn_status_mode
                 Layout.preferredWidth: 140
-                text:"Loading"
-                FluMenuItem{
-                    text:"Loading"
+                text: "Loading"
+                FluMenuItem {
+                    text: "Loading"
                     onClicked: {
                         btn_status_mode.text = text
-                        status_view.statusMode = FluStatusView.Loading
+                        status_view.statusMode = FluStatusViewType.Loading
                     }
                 }
-                FluMenuItem{
-                    text:"Empty"
+                FluMenuItem {
+                    text: "Empty"
                     onClicked: {
                         btn_status_mode.text = text
-                        status_view.statusMode = FluStatusView.Empty
+                        status_view.statusMode = FluStatusViewType.Empty
                     }
                 }
-                FluMenuItem{
-                    text:"Error"
+                FluMenuItem {
+                    text: "Error"
                     onClicked: {
                         btn_status_mode.text = text
-                        status_view.statusMode = FluStatusView.Error
+                        status_view.statusMode = FluStatusViewType.Error
                     }
                 }
-                FluMenuItem{
-                    text:"Success"
+                FluMenuItem {
+                    text: "Success"
                     onClicked: {
                         btn_status_mode.text = text
-                        status_view.statusMode = FluStatusView.Success
+                        status_view.statusMode = FluStatusViewType.Success
                     }
                 }
             }
         }
     }
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 10
         height: 380
         paddings: 10
-        FluStatusView{
-            id:status_view
+        FluStatusView {
+            id: status_view
             anchors.fill: parent
-            onErrorClicked:{
+            onErrorClicked: {
                 showError("点击重新加载")
             }
             Rectangle {
                 anchors.fill: parent
-                color:FluTheme.primaryColor.dark
+                color: FluTheme.primaryColor.dark
             }
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluStatusView{
-    anchors.fill: parent
-    statusMode: FluStatusView.Loading
-    Rectangle{
-        anchors.fill: parent
-        color:FluTheme.primaryColor.dark
-    }
+        code: 'FluStatusView{
+anchors.fill: parent
+statusMode: FluStatusViewType.Loading
+Rectangle{
+anchors.fill: parent
+color:FluTheme.primaryColor.dark
+}
 }'
     }
-
 }

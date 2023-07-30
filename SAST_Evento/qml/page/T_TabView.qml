@@ -5,22 +5,24 @@ import QtQuick.Window
 import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
-FluScrollablePage{
+FluScrollablePage {
 
-    property var colors : [FluColors.Yellow,FluColors.Orange,FluColors.Red,FluColors.Magenta,FluColors.Purple,FluColors.Blue,FluColors.Teal,FluColors.Green]
+    property var colors: [FluColors.Yellow, FluColors.Orange, FluColors.Red, FluColors.Magenta, FluColors.Purple, FluColors.Blue, FluColors.Teal, FluColors.Green]
 
-    title:"TabView"
+    title: "TabView"
 
-    Component{
-        id:com_page
-        Rectangle{
+    Component {
+        id: com_page
+        Rectangle {
             anchors.fill: parent
             color: argument
         }
     }
 
-    function newTab(){
-        tab_view.appendTab("qrc:/SAST_Evento/res/image/favicon.ico","Document "+tab_view.count(),com_page,colors[Math.floor(Math.random() * 8)].dark)
+    function newTab() {
+        tab_view.appendTab("qrc:/example/res/image/favicon.ico",
+                           "Document " + tab_view.count(), com_page,
+                           colors[Math.floor(Math.random() * 8)].dark)
     }
 
     Component.onCompleted: {
@@ -29,102 +31,101 @@ FluScrollablePage{
         newTab()
     }
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 50
         paddings: 10
-        RowLayout{
+        RowLayout {
             spacing: 14
-            FluDropDownButton{
-                id:btn_tab_width_behavior
+            FluDropDownButton {
+                id: btn_tab_width_behavior
                 Layout.preferredWidth: 140
-                text:"Equal"
-                FluMenuItem{
-                    text:"Equal"
+                text: "Equal"
+                FluMenuItem {
+                    text: "Equal"
                     onClicked: {
                         btn_tab_width_behavior.text = text
-                        tab_view.tabWidthBehavior = FluTabView.Equal
+                        tab_view.tabWidthBehavior = FluTabViewType.Equal
                     }
                 }
-                FluMenuItem{
-                    text:"SizeToContent"
+                FluMenuItem {
+                    text: "SizeToContent"
                     onClicked: {
                         btn_tab_width_behavior.text = text
-                        tab_view.tabWidthBehavior = FluTabView.SizeToContent
+                        tab_view.tabWidthBehavior = FluTabViewType.SizeToContent
                     }
                 }
-                FluMenuItem{
-                    text:"Compact"
+                FluMenuItem {
+                    text: "Compact"
                     onClicked: {
                         btn_tab_width_behavior.text = text
-                        tab_view.tabWidthBehavior = FluTabView.Compact
+                        tab_view.tabWidthBehavior = FluTabViewType.Compact
                     }
                 }
             }
-            FluDropDownButton{
-                id:btn_close_button_visibility
-                text:"Always"
+            FluDropDownButton {
+                id: btn_close_button_visibility
+                text: "Always"
                 Layout.preferredWidth: 120
-                FluMenuItem{
-                    text:"Nerver"
+                FluMenuItem {
+                    text: "Nerver"
                     onClicked: {
                         btn_close_button_visibility.text = text
-                        tab_view.closeButtonVisibility = FluTabView.Nerver
+                        tab_view.closeButtonVisibility = FluTabViewType.Nerver
                     }
                 }
-                FluMenuItem{
-                    text:"Always"
+                FluMenuItem {
+                    text: "Always"
                     onClicked: {
                         btn_close_button_visibility.text = text
-                        tab_view.closeButtonVisibility = FluTabView.Always
+                        tab_view.closeButtonVisibility = FluTabViewType.Always
                     }
                 }
-                FluMenuItem{
-                    text:"OnHover"
+                FluMenuItem {
+                    text: "OnHover"
                     onClicked: {
                         btn_close_button_visibility.text = text
-                        tab_view.closeButtonVisibility = FluTabView.OnHover
+                        tab_view.closeButtonVisibility = FluTabViewType.OnHover
                     }
                 }
             }
         }
     }
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 15
         height: 400
         paddings: 10
-        FluTabView{
-            id:tab_view
-            onNewPressed:{
+        FluTabView {
+            id: tab_view
+            onNewPressed: {
                 newTab()
             }
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluTabView{
-    anchors.fill: parent
-    Component.onCompleted: {
-        newTab()
-        newTab()
-        newTab()
-    }
-    Component{
-        id:com_page
-        Rectangle{
-            anchors.fill: parent
-            color: argument
-        }
-    }
-    function newTab(){
-        tab_view.appendTab("qrc:/SAST_Evento/res/image/favicon.ico","Document 1",com_page,argument)
-    }
+        code: 'FluTabView{
+anchors.fill: parent
+Component.onCompleted: {
+newTab()
+newTab()
+newTab()
+}
+Component{
+id:com_page
+Rectangle{
+anchors.fill: parent
+color: argument
+}
+}
+function newTab(){
+tab_view.appendTab("qrc:/example/res/image/favicon.ico","Document 1",com_page,argument)
+}
 }
 '
     }
-
 }

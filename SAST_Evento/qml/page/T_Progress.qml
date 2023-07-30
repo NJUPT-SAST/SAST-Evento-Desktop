@@ -5,35 +5,33 @@ import QtQuick.Controls
 import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
-FluScrollablePage{
+FluScrollablePage {
 
-    title:"Progress"
+    title: "Progress"
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
-        height: 110
+        height: 130
         paddings: 10
 
-        ColumnLayout{
+        ColumnLayout {
             spacing: 10
-            anchors{
+            anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
-            FluText{
+            FluText {
                 text: "indeterminate = true"
             }
-            FluProgressBar{
-            }
-            FluProgressRing{
-            }
+            FluProgressBar {}
+            FluProgressRing {}
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluProgressBar{
+        code: 'FluProgressBar{
 
 }
 FluProgressRing{
@@ -42,59 +40,60 @@ FluProgressRing{
 '
     }
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
-        height: 230
+        height: 286
         paddings: 10
 
-        ColumnLayout{
+        ColumnLayout {
             spacing: 10
-            anchors{
+            anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
-            FluText{
+            FluText {
                 text: "indeterminate = false"
             }
-            FluProgressBar{
+            FluProgressBar {
                 indeterminate: false
-                progress: slider.value/100
+                value: slider.value / 100
+                Layout.topMargin: 10
             }
-            FluProgressRing{
+            FluProgressBar {
                 indeterminate: false
-                progress: slider.value/100
-            }
-            FluProgressBar{
-                indeterminate: false
+                value: slider.value / 100
                 progressVisible: true
-                progress: slider.value/100
+                Layout.topMargin: 10
             }
-            FluProgressRing{
+            FluProgressRing {
                 indeterminate: false
-                progressVisible: true
-                progress: slider.value/100
+                value: slider.value / 100
+                Layout.topMargin: 10
             }
-            FluSlider{
-                id:slider
+            FluProgressRing {
+                progressVisible: true
+                indeterminate: false
+                value: slider.value / 100
+            }
+            FluSlider {
+                id: slider
                 Component.onCompleted: {
                     value = 50
                 }
             }
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluProgressBar{
-    indeterminate: false
+        code: 'FluProgressBar{
+indeterminate: false
 }
 FluProgressRing{
-    indeterminate: false
-    progressVisible: true
+indeterminate: false
+progressVisible: true
 }
 '
     }
-
-
 }

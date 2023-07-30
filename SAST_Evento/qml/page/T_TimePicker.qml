@@ -5,75 +5,72 @@ import QtQuick.Window
 import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
-FluScrollablePage{
+FluScrollablePage {
 
-    title:"TimePicker"
-
-    FluArea{
+    title: "TimePicker"
+    launchMode: FluPageType.SingleInstance
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 80
         paddings: 10
 
-        ColumnLayout{
+        ColumnLayout {
 
-            anchors{
+            anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
 
-            FluText{
-                text:"hourFormat=FluTimePicker.H"
+            FluText {
+                text: "hourFormat=FluTimePickerType.H"
             }
 
-            FluTimePicker{
+            FluTimePicker {
                 onCurrentChanged: {
                     showSuccess(current.toLocaleTimeString(Qt.locale("de_DE")))
                 }
             }
-
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluTimePicker{
+        code: 'FluTimePicker{
 
 }'
     }
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 80
         paddings: 10
 
-        ColumnLayout{
+        ColumnLayout {
 
-            anchors{
+            anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
 
-            FluText{
-                text:"hourFormat=FluTimePicker.HH"
+            FluText {
+                text: "hourFormat=FluTimePickerType.HH"
             }
 
-            FluTimePicker{
-                 hourFormat:FluTimePicker.HH
-                 onCurrentChanged: {
-                     showSuccess(current.toLocaleTimeString(Qt.locale("de_DE")))
-                 }
+            FluTimePicker {
+                hourFormat: FluTimePickerType.HH
+                onCurrentChanged: {
+                    showSuccess(current.toLocaleTimeString(Qt.locale("de_DE")))
+                }
             }
-
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluTimePicker{
-    hourFormat:FluTimePicker.HH
+        code: 'FluTimePicker{
+hourFormat:FluTimePickerType.HH
 }'
     }
-
 }

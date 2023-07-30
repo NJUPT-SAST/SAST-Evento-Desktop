@@ -7,7 +7,7 @@ import FluentUI
 
 FluScrollablePage {
 
-    launchMode: FluPage.SingleTask
+    launchMode: FluPageType.SingleTask
     animDisabled: true
 
     ListModel {
@@ -82,26 +82,20 @@ FluScrollablePage {
                 id: control
                 width: 220
                 height: 240
-                FluArea {
-                    radius: 8
+                FluItem {
+                    radius: [8, 8, 8, 8]
                     width: 200
                     height: 220
                     anchors.centerIn: parent
-                    color: 'transparent'
                     FluAcrylic {
-                        sourceItem: bg
                         anchors.fill: parent
-                        color: FluTheme.dark ? Window.active ? Qt.rgba(
-                                                                   38 / 255,
-                                                                   44 / 255,
-                                                                   54 / 255,
-                                                                   1) : Qt.rgba(39 / 255, 39 / 255, 39 / 255, 1) : Qt.rgba(
-                                                                   251 / 255,
-                                                                   251 / 255,
-                                                                   253 / 255, 1)
-                        rectX: list.x - list.contentX + 10 + (control.width) * index
-                        rectY: list.y + 10
-                        acrylicOpacity: 0.8
+                        tintColor: FluTheme.dark ? Qt.rgba(0, 0, 0,
+                                                           1) : Qt.rgba(1, 1,
+                                                                        1, 1)
+                        target: bg
+                        targetRect: Qt.rect(
+                                        list.x - list.contentX + 10 + (control.width) * index,
+                                        list.y + 10, width, height)
                     }
                     Rectangle {
                         anchors.fill: parent

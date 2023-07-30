@@ -5,221 +5,186 @@ import QtQuick.Window
 import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
-FluScrollablePage{
+FluScrollablePage {
 
-    launchMode: FluPage.SingleInstance
+    launchMode: FluPageType.SingleInstance
 
-    title:"TextBox"
-    FluArea{
+    title: "TextBox"
+    FluArea {
         Layout.fillWidth: true
         height: 68
         paddings: 10
         Layout.topMargin: 20
 
-        FluTextBox{
-            Layout.topMargin: 20
+        FluTextBox {
             placeholderText: "单行输入框"
-            Layout.preferredWidth: 300
-            disabled:text_box_switch.checked
-            anchors{
+            disabled: text_box_switch.checked
+            cleanEnabled: true
+            anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
         }
 
-        Row{
-            spacing: 5
-            anchors{
+        FluToggleSwitch {
+            id: text_box_switch
+            anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
             }
-            FluToggleSwitch{
-                id:text_box_switch
-                Layout.alignment: Qt.AlignRight
-                text:"Disabled"
-            }
+            text: "Disabled"
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluTextBox{
-    placeholderText:"单行输入框"
+        code: 'FluTextBox{
+placeholderText:"单行输入框"
 }'
     }
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         height: 68
         paddings: 10
         Layout.topMargin: 20
 
-        FluPasswordBox{
-            Layout.topMargin: 20
+        FluPasswordBox {
             placeholderText: "请输入密码"
-            Layout.preferredWidth: 300
-            disabled:password_box_switch.checked
-            anchors{
+            disabled: password_box_switch.checked
+            anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
         }
-
-        Row{
-            spacing: 5
-            anchors{
+        FluToggleSwitch {
+            id: password_box_switch
+            anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
             }
-            FluToggleSwitch{
-                id:password_box_switch
-                Layout.alignment: Qt.AlignRight
-                text:"Disabled"
-            }
+            text: "Disabled"
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluPasswordBox{
-    placeholderText:"请输入密码"
+        code: 'FluPasswordBox{
+placeholderText:"请输入密码"
 }'
     }
 
-
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
-        height: 36+multiine_textbox.height
+        height: 36 + multiine_textbox.height
         paddings: 10
         Layout.topMargin: 20
 
-        FluMultilineTextBox{
-            id:multiine_textbox
-            Layout.topMargin: 20
+        FluMultilineTextBox {
+            id: multiine_textbox
             placeholderText: "多行输入框"
-            Layout.preferredWidth: 300
-            disabled:text_box_multi_switch.checked
-            anchors{
+            disabled: text_box_multi_switch.checked
+            anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
         }
 
-        Row{
-            spacing: 5
-            anchors{
+        FluToggleSwitch {
+            id: text_box_multi_switch
+            anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
             }
-            FluToggleSwitch{
-                id:text_box_multi_switch
-                Layout.alignment: Qt.AlignRight
-                text:"Disabled"
-            }
+            text: "Disabled"
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluMultilineTextBox{
-    placeholderText:"多行输入框"
+        code: 'FluMultilineTextBox{
+placeholderText:"多行输入框"
 }'
     }
 
-
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         height: 68
         paddings: 10
         Layout.topMargin: 20
-
-        FluAutoSuggestBox{
-            Layout.topMargin: 20
+        FluAutoSuggestBox {
             placeholderText: "AutoSuggestBox"
-            Layout.preferredWidth: 300
-            items:generateRandomNames(100)
-            disabled:text_box_suggest_switch.checked
-            anchors{
+            items: generateRandomNames(100)
+            disabled: text_box_suggest_switch.checked
+            anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
         }
-
-        Row{
-            spacing: 5
-            anchors{
+        FluToggleSwitch {
+            id: text_box_suggest_switch
+            anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
             }
-            FluToggleSwitch{
-                id:text_box_suggest_switch
-                Layout.alignment: Qt.AlignRight
-                text:"Disabled"
-            }
+            text: "Disabled"
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluAutoSuggestBox{
-    placeholderText:"AutoSuggestBox"
+        code: 'FluAutoSuggestBox{
+placeholderText:"AutoSuggestBox"
 }'
     }
 
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         height: 68
         paddings: 10
         Layout.topMargin: 20
-
-        FluSpinBox{
-            Layout.topMargin: 20
+        FluSpinBox {
             disabled: spin_box_switch.checked
-            anchors{
+            anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
         }
-
-        Row{
-            spacing: 5
-            anchors{
+        FluToggleSwitch {
+            id: spin_box_switch
+            anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
             }
-            FluToggleSwitch{
-                id:spin_box_switch
-                Layout.alignment: Qt.AlignRight
-                text:"Disabled"
-            }
+            text: "Disabled"
         }
     }
-    CodeExpander{
+    CodeExpander {
         Layout.fillWidth: true
         Layout.topMargin: -1
-        code:'FluSpinBox{
+        code: 'FluSpinBox{
 
 }'
     }
 
     function generateRandomNames(numNames) {
-        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const names = [];
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        const names = []
         function generateRandomName() {
-            const nameLength = Math.floor(Math.random() * 5) + 4;
-            let name = '';
-            for (let i = 0; i < nameLength; i++) {
-                const letterIndex = Math.floor(Math.random() * 26);
-                name += alphabet.charAt(letterIndex);
+            const nameLength = Math.floor(Math.random() * 5) + 4
+            let name = ''
+            for (var i = 0; i < nameLength; i++) {
+                const letterIndex = Math.floor(Math.random() * 26)
+                name += alphabet.charAt(letterIndex)
             }
-            return name;
+            return name
         }
-        for (let i = 0; i < numNames; i++) {
-            const name = generateRandomName();
-            names.push({title:name});
+        for (var i = 0; i < numNames; i++) {
+            const name = generateRandomName()
+            names.push({
+                           "title": name
+                       })
         }
-        return names;
+        return names
     }
-
-
 }

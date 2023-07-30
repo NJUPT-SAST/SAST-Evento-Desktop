@@ -8,6 +8,14 @@ if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
 endif()
 
+#导入SAST_Evento的QML位置，不然import SAST_Evento有时候会爆红
+set(QML_IMPORT_PATH ${CMAKE_BINARY_DIR}/SAST_Evento CACHE STRING "Qt Creator extra QML import paths" FORCE)
+
+#判断FluentUI库类型
+if(FLUENTUI_BUILD_STATIC_LIB)
+    add_definitions(-DFLUENTUI_BUILD_STATIC_LIB)
+endif()
+
 #设置可执行文件输出目录
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/debug)
@@ -19,9 +27,9 @@ endif()
 file(TO_CMAKE_PATH "/" PATH_SEPARATOR)
 
 #设置版本号
-add_definitions(-DVERSION=0,1,7,9)
+add_definitions(-DVERSION=0,2,7,30)
 
-find_package(Qt6 REQUIRED Core COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick Svg Network)
 
 if(QT_VERSION VERSION_GREATER_EQUAL "6.3")
     qt_standard_project_setup()
@@ -93,6 +101,11 @@ qt_add_qml_module(SAST_Evento
     RESOURCES ${resource_files}
 )
 
+#导入component头文件,不然通过QML_NAMED_ELEMENT生成的c++类会找不到头文件报错
+target_include_directories(SAST_Evento PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/component
+)
+
 #设置属性
 set_target_properties(SAST_Evento PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.SAST_Evento.com
@@ -103,13 +116,26 @@ set_target_properties(SAST_Evento PROPERTIES
 )
 
 #链接库
-target_link_libraries(SAST_Evento PRIVATE
-    Qt6::Core
-    Qt6::Quick
-    fluentuiplugin
-    FramelessHelper::Core
-    FramelessHelper::Quick
-)
+if (FLUENTUI_BUILD_STATIC_LIB)
+    target_link_libraries(SAST_Evento PRIVATE
+        Qt6::Quick
+        Qt6::Svg
+        Qt6::Network
+        fluentui
+        fluentuiplugin
+        FramelessHelper::Core
+        FramelessHelper::Quick
+    )
+else()
+    target_link_libraries(SAST_Evento PRIVATE
+        Qt6::Quick
+        Qt6::Svg
+        Qt6::Network
+        fluentuiplugin
+        FramelessHelper::Core
+        FramelessHelper::Quick
+    )
+endif()
 
 #安装
 install(TARGETS SAST_Evento

@@ -22,40 +22,17 @@ CustomWindow {
     minimumWidth: 520
     minimumHeight: 200
     appBarVisible: false
-    launchMode: FluWindow.SingleTask
-
-    Settings {
-        id: settings
-
-        property var darkMode
-        property int displayMode
-        property string langMode
-        property string nativeTextSet
-        property string enableAnimationSet
-        property int colorIndex
-        property string username
-    }
+    launchMode: FluWindowType.SingleTask
 
     property var loginPageRegister: registerForWindowResult("/login")
 
-    Connections {
-        target: FluTheme
-        function onDarkModeChanged() {
-            settings.darkMode = FluTheme.darkMode
-        }
+    Settings {
+        id: settings
+        property string username
     }
 
     Component.onCompleted: {
-        var list = [FluColors.Yellow, FluColors.Orange, FluColors.Red, FluColors.Magenta, FluColors.Purple, FluColors.Blue, FluColors.Teal, FluColors.Green]
-        MainEvent.displayMode = settings.value("displayMode",
-                                               FluNavigationView.Auto)
-        FluTheme.darkMode = settings.value("darkMode", FluDarkMode.System)
-        FluTheme.primaryColor = list[settings.value("colorIndex", 5)]
-        FluTheme.nativeText = settings.value("nativeTextSet",
-                                             "false").charAt(0) === 't'
-        FluTheme.enableAnimation = settings.value("enableAnimationSet",
-                                                  "true").charAt(0) === 't'
-        appInfo.changeLang(settings.value("langMode", "Zh"))
+        FluTools.setQuitOnLastWindowClosed(false)
         loginPageRegister.launch({
                                      "username": settings.value("username", "")
                                  })
@@ -88,15 +65,6 @@ CustomWindow {
         event.accepted = false
     }
 
-    Connections {
-        target: appInfo
-        function onActiveWindow() {
-            window.show()
-            window.raise()
-            window.requestActivate()
-        }
-    }
-
     SystemTrayIcon {
         id: system_tray
         visible: true
@@ -125,15 +93,14 @@ CustomWindow {
         title: "退出"
         message: "确定要退出程序吗？"
         negativeText: "最小化"
-        buttonFlags: FluContentDialog.NeutralButton | FluContentDialog.NegativeButton
-                     | FluContentDialog.PositiveButton
+        buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.NeutralButton
+                     | FluContentDialogType.PositiveButton
         onNegativeClicked: {
             window.hide()
-            system_tray.showMessage("提示", "SAST Evento已隐藏至托盘,点击托盘可再次激活窗口")
+            system_tray.showMessage("友情提示", "FluentUI已隐藏至托盘,点击托盘可再次激活窗口")
         }
         positiveText: "退出"
         neutralText: "取消"
-        blurSource: nav_view
         onPositiveClicked: {
             window.deleteWindow()
             FluApp.closeApp()
@@ -212,13 +179,6 @@ CustomWindow {
                     }
                 }
             }
-
-            FluRemoteLoader {
-                id: loader
-                lazy: true
-                anchors.fill: parent
-                source: "qrc:/SAST_Evento/qml/page/T_About.qml"
-            }
         }
         front: Item {
             id: page_front
@@ -251,14 +211,6 @@ CustomWindow {
                 displayMode: MainEvent.displayMode
                 logo: "qrc:/SAST_Evento/res/image/favicon.ico"
                 title: "SAST Evento"
-                onLogoClicked: {
-                    clickCount += 1
-                    if (clickCount === 1) {
-                        loader.reload()
-                        flipable.flipped = true
-                        clickCount = 0
-                    }
-                }
                 autoSuggestBox: FluAutoSuggestBox {
                     width: 280
                     anchors.centerIn: parent
@@ -276,7 +228,7 @@ CustomWindow {
                 Connections {
                     target: ItemsOriginal
                     function onSourceChanged() {
-                        nav_view.pageMode = FluNavigationView.NoStack
+                        nav_view.pageMode = FluNavigationViewType.NoStack
                         ItemsOriginal.item.navigationView = nav_view
                         nav_view.items = ItemsOriginal.item
                         nav_view.setCurrentIndex(0)
@@ -286,23 +238,35 @@ CustomWindow {
         }
     }
 
-    CircularReveal {
-        id: reveal
-        target: window.contentItem
-        anchors.fill: parent
-        onImageChanged: {
-            changeDark()
+    Component {
+        id: com_reveal
+        CircularReveal {
+            id: reveal
+            target: window.contentItem
+            anchors.fill: parent
+            onAnimationFinished: {
+                //动画结束后释放资源
+                loader_reveal.sourceComponent = undefined
+            }
+            onImageChanged: {
+                changeDark()
+            }
         }
+    }
+
+    Loader {
+        id: loader_reveal
+        anchors.fill: parent
     }
 
     function distance(x1, y1, x2, y2) {
         return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
     }
-
     function handleDarkChanged(button) {
         if (FluTools.isMacos() || !FluTheme.enableAnimation) {
             changeDark()
         } else {
+            loader_reveal.sourceComponent = com_reveal
             var target = window.contentItem
             var pos = button.mapToItem(target, 0, 0)
             var mouseX = pos.x
@@ -314,6 +278,7 @@ CustomWindow {
                                            target.height), distance(
                                       mouseX, mouseY,
                                       target.width, target.height))
+            var reveal = loader_reveal.item
             reveal.start(reveal.width * Screen.devicePixelRatio,
                          reveal.height * Screen.devicePixelRatio,
                          Qt.point(mouseX, mouseY), radius)
@@ -322,19 +287,9 @@ CustomWindow {
 
     function changeDark() {
         if (FluTheme.dark) {
-            FluTheme.darkMode = FluDarkMode.Light
+            FluTheme.darkMode = FluThemeType.Light
         } else {
-            FluTheme.darkMode = FluDarkMode.Dark
-        }
-    }
-
-    Shortcut {
-        sequence: "F5"
-        context: Qt.WindowShortcut
-        onActivated: {
-            if (flipable.flipped) {
-                loader.reload()
-            }
+            FluTheme.darkMode = FluThemeType.Dark
         }
     }
 }
