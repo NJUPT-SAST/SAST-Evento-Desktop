@@ -4,7 +4,7 @@ En::En(QObject *parent)
     : Lang{parent}
 {
     setObjectName("En");
-    home("Home");
+    home("Events Square");
     timesheet("Timesheet");
     history("History");
     souvenirCard("Souvenir Card");

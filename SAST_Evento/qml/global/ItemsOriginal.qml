@@ -18,18 +18,18 @@ Loader {
         }
     }
 
-    function getRecentlyAddedData() {
+    function getInProgressData() {
         var arr = []
         for (var i = 0; i < loader.item.children.length; i++) {
-            var item = children[i]
-            if (item instanceof FluPaneItem && item.recentlyAdded) {
+            var item = loader.item.children[i]
+            if (item instanceof FluPaneItem && item.inProgress) {
                 arr.push(item)
             }
             if (item instanceof FluPaneItemExpander) {
                 for (var j = 0; j < item.children.length; j++) {
                     var itemChild = item.children[j]
                     if (itemChild instanceof FluPaneItem
-                            && itemChild.recentlyAdded) {
+                            && itemChild.inProgress) {
                         arr.push(itemChild)
                     }
                 }

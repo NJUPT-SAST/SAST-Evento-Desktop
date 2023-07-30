@@ -4,8 +4,8 @@ Zh::Zh(QObject *parent)
     : Lang{parent}
 {
     setObjectName("Zh");
-    home("首页");
-    timesheet("活动时间表");
+    home("活动广场");
+    timesheet("活动日程");
     history("历史活动");
     souvenirCard("纪念卡");
     organize("组织活动");

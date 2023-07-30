@@ -69,8 +69,10 @@ FluObject {
             }
             navigationView.push("qrc:/SAST_Evento/qml/page/T_SouvenirCard.qml")
         }
-        recentlyAdded: true
+        // TODO
+        image: "qrc:/SAST_Evento/res/image/control/InfoBar.png"
         recentlyUpdated: true
+        desc: "An inline message to display app-wide statuschange information."
     }
 
     FluPaneItemExpander {
@@ -81,8 +83,10 @@ FluObject {
             onTap: {
                 navigationView.push("qrc:/SAST_Evento/qml/page/T_TextBox.qml")
             }
-            recentlyUpdated: true
-            recentlyAdded: true
+            // TODO
+            image: "qrc:/SAST_Evento/res/image/control/InfoBar.png"
+            inProgress: true
+            desc: "An inline message to display app-wide statuschange information."
         }
         FluPaneItem {
             title: lang.eventInfo

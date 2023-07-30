@@ -3,130 +3,129 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
-import "qrc:///example/qml/component"
+import "qrc:///SAST_Evento/qml/component"
 
-FluContentPage{
+FluContentPage {
 
-    title:"Watermark"
+    title: "Watermark"
 
-    FluArea{
+    FluArea {
         anchors.fill: parent
         anchors.topMargin: 20
 
-        ColumnLayout{
-            anchors{
+        ColumnLayout {
+            anchors {
                 left: parent.left
                 leftMargin: 14
             }
 
-            RowLayout{
+            RowLayout {
                 spacing: 10
                 Layout.topMargin: 14
-                FluText{
-                    text:"text:"
+                FluText {
+                    text: "text:"
                     Layout.alignment: Qt.AlignVCenter
                 }
-                FluTextBox{
-                    id:text_box
-                    text:"会磨刀的小猪"
+                FluTextBox {
+                    id: text_box
+                    text: "会磨刀的小猪"
                 }
             }
 
-            RowLayout{
+            RowLayout {
                 spacing: 10
-                FluText{
-                    text:"textSize:"
+                FluText {
+                    text: "textSize:"
                     Layout.alignment: Qt.AlignVCenter
                 }
-                FluSlider{
-                    id:slider_text_size
+                FluSlider {
+                    id: slider_text_size
                     value: 20
                     from: 13
-                    to:50
+                    to: 50
                 }
             }
-            RowLayout{
+            RowLayout {
                 spacing: 10
-                FluText{
-                    text:"gapX:"
+                FluText {
+                    text: "gapX:"
                     Layout.alignment: Qt.AlignVCenter
                 }
-                FluSlider{
-                    id:slider_gap_x
+                FluSlider {
+                    id: slider_gap_x
                     value: 100
                 }
             }
-            RowLayout{
+            RowLayout {
                 spacing: 10
-                FluText{
-                    text:"gapY:"
+                FluText {
+                    text: "gapY:"
                     Layout.alignment: Qt.AlignVCenter
                 }
-                FluSlider{
-                    id:slider_gap_y
+                FluSlider {
+                    id: slider_gap_y
                     value: 100
                 }
             }
-            RowLayout{
+            RowLayout {
                 spacing: 10
-                FluText{
-                    text:"offsetX:"
+                FluText {
+                    text: "offsetX:"
                     Layout.alignment: Qt.AlignVCenter
                 }
-                FluSlider{
-                    id:slider_offset_x
+                FluSlider {
+                    id: slider_offset_x
                     value: 50
                 }
             }
-            RowLayout{
+            RowLayout {
                 spacing: 10
-                FluText{
-                    text:"offsetY:"
+                FluText {
+                    text: "offsetY:"
                     Layout.alignment: Qt.AlignVCenter
                 }
-                FluSlider{
-                    id:slider_offset_y
+                FluSlider {
+                    id: slider_offset_y
                     value: 50
                 }
             }
-            RowLayout{
+            RowLayout {
                 spacing: 10
-                FluText{
-                    text:"rotate:"
+                FluText {
+                    text: "rotate:"
                     Layout.alignment: Qt.AlignVCenter
                 }
-                FluSlider{
-                    id:slider_rotate
+                FluSlider {
+                    id: slider_rotate
                     value: 22
                     from: 0
-                    to:360
+                    to: 360
                 }
             }
-            RowLayout{
+            RowLayout {
                 spacing: 10
-                FluText{
-                    text:"textColor:"
+                FluText {
+                    text: "textColor:"
                     Layout.alignment: Qt.AlignVCenter
                 }
-                FluColorPicker{
-                    id:color_picker
+                FluColorPicker {
+                    id: color_picker
                     Component.onCompleted: {
-                        setColor(Qt.rgba(0,0,0,0.1))
+                        setColor(Qt.rgba(0, 0, 0, 0.1))
                     }
                 }
             }
         }
 
-        FluWatermark{
-            id:water_mark
+        FluWatermark {
+            id: water_mark
             anchors.fill: parent
-            text:text_box.text
+            text: text_box.text
             textColor: color_picker.colorValue
             textSize: slider_text_size.value
             rotate: slider_rotate.value
-            gap:Qt.point(slider_gap_x.value,slider_gap_y.value)
-            offset: Qt.point(slider_offset_x.value,slider_offset_y.value)
+            gap: Qt.point(slider_gap_x.value, slider_gap_y.value)
+            offset: Qt.point(slider_offset_x.value, slider_offset_y.value)
         }
     }
-
 }
