@@ -153,7 +153,6 @@ FluScrollablePage {
         cellHeight: 120
         cellWidth: 320
         interactive: false
-        // model: ItemsOriginal.item.getRecentlyUpdatedData()
         delegate: com_item
 
         Component.onCompleted: {
