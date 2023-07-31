@@ -9,29 +9,20 @@ FluScrollablePage {
 
     launchMode: FluPageType.SingleTask
     animDisabled: true
-
     title: lang.home
-
-    FluFlipView {
-        id: flip
+    FluCarousel {
         Layout.topMargin: 10
         Layout.bottomMargin: 10
         Layout.fillWidth: true
 
-        Image {
-            source: "qrc:/SAST_Evento/res/image/banner_1.jpg"
-            asynchronous: true
-            fillMode: Image.PreserveAspectCrop
-        }
-        Image {
-            source: "qrc:/SAST_Evento/res/image/banner_2.jpg"
-            asynchronous: true
-            fillMode: Image.PreserveAspectCrop
-        }
-        Image {
-            source: "qrc:/SAST_Evento/res/image/banner_3.jpg"
-            asynchronous: true
-            fillMode: Image.PreserveAspectCrop
+        Component.onCompleted: {
+            setData([{
+                         "url": "qrc:/SAST_Evento/res/image/banner_1.jpg"
+                     }, {
+                         "url": "qrc:/SAST_Evento/res/image/banner_2.jpg"
+                     }, {
+                         "url": "qrc:/SAST_Evento/res/image/banner_3.jpg"
+                     }])
         }
     }
 

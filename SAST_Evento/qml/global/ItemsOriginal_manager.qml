@@ -35,7 +35,7 @@ FluObject {
             if (navigationView.getCurrentUrl()) {
                 item_timesheet.count = 0
             }
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_FlipView.qml")
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_Carousel.qml")
         }
     }
 

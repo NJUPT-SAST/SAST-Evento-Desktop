@@ -20,7 +20,7 @@ FluScrollablePage {
     }
 
     function newTab() {
-        tab_view.appendTab("qrc:/example/res/image/favicon.ico",
+        tab_view.appendTab("qrc:/SAST_Evento/res/image/favicon.ico",
                            "Document " + tab_view.count(), com_page,
                            colors[Math.floor(Math.random() * 8)].dark)
     }
