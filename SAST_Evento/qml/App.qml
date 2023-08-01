@@ -36,8 +36,7 @@ Window {
 
     Component.onCompleted: {
         FluApp.init(app)
-        FluTheme.darkMode = FluThemeType.System
-        //settings.value("darkMode", FluThemeType.System)
+        FluTheme.darkMode = settings.value("darkMode", FluThemeType.System)
         FluTheme.enableAnimation = settings.value("enableAnimationSet", true)
         FluTheme.nativeText = settings.value("nativeTextSet", false)
         var list = [FluColors.Yellow, FluColors.Orange, FluColors.Red, FluColors.Magenta, FluColors.Purple, FluColors.Blue, FluColors.Teal, FluColors.Green]
