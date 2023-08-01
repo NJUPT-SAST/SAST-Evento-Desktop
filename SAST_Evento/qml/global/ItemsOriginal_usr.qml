@@ -10,7 +10,7 @@ FluObject {
     FluPaneItem {
         id: item_home
         count: 9
-        title: lang.home
+        title: lang.lang_home
         infoBadge: FluBadge {
             count: item_home.count
         }
@@ -26,7 +26,7 @@ FluObject {
     FluPaneItem {
         id: item_schedule
         count: 9
-        title: lang.schedule
+        title: lang.lang_schedule
         infoBadge: FluBadge {
             count: item_schedule.count
         }

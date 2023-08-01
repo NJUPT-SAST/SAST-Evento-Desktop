@@ -7,7 +7,7 @@ import "qrc:///SAST_Evento/qml/global"
 
 FluScrollablePage {
 
-    title: lang.timesheet
+    title: lang.lang_schedule
     launchMode: FluPageType.SingleTask
 
     ColumnLayout {
@@ -88,13 +88,13 @@ FluScrollablePage {
                     FluText {
                         id: item_status
                         wrapMode: Text.WrapAnywhere
-                        font: FluTextStyle.Subtitle
+                        font: FluTextStyle.Body
                         anchors {
                             left: item_title.left
                             right: parent.right
                             rightMargin: 20
-                            top: item_time.bottom
-                            topMargin: 3
+                            bottom: parent.bottom
+                            bottomMargin: 15
                         }
 
                         Loader {
@@ -107,9 +107,9 @@ FluScrollablePage {
                         Component {
                             id: inProgress
                             FluTextButton {
-                                text: "签到"
+                                text: lang.lang_sign_in
                                 onClicked: {
-                                    text = "已签到"
+                                    text = lang.lang_signed_in
                                     showSuccess("签到成功")
                                     disabled = true
                                 }
@@ -119,7 +119,7 @@ FluScrollablePage {
                         Component {
                             id: finished
                             FluTextButton {
-                                text: "评价"
+                                text: lang.lang_comment
                                 onClicked: {
                                     ItemsOriginal.item.navigationView.push(
                                                 "qrc:/SAST_Evento/qml/page/T_EventInfo.qml")
@@ -129,14 +129,14 @@ FluScrollablePage {
 
                         Component.onCompleted: {
                             if (modelData.id % 3 === 0) {
-                                text = "进行中"
+                                text = lang.lang_in_progress
                                 color = "#107C10"
                                 loader.sourceComponent = inProgress
                             } else if (modelData.id % 3 === 1) {
-                                text = "未开始"
+                                text = lang.lang_not_started
                                 color = "#0078D4"
                             } else {
-                                text = "已结束"
+                                text = lang.lang_over
                                 color = FluColors.Grey120
                                 loader.sourceComponent = finished
                             }
@@ -147,7 +147,7 @@ FluScrollablePage {
                         id: item_mouse
                         anchors {
                             fill: parent
-                            rightMargin: 50
+                            rightMargin: 80
                         }
 
                         hoverEnabled: true

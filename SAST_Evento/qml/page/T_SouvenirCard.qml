@@ -7,7 +7,7 @@ import "qrc:///SAST_Evento/qml/component"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
-    title: lang.souvenirCard
+    title: lang.lang_souvenirCard
     FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 10

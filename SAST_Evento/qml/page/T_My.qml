@@ -8,7 +8,7 @@ import "qrc:///SAST_Evento/qml/global"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
-    title: lang.my
+    title: lang.lang_my
 
     Settings {
         id: settings
@@ -109,7 +109,7 @@ FluScrollablePage {
                     anchors.left: img.right
                     anchors.leftMargin: 15
                     FluText {
-                        text: lang.welcome
+                        text: lang.lang_welcome
                         font: FluTextStyle.Title
                     }
                     FluText {
@@ -137,7 +137,7 @@ FluScrollablePage {
                         iconSource: FluentIcons.Trackers
                     }
                     FluText {
-                        text: lang.sign_in
+                        text: lang.lang_sign_in
                         width: 50
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -162,7 +162,7 @@ FluScrollablePage {
                         }
                     }
                     FluText {
-                        text: lang.souvenirCard
+                        text: lang.lang_souvenirCard
                         width: 50
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -181,7 +181,7 @@ FluScrollablePage {
                         iconSource: FluentIcons.PersonalFolder
                     }
                     FluText {
-                        text: lang.personalData
+                        text: lang.lang_personalData
                         width: 50
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -189,7 +189,7 @@ FluScrollablePage {
             }
 
             FluText {
-                text: lang.history
+                text: lang.lang_history
                 font: FluTextStyle.Subtitle
                 Layout.leftMargin: 20
             }

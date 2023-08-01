@@ -9,7 +9,7 @@ import "qrc:///SAST_Evento/qml/component"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
-    title: lang.settings
+    title: lang.lang_settings
 
     Settings {
         id: settings
@@ -31,19 +31,19 @@ FluScrollablePage {
                 left: parent.left
             }
             FluText {
-                text: lang.dark_mode
+                text: lang.lang_dark_mode
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
             Repeater {
                 model: [{
-                        "title": lang.followSystem,
+                        "title": lang.lang_followSystem,
                         "mode": FluThemeType.System
                     }, {
-                        "title": lang.light,
+                        "title": lang.lang_light,
                         "mode": FluThemeType.Light
                     }, {
-                        "title": lang.dark,
+                        "title": lang.lang_dark,
                         "mode": FluThemeType.Dark
                     }]
                 delegate: FluRadioButton {
@@ -70,22 +70,22 @@ FluScrollablePage {
                 left: parent.left
             }
             FluText {
-                text: lang.navigation_view_display_mode
+                text: lang.lang_navigation_view_display_mode
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
             Repeater {
                 model: [{
-                        "title": lang.openSideBar,
+                        "title": lang.lang_openSideBar,
                         "mode": FluNavigationViewType.Open
                     }, {
-                        "title": lang.compactSideBar,
+                        "title": lang.lang_compactSideBar,
                         "mode": FluNavigationViewType.Compact
                     }, {
-                        "title": lang.minimalSideBar,
+                        "title": lang.lang_minimalSideBar,
                         "mode": FluNavigationViewType.Minimal
                     }, {
-                        "title": lang.automatical,
+                        "title": lang.lang_automatical,
                         "mode": FluNavigationViewType.Auto
                     }]
                 delegate: FluRadioButton {
@@ -114,7 +114,7 @@ FluScrollablePage {
             }
 
             FluText {
-                text: lang.locale
+                text: lang.lang_locale
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
@@ -126,7 +126,7 @@ FluScrollablePage {
                     model: ["Zh", "En"]
                     delegate: FluRadioButton {
                         checked: appInfo.lang.objectName === modelData
-                        text: modelData === "En" ? lang.en : lang.zh
+                        text: modelData === "En" ? lang.lang_en : lang.lang_zh
                         clickListener: function () {
                             settings.langMode = modelData
                             appInfo.changeLang(settings.langMode)

@@ -10,7 +10,7 @@ FluObject {
     FluPaneItem {
         id: item_home
         count: 9
-        title: lang.home
+        title: lang.lang_home
         infoBadge: FluBadge {
             count: item_home.count
         }
@@ -26,7 +26,7 @@ FluObject {
     FluPaneItem {
         id: item_schedule
         count: 9
-        title: lang.schedule
+        title: lang.lang_schedule
         infoBadge: FluBadge {
             count: item_schedule.count
         }
@@ -40,16 +40,16 @@ FluObject {
     }
 
     FluPaneItemExpander {
-        title: lang.organize
+        title: lang.lang_organize
         icon: FluentIcons.AllApps
         FluPaneItem {
-            title: lang.createEvent
+            title: lang.lang_createEvent
             onTap: {
                 navigationView.push("qrc:/SAST_Evento/qml/page/T_TextBox.qml")
             }
         }
         FluPaneItem {
-            title: lang.eventInfo
+            title: lang.lang_eventInfo
             onTap: {
                 navigationView.push("qrc:/SAST_Evento/qml/page/T_InfoBar.qml")
             }
@@ -57,10 +57,10 @@ FluObject {
     }
 
     FluPaneItemExpander {
-        title: lang.manage
+        title: lang.lang_manage
         icon: FluentIcons.ViewAll
         FluPaneItem {
-            title: lang.feedback
+            title: lang.lang_feedback
 
             onTap: {
                 navigationView.push(
@@ -68,26 +68,26 @@ FluObject {
             }
         }
         FluPaneItem {
-            title: lang.timesheet
+            title: lang.lang_timesheet
             onTap: {
                 navigationView.push("qrc:/SAST_Evento/qml/page/T_Progress.qml")
             }
         }
         FluPaneItem {
-            title: lang.usermanage
+            title: lang.lang_usermanage
             onTap: {
                 navigationView.push(
                     "qrc:/SAST_Evento/qml/page/T_RatingControl.qml")
             }
         }
         FluPaneItem {
-            title: lang.uploadSouvenirCard
+            title: lang.lang_uploadSouvenirCard
             onTap: {
                 navigationView.push("qrc:/SAST_Evento/qml/page/T_Badge.qml")
             }
         }
         FluPaneItem {
-            title: lang.ppt
+            title: lang.lang_ppt
             onTap: {
                 navigationView.push("qrc:/SAST_Evento/qml/page/T_Rectangle.qml")
             }

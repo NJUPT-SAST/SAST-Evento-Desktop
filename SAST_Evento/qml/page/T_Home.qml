@@ -9,7 +9,7 @@ FluScrollablePage {
 
     launchMode: FluPageType.SingleTask
     animDisabled: true
-    title: lang.home
+    title: lang.lang_home
     FluCarousel {
         Layout.topMargin: 10
         Layout.bottomMargin: 10
@@ -122,7 +122,7 @@ FluScrollablePage {
     }
 
     FluText {
-        text: "正在进行的活动"
+        text: lang.lang_ongoing_events
         font: FluTextStyle.Title
         Layout.topMargin: 20
         Layout.leftMargin: 20
@@ -228,7 +228,7 @@ FluScrollablePage {
     }
 
     FluText {
-        text: "最新活动"
+        text: lang.lang_latest_events
         font: FluTextStyle.Title
         Layout.topMargin: 20
         Layout.leftMargin: 20

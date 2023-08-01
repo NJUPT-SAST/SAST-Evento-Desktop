@@ -7,44 +7,60 @@
 class Lang : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY_AUTO(QString,home);
-    Q_PROPERTY_AUTO(QString,schedule);
-    Q_PROPERTY_AUTO(QString,history);
-    Q_PROPERTY_AUTO(QString,souvenirCard);
-    Q_PROPERTY_AUTO(QString,organize);
-    Q_PROPERTY_AUTO(QString,manage);
-    Q_PROPERTY_AUTO(QString,my);
-    Q_PROPERTY_AUTO(QString,theming);
-    Q_PROPERTY_AUTO(QString,dark_mode);
-    Q_PROPERTY_AUTO(QString,sys_dark_mode);
-    Q_PROPERTY_AUTO(QString,search);
-    Q_PROPERTY_AUTO(QString,settings);
-    Q_PROPERTY_AUTO(QString,navigation_view_display_mode);
-    Q_PROPERTY_AUTO(QString,locale);
-    Q_PROPERTY_AUTO(QString,personalData);
-    Q_PROPERTY_AUTO(QString,sign_in);
+    Q_PROPERTY_AUTO(QString,lang_home);
+    Q_PROPERTY_AUTO(QString,lang_schedule);
+    Q_PROPERTY_AUTO(QString,lang_history);
+    Q_PROPERTY_AUTO(QString,lang_souvenirCard);
+    Q_PROPERTY_AUTO(QString,lang_organize);
+    Q_PROPERTY_AUTO(QString,lang_manage);
+    Q_PROPERTY_AUTO(QString,lang_my);
+    Q_PROPERTY_AUTO(QString,lang_theming);
+    Q_PROPERTY_AUTO(QString,lang_dark_mode);
+    Q_PROPERTY_AUTO(QString,lang_sys_dark_mode);
+    Q_PROPERTY_AUTO(QString,lang_search);
+    Q_PROPERTY_AUTO(QString,lang_settings);
+    Q_PROPERTY_AUTO(QString,lang_navigation_view_display_mode);
+    Q_PROPERTY_AUTO(QString,lang_locale);
+    Q_PROPERTY_AUTO(QString,lang_personalData);
+    Q_PROPERTY_AUTO(QString,lang_sign_in);
 
-    Q_PROPERTY_AUTO(QString,createEvent);
-    Q_PROPERTY_AUTO(QString,eventInfo);
-    Q_PROPERTY_AUTO(QString,timesheet);
-    Q_PROPERTY_AUTO(QString,usermanage);
-    Q_PROPERTY_AUTO(QString,feedback);
-    Q_PROPERTY_AUTO(QString,uploadSouvenirCard);
-    Q_PROPERTY_AUTO(QString,ppt);
+    Q_PROPERTY_AUTO(QString,lang_createEvent);
+    Q_PROPERTY_AUTO(QString,lang_eventInfo);
+    Q_PROPERTY_AUTO(QString,lang_timesheet);
+    Q_PROPERTY_AUTO(QString,lang_usermanage);
+    Q_PROPERTY_AUTO(QString,lang_feedback);
+    Q_PROPERTY_AUTO(QString,lang_uploadSouvenirCard);
+    Q_PROPERTY_AUTO(QString,lang_ppt);
 
-    Q_PROPERTY_AUTO(QString,welcome);
+    Q_PROPERTY_AUTO(QString,lang_welcome);
+    Q_PROPERTY_AUTO(QString,lang_login);
+    Q_PROPERTY_AUTO(QString,lang_comment);
+    Q_PROPERTY_AUTO(QString,lang_publish);
+    Q_PROPERTY_AUTO(QString,lang_subscribe);
+    Q_PROPERTY_AUTO(QString,lang_unsubscribe);
+    Q_PROPERTY_AUTO(QString,lang_signed_in);
+    Q_PROPERTY_AUTO(QString,lang_in_progress);
+    Q_PROPERTY_AUTO(QString,lang_not_started);
+    Q_PROPERTY_AUTO(QString,lang_over);
+    Q_PROPERTY_AUTO(QString,lang_ongoing_events);
+    Q_PROPERTY_AUTO(QString,lang_latest_events);
+    Q_PROPERTY_AUTO(QString,lang_username);
+    Q_PROPERTY_AUTO(QString,lang_password);
+    Q_PROPERTY_AUTO(QString,lang_zh);
+    Q_PROPERTY_AUTO(QString,lang_en);
+    Q_PROPERTY_AUTO(QString,lang_participate_in);
+    Q_PROPERTY_AUTO(QString,lang_cancel);
+    Q_PROPERTY_AUTO(QString,lang_exit);
+    Q_PROPERTY_AUTO(QString,lang_determine_exit);
 
-    Q_PROPERTY_AUTO(QString,zh);
-    Q_PROPERTY_AUTO(QString,en);
+    Q_PROPERTY_AUTO(QString,lang_followSystem);
+    Q_PROPERTY_AUTO(QString,lang_light);
+    Q_PROPERTY_AUTO(QString,lang_dark);
 
-    Q_PROPERTY_AUTO(QString,followSystem);
-    Q_PROPERTY_AUTO(QString,light);
-    Q_PROPERTY_AUTO(QString,dark);
-
-    Q_PROPERTY_AUTO(QString,openSideBar);
-    Q_PROPERTY_AUTO(QString,compactSideBar);
-    Q_PROPERTY_AUTO(QString,minimalSideBar);
-    Q_PROPERTY_AUTO(QString,automatical);
+    Q_PROPERTY_AUTO(QString,lang_openSideBar);
+    Q_PROPERTY_AUTO(QString,lang_compactSideBar);
+    Q_PROPERTY_AUTO(QString,lang_minimalSideBar);
+    Q_PROPERTY_AUTO(QString,lang_automatical);
 public:
     explicit Lang(QObject *parent = nullptr);
 

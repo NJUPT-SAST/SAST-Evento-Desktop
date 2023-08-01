@@ -18,7 +18,7 @@ FluObject {
     }
 
     FluPaneItem {
-        title: lang.my
+        title: lang.lang_my
         icon: FluentIcons.Contact
         onTap: {
             navigationView.push("qrc:/SAST_Evento/qml/page/T_My.qml")
@@ -26,7 +26,7 @@ FluObject {
     }
 
     FluPaneItem {
-        title: lang.theming
+        title: lang.lang_theming
         icon: FluentIcons.Brightness
         onTap: {
             navigationView.push("qrc:/SAST_Evento/qml/page/T_Theme.qml")
@@ -34,7 +34,7 @@ FluObject {
     }
 
     FluPaneItem {
-        title: lang.settings
+        title: lang.lang_settings
         icon: FluentIcons.Settings
         onTap: {
             navigationView.push("qrc:/SAST_Evento/qml/page/T_Settings.qml")

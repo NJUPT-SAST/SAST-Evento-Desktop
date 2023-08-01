@@ -18,7 +18,7 @@ FluWindow {
             left: parent.left
             right: parent.right
         }
-        darkText: lang.dark_mode
+        darkText: lang.lang_dark_mode
     }
     Item {
         id: container

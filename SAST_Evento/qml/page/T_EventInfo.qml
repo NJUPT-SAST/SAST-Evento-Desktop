@@ -54,16 +54,16 @@ FluScrollablePage {
 
         FluToggleButton {
             id: btn_participate
-            text: "参加活动"
+            text: lang.lang_participate_in
             disabled: false
             width: 120
             onClicked: {
                 if (checked) {
-                    text = "已参加，点击取消"
+                    text = lang.lang_cancel
                     showSuccess("参加成功")
                     loader.item.publishDiasabled = false
                 } else {
-                    text = "参加活动"
+                    text = lang.lang_participate_in
                     showSuccess("取消成功")
                     loader.item.publishDiasabled = true
                 }
@@ -85,7 +85,7 @@ FluScrollablePage {
             width: parent.width
             spacing: 15
             FluText {
-                text: "评价"
+                text: lang.lang_comment
                 font: FluTextStyle.Subtitle
             }
 
@@ -98,7 +98,7 @@ FluScrollablePage {
 
             FluFilledButton {
                 id: btn_publish
-                text: "发表"
+                text: lang.lang_publish
                 disabled: true
                 anchors {
                     right: parent.right

@@ -17,16 +17,16 @@ FluScrollablePage {
         }
 
         FluTextButton {
-            text: "+订阅"
+            text: lang.lang_subscribe
             checked: true
             onClicked: {
                 checked = !checked
                 if (!checked) {
-                    text = "取消订阅"
+                    text = lang.lang_unsubscribe
                     showInfo("已订阅")
                     textColor = disableColor
                 } else {
-                    text = "+订阅"
+                    text = lang.lang_subscribe
                     showInfo("已取消订阅")
                     textColor = pressedColor
                 }

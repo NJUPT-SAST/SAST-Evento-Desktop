@@ -8,7 +8,7 @@ import "qrc:///SAST_Evento/qml/component"
 CustomWindow {
 
     id: window
-    title: "登录"
+    title: lang.lang_login
     width: 400
     height: 500
     fixSize: true
@@ -58,7 +58,7 @@ CustomWindow {
             items: [{
                     "title": settings.value("username", "")
                 }]
-            placeholderText: "账号"
+            placeholderText: lang.lang_username
             Layout.preferredWidth: 260
             Layout.alignment: Qt.AlignHCenter
             Layout.topMargin: 40
@@ -68,7 +68,7 @@ CustomWindow {
             id: textbox_password
             Layout.topMargin: 20
             Layout.preferredWidth: 260
-            placeholderText: "密码"
+            placeholderText: lang.lang_password
             echoMode: TextInput.Password
             Layout.alignment: Qt.AlignHCenter
             Keys.onEnterPressed: {
@@ -81,7 +81,7 @@ CustomWindow {
 
         FluFilledButton {
             id: btn
-            text: "登录"
+            text: lang.lang_login
             Layout.alignment: Qt.AlignHCenter
             Layout.topMargin: 20
             focus: true

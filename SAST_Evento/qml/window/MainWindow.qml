@@ -72,7 +72,7 @@ CustomWindow {
         tooltip: "SAST Evento"
         menu: Menu {
             MenuItem {
-                text: "退出"
+                text: lang.lang_exit
                 onTriggered: {
                     window.deleteWindow()
                     FluApp.closeApp()
@@ -90,17 +90,17 @@ CustomWindow {
 
     FluContentDialog {
         id: dialog_close
-        title: "退出"
-        message: "确定要退出程序吗？"
-        negativeText: "最小化"
+        title: lang.lang_exit
+        message: lang.lang_determine_exit
+        negativeText: lang.lang_minimalSideBar
         buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.NeutralButton
                      | FluContentDialogType.PositiveButton
         onNegativeClicked: {
             window.hide()
             system_tray.showMessage("友情提示", "FluentUI已隐藏至托盘,点击托盘可再次激活窗口")
         }
-        positiveText: "退出"
-        neutralText: "取消"
+        positiveText: lang.lang_exit
+        neutralText: lang.lang_cancel
         onPositiveClicked: {
             window.deleteWindow()
             FluApp.closeApp()
@@ -147,7 +147,7 @@ CustomWindow {
                     left: parent.left
                     right: parent.right
                 }
-                darkText: lang.dark_mode
+                darkText: lang.lang_dark_mode
                 showDark: true
                 z: 7
                 darkClickListener: button => handleDarkChanged(button)
@@ -190,7 +190,7 @@ CustomWindow {
                     left: parent.left
                     right: parent.right
                 }
-                darkText: lang.dark_mode
+                darkText: lang.lang_dark_mode
                 showDark: true
                 darkClickListener: button => handleDarkChanged(button)
                 z: 7
@@ -213,7 +213,7 @@ CustomWindow {
                     width: 280
                     anchors.centerIn: parent
                     iconSource: FluentIcons.Search
-                    placeholderText: lang.search
+                    placeholderText: lang.lang_search
                     onItemClicked: data => {
                                        ItemsOriginal.startPageByItem(data)
                                    }
