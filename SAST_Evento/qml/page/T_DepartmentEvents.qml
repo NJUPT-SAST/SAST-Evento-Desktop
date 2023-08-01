@@ -3,17 +3,16 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
-import "qrc:///SAST_Evento/qml/component"
 import "qrc:///SAST_Evento/qml/global"
 
 FluScrollablePage {
-
+    launchMode: FluPageType.SingleTask
     ColumnLayout {
         Layout.topMargin: 10
         Layout.fillWidth: true
 
         FluText {
-            text: "软件研发部的活动"
+            text: "软件研发中心的活动"
             font: FluTextStyle.Title
         }
 
@@ -111,7 +110,8 @@ FluScrollablePage {
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: {
-                            ItemsOriginal.startPageByItem(modelData)
+                            ItemsOriginal.item.navigationView.push(
+                                        "qrc:/SAST_Evento/qml/page/T_EventInfo.qml")
                         }
                     }
                 }

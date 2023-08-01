@@ -3,9 +3,10 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
-import "qrc:///SAST_Evento/qml/component"
+import "qrc:///SAST_Evento/qml/global"
 
 FluScrollablePage {
+    launchMode: FluPageType.SingleTask
     Column {
         spacing: 15
         Layout.fillWidth: true
@@ -34,9 +35,14 @@ FluScrollablePage {
             font: FluTextStyle.TitleLarge
         }
 
-        FluText {
+        FluTextButton {
             text: "活动组织部门"
             font: FluTextStyle.Subtitle
+
+            onClicked: {
+                ItemsOriginal.item.navigationView.push(
+                            "qrc:/SAST_Evento/qml/page/T_DepartmentEvents.qml")
+            }
         }
 
         FluText {

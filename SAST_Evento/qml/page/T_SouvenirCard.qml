@@ -6,6 +6,7 @@ import FluentUI
 import "qrc:///SAST_Evento/qml/component"
 
 FluScrollablePage {
+    launchMode: FluPageType.SingleTask
     title: lang.souvenirCard
     FluArea {
         Layout.fillWidth: true

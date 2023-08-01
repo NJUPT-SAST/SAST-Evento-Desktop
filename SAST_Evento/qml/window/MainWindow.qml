@@ -228,7 +228,7 @@ CustomWindow {
                 Connections {
                     target: ItemsOriginal
                     function onSourceChanged() {
-                        nav_view.pageMode = FluNavigationViewType.NoStack
+                        nav_view.pageMode = FluNavigationViewType.Stack
                         ItemsOriginal.item.navigationView = nav_view
                         nav_view.items = ItemsOriginal.item
                         nav_view.setCurrentIndex(0)

@@ -4,11 +4,11 @@ import QtQuick.Layouts
 import QtQuick.Window
 import QtCore
 import FluentUI
-import "qrc:///SAST_Evento/qml/component"
+import "qrc:///SAST_Evento/qml/global"
 
 FluScrollablePage {
-    title: lang.my
     launchMode: FluPageType.SingleTask
+    title: lang.my
 
     Settings {
         id: settings
@@ -63,13 +63,12 @@ FluScrollablePage {
 
         FluArea {
             Layout.fillWidth: true
-            Layout.topMargin: 20
+            Layout.topMargin: 50
             height: 85
             paddings: 10
-            FluButton {
+            FluTextButton {
                 id: button
                 text: "登录"
-                anchors.right: parent.right
 
                 onClicked: {
                     loginPageRegister.launch({
@@ -156,6 +155,11 @@ FluScrollablePage {
                         height: 50
                         scale: 1.8
                         iconSource: FluentIcons.Smartcard
+
+                        onClicked: {
+                            ItemsOriginal.item.navigationView.push(
+                                        "qrc:/SAST_Evento/qml/page/T_SouvenirCard.qml")
+                        }
                     }
                     FluText {
                         text: "纪念卡"
@@ -268,7 +272,8 @@ FluScrollablePage {
                             anchors.fill: parent
                             hoverEnabled: true
                             onClicked: {
-
+                                ItemsOriginal.item.navigationView.push(
+                                            "qrc:/SAST_Evento/qml/page/T_EventInfo.qml")
                             }
                         }
                     }

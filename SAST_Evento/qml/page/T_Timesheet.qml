@@ -8,7 +8,7 @@ import "qrc:///SAST_Evento/qml/global"
 FluScrollablePage {
 
     title: lang.timesheet
-    launchMode: FluPageType.SingleInstance
+    launchMode: FluPageType.SingleTask
 
     ColumnLayout {
         Layout.topMargin: 10
@@ -152,7 +152,8 @@ FluScrollablePage {
 
                         hoverEnabled: true
                         onClicked: {
-                            ItemsOriginal.startPageByItem(modelData)
+                            ItemsOriginal.item.navigationView.push(
+                                        "qrc:/SAST_Evento/qml/page/T_EventInfo.qml")
                         }
                     }
                 }

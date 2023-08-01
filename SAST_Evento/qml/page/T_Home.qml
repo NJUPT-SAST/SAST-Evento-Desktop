@@ -113,7 +113,8 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        ItemsOriginal.startPageByItem(modelData)
+                        ItemsOriginal.item.navigationView.push(
+                                    "qrc:/SAST_Evento/qml/page/T_EventInfo.qml")
                     }
                 }
             }
