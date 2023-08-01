@@ -8,7 +8,7 @@ class Lang : public QObject
 {
     Q_OBJECT
     Q_PROPERTY_AUTO(QString,home);
-    Q_PROPERTY_AUTO(QString,timesheet);
+    Q_PROPERTY_AUTO(QString,schedule);
     Q_PROPERTY_AUTO(QString,history);
     Q_PROPERTY_AUTO(QString,souvenirCard);
     Q_PROPERTY_AUTO(QString,organize);
@@ -21,14 +21,18 @@ class Lang : public QObject
     Q_PROPERTY_AUTO(QString,settings);
     Q_PROPERTY_AUTO(QString,navigation_view_display_mode);
     Q_PROPERTY_AUTO(QString,locale);
+    Q_PROPERTY_AUTO(QString,personalData);
+    Q_PROPERTY_AUTO(QString,sign_in);
 
     Q_PROPERTY_AUTO(QString,createEvent);
     Q_PROPERTY_AUTO(QString,eventInfo);
-    Q_PROPERTY_AUTO(QString,addTypes);
-    Q_PROPERTY_AUTO(QString,addGroup);
-    Q_PROPERTY_AUTO(QString,statistics);
+    Q_PROPERTY_AUTO(QString,timesheet);
+    Q_PROPERTY_AUTO(QString,usermanage);
+    Q_PROPERTY_AUTO(QString,feedback);
     Q_PROPERTY_AUTO(QString,uploadSouvenirCard);
-    Q_PROPERTY_AUTO(QString,exportTimesheetPictures);
+    Q_PROPERTY_AUTO(QString,ppt);
+
+    Q_PROPERTY_AUTO(QString,welcome);
 
     Q_PROPERTY_AUTO(QString,zh);
     Q_PROPERTY_AUTO(QString,en);

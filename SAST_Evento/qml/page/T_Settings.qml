@@ -8,7 +8,7 @@ import "qrc:///SAST_Evento/qml/global"
 import "qrc:///SAST_Evento/qml/component"
 
 FluScrollablePage {
-
+    launchMode: FluPageType.SingleTask
     title: lang.settings
 
     Settings {

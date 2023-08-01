@@ -109,7 +109,7 @@ FluScrollablePage {
                     anchors.left: img.right
                     anchors.leftMargin: 15
                     FluText {
-                        text: "欢迎回来，"
+                        text: lang.welcome
                         font: FluTextStyle.Title
                     }
                     FluText {
@@ -137,7 +137,7 @@ FluScrollablePage {
                         iconSource: FluentIcons.Trackers
                     }
                     FluText {
-                        text: "签到"
+                        text: lang.sign_in
                         width: 50
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -162,7 +162,7 @@ FluScrollablePage {
                         }
                     }
                     FluText {
-                        text: "纪念卡"
+                        text: lang.souvenirCard
                         width: 50
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -181,7 +181,7 @@ FluScrollablePage {
                         iconSource: FluentIcons.PersonalFolder
                     }
                     FluText {
-                        text: "个人资料"
+                        text: lang.personalData
                         width: 50
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -189,7 +189,7 @@ FluScrollablePage {
             }
 
             FluText {
-                text: "历史活动"
+                text: lang.history
                 font: FluTextStyle.Subtitle
                 Layout.leftMargin: 20
             }

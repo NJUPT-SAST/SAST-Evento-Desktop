@@ -24,18 +24,18 @@ FluObject {
     }
 
     FluPaneItem {
-        id: item_timesheet
+        id: item_schedule
         count: 9
-        title: lang.timesheet
+        title: lang.schedule
         infoBadge: FluBadge {
-            count: item_timesheet.count
+            count: item_schedule.count
         }
         icon: FluentIcons.Calendar
         onTap: {
             if (navigationView.getCurrentUrl()) {
-                item_timesheet.count = 0
+                item_schedule.count = 0
             }
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_Timesheet.qml")
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_Schedule.qml")
         }
     }
 
@@ -47,10 +47,6 @@ FluObject {
             onTap: {
                 navigationView.push("qrc:/SAST_Evento/qml/page/T_TextBox.qml")
             }
-            // TODO
-            image: "qrc:/SAST_Evento/res/image/control/InfoBar.png"
-            inProgress: true
-            desc: "An inline message to display app-wide statuschange information."
         }
         FluPaneItem {
             title: lang.eventInfo
@@ -64,23 +60,21 @@ FluObject {
         title: lang.manage
         icon: FluentIcons.ViewAll
         FluPaneItem {
-            title: lang.addTypes
-            image: "qrc:/SAST_Evento/res/image/control/InfoBar.png"
-            recentlyUpdated: true
-            desc: "An inline message to display app-wide statuschange information."
+            title: lang.feedback
+
             onTap: {
                 navigationView.push(
                     "qrc:/SAST_Evento/qml/page/T_RadioButton.qml")
             }
         }
         FluPaneItem {
-            title: lang.addGroup
+            title: lang.timesheet
             onTap: {
                 navigationView.push("qrc:/SAST_Evento/qml/page/T_Progress.qml")
             }
         }
         FluPaneItem {
-            title: lang.statistics
+            title: lang.usermanage
             onTap: {
                 navigationView.push(
                     "qrc:/SAST_Evento/qml/page/T_RatingControl.qml")
@@ -93,7 +87,7 @@ FluObject {
             }
         }
         FluPaneItem {
-            title: lang.exportTimesheetPictures
+            title: lang.ppt
             onTap: {
                 navigationView.push("qrc:/SAST_Evento/qml/page/T_Rectangle.qml")
             }

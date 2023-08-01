@@ -5,7 +5,7 @@ Zh::Zh(QObject *parent)
 {
     setObjectName("Zh");
     home("活动广场");
-    timesheet("活动日程");
+    schedule("活动日程");
     history("历史活动");
     souvenirCard("纪念卡");
     organize("组织活动");
@@ -18,17 +18,21 @@ Zh::Zh(QObject *parent)
     settings("设置");
     locale("语言环境");
     navigation_view_display_mode("导航视图显示模式");
+    personalData("个人资料");
+    sign_in("签到");
 
     createEvent("创建活动");
     eventInfo("活动信息");
-    addTypes("添加活动类型");
-    addGroup("添加部门/组别");
-    statistics("统计报表");
+    usermanage("用户管理");
+    timesheet("活动时间");
+    feedback("用户反馈");
     uploadSouvenirCard("上传纪念卡");
-    exportTimesheetPictures("导出时间表图片");
+    ppt("幻灯片");
 
     zh("中文");
     en("英文");
+
+    welcome("欢迎回来，");
 
     followSystem("跟随系统");
     light("浅色");

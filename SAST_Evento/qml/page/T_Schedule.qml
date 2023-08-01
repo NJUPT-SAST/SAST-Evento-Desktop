@@ -121,8 +121,8 @@ FluScrollablePage {
                             FluTextButton {
                                 text: "评价"
                                 onClicked: {
-                                    text = "已评价"
-                                    disabled = true
+                                    ItemsOriginal.item.navigationView.push(
+                                                "qrc:/SAST_Evento/qml/page/T_EventInfo.qml")
                                 }
                             }
                         }

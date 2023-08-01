@@ -5,7 +5,7 @@ En::En(QObject *parent)
 {
     setObjectName("En");
     home("Events Square");
-    timesheet("Timesheet");
+    schedule("Schedule");
     history("History");
     souvenirCard("Souvenir Card");
     organize("Organize");
@@ -19,14 +19,18 @@ En::En(QObject *parent)
     settings("Settings");
     locale("Locale");
     navigation_view_display_mode("NavigationView Display Mode");
+    personalData("Personal Data");
+    sign_in("Sign In");
 
     createEvent("Create Event");
     eventInfo("Event Infomation");
-    addTypes("Add Event Type");
-    addGroup("Add Group");
-    statistics("Statistics");
+    usermanage("User Management");
+    timesheet("Timesheet");
+    feedback("Feedback");
     uploadSouvenirCard("Upload Souvenir Card");
-    exportTimesheetPictures("Export Timesheet Pictures");
+    ppt("PowerPoint");
+
+    welcome("Welcome Back,");
 
     zh("Chinese");
     en("English");

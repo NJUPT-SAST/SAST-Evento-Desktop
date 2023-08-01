@@ -24,50 +24,18 @@ FluObject {
     }
 
     FluPaneItem {
-        id: item_timesheet
+        id: item_schedule
         count: 9
-        title: lang.timesheet
+        title: lang.schedule
         infoBadge: FluBadge {
-            count: item_timesheet.count
+            count: item_schedule.count
         }
         icon: FluentIcons.Calendar
         onTap: {
             if (navigationView.getCurrentUrl()) {
-                item_timesheet.count = 0
+                item_schedule.count = 0
             }
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_Home.qml")
-        }
-    }
-
-    FluPaneItem {
-        id: item_history
-        count: 0
-        title: lang.history
-        infoBadge: FluBadge {
-            count: item_history.count
-        }
-        icon: FluentIcons.Replay
-        onTap: {
-            if (navigationView.getCurrentUrl()) {
-                item_history.count = 0
-            }
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_Home.qml")
-        }
-    }
-
-    FluPaneItem {
-        id: item_souvenirCard
-        count: 0
-        title: lang.souvenirCard
-        infoBadge: FluBadge {
-            count: item_souvenirCard.count
-        }
-        icon: FluentIcons.Smartcard
-        onTap: {
-            if (navigationView.getCurrentUrl()) {
-                item_souvenirCard.count = 0
-            }
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_SouvenirCard.qml")
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_Schedule.qml")
         }
     }
 }
