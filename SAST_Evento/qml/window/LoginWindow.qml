@@ -9,7 +9,7 @@ CustomWindow {
 
     id: window
     title: "登录"
-    width: 500
+    width: 400
     height: 500
     fixSize: true
     modality: Qt.ApplicationModal
@@ -41,13 +41,14 @@ CustomWindow {
         }
 
         Image {
-            source: "qrc:/SAST_Evento/res/image/evento_black.png"
-            sourceSize.width: 450
+            sourceSize.width: 400
             Layout.alignment: Qt.AlignHCenter
-            Component.onCompleted: {
+            source: {
                 if (settings.value("darkMode",
                                    FluThemeType.System) === FluThemeType.Dark) {
-                    source = "qrc:/SAST_Evento/res/image/evento_white.png"
+                    return "qrc:/SAST_Evento/res/image/evento_white.png"
+                } else {
+                    return "qrc:/SAST_Evento/res/image/evento_black.png"
                 }
             }
         }
