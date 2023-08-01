@@ -61,35 +61,35 @@ FluObject {
         icon: FluentIcons.ViewAll
         FluPaneItem {
             title: lang.lang_feedback
-
             onTap: {
-                navigationView.push(
-                    "qrc:/SAST_Evento/qml/page/T_RadioButton.qml")
+                navigationView.push("qrc:/SAST_Evento/qml/page/T_Feedback.qml")
             }
         }
         FluPaneItem {
             title: lang.lang_timesheet
             onTap: {
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Progress.qml")
+                navigationView.push("qrc:/SAST_Evento/qml/page/T_Timesheet.qml")
             }
         }
         FluPaneItem {
             title: lang.lang_usermanage
             onTap: {
                 navigationView.push(
-                    "qrc:/SAST_Evento/qml/page/T_RatingControl.qml")
+                    "qrc:/SAST_Evento/qml/page/T_UserManage.qml")
             }
         }
         FluPaneItem {
             title: lang.lang_uploadSouvenirCard
             onTap: {
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Badge.qml")
+                navigationView.push(
+                    "qrc:/SAST_Evento/qml/page/T_SouvenirCard.qml")
             }
         }
         FluPaneItem {
             title: lang.lang_ppt
             onTap: {
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Rectangle.qml")
+                navigationView.push(
+                    "qrc:/SAST_Evento/qml/page/T_PowerPoint.qml")
             }
         }
     }

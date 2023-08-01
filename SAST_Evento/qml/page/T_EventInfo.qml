@@ -116,20 +116,16 @@ FluScrollablePage {
                         width: parent.width
                         height: 70 + item_comment.lineCount * 15
                         anchors.centerIn: parent
-                        paddings: 10
-                        color: "transparent"
-                        Rectangle {
-                            anchors.fill: parent
-                            radius: 8
-                            color: "transparent"
-                        }
+
                         FluRectangle {
                             id: item_img
                             height: 40
                             width: 40
                             radius: [20, 20, 20, 20]
                             anchors {
+                                top: parent.top
                                 left: parent.left
+                                margins: 10
                             }
                             FluImage {
                                 anchors.fill: parent
@@ -152,19 +148,21 @@ FluScrollablePage {
                         FluText {
                             id: item_comment
                             text: modelData.comment
-                            wrapMode: Text.WrapAnywhere
-                            width: parent.width - 20
+                            wrapMode: Text.WordWrap
+                            width: parent.width - 45
                             font: FluTextStyle.Body
                             anchors {
                                 top: item_img.bottom
                                 topMargin: 5
+                                left: parent.left
+                                leftMargin: 10
                             }
                         }
 
                         FluIconButton {
                             iconSource: FluentIcons.Copy
                             anchors {
-                                left: item_comment.right
+                                right: parent.right
                                 bottom: parent.bottom
                                 rightMargin: 5
                                 bottomMargin: 5

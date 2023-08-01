@@ -74,7 +74,7 @@ FluScrollablePage {
                         id: item_time
                         text: modelData.time
                         color: FluColors.Grey120
-                        wrapMode: Text.WrapAnywhere
+                        wrapMode: Text.WordWrap
                         font: FluTextStyle.Caption
                         anchors {
                             left: item_title.left
@@ -87,7 +87,7 @@ FluScrollablePage {
 
                     FluText {
                         id: item_status
-                        wrapMode: Text.WrapAnywhere
+                        wrapMode: Text.WordWrap
                         font: FluTextStyle.Body
                         anchors {
                             left: item_title.left

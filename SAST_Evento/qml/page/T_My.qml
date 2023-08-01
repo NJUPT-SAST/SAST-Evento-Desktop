@@ -254,7 +254,7 @@ FluScrollablePage {
                             id: item_desc
                             text: modelData.desc
                             color: FluColors.Grey120
-                            wrapMode: Text.WrapAnywhere
+                            wrapMode: Text.WordWrap
                             elide: Text.ElideRight
                             font: FluTextStyle.Caption
                             maximumLineCount: 3
