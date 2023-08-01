@@ -35,44 +35,8 @@ FluObject {
             if (navigationView.getCurrentUrl()) {
                 item_timesheet.count = 0
             }
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_Carousel.qml")
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_Timesheet.qml")
         }
-    }
-
-    FluPaneItem {
-        id: item_history
-        count: 0
-        title: lang.history
-        infoBadge: FluBadge {
-            count: item_history.count
-        }
-        icon: FluentIcons.Replay
-        onTap: {
-            if (navigationView.getCurrentUrl()) {
-                item_history.count = 0
-            }
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_Home.qml")
-        }
-    }
-
-    FluPaneItem {
-        id: item_souvenirCard
-        count: 0
-        title: lang.souvenirCard
-        infoBadge: FluBadge {
-            count: item_souvenirCard.count
-        }
-        icon: FluentIcons.Smartcard
-        onTap: {
-            if (navigationView.getCurrentUrl()) {
-                item_souvenirCard.count = 0
-            }
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_SouvenirCard.qml")
-        }
-        // TODO
-        image: "qrc:/SAST_Evento/res/image/control/InfoBar.png"
-        recentlyUpdated: true
-        desc: "An inline message to display app-wide statuschange information."
     }
 
     FluPaneItemExpander {
