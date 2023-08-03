@@ -1,0 +1,17 @@
+VO视图对象
+EventoPlaza
+EventoSchedule
+EventoPage
+EventoFeedback
+DepartmentPage
+MyPage
+EventoCalendar
+EventoEdit
+FeedbackStatistics
+UserManagement
+UserEdit
+
+应用service
+处理相关业务
+
+Assembler对象转换器（VO与BO）

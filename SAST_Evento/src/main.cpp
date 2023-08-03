@@ -10,7 +10,7 @@
 #include <QQuickWindow>
 #include <QSslConfiguration>
 
-#include "AppInfo.h"
+#include "controller/AppInfo.h"
 
 FRAMELESSHELPER_USE_NAMESPACE
 
