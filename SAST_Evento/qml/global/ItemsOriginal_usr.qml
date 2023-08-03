@@ -10,7 +10,7 @@ FluObject {
     FluPaneItem {
         id: item_home
         count: 9
-        title: lang.lang_home
+        title: lang.lang_plaza
         infoBadge: FluBadge {
             count: item_home.count
         }
@@ -19,7 +19,7 @@ FluObject {
             if (navigationView.getCurrentUrl()) {
                 item_home.count = 0
             }
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_Home.qml")
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_Plaza.qml")
         }
     }
 

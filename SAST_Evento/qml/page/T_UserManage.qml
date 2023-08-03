@@ -7,7 +7,7 @@ import "qrc:///SAST_Evento/qml/global"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
-    title: lang.lang_usermanage
+    title: lang.lang_user_manage
     Layout.fillWidth: true
 
     Column {

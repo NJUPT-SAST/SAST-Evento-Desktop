@@ -7,11 +7,10 @@
 class Lang : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY_AUTO(QString,lang_home);
+    Q_PROPERTY_AUTO(QString,lang_plaza);
     Q_PROPERTY_AUTO(QString,lang_schedule);
     Q_PROPERTY_AUTO(QString,lang_history);
-    Q_PROPERTY_AUTO(QString,lang_souvenirCard);
-    Q_PROPERTY_AUTO(QString,lang_organize);
+    Q_PROPERTY_AUTO(QString,lang_souvenir_card);
     Q_PROPERTY_AUTO(QString,lang_manage);
     Q_PROPERTY_AUTO(QString,lang_my);
     Q_PROPERTY_AUTO(QString,lang_theming);
@@ -21,29 +20,30 @@ class Lang : public QObject
     Q_PROPERTY_AUTO(QString,lang_settings);
     Q_PROPERTY_AUTO(QString,lang_navigation_view_display_mode);
     Q_PROPERTY_AUTO(QString,lang_locale);
-    Q_PROPERTY_AUTO(QString,lang_personalData);
-    Q_PROPERTY_AUTO(QString,lang_sign_in);
+    Q_PROPERTY_AUTO(QString,lang_profile);
+    Q_PROPERTY_AUTO(QString,lang_check);
 
-    Q_PROPERTY_AUTO(QString,lang_createEvent);
-    Q_PROPERTY_AUTO(QString,lang_eventInfo);
+    Q_PROPERTY_AUTO(QString,lang_create_event);
+    Q_PROPERTY_AUTO(QString,lang_event_info);
     Q_PROPERTY_AUTO(QString,lang_timesheet);
-    Q_PROPERTY_AUTO(QString,lang_usermanage);
+    Q_PROPERTY_AUTO(QString,lang_user_manage);
     Q_PROPERTY_AUTO(QString,lang_feedback);
-    Q_PROPERTY_AUTO(QString,lang_uploadSouvenirCard);
-    Q_PROPERTY_AUTO(QString,lang_ppt);
+    Q_PROPERTY_AUTO(QString,lang_upload_souvenir_card);
+    Q_PROPERTY_AUTO(QString,lang_slide);
+    Q_PROPERTY_AUTO(QString,lang_others);
 
     Q_PROPERTY_AUTO(QString,lang_welcome);
     Q_PROPERTY_AUTO(QString,lang_login);
     Q_PROPERTY_AUTO(QString,lang_comment);
-    Q_PROPERTY_AUTO(QString,lang_publish);
+    Q_PROPERTY_AUTO(QString,lang_submit);
     Q_PROPERTY_AUTO(QString,lang_subscribe);
     Q_PROPERTY_AUTO(QString,lang_unsubscribe);
-    Q_PROPERTY_AUTO(QString,lang_signed_in);
-    Q_PROPERTY_AUTO(QString,lang_in_progress);
+    Q_PROPERTY_AUTO(QString,lang_checked);
+    Q_PROPERTY_AUTO(QString,lang_undertaking);
     Q_PROPERTY_AUTO(QString,lang_not_started);
     Q_PROPERTY_AUTO(QString,lang_over);
-    Q_PROPERTY_AUTO(QString,lang_ongoing_events);
-    Q_PROPERTY_AUTO(QString,lang_latest_events);
+    Q_PROPERTY_AUTO(QString,lang_undertaking_evento);
+    Q_PROPERTY_AUTO(QString,lang_latest_evento);
     Q_PROPERTY_AUTO(QString,lang_username);
     Q_PROPERTY_AUTO(QString,lang_password);
     Q_PROPERTY_AUTO(QString,lang_zh);

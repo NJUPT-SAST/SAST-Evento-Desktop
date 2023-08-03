@@ -107,9 +107,9 @@ FluScrollablePage {
                         Component {
                             id: inProgress
                             FluTextButton {
-                                text: lang.lang_sign_in
+                                text: lang.lang_check
                                 onClicked: {
-                                    text = lang.lang_signed_in
+                                    text = lang.lang_checked
                                     showSuccess("签到成功")
                                     disabled = true
                                 }
@@ -129,7 +129,7 @@ FluScrollablePage {
 
                         Component.onCompleted: {
                             if (modelData.id % 3 === 0) {
-                                text = lang.lang_in_progress
+                                text = lang.lang_undertaking
                                 color = "#107C10"
                                 loader.sourceComponent = inProgress
                             } else if (modelData.id % 3 === 1) {

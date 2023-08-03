@@ -98,7 +98,7 @@ FluScrollablePage {
 
             FluFilledButton {
                 id: btn_publish
-                text: lang.lang_publish
+                text: lang.lang_submit
                 disabled: true
                 anchors {
                     right: parent.right

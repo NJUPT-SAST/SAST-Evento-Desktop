@@ -10,7 +10,7 @@ FluObject {
     FluPaneItem {
         id: item_home
         count: 9
-        title: lang.lang_home
+        title: lang.lang_plaza
         infoBadge: FluBadge {
             count: item_home.count
         }
@@ -19,7 +19,7 @@ FluObject {
             if (navigationView.getCurrentUrl()) {
                 item_home.count = 0
             }
-            navigationView.push("qrc:/SAST_Evento/qml/page/T_Home.qml")
+            navigationView.push("qrc:/SAST_Evento/qml/page/T_Plaza.qml")
         }
     }
 
@@ -40,31 +40,8 @@ FluObject {
     }
 
     FluPaneItemExpander {
-        title: lang.lang_organize
-        icon: FluentIcons.AllApps
-        FluPaneItem {
-            title: lang.lang_createEvent
-            onTap: {
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_TextBox.qml")
-            }
-        }
-        FluPaneItem {
-            title: lang.lang_eventInfo
-            onTap: {
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_InfoBar.qml")
-            }
-        }
-    }
-
-    FluPaneItemExpander {
         title: lang.lang_manage
-        icon: FluentIcons.ViewAll
-        FluPaneItem {
-            title: lang.lang_feedback
-            onTap: {
-                navigationView.push("qrc:/SAST_Evento/qml/page/T_Feedback.qml")
-            }
-        }
+        icon: FluentIcons.AllApps
         FluPaneItem {
             title: lang.lang_timesheet
             onTap: {
@@ -72,24 +49,34 @@ FluObject {
             }
         }
         FluPaneItem {
-            title: lang.lang_usermanage
+            title: lang.lang_feedback
+            onTap: {
+                navigationView.push("qrc:/SAST_Evento/qml/page/T_Feedback.qml")
+            }
+        }
+    }
+
+    FluPaneItemExpander {
+        title: lang.lang_others
+        icon: FluentIcons.ViewAll
+        FluPaneItem {
+            title: lang.lang_user_manage
             onTap: {
                 navigationView.push(
                     "qrc:/SAST_Evento/qml/page/T_UserManage.qml")
             }
         }
         FluPaneItem {
-            title: lang.lang_uploadSouvenirCard
+            title: lang.lang_upload_souvenir_card
             onTap: {
                 navigationView.push(
                     "qrc:/SAST_Evento/qml/page/T_SouvenirCard.qml")
             }
         }
         FluPaneItem {
-            title: lang.lang_ppt
+            title: lang.lang_slide
             onTap: {
-                navigationView.push(
-                    "qrc:/SAST_Evento/qml/page/T_PowerPoint.qml")
+                navigationView.push("qrc:/SAST_Evento/qml/page/T_Slide.qml")
             }
         }
     }

@@ -4,11 +4,10 @@ En::En(QObject *parent)
     : Lang{parent}
 {
     setObjectName("En");
-    lang_home("Events Square");
+    lang_plaza("Evento Plaza");
     lang_schedule("Schedule");
     lang_history("History");
-    lang_souvenirCard("Souvenir Card");
-    lang_organize("Organize");
+    lang_souvenir_card("Souvenir Card");
     lang_manage("Manage");
     lang_my("My");
     lang_theming("Theming");
@@ -19,29 +18,30 @@ En::En(QObject *parent)
     lang_settings("Settings");
     lang_locale("Locale");
     lang_navigation_view_display_mode("NavigationView Display Mode");
-    lang_personalData("Personal Data");
-    lang_sign_in("Sign In");
+    lang_profile("Profile");
+    lang_check("Check");
 
-    lang_createEvent("Create Event");
-    lang_eventInfo("Event Infomation");
-    lang_usermanage("User Management");
+    lang_create_event("Create Event");
+    lang_event_info("Event Infomation");
+    lang_user_manage("User Management");
     lang_timesheet("Timesheet");
     lang_feedback("Feedback");
-    lang_uploadSouvenirCard("Upload Souvenir Card");
-    lang_ppt("PowerPoint");
+    lang_upload_souvenir_card("Upload Souvenir Card");
+    lang_slide("Slide");
+    lang_others("Others");
 
     lang_welcome("Welcome Back,");
     lang_login("Login");
     lang_comment("Comment");
-    lang_publish("Publish");
+    lang_submit("Submuit");
     lang_subscribe("+Subscribe");
     lang_unsubscribe("Unsubscribe");
-    lang_signed_in("Signed In");
-    lang_in_progress("Ongoing");
+    lang_checked("Checked");
+    lang_undertaking("Undertaking");
     lang_not_started("Not Started");
     lang_over("Over");
-    lang_ongoing_events("Ongoing Events");
-    lang_latest_events("Latest Events");
+    lang_undertaking_evento("Undertaking Evento");
+    lang_latest_evento("Latest Evento");
     lang_username("username");
     lang_password("password");
     lang_zh("Chinese");

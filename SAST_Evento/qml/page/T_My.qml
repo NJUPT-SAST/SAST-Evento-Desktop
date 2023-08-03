@@ -68,7 +68,7 @@ FluScrollablePage {
             paddings: 10
             FluTextButton {
                 id: button
-                text: "登录"
+                text: lang.lang_login
 
                 onClicked: {
                     loginPageRegister.launch({
@@ -137,7 +137,7 @@ FluScrollablePage {
                         iconSource: FluentIcons.Trackers
                     }
                     FluText {
-                        text: lang.lang_sign_in
+                        text: lang.lang_check
                         width: 50
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -162,7 +162,7 @@ FluScrollablePage {
                         }
                     }
                     FluText {
-                        text: lang.lang_souvenirCard
+                        text: lang.lang_souvenir_card
                         width: 50
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -181,7 +181,7 @@ FluScrollablePage {
                         iconSource: FluentIcons.PersonalFolder
                     }
                     FluText {
-                        text: lang.lang_personalData
+                        text: lang.lang_profile
                         width: 50
                         horizontalAlignment: Text.AlignHCenter
                     }

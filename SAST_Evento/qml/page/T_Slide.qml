@@ -7,6 +7,6 @@ import "qrc:///SAST_Evento/qml/global"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
-    title: lang.lang_ppt
+    title: lang.lang_slide
     Layout.fillWidth: true
 }

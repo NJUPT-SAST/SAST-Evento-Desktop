@@ -9,7 +9,7 @@ FluScrollablePage {
 
     launchMode: FluPageType.SingleTask
     animDisabled: true
-    title: lang.lang_home
+    title: lang.lang_plaza
     FluCarousel {
         Layout.topMargin: 10
         Layout.bottomMargin: 10
@@ -122,7 +122,7 @@ FluScrollablePage {
     }
 
     FluText {
-        text: lang.lang_ongoing_events
+        text: lang.lang_undertaking_evento
         font: FluTextStyle.Title
         Layout.topMargin: 20
         Layout.leftMargin: 20
@@ -228,7 +228,7 @@ FluScrollablePage {
     }
 
     FluText {
-        text: lang.lang_latest_events
+        text: lang.lang_latest_evento
         font: FluTextStyle.Title
         Layout.topMargin: 20
         Layout.leftMargin: 20
