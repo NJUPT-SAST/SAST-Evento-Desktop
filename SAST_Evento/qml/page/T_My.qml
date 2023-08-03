@@ -128,13 +128,17 @@ FluScrollablePage {
                 color: "transparent"
 
                 Column {
-                    id: button_signIn
+                    id: button_check
                     anchors.leftMargin: 50
                     FluIconButton {
                         width: 50
                         height: 50
                         scale: 1.8
                         iconSource: FluentIcons.Trackers
+                        onClicked: {
+
+                            //TODO
+                        }
                     }
                     FluText {
                         text: lang.lang_check
@@ -146,7 +150,7 @@ FluScrollablePage {
                 Column {
                     id: button_souvenirCard
                     anchors {
-                        left: button_signIn.right
+                        left: button_check.right
                         leftMargin: parent.width / 3
                     }
 
@@ -179,6 +183,10 @@ FluScrollablePage {
                         height: 50
                         scale: 1.8
                         iconSource: FluentIcons.PersonalFolder
+                        onClicked: {
+                            ItemsOriginal.item.navigationView.push(
+                                        "qrc:/SAST_Evento/qml/page/T_Profile.qml")
+                        }
                     }
                     FluText {
                         text: lang.lang_profile
