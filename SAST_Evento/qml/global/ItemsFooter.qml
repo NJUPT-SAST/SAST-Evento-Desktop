@@ -11,13 +11,6 @@ FluObject {
     FluPaneItemSeparator {}
 
     FluPaneItem {
-        title: "热重载窗口"
-        tapFunc: function () {
-            FluApp.navigate("/hotload")
-        }
-    }
-
-    FluPaneItem {
         title: lang.lang_my
         icon: FluentIcons.Contact
         onTap: {

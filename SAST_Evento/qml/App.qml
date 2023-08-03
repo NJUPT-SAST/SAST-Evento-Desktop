@@ -28,11 +28,9 @@ Window {
         appInfo.changeLang(settings.value("langMode", "Zh"))
         FluApp.routes = {
             "/": "qrc:/SAST_Evento/qml/window/MainWindow.qml",
-            "/login": "qrc:/SAST_Evento/qml/window/LoginWindow.qml",
-            "/hotload": "qrc:/SAST_Evento/qml/window/HotloadWindow.qml"
+            "/login": "qrc:/SAST_Evento/qml/window/LoginWindow.qml"
         }
         FluApp.initialRoute = "/"
-        FluApp.httpInterceptor = interceptor
         FluApp.run()
     }
 

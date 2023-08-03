@@ -6,18 +6,6 @@ import FluentUI
 Loader {
     id: loader
 
-    Connections {
-        target: appInfo
-        function onLogin() {
-            if (appInfo.identity.authority === 0)
-                return
-            if (appInfo.identity.authority === 2)
-                loader.source = "qrc:/SAST_Evento/qml/global/ItemsOriginal_manager.qml"
-            if (appInfo.identity.authority === 1)
-                loader.source = "qrc:/SAST_Evento/qml/global/ItemsOriginal_usr.qml"
-        }
-    }
-
     function getInProgressData() {
         var arr = []
         for (var i = 0; i < loader.item.children.length; i++) {

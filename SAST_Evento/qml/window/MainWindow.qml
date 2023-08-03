@@ -42,21 +42,11 @@ CustomWindow {
         target: loginPageRegister
         function onResult(data) {
             if (data.ok) {
-                appInfo.changeIdentity(data.username, data.password)
                 settings.username = data.username
+                ItemsOriginal.source = "qrc:/SAST_Evento/qml/global/ItemsOriginal_manager.qml"
             } else {
                 showInfo("未登录，前往“我的”以登录账号")
             }
-        }
-    }
-
-    Connections {
-        target: appInfo
-        function onLogin() {
-            if (appInfo.identity.authority === 0)
-                showInfo("未登录，前往“我的”以登录账号")
-            else
-                showSuccess("登录成功")
         }
     }
 

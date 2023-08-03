@@ -30,26 +30,7 @@ FluScrollablePage {
     }
 
     Component.onCompleted: {
-        if (appInfo.identity.authority === 0) {
-            loader.sourceComponent = noLogin
-            return
-        }
         loader.sourceComponent = login
-    }
-
-    Connections {
-        target: appInfo
-        function onLogin() {
-            if (appInfo.identity.authority === 0) {
-                loader.sourceComponent = noLogin
-                return
-            }
-            loader.sourceComponent = login
-            if (appInfo.identity.authority === 2)
-                loader.item.text = "管理员"
-            if (appInfo.identity.authority === 1)
-                loader.item.text = "普通用户"
-        }
     }
 
     Loader {
@@ -113,7 +94,7 @@ FluScrollablePage {
                         font: FluTextStyle.Title
                     }
                     FluText {
-                        text: appInfo.identity.username
+                        text: "admin"
                         font: FluTextStyle.Subtitle
                     }
                 }
