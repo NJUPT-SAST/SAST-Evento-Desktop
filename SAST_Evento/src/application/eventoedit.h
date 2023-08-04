@@ -5,7 +5,8 @@
 
 class EventoEdit
 {
-    //Q_OBJECT
+    Q_OBJECT
+
 public:
     enum EditMode{
         Edit = 0,
