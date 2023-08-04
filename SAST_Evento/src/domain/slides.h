@@ -9,6 +9,8 @@ class Slides
 public:
     Slides(QString id, QString pic, QString title, EventoID eventId, std::optional<QString> link);
 
+    QString getLink() const;
+
 private:
     QString m_id;
     QString m_pic;
