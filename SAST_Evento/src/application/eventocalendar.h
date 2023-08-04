@@ -2,11 +2,10 @@
 #define EVENTOCALENDAR_H
 
 #include <QObject>
-#include <mutex>
 
 class EventoCalendar
 {
-    //Q_OBJECT
+    Q_OBJECT
 
 public:
     enum CalendarMode{
@@ -22,7 +21,6 @@ public slots:
 
 private:
     EventoCalendar();
-    static std::mutex m_mutex;
 };
 
 #endif // EVENTOCALENDAR_H

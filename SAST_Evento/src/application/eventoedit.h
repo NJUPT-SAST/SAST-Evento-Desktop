@@ -2,7 +2,6 @@
 #define EVENTOEDIT_H
 
 #include <QObject>
-#include <mutex>
 
 class EventoEdit
 {
@@ -21,7 +20,6 @@ public slots:
     void onRemove();
 private:
     EventoEdit();
-    static std::mutex m_mutex;
 };
 
 #endif // EVENTOEDIT_H

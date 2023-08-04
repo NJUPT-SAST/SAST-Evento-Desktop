@@ -4,3 +4,13 @@
 EventoPlaza::EventoPlaza()
     : m_slidesModel(SlidesModel::getInstance())
 {}
+
+void EventoPlaza::onClickEvento(EventoID)
+{
+
+}
+
+void EventoPlaza::onClickSlide(QString)
+{
+
+}
