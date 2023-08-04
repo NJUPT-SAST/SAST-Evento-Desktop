@@ -1,19 +1,15 @@
 #include "slidesmodel.h"
+#include "src/domain/slides.h"
 
 SlidesModel::SlidesModel(QObject *parent)
     : QAbstractListModel(parent)
 {
 }
 
-std::shared_ptr<SlidesModel> SlidesModel::getInstance()
+SlidesModel* SlidesModel::getInstance()
 {
-    static std::shared_ptr<SlidesModel> instance = nullptr;
-    if (instance)
-        return instance;
-    std::lock_guard<std::mutex> lock(m_mutex);
-    if (!instance)
-        instance = std::make_shared<SlidesModel>(nullptr);
-    return instance;
+    static SlidesModel instance;
+    return &instance;
 }
 
 int SlidesModel::rowCount(const QModelIndex &parent) const
@@ -35,7 +31,7 @@ QVariant SlidesModel::data(const QModelIndex &index, int role) const
     case Role::Url:
         return m_data[index.row()].getLink();
     default:
-        ;
+        break;
     }
 
     return QVariant();
