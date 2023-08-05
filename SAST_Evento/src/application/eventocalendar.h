@@ -21,8 +21,12 @@ public slots:
     void onMove();
 
 private:
-    EventoCalendar();
     static std::mutex m_mutex;
+
+    EventoCalendar(){};
+    ~EventoCalendar(){};
+    EventoCalendar(const EventoCalendar&);
+    EventoCalendar &operator=(const EventoCalendar&);
 };
 
 #endif // EVENTOCALENDAR_H
