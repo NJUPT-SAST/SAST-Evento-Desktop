@@ -19,7 +19,7 @@ int SlidesModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return m_data.count();
+    return m_data.size();
 }
 
 QVariant SlidesModel::data(const QModelIndex &index, int role) const
@@ -45,20 +45,46 @@ QHash<int, QByteArray> SlidesModel::roleNames() const
     return roles;
 }
 
-bool SlidesModel::setData(const QModelIndex &index, const QVariant &value, int role)
+void SlidesModel::resetModel(const std::vector<Slides>& model)
 {
-    if (data(index, role) != value) {
-        // FIXME: Implement me!
-        emit dataChanged(index, index, {role});
-        return true;
-    }
-    return false;
+    std::lock_guard<std::mutex> lock(m_mutex);
+    beginResetModel();
+    m_data = std::move(model);
+    endResetModel();
 }
 
-Qt::ItemFlags SlidesModel::flags(const QModelIndex &index) const
+void SlidesModel::append(const Slides& item)
 {
-    if (!index.isValid())
-        return Qt::NoItemFlags;
-
-    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable; // FIXME: Implement me!
+    std::lock_guard<std::mutex> lock(m_mutex);
+    beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
+    m_data.emplace_back(item);
+    endInsertRows();
 }
+
+void SlidesModel::removeBySlideID(const QString& id)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto iter = std::find_if(m_data.begin(), m_data.end(),
+                             [&id](const Slides& ele) {
+                                 return ele.getSlideID() == id;
+                             });
+    if (iter == m_data.end()) return;
+    auto idx = std::distance(m_data.begin() ,iter);
+    beginRemoveRows(QModelIndex(), idx, idx);
+    m_data.erase(iter);
+    endRemoveRows();
+}
+
+void SlidesModel::changeItemBySlideID(const QString& id, const Slides& item)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto iter = std::find_if(m_data.begin(), m_data.end(),
+                             [&id](const Slides& ele) {
+                                 return ele.getSlideID() == id;
+                             });
+    if (iter == m_data.end()) return;
+    auto idx = std::distance(m_data.begin() ,iter);
+    m_data.emplace(iter, item);
+    emit dataChanged(index(idx), index(idx));
+}
+

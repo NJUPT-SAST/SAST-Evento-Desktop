@@ -19,7 +19,7 @@ int EventoBriefModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return m_data.count();
+    return m_data.size();
 }
 
 QVariant EventoBriefModel::data(const QModelIndex &index, int role) const
@@ -61,36 +61,45 @@ QHash<int, QByteArray> EventoBriefModel::roleNames() const
     return roles;
 }
 
-bool EventoBriefModel::setData(const QModelIndex &index, const QVariant &value, int role)
+void EventoBriefModel::resetModel(const std::vector<EventoBrief>& model)
 {
-    if (data(index, role) != value) {
-        // FIXME: Implement me!
-        emit dataChanged(index, index, {role});
-        return true;
-    }
-    return false;
+    std::lock_guard<std::mutex> lock(m_mutex);
+    beginResetModel();
+    m_data = std::move(model);
+    endResetModel();
 }
 
-Qt::ItemFlags EventoBriefModel::flags(const QModelIndex &index) const
+void EventoBriefModel::append(const EventoBrief& item)
 {
-    if (!index.isValid())
-        return Qt::NoItemFlags;
-
-    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable; // FIXME: Implement me!
-}
-
-bool EventoBriefModel::insertRows(int row, int count, const QModelIndex &parent)
-{
-    beginInsertRows(parent, row, row + count - 1);
-    // FIXME: Implement me!
+    std::lock_guard<std::mutex> lock(m_mutex);
+    beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
+    m_data.emplace_back(item);
     endInsertRows();
-    return true;
 }
 
-bool EventoBriefModel::removeRows(int row, int count, const QModelIndex &parent)
+void EventoBriefModel::removeByEventoID(const QString& id)
 {
-    beginRemoveRows(parent, row, row + count - 1);
-    // FIXME: Implement me!
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto iter = std::find_if(m_data.begin(), m_data.end(),
+                 [&id](const EventoBrief& ele) {
+                     return ele.getEventoID() == id;
+    });
+    if (iter == m_data.end()) return;
+    auto idx = std::distance(m_data.begin() ,iter);
+    beginRemoveRows(QModelIndex(), idx, idx);
+    m_data.erase(iter);
     endRemoveRows();
-    return true;
+}
+
+void EventoBriefModel::changeItemByEventoID(const QString& id, const EventoBrief& item)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto iter = std::find_if(m_data.begin(), m_data.end(),
+                             [&id](const EventoBrief& ele) {
+                                 return ele.getEventoID() == id;
+                             });
+    if (iter == m_data.end()) return;
+    auto idx = std::distance(m_data.begin() ,iter);
+    m_data.emplace(iter, item);
+    emit dataChanged(index(idx), index(idx));
 }

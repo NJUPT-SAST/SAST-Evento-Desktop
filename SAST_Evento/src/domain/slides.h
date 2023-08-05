@@ -9,7 +9,8 @@ class Slides
 public:
     Slides(QString id, QString pic, QString title, EventoID eventId, std::optional<QString> link);
 
-    QString getLink() const;
+    QString getLink() const { return m_link.value_or("default path"); }
+    QString getSlideID() const { return m_id; }
 
 private:
     QString m_id;

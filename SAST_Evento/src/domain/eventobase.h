@@ -26,6 +26,7 @@ public:
         m_metadata(std::move(metadata))
     {}
 
+    EventoID getEventoID() const { return m_id; }
     EventoState getState() const { return m_state; }
     QString getDate() const { return m_date; }
     QString getImage() const { return m_image.value_or("default path"); }

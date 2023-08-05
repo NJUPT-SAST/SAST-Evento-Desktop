@@ -2,6 +2,7 @@
 #define SLIDESMODEL_H
 
 #include <QAbstractListModel>
+#include <mutex>
 
 class Slides;
 
@@ -23,16 +24,17 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    // Editable:
-    bool setData(const QModelIndex &index, const QVariant &value,
-                 int role = Qt::EditRole) override;
-
-    Qt::ItemFlags flags(const QModelIndex& index) const override;
+    void resetModel(const std::vector<Slides>& model);
+    void append(const Slides& item);
+    void removeByEventoID(const QString& id);
+    void changeItemByEventoID(const QString& id, const Slides& item);
 
 private:
     explicit SlidesModel(QObject *parent = nullptr);
 
-    QList<Slides> m_data;
+    std::vector<Slides> m_data;
+
+    std::mutex m_mutex;
 };
 
 #endif // SLIDESMODEL_H
