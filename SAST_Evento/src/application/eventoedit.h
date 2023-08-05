@@ -20,16 +20,11 @@ public slots:
     void onSave();
     void onRemove();
 private:
-<<<<<<< HEAD
-    static std::mutex m_mutex;
-
     EventoEdit(){};
     ~EventoEdit(){};
     EventoEdit(const EventoEdit&);
     EventoEdit &operator=(const EventoEdit&);
-=======
-    EventoEdit();
->>>>>>> 3bfb64fcdf3908b652e3f7c0bba0156365ab0447
+
 };
 
 #endif // EVENTOEDIT_H
