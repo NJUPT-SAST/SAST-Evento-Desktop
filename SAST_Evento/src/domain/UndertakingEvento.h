@@ -16,6 +16,8 @@ public:
                        QString description,
                        bool visible);
 
+    QString getLocation() const { return m_location; }
+
 private:
     QString m_location;
     QString m_description;

@@ -9,7 +9,8 @@ public:
     Feedback(EventoBase event,
              int score,
              QString comment);
-    EventInfo getEvent() const { return m_event; }
+
+    EventoBase getEvent() const { return *this; }
     int getScore() const { return m_score; }
     QString getComment() const { return m_comment; }
 

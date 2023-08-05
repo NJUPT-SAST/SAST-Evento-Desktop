@@ -4,12 +4,20 @@
 #include "eventobase.h"
 
 class EventoBlock : EventoBase {
-   public:
+public:
     enum class CalendarMode { Overall, Mine };
 
-    EventoBlock(EventoID id, EventoState state, QString date, QString title,
-                QString metadata, int rowStart, int rowEnd, int columnStart,
-                int columnEnd, QString description, bool finished);
+    EventoBlock(EventoID id,
+                EventoState state,
+                QString date,
+                QString title,
+                QString metadata,
+                int rowStart,
+                int rowEnd,
+                int columnStart,
+                int columnEnd,
+                QString description,
+                bool finished);
 
     int getRowStart() const { return m_rowStart; }
     int getRowEnd() const { return m_rowEnd; }
@@ -19,7 +27,7 @@ class EventoBlock : EventoBase {
     QString getDescription() const { return m_description; }
     bool isFinished() const { return m_finished; }
 
-   private:
+private:
     int m_rowStart;
     int m_rowEnd;
     int m_columnStart;

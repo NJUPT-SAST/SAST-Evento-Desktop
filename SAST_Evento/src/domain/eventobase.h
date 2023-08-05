@@ -22,13 +22,15 @@ public:
                QString title,
                QString metadata)
     : m_id(std::move(id)), m_state(state), m_date(std::move(date)),
-      m_image(std::move(image)), m_title(std::move(title)),m_metadata(metadata)
+        m_image(std::move(image)), m_title(std::move(title)),
+        m_metadata(std::move(metadata))
     {}
 
-    EventoState getState() { return m_state; }
-    QString getDate() { return m_date; }
-    QString getImage() { return m_image.value_or("default path"); }
-    QString getTitle() { return m_title; }
+    EventoState getState() const { return m_state; }
+    QString getDate() const { return m_date; }
+    QString getImage() const { return m_image.value_or("default path"); }
+    QString getTitle() const { return m_title; }
+    QString getMetadata() const { return m_metadata; }
 
 protected:
     EventoID m_id;
