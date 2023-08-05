@@ -12,3 +12,8 @@ EventoBlock::EventoBlock(EventoID id, EventoState state, QString date,
       m_columnEnd(columnEnd),
       m_description(std::move(description)),
       m_finished(finished) {}
+
+void EventoBlock::setRowStart(int rowStart){ m_rowStart = rowStart; }
+void EventoBlock::setRowEnd(int rowEnd){ m_rowEnd = rowEnd; }
+void EventoBlock::setColumnStart(int columnStart){ m_columnStart = columnStart; }
+void EventoBlock::setColumnEnd(int columnEnd){ m_columnEnd = columnEnd; }
