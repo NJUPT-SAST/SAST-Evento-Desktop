@@ -1,21 +1,12 @@
 #ifndef EVENTO_H
 #define EVENTO_H
 
-#include <QString>
 #include <QStringList>
+#include "eventobrief.h"
 
-using EventoID = QString;
-
-class Evento
+class Evento : public EventoBrief
 {
 public:
-    enum class EventoState {
-        Before,
-        Registration,
-        Undertaking,
-        Cancelled,
-        Over
-    };
     enum class ParticipationState {
         unsubscribed,
         subscribed,
@@ -25,33 +16,26 @@ public:
     };
 
     Evento(EventoID id,
-           EventoState state,
-           QStringList tag,
-           QString date,
-           QString registration,
+           EventoState state,          
+           QString date,          
            std::optional<QString> image,
            QString title,
-           QString description,
+           bool visible,
+           CheckState checked,
            QString type,
            QString location,
-           bool visible,
+           QString registration,
+           QStringList tag,
+           QString description,
            ParticipationState participate,
            bool feedback);
 
 private:
-    EventoID id;
-    EventoState state;
-    QStringList tag;
-    QString date;
-    QString registration;
-    std::optional<QString> image;
-    QString title;
-    QString description;
-    QString type;
-    QString location;
-    bool visible;
-    ParticipationState participate;
-    bool feedback;
+    QString m_registration;
+    QStringList m_tag;
+    QString m_description;
+    ParticipationState m_participate;
+    bool m_feedback;
 };
 
 #endif // EVENTO_H

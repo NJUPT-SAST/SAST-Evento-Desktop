@@ -1,49 +1,25 @@
 #ifndef UNDERTAKINGEVENTO_H
 #define UNDERTAKINGEVENTO_H
 
-#include <QString>
-using EventoID = QString;
+#include "eventobase.h"
 
-class undertakingevento
+class UndertakingEvento: public EventoBase
 {
 public:
-    enum class EventoState {
-        Before,
-        Registration,
-        Undertaking,
-        Cancelled,
-        Over
-    };
-    undertakingevento(EventoID id,
-                      EventoState state,
-                      QString date,
-                      std::optional<QString> image,
-                      QString title,
-                      QString description,
-                      QString metadata,
-                      bool visible);
+    UndertakingEvento(EventoID id,
+                       EventoState state,
+                       QString date,
+                       std::optional<QString> image,
+                       QString title,
+                       QString metadata,
+                       QString location,
+                       QString description,
+                       bool visible);
+
 private:
-    EventoID id;
-    EventoState state;
-    QString date;
-    std::optional<QString> image;
-    QString title;
-    QString description;
-    QString metadata;
-    bool visible;
+    QString m_location;
+    QString m_description;
+    bool m_visible;
 };
 
 #endif // UNDERTAKINGEVENTO_H
-
-/*
-"UndertakingEvento":{
-                    "id":"EventoID",
-                    "state":"EventoState",
-                    "date":"QString",
-                    "image":"std::optional<QString>",
-                    "title":"QString",
-                    "description":"QString",
-                    "metadata":"QString",
-                    "visible":"bool"
-                },
-*/

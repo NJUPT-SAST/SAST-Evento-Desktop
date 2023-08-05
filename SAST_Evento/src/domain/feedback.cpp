@@ -1,6 +1,7 @@
 #include "feedback.h"
 
-Feedback::Feedback(EventInfo event,
+Feedback::Feedback(EventoBase evento,
                    int score,
                    QString comment)
-:m_event(event),m_score(score),m_comment(comment){}
+: EventoBase(std::move(evento)), m_score(score),
+  m_comment(std::move(comment)) {}

@@ -1,26 +1,16 @@
 #ifndef FEEDBACK_H
 #define FEEDBACK_H
 
-#include <QString>
-using EventoID = QString;
+#include "eventobase.h"
 
-class Feedback
+class Feedback: private EventoBase
 {
 public:
-    struct EventInfo {
-        EventoID id;
-        QString date;
-        std::optional<QString> image;
-        QString title;
-        QString metadata;
-    };
-
-    Feedback(EventInfo event,
+    Feedback(EventoBase event,
              int score,
              QString comment);
 
 private:
-    EventInfo m_event;
     int m_score;
     QString m_comment;
 };

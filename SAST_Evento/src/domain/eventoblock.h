@@ -1,10 +1,9 @@
 #ifndef EVENTOBLOCK_H
 #define EVENTOBLOCK_H
 
-#include <QString>
-using EventoID = QString;
+#include "eventobase.h"
 
-class EventoBlock
+class EventoBlock: EventoBase
 {
 public:
     enum class CalendarMode {
@@ -13,25 +12,24 @@ public:
     };
 
     EventoBlock(EventoID id,
-                int start,
-                int end,
-                int data,
+                EventoState state,
+                QString date,
                 QString title,
-                QString description,
                 QString metadata,
-                bool finished,
-                bool enabled);
+                int rowStart,
+                int rowEnd,
+                int columnStart,
+                int columnEnd,
+                QString description,              
+                bool finished);
 
 private:
-    EventoID m_id;
-    int m_start;
-    int m_end;
-    int m_data;
-    QString m_title;
+    int m_rowStart;
+    int m_rowEnd;
+    int m_columnStart;
+    int m_columnEnd;
     QString m_description;
-    QString m_metadata;
     bool m_finished;
-    bool m_enabled;
 };
 
 #endif // EVENTOBLOCK_H

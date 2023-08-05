@@ -1,38 +1,23 @@
 #ifndef LATESTEVENTO_H
 #define LATESTEVENTO_H
 
-#include <QString>
-using EventoID = QString;
+#include "undertakingevento.h"
 
-class latestevento
+class LatestEvento : public UndertakingEvento
 {
 public:
-    enum class EventoState {
-        Before,
-        Registration,
-        Undertaking,
-        Cancelled,
-        Over
-    };
-    latestevento(EventoID id,
-                      EventoState state,
-                      QString date,
-                      std::optional<QString> image,
-                      QString title,
-                      QString description,
-                      QString type,
-                      QString metadata,
-                      bool visible);
+    LatestEvento(EventoID id,
+                 EventoState state,
+                 QString date,
+                 std::optional<QString> image,
+                 QString title,
+                 QString metadata,
+                 QString location,
+                 QString description,
+                 bool visible,
+                 QString type);
 private:
-    EventoID id;
-    EventoState state;
-    QString date;
-    std::optional<QString> image;
-    QString title;
-    QString description;
-    QString type;
-    QString metadata;
-    bool visible;
+    QString m_type;
 };
 
 #endif // LATESTEVENTO_H

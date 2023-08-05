@@ -1,15 +1,21 @@
 #include "eventoblock.h"
 
 EventoBlock::EventoBlock(EventoID id,
-                         int start,
-                         int end,
-                         int data,
+                         EventoState state,
+                         QString date,
                          QString title,
-                         QString description,
                          QString metadata,
-                         bool finished,
-                         bool enabled)
-: m_id(std::move(id)),m_start(start),m_end(end),m_data(data),
-  m_title(std::move(title)),m_description(std::move(description)),m_metadata(metadata),
-  m_finished(finished),m_enabled(enabled){}
+                         int rowStart,
+                         int rowEnd,
+                         int columnStart,
+                         int columnEnd,
+                         QString description,
+                         bool finished)
+    : EventoBase(std::move(id), state, std::move(date), std::nullopt,
+                 std::move(title), std::move(metadata)),
+    m_rowStart(rowStart),m_rowEnd(rowEnd),
+    m_columnStart(columnStart),m_columnEnd(columnEnd),
+    m_description(std::move(description)), m_finished(finished)
+{
 
+}

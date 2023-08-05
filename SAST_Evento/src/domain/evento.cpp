@@ -2,46 +2,23 @@
 
 Evento::Evento(EventoID id,
                EventoState state,
-               QStringList tag,
                QString date,
-               QString registration,
                std::optional<QString> image,
                QString title,
-               QString description,
+               bool visible,
+               CheckState checked,
                QString type,
                QString location,
-               bool visible,
+               QString registration,
+               QStringList tag,
+               QString description,
                ParticipationState participate,
                bool feedback)
-     :id(std::move(id)),
-      state(state),
-      tag(std::move(tag)),
-      date(std::move(date)),
-      registration(std::move(registration)),
-      image(std::move(image)),
-      title(std::move(title)),
-      description(std::move(description)),
-      type(std::move(type)),
-      location(std::move(location)),
-      visible(visible),
-      participate(std::move(participate)),
-      feedback(feedback)
-{}
+    : EventoBrief(std::move(id), state, std::move(date),
+                       std::move(image), std::move(title), nullptr,
+                  visible, checked, std::move(type), std::move(location)),
+    m_registration(std::move(registration)), m_tag(std::move(tag)),
+    m_participate(participate), m_feedback(feedback)
+{
 
-
-/*
-
-    EventoID id;
-    EventoSate state;
-    QStringList tag;
-    QString date;
-    QString registration;
-    std::optional<QString> image;
-    QString title;
-    QString description;
-    QString type;
-    QString location;
-    bool visible;
-    ParticipationState participate;
-    bool feedback;
-*/
+}

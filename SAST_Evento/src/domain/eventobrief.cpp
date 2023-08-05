@@ -5,24 +5,15 @@ EventoBrief::EventoBrief(EventoID id,
                          QString date,
                          std::optional<QString> image,
                          QString title,
-                         QString location,
-                         QString type,
                          QString metadata,
                          bool visible,
-                         bool enable,
-                         CheckState checked)
-: m_id(std::move(id)), m_state(state), m_date(std::move(date)),
-  m_image(std::move(image)), m_title(std::move(title)),
-  m_location(std::move(location)), m_type(std::move(type)),
-    m_metadata(metadata), m_visible(visible), m_enable(enable),
-    m_checked(checked) {}
+                         CheckState checked,
+                         QString location,
+                         QString type)
+: EventoBaseExpand(std::move(id), state, std::move(date),
+                   std::move(image), std::move(title),
+                   std::move(metadata), visible, checked),
+  m_location(std::move(location)), m_type(std::move(type))
+{
 
-
-
-
-
-
-
-
-
-
+}
