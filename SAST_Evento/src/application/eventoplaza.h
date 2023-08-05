@@ -1,16 +1,26 @@
 #ifndef EVENTOPLAZA_H
 #define EVENTOPLAZA_H
 
-#include "src/controller/slidesmodel.h"
+#include <QObject>
+
+class SlidesModel;
+class UndertakingEvento;
+class LatestEvento;
 
 class EventoPlaza
 {
+    Q_OBJECT
+
 public:
+    using EventoID = QString;
     EventoPlaza();
+public slots:
+    void onClickEvento(EventoID);
+    void onClickSlide(QString);
 private:
-    std::shared_ptr<SlidesModel> m_slidesModel;
-    std::shared_ptr<UndertakingEvento> m_undertakingEventoModel;
-    std::shared_ptr<LatestEvento> m_latestEventoModel;
+    SlidesModel* m_slidesModel;
+    UndertakingEvento* m_undertakingEventoModel;
+    LatestEvento* m_latestEventoModel;
 };
 
 #endif // EVENTOPLAZA_H

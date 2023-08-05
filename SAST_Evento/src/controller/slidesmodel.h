@@ -2,8 +2,8 @@
 #define SLIDESMODEL_H
 
 #include <QAbstractListModel>
-#include <mutex>
-#include "src/domain/slides.h"
+
+class Slides;
 
 class SlidesModel : public QAbstractListModel
 {
@@ -14,7 +14,7 @@ public:
         Url =  Qt::DisplayPropertyRole + 1,
     };
 
-    static std::shared_ptr<SlidesModel> getInstance();
+    static SlidesModel* getInstance();
 
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -31,8 +31,6 @@ public:
 
 private:
     explicit SlidesModel(QObject *parent = nullptr);
-
-    static std::mutex m_mutex;
 
     QList<Slides> m_data;
 };

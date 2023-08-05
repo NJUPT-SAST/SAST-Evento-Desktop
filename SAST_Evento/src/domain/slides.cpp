@@ -6,8 +6,5 @@ Slides::Slides(QString id, QString pic, QString title, EventoID eventId, std::op
 
 QString Slides::getLink() const
 {
-    if (m_link.has_value())
-        return m_link.value();
-    return "defalut path";
-    // TODO: default path
+    return m_link.value_or("defalut path");
 }
