@@ -41,7 +41,7 @@ CustomWindow {
         }
 
         Image {
-            sourceSize.width: 400
+            sourceSize.width: 350
             Layout.alignment: Qt.AlignHCenter
             source: {
                 if (settings.value("darkMode",
