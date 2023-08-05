@@ -11,6 +11,9 @@ public:
     PermissionEntry(QString permissionId,
                     QString event,
                     QVector<QString> methodAllowed);
+    QString getPermissionId() const { return m_permissionId; }
+    QString getEvent() const { return m_event; }
+    QVector<QString> getMethodAllowed() const { return m_methodAllowed; }
 
 private:
     QString m_permissionId;
