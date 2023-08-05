@@ -24,8 +24,14 @@ public:
     int getColumnStart() const { return m_columnStart; }
     int getColumnEnd() const { return m_columnEnd; }
     QString getDate() const { return m_date; }
+    QString getTitle() const { return m_title; }
     QString getDescription() const { return m_description; }
     bool isFinished() const { return m_finished; }
+
+    void setRowStart(int rowStart);
+    void setRowEnd(int rowEnd);
+    void setColumnStart(int columnStart);
+    void setColumnEnd(int columnEnd);
 
 private:
     int m_rowStart;
