@@ -26,8 +26,8 @@ public:
 
     void resetModel(const std::vector<Slides>& model);
     void append(const Slides& item);
-    void removeByEventoID(const QString& id);
-    void changeItemByEventoID(const QString& id, const Slides& item);
+    void removeBySlideID(const QString& id);
+    void changeItemBySlideID(const QString& id, const Slides& item);
 
 private:
     explicit SlidesModel(QObject *parent = nullptr);
