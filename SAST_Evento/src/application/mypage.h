@@ -11,35 +11,17 @@ class MyPage
     Q_OBJECT
 
 public:
-    using EventoID = QString;
-
-    enum class EventoState {
-        Before,
-        Registration,
-        Undertaking,
-        Cancelled,
-        Over
-    };
-
-    enum class CheckState {
-        Disabled,
-        Checked,
-        Expired,
-        Unchecked,
-        Scene
-    };
-
     static MyPage* getInstance();
+
+    ~MyPage() = default;
 
 public slots:
     void onHistory();
     void onClickSouvenirs();
     void onClickProfile();
+
 private:
     MyPage(){};
-    ~MyPage(){};
-    MyPage(const MyPage&);
-    MyPage &operator=(const MyPage&);
 
     EventoHistory* m_eventoHistory;
 

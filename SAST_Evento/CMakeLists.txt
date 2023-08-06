@@ -40,7 +40,7 @@ else()
 endif()
 
 #遍历所有Cpp文件
-file(GLOB_RECURSE CPP_FILES *.cpp *.h)
+file(GLOB_RECURSE CPP_FILES *.cpp *.h *.hpp)
 foreach(filepath ${CPP_FILES})
     string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
     list(APPEND sources_files ${filename})
@@ -103,7 +103,7 @@ qt_add_qml_module(SAST_Evento
 
 #导入component头文件,不然通过QML_NAMED_ELEMENT生成的c++类会找不到头文件报错
 target_include_directories(SAST_Evento PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/component
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/controller
 )
 
 #设置属性

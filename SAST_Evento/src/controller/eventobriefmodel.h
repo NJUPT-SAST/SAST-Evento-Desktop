@@ -12,7 +12,7 @@ class EventoBriefModel : public QAbstractListModel
 
 public:
     enum Role {
-        State = Qt::DisplayPropertyRole + 1,
+        State = Qt::UserRole + 1,
         Title,
         Date,
         Location,

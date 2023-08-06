@@ -1,4 +1,4 @@
-#include "CircularReveal.h"
+#include "circularreveal.h"
 #include <QGuiApplication>
 #include <QQuickItemGrabResult>
 #include <QPainterPath>

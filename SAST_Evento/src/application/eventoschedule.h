@@ -11,12 +11,19 @@ class EventoSchedule
 
 public:
     using EventoID = QString;
-    EventoSchedule();
+
+    ~EventoSchedule() = default;
+
+    static EventoSchedule* getInstance();
+
 public slots:
     void onClickEvento(EventoID);
     void onCheck(EventoID);
     void onFeedback(EventoID);
+
 private:
+    EventoSchedule();
+
     EventoBriefModel* m_eventoBriefModel;
 };
 

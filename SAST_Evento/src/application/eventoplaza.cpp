@@ -5,12 +5,18 @@ EventoPlaza::EventoPlaza()
     : m_slidesModel(SlidesModel::getInstance())
 {}
 
-void EventoPlaza::onClickEvento(EventoID)
+EventoPlaza* EventoPlaza::getInstance()
+{
+    static EventoPlaza instance;
+    return &instance;
+}
+
+void EventoPlaza::onClickEvento(EventoID id)
 {
 
 }
 
-void EventoPlaza::onClickSlide(QString)
+void EventoPlaza::onClickSlide(QString id)
 {
 
 }

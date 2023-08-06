@@ -12,7 +12,7 @@ class SlidesModel : public QAbstractListModel
 
 public:
     enum Role {
-        Url =  Qt::DisplayPropertyRole + 1,
+        Url =  Qt::UserRole + 1,
     };
 
     static SlidesModel* getInstance();

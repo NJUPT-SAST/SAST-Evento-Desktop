@@ -8,13 +8,14 @@ class EventoEdit
     Q_OBJECT
 
 public:
-    using EventoID = QString;
     enum EditMode{
         Edit = 0,
         Create = 1
     };
 
     static EventoEdit* getInstance();
+
+    ~EventoEdit() = default;
 
 public slots:
     void onCreate();
@@ -23,9 +24,6 @@ public slots:
     void onGenerateQR(QString);
 private:
     EventoEdit(){};
-    ~EventoEdit(){};
-    EventoEdit(const EventoEdit&);
-    EventoEdit &operator=(const EventoEdit&);
 
 };
 

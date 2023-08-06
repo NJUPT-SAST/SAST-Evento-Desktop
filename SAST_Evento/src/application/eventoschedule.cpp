@@ -9,17 +9,23 @@ EventoSchedule::EventoSchedule()
 
 }
 
-void EventoSchedule::onClickEvento(EventoID)
+EventoSchedule* EventoSchedule::getInstance()
+{
+    static EventoSchedule instance;
+    return &instance;
+}
+
+void EventoSchedule::onClickEvento(EventoID id)
 {
 
 }
 
-void EventoSchedule::onCheck(EventoID)
+void EventoSchedule::onCheck(EventoID id)
 {
 
 }
 
-void EventoSchedule::onFeedback(EventoID)
+void EventoSchedule::onFeedback(EventoID id)
 {
 
 }

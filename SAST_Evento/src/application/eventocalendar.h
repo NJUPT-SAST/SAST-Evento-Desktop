@@ -17,15 +17,14 @@ public:
 
     static EventoCalendar* getInstance();
 
+    ~EventoCalendar() = default;
+
 public slots:
     void onClick(EventoID);
     void onMove(EventoID, int, int);
 
 private:
     EventoCalendar(){};
-    ~EventoCalendar(){};
-    EventoCalendar(const EventoCalendar&);
-    EventoCalendar &operator=(const EventoCalendar&);
 };
 
 #endif // EVENTOCALENDAR_H

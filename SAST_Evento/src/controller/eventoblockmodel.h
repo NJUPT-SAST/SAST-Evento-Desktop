@@ -10,7 +10,7 @@ class EventoBlockModel : public QAbstractListModel
 
 public:
     enum Role{
-        RowStart = Qt::DisplayPropertyRole + 1,
+        RowStart = Qt::UserRole + 1,
         RowEnd,
         ColumnStart,
         ColumnEnd,

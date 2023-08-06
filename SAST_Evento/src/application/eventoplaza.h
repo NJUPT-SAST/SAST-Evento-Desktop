@@ -13,11 +13,18 @@ class EventoPlaza
 
 public:
     using EventoID = QString;
-    EventoPlaza();
+
+    static EventoPlaza* getInstance();
+
+    ~EventoPlaza() = default;
+
 public slots:
     void onClickEvento(EventoID);
     void onClickSlide(QString);
+
 private:
+    EventoPlaza();
+
     SlidesModel* m_slidesModel;
     UndertakingEvento* m_undertakingEventoModel;
     LatestEvento* m_latestEventoModel;
