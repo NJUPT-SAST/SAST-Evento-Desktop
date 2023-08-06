@@ -2,8 +2,9 @@
 #define EVENTOCALENDAR_H
 
 #include <QObject>
+#include "src/controller/eventoblockmodel.h"
 
-class EventoCalendar
+class EventoCalendar : public QObject
 {
     Q_OBJECT
 
@@ -24,7 +25,9 @@ public slots:
     void onMove(EventoID, int, int);
 
 private:
-    EventoCalendar(){};
+    EventoCalendar();
+
+    EventoBlockModel* m_eventoBlockModel;
 };
 
 #endif // EVENTOCALENDAR_H

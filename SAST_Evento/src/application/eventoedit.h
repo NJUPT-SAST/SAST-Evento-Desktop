@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class EventoEdit
+class EventoEdit : public QObject
 {
     Q_OBJECT
 
