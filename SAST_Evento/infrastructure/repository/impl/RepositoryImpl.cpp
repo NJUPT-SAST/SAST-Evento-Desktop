@@ -3,7 +3,7 @@
 #include <infrastructure/nlohmann/json.hpp>
 #include "domain/exception/biz_exception.h"
 #include "infrastructure/converter/converter.h"
-#include "infrastructure/helper/CommonHelper.h"
+#include "infrastructure/helper/common_helper.h"
 #include "infrastructure/tool/RxHttp.h"
 #include "infrastructure/dto/UserDto.h"
 #include "infrastructure/dto/TokenDto.h"

@@ -14,3 +14,12 @@
 //    obj.statusMessage = QString::fromStdString(val.status.message);
 //    return obj;
 //}
+
+Slide Converter::dto2User(const SlideDTO &val)
+{
+    Slide obj;
+    obj.id = val.id;
+    obj.title = QString::fromStdString(val.title);
+    obj.url = QString::fromStdString(val.url);
+    return obj;
+}

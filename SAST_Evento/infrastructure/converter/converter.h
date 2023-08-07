@@ -4,10 +4,10 @@
 #include <QJsonDocument>
 #include <QObject>
 #include <QTimeZone>
-//#include "domain/entity/User.h"
-//#include "infrastructure/dto/UserDto.h"
+#include "domain/entity/slide.h"
+#include "infrastructure/dto/slidedto.h"
 
-//class Converter {
-//public:
-//    static User dto2User(const UserDto& val);
-//};
+class Converter {
+public:
+    static Slide dto2User(const SlideDTO& val);
+};
