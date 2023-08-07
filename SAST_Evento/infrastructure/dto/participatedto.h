@@ -1,7 +1,7 @@
 #ifndef PARTICIPATEDTO_H
 #define PARTICIPATEDTO_H
 
-#include <QString>
+#include <infrastructure/nlohmann/json.hpp>
 
 struct ParticipateDTO
 {
@@ -10,7 +10,14 @@ struct ParticipateDTO
     bool isParticipate;
     bool isSubscribe;
     bool eventId;
-    QString userId;
+    std::string userId;
 };
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(ParticipateDTO,
+                                                id,
+                                                isRegistration,
+                                                isParticipate,
+                                                isSubscribe,
+                                                eventId,
+                                                userId)
 
 #endif // PARTICIPATEDTO_H
