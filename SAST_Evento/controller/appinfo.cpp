@@ -1,10 +1,9 @@
 #include "appinfo.h"
 
-#include <QDebug>
 #include <QQmlContext>
 
-#include "src/lang/En.h"
-#include "src/lang/Zh.h"
+#include "lang/En.h"
+#include "lang/Zh.h"
 
 #define STR(x) #x
 #define VER_JOIN(a, b, c, d) STR(a.b.c.d)
