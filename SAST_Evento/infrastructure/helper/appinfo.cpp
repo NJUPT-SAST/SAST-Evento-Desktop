@@ -13,6 +13,7 @@
 AppInfo::AppInfo(QObject *parent) : QObject{parent} {
     version(VER_STR);
     lang(new Zh());
+
 }
 
 void AppInfo::init(QQmlApplicationEngine *engine) {

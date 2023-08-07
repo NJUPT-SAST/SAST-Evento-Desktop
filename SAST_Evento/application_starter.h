@@ -1,8 +1,8 @@
 #ifndef APPLICATIONINJECTOR_H
 #define APPLICATIONINJECTOR_H
 
-#include "infrastructure/di/RepositoryInjector.h"
-#include "infrastructure/di/ServiceInjector.h"
+#include "infrastructure/di/repository_injector.h"
+#include "infrastructure/di/service_injector.h"
 
 using namespace QInjection;
 

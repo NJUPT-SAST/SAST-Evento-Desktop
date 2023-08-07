@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QQmlApplicationEngine>
 
-#include "src/lang/Lang.h"
-#include "src/stdafx.h"
+#include "lang/Lang.h"
+#include "stdafx.h"
 
 class AppInfo : public QObject {
     Q_OBJECT

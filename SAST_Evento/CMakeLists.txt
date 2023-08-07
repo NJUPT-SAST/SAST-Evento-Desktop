@@ -103,7 +103,7 @@ qt_add_qml_module(SAST_Evento
 
 #导入component头文件,不然通过QML_NAMED_ELEMENT生成的c++类会找不到头文件报错
 target_include_directories(SAST_Evento PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/controller
+    ${CMAKE_CURRENT_SOURCE_DIR}/infrastructure/helper
 )
 
 #设置属性
