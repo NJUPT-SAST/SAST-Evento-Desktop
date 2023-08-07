@@ -10,7 +10,8 @@
 #include <QQuickWindow>
 #include <QSslConfiguration>
 
-#include "controller/AppInfo.h"
+#include "application_starter.h"
+#include "controller/appinfo.h"
 
 FRAMELESSHELPER_USE_NAMESPACE
 
@@ -23,6 +24,7 @@ int main(int argc, char *argv[]) {
         "https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop");
     QGuiApplication::setApplicationName("SAST Evento");
     QGuiApplication app(argc, argv);
+    ApplicationStarter::init(argv);
 #ifdef Q_OS_WIN  // 此设置仅在Windows下生效
     FramelessConfig::instance()->set(
         Global::Option::ForceHideWindowFrameBorder);
@@ -44,7 +46,7 @@ int main(int argc, char *argv[]) {
     engine.addImportPath("qrc:/");  // 让静态资源可以被QML引擎搜索到
 #endif
     appInfo->init(&engine);
-    const QUrl url(QStringLiteral("qrc:/SAST_Evento/qml/App.qml"));
+    const QUrl url(QStringLiteral("qrc:/SAST_Evento/App.qml"));
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated, &app,
         [url](QObject *obj, const QUrl &objUrl) {
@@ -52,5 +54,10 @@ int main(int argc, char *argv[]) {
         },
         Qt::QueuedConnection);
     engine.load(url);
-    return app.exec();
+
+    const int exec = QGuiApplication::exec();
+    if (exec == 931) {
+        QProcess::startDetached(qApp->applicationFilePath(), QStringList());
+    }
+    return exec;
 }
