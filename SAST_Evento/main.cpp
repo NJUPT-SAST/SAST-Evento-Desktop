@@ -11,7 +11,7 @@
 #include <QSslConfiguration>
 
 #include "application_starter.h"
-#include "infrastructure/appinfo.h"
+#include "infrastructure/helper/appinfo.h"
 
 FRAMELESSHELPER_USE_NAMESPACE
 
