@@ -2,6 +2,7 @@
 #define EVENTOBASE_H
 
 #include <QString>
+#include <QDateTime>
 
 struct EventoBase
 {

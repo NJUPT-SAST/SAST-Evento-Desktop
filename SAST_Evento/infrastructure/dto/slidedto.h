@@ -2,6 +2,7 @@
 #define SLIDEDTO_H
 
 #include <infrastructure/nlohmann/json.hpp>
+#include <optional>
 
 struct SlideDTO
 {
