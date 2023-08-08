@@ -30,6 +30,9 @@ public:
 
     void resetModel(const std::vector<EventoBrief>& model);
 
+    EventoBriefModel(const EventoBriefModel&) = delete;
+    EventoBriefModel& operator=(const EventoBriefModel) = delete;
+
 private:
     explicit EventoBriefModel(QObject *parent = nullptr);
 

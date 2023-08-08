@@ -2,12 +2,13 @@
 #define UNDERTAKINGEVENTO_H
 
 #include "eventobase.h"
+#include "image.h"
 
 struct UndertakingEvento : EventoBase
 {
     QString time;
     QString location;
-    QStringList image;
+    Image image;
 };
 
 #endif // UNDERTAKINGEVENTO_H

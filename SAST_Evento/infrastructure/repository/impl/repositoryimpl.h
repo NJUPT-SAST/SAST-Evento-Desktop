@@ -16,29 +16,33 @@ private:
 
     PermissionEntry permissionEntry() override;
 
-    Evento evento(const QString& eventId) override;
+    Evento evento(int eventId) override;
 
-    Slide slide() override;
+    Image image(int eventId) override;
 
-    LatestEventoModel latestEventoModel() override;
+    std::vector<Department> departmentModel() override;
 
-    UndertakingEventoModel undertakingEventoModel() override;
+    std::vector<LatestEvento> latestEventoModel() override;
 
-    SlideModel slideModel() override;
+    std::vector<UndertakingEvento> undertakingEventoModel() override;
 
-    ImageModel imageModel(int eventId) override;
+    std::vector<Slide> slideModel() override;
 
-    EventoBriefModel historyEventoModel(const QString& userId) override;
+    std::vector<Image> imageModel(int eventId) override;
 
-    EventoBriefModel departmentEventoModel(int departmentId) override;
+    std::vector<EventoBrief> historyEventoModel(const QString& userId) override;
 
-    ScheduleModel scheduleModel(const QString& userId) override;
+    std::vector<EventoBrief> departmentEventoModel(int departmentId) override;
 
-    EventoBlockModel eventoBlockModel() override;
+    std::vector<Schedule> scheduleModel(const QString& userId) override;
 
-    FeedbackModel feedbackModel(int eventId) override;
+    std::vector<EventoBlock> eventoBlockModel() override;
 
-    UserBriefModel userbriefModel(const QString& userId) override;
+    std::vector<Feedback> feedbackModel(int eventId) override;
+
+    std::vector<PermissionEntry> permissionModel() override;
+
+    std::vector<UserBrief> userbriefModel(const QString& userId) override;
 
 public:
     explicit RepositoryImpl(QObject* parent = nullptr);

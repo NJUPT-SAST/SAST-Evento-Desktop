@@ -28,6 +28,9 @@ public:
 
     void resetModel(const std::vector<Slide>& model);
 
+    SlideModel(const SlideModel&) = delete;
+    SlideModel& operator=(const SlideModel&) = delete;
+
 private:
     explicit SlideModel(QObject *parent = nullptr);
 

@@ -2,12 +2,13 @@
 #define LATESTEVENTO_H
 
 #include "eventobase.h"
+#include "image.h"
 
 struct LatestEvento : EventoBase
 {
     QString time;
     QString description;
-    QString image;
+    Image image;
 };
 
 #endif // LATESTEVENTO_H

@@ -44,102 +44,159 @@ QString RepositoryImpl::accessToken(const QString& id, const QString& psw){
 
 PermissionEntry RepositoryImpl::permissionEntry()
 {
-
+    PermissionDTO dto;
+    // Query
+    return Converter::dto2PermissonEntry(dto);
 }
 
-Evento RepositoryImpl::evento(const QString &eventId)
+Evento RepositoryImpl::evento(int eventId)
 {
     EventDTO eventDto;
-    SlideDTO slideDto;
     // Query
-    return Converter::dto2Evento(eventDto, slideDto);
+    return Converter::dto2Evento(eventDto);
 }
 
-Slide RepositoryImpl::slide()
+Image RepositoryImpl::image(int eventId)
 {
+    ImageDTO dto;
+    // Query
+    return Converter::dto2Image(dto);
+}
+
+std::vector<LatestEvento> RepositoryImpl::latestEventoModel()
+{
+    std::vector<LatestEvento> result;
+    EventDTO eventDto;
+    ImageDTO imageDto;
+    // Query
+    // loop
+    auto ele = Converter::dto2LatestEvento(eventDto, imageDto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
+}
+
+std::vector<UndertakingEvento> RepositoryImpl::undertakingEventoModel()
+{
+    std::vector<UndertakingEvento> result;
+    EventDTO eventDto;
+    ImageDTO imageDto;
+    // Query
+    // loop
+    auto ele = Converter::dto2UndertakingEvento(eventDto, imageDto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
+}
+
+std::vector<Slide> RepositoryImpl::slideModel()
+{
+    std::vector<Slide> result;
     SlideDTO dto;
     // Query
-    return Converter::dto2Slide(dto);
+    // loop
+    auto ele = Converter::dto2Slide(dto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
 }
 
-LatestEventoModel RepositoryImpl::latestEventoModel()
+std::vector<Image> RepositoryImpl::imageModel(int eventId)
 {
-
+    std::vector<Image> result;
+    ImageDTO dto;
+    // Query
+    // loop
+    auto ele = Converter::dto2Image(dto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
 }
 
-UndertakingEventoModel RepositoryImpl::undertakingEventoModel()
+std::vector<EventoBrief> RepositoryImpl::historyEventoModel(const QString &userId)
 {
-
+    std::vector<EventoBrief> result;
+    EventDTO eventDto;
+    ImageDTO imageDto;
+    // Query
+    // loop
+    auto ele = Converter::dto2EventoBrief(eventDto, imageDto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
 }
 
-SlideModel RepositoryImpl::slideModel()
+std::vector<EventoBrief> RepositoryImpl::departmentEventoModel(int departmentId)
 {
-
+    std::vector<EventoBrief> result;
+    EventDTO eventDto;
+    ImageDTO imageDto;
+    // Query
+    // loop
+    auto ele = Converter::dto2EventoBrief(eventDto, imageDto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
 }
 
-ImageModel RepositoryImpl::imageModel(int eventId)
+std::vector<Schedule> RepositoryImpl::scheduleModel(const QString &userId)
 {
-
+    std::vector<Schedule> result;
+    EventDTO eventDto;
+    ImageDTO imageDto;
+    // Query
+    // loop
+    auto ele = Converter::dto2Schedule(eventDto, imageDto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
 }
 
-EventoBriefModel RepositoryImpl::historyEventoModel(const QString &userId)
+std::vector<EventoBlock> RepositoryImpl::eventoBlockModel()
 {
-
+    std::vector<EventoBlock> result;
+    EventDTO eventDto;
+    // Query
+    // loop
+    auto ele = Converter::dto2EventoBlock(eventDto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
 }
 
-EventoBriefModel RepositoryImpl::departmentEventoModel(int departmentId)
+std::vector<Feedback> RepositoryImpl::feedbackModel(int eventId)
 {
-
+    std::vector<Feedback> result;
+    EventDTO eventDto;
+    FeedbackDTO feedbackDto;
+    // Query
+    // loop
+    auto ele = Converter::dto2Feedback(eventDto, feedbackDto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
 }
 
-ScheduleModel RepositoryImpl::scheduleModel(const QString &userId)
+std::vector<PermissionEntry> RepositoryImpl::permissionModel()
 {
-
+    std::vector<PermissionEntry> result;
+    PermissionDTO dto;
+    // Query
+    // loop
+    auto ele = Converter::dto2PermissonEntry(dto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
 }
 
-EventoBlockModel RepositoryImpl::eventoBlockModel()
+std::vector<UserBrief> RepositoryImpl::userbriefModel(const QString &userId)
 {
-
+    std::vector<UserBrief> result;
+    PermissionDTO dto;
+    // Query
+    // loop
+    auto ele = Converter::dto2UserBrief(dto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
 }
-
-FeedbackModel RepositoryImpl::feedbackModel(int eventId)
-{
-
-}
-
-UserBriefModel RepositoryImpl::userbriefModel(const QString &userId)
-{
-
-}
-
-
-
-//User RepositoryImpl::user(){
-//    UserDto dto;
-//    QString query = R"(query {
-//  viewer {
-//    login
-//    bio
-//    name
-//    location
-//    websiteUrl
-//    avatarUrl
-//    company
-//    followers {
-//      totalCount
-//    }
-//    following {
-//      totalCount
-//    }
-//    status {
-//      emojiHTML
-//      message
-//    }
-//  }
-//})";
-//    const QVariantMap& data = {
-//                               {"query",query},
-//                               };
-//    handleResult(RxHttp::postJson("https://api.github.com/graphql",data),dto,"viewer");
-//    return Converter::dto2User(dto);
-//}
