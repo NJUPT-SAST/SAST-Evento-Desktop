@@ -13,11 +13,13 @@
 #include "domain/model/latesteventomodel.h"
 #include "domain/model/schedulemodel.h"
 #include "domain/model/feedbackmodel.h"
+#include "domain/model/imagemodel.h"
 #include "domain/model/userbriefmodel.h"
 
 class Repository : public QObject
 {
     Q_OBJECT
+
 public:
     explicit Repository(QObject* parent = nullptr);
 
@@ -29,7 +31,7 @@ public:
         return "https://" + path;
     }
 
-    virtual QString accessToken(const QString &id,const QString &secret,const QString &code) = 0;
+    virtual QString accessToken(const QString& id, const QString& psw) = 0;
 
     virtual PermissionEntry permissionEntry();
 
@@ -41,7 +43,9 @@ public:
 
     virtual UndertakingEventoModel undertakingEventoModel() = 0;
 
-    virtual SlideModel slideModel(bool isImage = true) = 0;
+    virtual SlideModel slideModel() = 0;
+
+    virtual ImageModel imageModel(int eventId) = 0;
 
     virtual EventoBriefModel historyEventoModel(const QString& userId) = 0;
 
@@ -53,7 +57,7 @@ public:
 
     virtual FeedbackModel feedbackModel(int eventId) = 0;
 
-    virtual UserBriefModel userbriefModel(const QString& userId);
+    virtual UserBriefModel userbriefModel(const QString& userId) = 0;
 };
 
 #endif  // REPOSITORY_H

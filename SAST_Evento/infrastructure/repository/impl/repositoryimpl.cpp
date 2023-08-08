@@ -4,9 +4,8 @@
 #include "domain/exception/biz_exception.h"
 #include "infrastructure/converter/converter.h"
 #include "infrastructure/helper/common_helper.h"
-//#include "infrastructure/tool/RxHttp.h"
+#include "infrastructure/dto/loginkeydto.h"
 
-//using namespace AeaQt;
 using namespace nlohmann;
 
 RepositoryImpl::RepositoryImpl(QObject* parent) : Repository{ parent }
@@ -30,6 +29,87 @@ void RepositoryImpl::handleResult(QString result, T& data,QString type)
     {
         throw BizException(-1, "Json解析异常");
     }
+}
+
+QString RepositoryImpl::accessToken(const QString& id, const QString& psw){
+    const QVariantMap& data = {
+        {"uid",id},
+        {"password",psw},
+    };
+    LoginKeyDTO dto;
+    // Query
+    // Cache
+    return QString::fromStdString(dto.token);
+}
+
+PermissionEntry RepositoryImpl::permissionEntry()
+{
+
+}
+
+Evento RepositoryImpl::evento(const QString &eventId)
+{
+    EventDTO eventDto;
+    SlideDTO slideDto;
+    // Query
+    return Converter::dto2Evento(eventDto, slideDto);
+}
+
+Slide RepositoryImpl::slide()
+{
+    SlideDTO dto;
+    // Query
+    return Converter::dto2Slide(dto);
+}
+
+LatestEventoModel RepositoryImpl::latestEventoModel()
+{
+
+}
+
+UndertakingEventoModel RepositoryImpl::undertakingEventoModel()
+{
+
+}
+
+SlideModel RepositoryImpl::slideModel()
+{
+
+}
+
+ImageModel RepositoryImpl::imageModel(int eventId)
+{
+
+}
+
+EventoBriefModel RepositoryImpl::historyEventoModel(const QString &userId)
+{
+
+}
+
+EventoBriefModel RepositoryImpl::departmentEventoModel(int departmentId)
+{
+
+}
+
+ScheduleModel RepositoryImpl::scheduleModel(const QString &userId)
+{
+
+}
+
+EventoBlockModel RepositoryImpl::eventoBlockModel()
+{
+
+}
+
+FeedbackModel RepositoryImpl::feedbackModel(int eventId)
+{
+
+}
+
+UserBriefModel RepositoryImpl::userbriefModel(const QString &userId)
+{
+
 }
 
 
