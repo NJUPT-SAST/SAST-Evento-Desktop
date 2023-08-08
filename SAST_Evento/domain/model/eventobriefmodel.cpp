@@ -1,5 +1,6 @@
 #include "eventobriefmodel.h"
 #include "domain/entity/eventobrief.h"
+#include "infrastructure/util/util.hpp"
 
 EventoBriefModel::EventoBriefModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -38,14 +39,13 @@ QVariant EventoBriefModel::data(const QModelIndex &index, int role) const
     case Role::Title:
         return element.title;
     case Role::State:
-        return static_cast<int>(
-            element.state);
+        return toUType(element.state);
     case Role::Description:
         return element.description;
     case Role::Time:
         return element.time;
     case Role::Url:
-        return element.image;
+        return element.image.url;
     default:
         break;
     }

@@ -38,6 +38,7 @@ QString RepositoryImpl::accessToken(const QString& id, const QString& psw){
     };
     LoginKeyDTO dto;
     // Query
+    handleResult("", dto);
     // Cache
     return QString::fromStdString(dto.token);
 }

@@ -1,6 +1,6 @@
 ﻿#include "settings_helper.h"
 
-#include "infrastructure/config/AppConfig.h"
+#include "infrastructure/config/appconfig.h"
 
 SettingsHelper* SettingsHelper::m_instance = nullptr;
 

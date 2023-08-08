@@ -30,7 +30,7 @@ Window {
             "/": "qrc:/SAST_Evento/ui/window/MainWindow.qml",
             "/login": "qrc:/SAST_Evento/ui/window/LoginWindow.qml"
         }
-        FluApp.initialRoute = "/"
+        FluApp.initialRoute = "/login"
         FluApp.run()
     }
 

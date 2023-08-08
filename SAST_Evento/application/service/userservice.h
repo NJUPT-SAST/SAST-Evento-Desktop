@@ -13,14 +13,13 @@ class UserService : public BaseService
 {
     Q_OBJECT
 public:
-    explicit UserService(QObject* parent = nullptr, Repository* repository = QInjection::Inject):_repository(repository){};
+    explicit UserService(QObject* parent = nullptr, Repository* repository = QInjection::Inject)
+        : m_repository(repository) {};
 
-    void login(const QString& code);
-
-    Q_SIGNAL void loginSuccess();
+    bool login(const QString& username, const QString& password);
 
 private:
-    Repository* _repository;
+    Repository* m_repository;
 };
 
 #endif  // USERSERVICE_H

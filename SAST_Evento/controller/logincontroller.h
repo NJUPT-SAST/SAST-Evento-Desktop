@@ -5,7 +5,7 @@
 #include <QHttpServer>
 #include <QtQml/qqml.h>
 #include "stdafx.h"
-#include "application/service/UserService.h"
+#include "application/service/userservice.h"
 #include "controller/basecontroller.h"
 
 using namespace QInjection;
@@ -14,36 +14,22 @@ class LoginController : public BaseController
 {
     Q_OBJECT
     Q_PROPERTY_AUTO(int,loginStatus)
+    // 1: 初始页面 2：加载中 3：登录成功 4：登录失败
     QML_NAMED_ELEMENT(LoginController)
+
 public:
+    enum class Status {
+        Start = 1,
+        Loading,
+        Success,
+        Failed
+    };
+
     explicit LoginController(QObject* parent = nullptr);
+    Q_INVOKABLE void login(const QString& username, const QString& password);
+
 private:
-    UserService* _userService(){return QInjection::Inject;}
-    QHttpServer _server;
-    std::string _htmlError = R"(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>QtHub</title>
-</head>
-<body>
-    <h1>授权</h1>
-    <p>网络异常，请刷新页面，重新授权。</p>
-</body>
-</html>
-)";
-    std::string _htmlSuccess = R"(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>QtHub</title>
-</head>
-<body>
-    <h1>授权</h1>
-    <p>授权成功，欢迎使用QtHub。</p>
-</body>
-</html>
-)";
+    UserService* m_userService() { return QInjection::Inject; }
 };
 
 #endif // LOGINCONTROLLER_H
