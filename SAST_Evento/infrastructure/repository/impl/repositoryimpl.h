@@ -16,7 +16,6 @@ private:
 
 public:
     explicit RepositoryImpl(QObject* parent = nullptr);
-
 };
 
 #endif  // REPOSITORYIMPL_H

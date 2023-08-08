@@ -22,7 +22,7 @@
 #include "infrastructure/dto/feedbackdto.h"
 #include "infrastructure/dto/permissiondto.h"
 #include "infrastructure/dto/slidedto.h"
-#include "infrastructure/dto/loginkeydto.h"
+#include "infrastructure/dto/loginkey.h"
 
 class Converter {
 public:

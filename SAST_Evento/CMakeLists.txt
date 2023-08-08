@@ -29,7 +29,7 @@ file(TO_CMAKE_PATH "/" PATH_SEPARATOR)
 #设置版本号
 add_definitions(-DVERSION=0,2,7,30)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Svg Network)
+find_package(Qt6 REQUIRED COMPONENTS Quick Svg Network HttpServer Concurrent)
 
 if(QT_VERSION VERSION_GREATER_EQUAL "6.3")
     qt_standard_project_setup()
@@ -121,6 +121,8 @@ if (FLUENTUI_BUILD_STATIC_LIB)
         Qt6::Quick
         Qt6::Svg
         Qt6::Network
+        Qt6::HttpServer
+        Qt6::Concurrent
         fluentui
         fluentuiplugin
         FramelessHelper::Core
@@ -131,6 +133,8 @@ else()
         Qt6::Quick
         Qt6::Svg
         Qt6::Network
+        Qt6::HttpServer
+        Qt6::Concurrent
         fluentuiplugin
         FramelessHelper::Core
         FramelessHelper::Quick
