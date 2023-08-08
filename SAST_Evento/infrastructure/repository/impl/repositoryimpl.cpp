@@ -4,11 +4,9 @@
 #include "domain/exception/biz_exception.h"
 #include "infrastructure/converter/converter.h"
 #include "infrastructure/helper/common_helper.h"
-#include "infrastructure/tool/RxHttp.h"
-#include "infrastructure/dto/UserDto.h"
-#include "infrastructure/dto/TokenDto.h"
+//#include "infrastructure/tool/RxHttp.h"
 
-using namespace AeaQt;
+//using namespace AeaQt;
 using namespace nlohmann;
 
 RepositoryImpl::RepositoryImpl(QObject* parent) : Repository{ parent }
@@ -34,16 +32,7 @@ void RepositoryImpl::handleResult(QString result, T& data,QString type)
     }
 }
 
-//QString RepositoryImpl::accessToken(const QString &id,const QString &secret,const QString &code){
-//    const QVariantMap& data = {
-//        {"client_id",id},
-//        {"client_secret",secret},
-//        {"code",code}
-//    };
-//    TokenDto dto;
-//    handleResult(RxHttp::get(html("/login/oauth/access_token"),data),dto);
-//    return QString::fromStdString(dto.access_token);
-//}
+
 
 //User RepositoryImpl::user(){
 //    UserDto dto;

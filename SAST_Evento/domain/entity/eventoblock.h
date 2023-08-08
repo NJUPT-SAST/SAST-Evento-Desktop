@@ -7,6 +7,7 @@ struct EventoBlock : EventoBase
 {
     QString data;
     QString time;
+    QString location;
     QString department;
     int rowStart;
     int rowEnd;

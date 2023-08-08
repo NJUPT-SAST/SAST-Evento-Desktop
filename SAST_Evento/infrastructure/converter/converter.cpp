@@ -15,11 +15,12 @@
 //    return obj;
 //}
 
-Slide Converter::dto2User(const SlideDTO &val)
+Slide Converter::dto2Slide(const SlideDTO &val)
 {
     Slide obj;
     obj.id = val.id;
     obj.title = QString::fromStdString(val.title);
+    // obj.link = QString::fromStdString(val.link);
     obj.url = QString::fromStdString(val.url);
     return obj;
 }

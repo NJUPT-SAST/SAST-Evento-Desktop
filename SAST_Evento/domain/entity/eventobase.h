@@ -15,6 +15,20 @@ struct EventoBase
         Over
     };
 
+    enum class ParticipationState {
+        Unsubscribed,
+        Subscribed,
+        Checked,
+        Over
+    };
+
+    enum class CheckState {
+        Disabled,
+        Checked,
+        Expired,
+        Unchecked
+    };
+
     int id;
     QString title;
     EventState state;

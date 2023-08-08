@@ -7,7 +7,7 @@ struct Slide
 {
     int id;
     QString title;
-    std::optional<QString> link;
+    QString link;
     QString url;
 };
 

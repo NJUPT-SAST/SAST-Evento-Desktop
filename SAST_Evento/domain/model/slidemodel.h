@@ -1,12 +1,12 @@
-#ifndef EVENTOBRIEFMODEL_H
-#define EVENTOBRIEFMODEL_H
+#ifndef SLIDEMODEL_H
+#define SLIDEMODEL_H
 
 #include <QAbstractListModel>
 #include <mutex>
 
-class EventoBrief;
+class Slide;
 
-class EventoBriefModel : public QAbstractListModel
+class SlideModel : public QAbstractListModel
 {
     Q_OBJECT
 
@@ -14,13 +14,11 @@ public:
     enum Role {
         Id = Qt::DisplayRole + 1,
         Title,
-        State,
-        Description,
-        Time,
+        Link,
         Url,
     };
 
-    static EventoBriefModel* getInstance();
+    static SlideModel* getInstance();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
@@ -28,14 +26,14 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<EventoBrief>& model);
+    void resetModel(const std::vector<Slide>& model);
 
 private:
-    explicit EventoBriefModel(QObject *parent = nullptr);
+    explicit SlideModel(QObject *parent = nullptr);
 
-    std::vector<EventoBrief> m_data;
+    std::vector<Slide> m_data;
 
     std::mutex m_mutex;
 };
 
-#endif // EVENTOBRIEFMODEL_H
+#endif // SLIDEMODEL_H

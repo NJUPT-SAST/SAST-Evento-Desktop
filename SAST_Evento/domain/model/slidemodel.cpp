@@ -1,18 +1,18 @@
-#include "eventobriefmodel.h"
-#include "domain/entity/eventobrief.h"
+#include "slidemodel.h"
+#include "domain/entity/slide.h"
 
-EventoBriefModel::EventoBriefModel(QObject *parent)
+SlideModel::SlideModel(QObject *parent)
     : QAbstractListModel(parent)
 {
 }
 
-EventoBriefModel *EventoBriefModel::getInstance()
+SlideModel *SlideModel::getInstance()
 {
-    static EventoBriefModel instance;
+    static SlideModel instance;
     return &instance;
 }
 
-int EventoBriefModel::rowCount(const QModelIndex &parent) const
+int SlideModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -22,7 +22,7 @@ int EventoBriefModel::rowCount(const QModelIndex &parent) const
     return m_data.size();
 }
 
-QVariant EventoBriefModel::data(const QModelIndex &index, int role) const
+QVariant SlideModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -37,15 +37,10 @@ QVariant EventoBriefModel::data(const QModelIndex &index, int role) const
         return element.id;
     case Role::Title:
         return element.title;
-    case Role::State:
-        return static_cast<int>(
-            element.state);
-    case Role::Description:
-        return element.description;
-    case Role::Time:
-        return element.time;
+    case Role::Link:
+        return element.link;
     case Role::Url:
-        return element.image;
+        return element.url;
     default:
         break;
     }
@@ -53,24 +48,23 @@ QVariant EventoBriefModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash<int, QByteArray> EventoBriefModel::roleNames() const
+QHash<int, QByteArray> SlideModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {
         roles.insert(Id, "id");
         roles.insert(Title, "title");
-        roles.insert(Time, "time");
-        roles.insert(State, "state");
-        roles.insert(Description, "description");
+        roles.insert(Link, "link");
         roles.insert(Url, "url");
     }
     return roles;
 }
 
-void EventoBriefModel::resetModel(const std::vector<EventoBrief>& model)
+void SlideModel::resetModel(const std::vector<Slide> &model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
 }
+

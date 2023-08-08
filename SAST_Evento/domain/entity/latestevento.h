@@ -5,7 +5,9 @@
 
 struct LatestEvento : EventoBase
 {
-
+    QString time;
+    QString description;
+    QString image;
 };
 
 #endif // LATESTEVENTO_H

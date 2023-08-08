@@ -3,7 +3,7 @@
 
 #include <QStringList>
 
-struct PermissonEntry
+struct PermissionEntry
 {
     int id;
     int eventId;

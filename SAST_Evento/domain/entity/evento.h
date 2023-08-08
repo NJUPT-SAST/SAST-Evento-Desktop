@@ -5,20 +5,6 @@
 
 struct Evento : EventoBase
 {
-    enum class ParticipationState {
-        Unsubscribed,
-        Subscribed,
-        Checked,
-        Over
-    };
-
-    enum class CheckState {
-        Disabled,
-        Checked,
-        Expired,
-        Unchecked
-    };
-
     QString description;
     QString time;
     QString type;

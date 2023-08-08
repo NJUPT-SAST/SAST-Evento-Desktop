@@ -2,6 +2,9 @@
 #define EVENTDTO_H
 
 #include <infrastructure/nlohmann/json.hpp>
+#include "typedto.h"
+#include "locationdto.h"
+#include "departmentdto.h"
 
 struct EventDTO
 {
@@ -12,10 +15,11 @@ struct EventDTO
     std::string gmtEventEnd;
     std::string gmtRegistrationStart;
     std::string gmtRegistrationEnd;
-    int typeId;
-    int locationId;
+    TypeDTO type;
+    LocationDTO location;
     std::string tag;
     int state;
+    std::vector<DepartmentDTO> departments;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(EventDTO,
@@ -26,9 +30,10 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(EventDTO,
                                                 gmtEventEnd,
                                                 gmtRegistrationStart,
                                                 gmtRegistrationEnd,
-                                                typeId,
-                                                locationId,
+                                                type,
+                                                location,
                                                 tag,
-                                                state)
+                                                state,
+                                                departments)
 
 #endif // EVENTDTO_H

@@ -2,7 +2,7 @@
 #define EVENTOBLOCKMODEL_H
 
 #include <QAbstractListModel>
-#include "src/domain/eventoblock.h"
+#include "domain/entity/eventoblock.h"
 
 class EventoBlockModel : public QAbstractListModel
 {
