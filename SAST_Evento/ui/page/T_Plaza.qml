@@ -10,10 +10,60 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
     animDisabled: true
     title: lang.lang_plaza
+
+    ListModel {
+        id: data_model
+        ListElement {
+            url: "qrc:/example/res/image/banner_1.jpg"
+            title: "qqq"
+        }
+        ListElement {
+            url: "qrc:/example/res/image/banner_2.jpg"
+            title: "qqq"
+        }
+        ListElement {
+            url: "qrc:/example/res/image/banner_3.jpg"
+            title: "qqq"
+        }
+    }
+
     FluCarousel {
         Layout.topMargin: 10
         Layout.bottomMargin: 10
         Layout.fillWidth: true
+        radius: [15, 15, 15, 15]
+        loopTime: 1500
+        indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
+        indicatorMarginTop: 15
+        model: data_model
+        delegate: Component {
+            Item {
+                anchors.fill: parent
+                Image {
+                    anchors.fill: parent
+                    source: modelData.url
+                    asynchronous: true
+                    fillMode: Image.PreserveAspectCrop
+                }
+                Rectangle {
+                    height: 40
+                    width: parent.width
+                    anchors.bottom: parent.bottom
+                    color: "#33000000"
+                    FluText {
+                        anchors.fill: parent
+                        verticalAlignment: Qt.AlignVCenter
+                        horizontalAlignment: Qt.AlignHCenter
+                        text: modelData.title
+                        color: FluColors.Grey10
+                        font.pixelSize: 15
+                    }
+                }
+            }
+        }
+    }
+
+    FluCarousel {
 
         Component.onCompleted: {
             setData([{
