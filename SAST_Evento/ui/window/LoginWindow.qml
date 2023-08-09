@@ -62,7 +62,7 @@ CustomWindow {
         id: textbox_uesrname
         anchors {
             top: logo.bottom
-            topMargin: 20
+            topMargin: 30
             horizontalCenter: parent.horizontalCenter
         }
         items: [{
@@ -99,7 +99,7 @@ CustomWindow {
         height: 36
         anchors {
             bottom: parent.bottom
-            bottomMargin: 80
+            bottomMargin: 60
             horizontalCenter: parent.horizontalCenter
         }
         focus: true
@@ -118,12 +118,12 @@ CustomWindow {
     }
 
     FluText {
-        text: "V1.0.0"
+        text: "V0.2.8.9"
         color: FluColors.Grey100
         font: FluTextStyle.Caption
         anchors {
             bottom: parent.bottom
-            bottomMargin: 26
+            bottomMargin: 15
             horizontalCenter: parent.horizontalCenter
         }
     }
