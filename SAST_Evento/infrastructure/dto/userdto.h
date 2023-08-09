@@ -14,4 +14,6 @@ struct UserDTO
     std::vector<std::string> link;
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(UserDTO, id, name, avatar, department, description, email, link)
+
 #endif // USERDTO_H
