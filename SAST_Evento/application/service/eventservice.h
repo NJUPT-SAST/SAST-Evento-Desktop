@@ -11,6 +11,8 @@ public:
     explicit EventService(QObject *parent = nullptr, Repository* repository = QInjection::Inject)
         : BaseService(parent, repository) {}
 
+    Evento loadEvento(int eventId);
+
     Department loadDepartment();
 
     std::vector<UndertakingEvento> loadUndertakingEvento();

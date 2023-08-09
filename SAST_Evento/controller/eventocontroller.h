@@ -16,6 +16,10 @@ class EventoController : public BaseController
 public:
     explicit EventoController(QObject *parent = nullptr);
 
+    Q_INVOKABLE void loadEventoInfo(int eventId);
+    Q_SIGNAL void loadEventoSuccessEvent();
+    Q_SIGNAL void loadEventoErrorEvent(const QString& message);
+
 private:
     EventService* m_eventService() { return QInjection::Inject; }
     SlideImageService* m_slideImageService() { return QInjection::Inject; }

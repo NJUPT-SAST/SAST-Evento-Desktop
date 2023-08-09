@@ -1,5 +1,4 @@
 #include "profilecontroller.h"
-
 #include "infrastructure/helper/user_helper.h"
 
 ProfileController::ProfileController(QObject *parent)
