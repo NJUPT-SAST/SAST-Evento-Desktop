@@ -24,30 +24,9 @@ CustomWindow {
     appBarVisible: false
     launchMode: FluWindowType.SingleTask
 
-    property var loginPageRegister: registerForWindowResult("/login")
-
     Settings {
         id: settings
         property string username
-    }
-
-    Component.onCompleted: {
-        FluTools.setQuitOnLastWindowClosed(false)
-        loginPageRegister.launch({
-                                     "username": settings.value("username", "")
-                                 })
-    }
-
-    Connections {
-        target: loginPageRegister
-        function onResult(data) {
-            if (data.ok) {
-                settings.username = data.username
-                ItemsOriginal.source = "qrc:/SAST_Evento/qml/global/ItemsOriginal_manager.qml"
-            } else {
-                showInfo("未登录，前往“我的”以登录账号")
-            }
-        }
     }
 
     closeFunc: function (event) {
@@ -87,7 +66,7 @@ CustomWindow {
                      | FluContentDialogType.PositiveButton
         onNegativeClicked: {
             window.hide()
-            system_tray.showMessage("友情提示", "FluentUI已隐藏至托盘,点击托盘可再次激活窗口")
+            system_tray.showMessage("提示", "SAST Evento已隐藏至托盘，点击托盘可再次激活窗口")
         }
         positiveText: lang.lang_exit
         neutralText: lang.lang_cancel
