@@ -12,6 +12,7 @@
 #include "domain/entity/undertakingevento.h"
 #include "domain/entity/userbrief.h"
 #include "domain/entity/image.h"
+#include "domain/entity/user.h"
 
 #include "infrastructure/dto/departmentdto.h"
 #include "infrastructure/dto/eventdto.h"
@@ -19,6 +20,7 @@
 #include "infrastructure/dto/permissiondto.h"
 #include "infrastructure/dto/slidedto.h"
 #include "infrastructure/dto/imagedto.h"
+#include "infrastructure/dto/userdto.h"
 
 class Converter {
 public:
@@ -34,4 +36,5 @@ public:
     static Image dto2Image(const ImageDTO& image);
     static UndertakingEvento dto2UndertakingEvento(const EventDTO& event, const ImageDTO& image);
     static UserBrief dto2UserBrief(const PermissionDTO& permission);
+    static User dto2User(const UserDTO& val);
 };

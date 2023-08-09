@@ -74,3 +74,8 @@ UserBrief Converter::dto2UserBrief(const PermissionDTO &permission)
 
 }
 
+User Converter::dto2User(const UserDTO& val)
+{
+
+}
+

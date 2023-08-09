@@ -3,6 +3,11 @@
 #include "domain/exception/biz_exception.h"
 #include "infrastructure/helper/user_helper.h"
 
+User UserService::loadUser()
+{
+    return m_repository->user();
+}
+
 bool UserService::login(const QString &username, const QString &password)
 {
     try {

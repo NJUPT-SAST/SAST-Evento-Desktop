@@ -71,6 +71,13 @@ Feedback RepositoryImpl::feedback(int eventId)
     return Converter::dto2Feedback(dto);
 }
 
+User RepositoryImpl::user()
+{
+    UserDTO dto;
+    // Query
+    return Converter::dto2User(dto);
+}
+
 std::vector<LatestEvento> RepositoryImpl::latestEventoModel()
 {
     std::vector<LatestEvento> result;

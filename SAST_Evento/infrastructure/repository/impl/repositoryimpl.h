@@ -22,6 +22,8 @@ private:
 
     Feedback feedback(int eventId) override;
 
+    User user() override;
+
     std::vector<Department> departmentModel() override;
 
     std::vector<LatestEvento> latestEventoModel() override;

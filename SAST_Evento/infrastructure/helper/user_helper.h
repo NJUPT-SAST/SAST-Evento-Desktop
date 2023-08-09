@@ -4,33 +4,28 @@
 #include <QObject>
 #include <QtQml/qqml.h>
 #include "infrastructure/helper/settings_helper.h"
-//#include "domain/entity/User.h"
+#include "domain/entity/user.h"
 #include "stdafx.h"
 
 class UserHelper : public QObject
 {
     Q_OBJECT
     Q_PROPERTY_AUTO(QString,token)
+    Q_PROPERTY_AUTO(QString,id)
     Q_PROPERTY_AUTO(QString,name)
-    Q_PROPERTY_AUTO(QString,account)
     Q_PROPERTY_AUTO(QString,avatar)
-    Q_PROPERTY_AUTO(QString,location)
+    Q_PROPERTY_AUTO(QString,image)
+    Q_PROPERTY_AUTO(QStringList,department)
+    Q_PROPERTY_AUTO(QString,description)
     Q_PROPERTY_AUTO(QString,email)
-    Q_PROPERTY_AUTO(QString,blog)
-    Q_PROPERTY_AUTO(QString,created_at)
-    Q_PROPERTY_AUTO(QString,updated_at)
-    Q_PROPERTY_AUTO(int,public_repos)
-    Q_PROPERTY_AUTO(int,public_gists)
-    Q_PROPERTY_AUTO(int,followers)
-    Q_PROPERTY_AUTO(int,following)
-    Q_PROPERTY_AUTO(QString,bio)
-    Q_PROPERTY_AUTO(QString,statusEmoji)
-    Q_PROPERTY_AUTO(QString,statusMessage)
+    Q_PROPERTY_AUTO(QStringList,link)
     QML_NAMED_ELEMENT(UserHelper)
     QML_SINGLETON
+
 private:
     explicit UserHelper(QObject* parent = nullptr);
     static UserHelper* m_instance;
+
 public:
     static UserHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
     {
@@ -42,8 +37,8 @@ public:
     }
 
     Q_INVOKABLE void logout(){
-        token(""),name(""),account(""),avatar(""),location(""),email(""),blog(""),created_at(""),updated_at(""),bio(""),statusEmoji(""),statusMessage("");
-        public_repos(0),public_gists(0),followers(0),following(0);
+        token(""),name(""),id(""),avatar(""),image(""),department(QStringList{}),
+            description(""),email(""),link(QStringList{});
         SettingsHelper::getInstance()->saveToken(_token);
     }
 
@@ -52,23 +47,17 @@ public:
         SettingsHelper::getInstance()->saveToken(_token);
     }
 
-//    void updateUser(const User& user){
-//        name(user.name);
-//        avatar(user.avatar);
-//        location(user.location);
-//        email(user.email);
-//        blog(user.blog);
-//        created_at(user.created_at);
-//        updated_at(user.updated_at);
-//        public_repos(user.public_repos);
-//        public_gists(user.public_gists);
-//        followers(user.followers);
-//        following(user.following);
-//        account(user.login);
-//        bio(user.bio);
-//        statusEmoji(user.statusEmoji);
-//        statusMessage(user.statusMessage);
-//    };
+    void updateUser(const User& user){
+        name(user.name);
+        avatar(user.avatar);
+        id(user.id);
+        email(user.email);
+        image(user.image);
+        department(user.department);
+        description(user.description);
+        email(user.email);
+        link(user.link);
+    };
 
 };
 

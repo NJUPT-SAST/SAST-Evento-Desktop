@@ -15,6 +15,7 @@
 #include "domain/entity/undertakingevento.h"
 #include "domain/entity/userbrief.h"
 #include "domain/entity/image.h"
+#include "domain/entity/user.h"
 
 class Repository : public QObject
 {
@@ -40,6 +41,8 @@ public:
     virtual Image image(int eventId) = 0;
 
     virtual Feedback feedback(int eventId) = 0;
+
+    virtual User user() = 0;
 
     virtual std::vector<Department> departmentModel() = 0;
 
