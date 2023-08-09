@@ -26,7 +26,7 @@ public:
     static Evento dto2Evento(const EventDTO& event);
     static EventoBlock dto2EventoBlock(const EventDTO& event);
     static EventoBrief dto2EventoBrief(const EventDTO& event, const ImageDTO& image);
-    static Feedback dto2Feedback(const EventDTO& event, const FeedbackDTO& feedback);
+    static Feedback dto2Feedback(const FeedbackDTO& feedback);
     static LatestEvento dto2LatestEvento(const EventDTO& event, const ImageDTO& image);
     static PermissionEntry dto2PermissonEntry(const PermissionDTO& permission);
     static Schedule dto2Schedule(const EventDTO& event, const ImageDTO& image);

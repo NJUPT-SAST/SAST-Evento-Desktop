@@ -1,13 +1,15 @@
 #ifndef FEEDBACK_H
 #define FEEDBACK_H
 
-#include "eventobase.h"
+#include <QString>
 
-struct Feedback : EventoBase
+struct Feedback
 {
-    QString time;
+    int id;
     int score;
     QString content;
+    int participateId;
+    QString userId;
 };
 
 #endif // FEEDBACK_H

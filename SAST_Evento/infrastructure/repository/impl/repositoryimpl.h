@@ -20,6 +20,8 @@ private:
 
     Image image(int eventId) override;
 
+    Feedback feedback(int eventId) override;
+
     std::vector<Department> departmentModel() override;
 
     std::vector<LatestEvento> latestEventoModel() override;

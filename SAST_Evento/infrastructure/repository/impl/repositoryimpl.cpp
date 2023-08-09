@@ -64,6 +64,13 @@ Image RepositoryImpl::image(int eventId)
     return Converter::dto2Image(dto);
 }
 
+Feedback RepositoryImpl::feedback(int eventId)
+{
+    FeedbackDTO dto;
+    // Query
+    return Converter::dto2Feedback(dto);
+}
+
 std::vector<LatestEvento> RepositoryImpl::latestEventoModel()
 {
     std::vector<LatestEvento> result;

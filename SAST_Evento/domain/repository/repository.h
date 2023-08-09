@@ -39,6 +39,8 @@ public:
 
     virtual Image image(int eventId) = 0;
 
+    virtual Feedback feedback(int eventId) = 0;
+
     virtual std::vector<Department> departmentModel() = 0;
 
     virtual std::vector<LatestEvento> latestEventoModel() = 0;

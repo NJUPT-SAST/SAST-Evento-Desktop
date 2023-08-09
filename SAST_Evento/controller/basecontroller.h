@@ -2,7 +2,9 @@
 #define BASECONTROLLER_H
 
 #include <QObject>
+#include <QtQml/qqml.h>
 #include "domain/exception/biz_exception.h"
+#include "stdafx.h"
 
 class BaseController : public QObject
 {

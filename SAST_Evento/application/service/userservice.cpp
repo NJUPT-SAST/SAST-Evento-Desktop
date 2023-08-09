@@ -13,3 +13,4 @@ bool UserService::login(const QString &username, const QString &password)
     }
     return true;
 }
+

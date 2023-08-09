@@ -25,7 +25,7 @@ EventoBrief Converter::dto2EventoBrief(const EventDTO &event, const ImageDTO &im
 
 }
 
-Feedback Converter::dto2Feedback(const EventDTO &event, const FeedbackDTO &feedback)
+Feedback Converter::dto2Feedback(const FeedbackDTO &feedback)
 {
 
 }
