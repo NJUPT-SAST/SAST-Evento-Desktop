@@ -14,7 +14,6 @@ class UserHelper : public QObject
     Q_PROPERTY_AUTO(QString,id)
     Q_PROPERTY_AUTO(QString,name)
     Q_PROPERTY_AUTO(QString,avatar)
-    Q_PROPERTY_AUTO(QString,image)
     Q_PROPERTY_AUTO(QStringList,department)
     Q_PROPERTY_AUTO(QString,description)
     Q_PROPERTY_AUTO(QString,email)
@@ -37,7 +36,7 @@ public:
     }
 
     Q_INVOKABLE void logout(){
-        token(""),name(""),id(""),avatar(""),image(""),department(QStringList{}),
+        token(""),name(""),id(""),avatar(""),department(QStringList{}),
             description(""),email(""),link(QStringList{});
         SettingsHelper::getInstance()->saveToken(_token);
     }
@@ -52,7 +51,6 @@ public:
         avatar(user.avatar);
         id(user.id);
         email(user.email);
-        image(user.image);
         department(user.department);
         description(user.description);
         email(user.email);

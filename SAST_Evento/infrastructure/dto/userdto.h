@@ -8,7 +8,6 @@ struct UserDTO
     std::string id;
     std::string name;
     std::string avatar;
-    std::string image;
     std::vector<std::string> department;
     std::string description;
     std::string email;
