@@ -2,12 +2,12 @@
 #define REPOSITORYINJECTOR_H
 
 #include <infrastructure/injection/dependencyinjector.h>
-#include <infrastructure/http/HttpClient.h>
-#include <domain/repository/Repository.h>
-#include <infrastructure/repository/impl/RepositoryImpl.h>
+//#include <infrastructure/http/HttpClient.h>
+#include <domain/repository/repository.h>
+#include <infrastructure/repository/impl/repositoryimpl.h>
 
 using namespace QInjection;
-using namespace AeaQt;
+//using namespace AeaQt;
 
 class RepositoryInjector
 {
@@ -19,7 +19,7 @@ public:
 
   static void init()
   {
-    HttpClient::instance();
+    //HttpClient::instance();
     QInjection::addSingleton(repository);
   }
 };

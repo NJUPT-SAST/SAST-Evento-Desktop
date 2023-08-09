@@ -78,6 +78,18 @@ User RepositoryImpl::user()
     return Converter::dto2User(dto);
 }
 
+std::vector<Department> RepositoryImpl::departmentModel()
+{
+    std::vector<Department> result;
+    DepartmentDTO dto;
+    // Query
+    // loop
+    auto ele = Converter::dto2Department(dto);
+    result.emplace_back(std::move(ele));
+    // loop
+    return result;
+}
+
 std::vector<LatestEvento> RepositoryImpl::latestEventoModel()
 {
     std::vector<LatestEvento> result;
@@ -186,7 +198,7 @@ std::vector<Feedback> RepositoryImpl::feedbackModel(int eventId)
     FeedbackDTO feedbackDto;
     // Query
     // loop
-    auto ele = Converter::dto2Feedback(eventDto, feedbackDto);
+    auto ele = Converter::dto2Feedback(feedbackDto);
     result.emplace_back(std::move(ele));
     // loop
     return result;

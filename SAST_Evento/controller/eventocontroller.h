@@ -9,7 +9,7 @@
 class EventoController : public BaseController
 {
     Q_OBJECT
-    QML_NAMED_ELEMENT(ScheduleController)
+    QML_NAMED_ELEMENT(EventoController)
     Q_PROPERTY_AUTO(int, EventStatus)
     Q_PROPERTY_AUTO(int, CheckStatus)
 

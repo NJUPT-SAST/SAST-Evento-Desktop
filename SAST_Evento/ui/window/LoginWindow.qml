@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtCore
 import FluentUI
+import SAST_Evento
 import "qrc:///SAST_Evento/ui/component"
 
 CustomWindow {
@@ -11,7 +12,7 @@ CustomWindow {
     height: 378
     fixSize: true
     launchMode: FluWindowType.SingleTask
-    closeDestory: false
+    closeDestory: true
     title: "SAST Evento"
 
     LoginController {
@@ -38,8 +39,9 @@ CustomWindow {
     }
 
     Image {
-        width: 80
+        id: logo
         height: 80
+        fillMode: Image.PreserveAspectFit
         source: {
             if (settings.value("darkMode",
                                FluThemeType.System) === FluThemeType.Dark) {
@@ -51,29 +53,38 @@ CustomWindow {
 
         anchors {
             top: parent.top
-            topMargin: 80
+            topMargin: 25
             horizontalCenter: parent.horizontalCenter
         }
     }
 
     FluAutoSuggestBox {
         id: textbox_uesrname
+        anchors {
+            top: logo.bottom
+            topMargin: 20
+            horizontalCenter: parent.horizontalCenter
+        }
         items: [{
                 "title": settings.value("username", "")
             }]
         placeholderText: lang.lang_username
-        Layout.preferredWidth: 260
+        width: 180
         Layout.alignment: Qt.AlignHCenter
         Layout.topMargin: 40
     }
 
     FluTextBox {
         id: textbox_password
-        Layout.topMargin: 20
-        Layout.preferredWidth: 260
+        anchors {
+            top: textbox_uesrname.bottom
+            topMargin: 15
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        width: 180
         placeholderText: lang.lang_password
         echoMode: TextInput.Password
-        Layout.alignment: Qt.AlignHCenter
         Keys.onEnterPressed: {
             btn.clicked()
         }

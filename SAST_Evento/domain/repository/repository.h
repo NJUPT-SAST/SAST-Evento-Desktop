@@ -34,7 +34,7 @@ public:
 
     virtual QString accessToken(const QString& id, const QString& psw) = 0;
 
-    virtual PermissionEntry permissionEntry();
+    virtual PermissionEntry permissionEntry() = 0;
 
     virtual Evento evento(int eventId) = 0;
 
