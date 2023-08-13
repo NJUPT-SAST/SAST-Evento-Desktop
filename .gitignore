@@ -31,10 +31,16 @@ target_wrapper.*
 # QtCreator CMake
 CMakeLists.txt.user*
 
-SAST_Evento/build-preset/plugins.qmltypes
 bin
 .DS_Store
 build
 cmake-build-*
+
+out
 .idea
 .vscode
+.vs
+x86
+x64
+
+example

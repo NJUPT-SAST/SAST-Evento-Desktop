@@ -1,0 +1,3 @@
+[submodule "libs/FluentUI"]
+	path = libs/FluentUI
+	url = https://github.com/zhuzichu520/FluentUI.git

@@ -2,34 +2,103 @@ cmake_minimum_required(VERSION 3.20)
 
 project(SAST_Evento_Desktop VERSION 0.1 LANGUAGES CXX)
 
-option(FLUENTUI_BUILD_EXAMPLES "Build FluentUI demo applications." ON)
-option(FLUENTUI_BUILD_FRAMELESSHEPLER "Build FramelessHelper." ON)
-option(FLUENTUI_BUILD_STATIC_LIB "Build static library." OFF)
+set(FLUENTUI_BUILD_EXAMPLES OFF)
 
-#设置QML插件输出目录，可以通过外部设置，如果外部没有设置就默认到<QT_SDK_DIR_PATH>\qml\FluentUI目录下
-set(FLUENTUI_QML_PLUGIN_DIRECTORY "" CACHE PATH "Path to FluentUI plugin")
-if(NOT FLUENTUI_QML_PLUGIN_DIRECTORY)
-    set(FLUENTUI_QML_PLUGIN_DIRECTORY ${CMAKE_PREFIX_PATH}/qml/FluentUI)
+add_subdirectory(libs)
+
+#配置通用编译
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(APPLE)
+    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
 endif()
 
-add_subdirectory(FluentUI)
+#设置可执行文件输出目录
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/debug)
+else()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/release)
+endif()
 
-if (FLUENTUI_BUILD_EXAMPLES)
-    add_subdirectory(SAST_Evento)
-endif ()
+find_package(Qt6 REQUIRED COMPONENTS Quick Svg Network)
 
-if (FLUENTUI_BUILD_FRAMELESSHEPLER)
-    set(FRAMELESSHELPER_BUILD_STATIC ON)
-    set(FRAMELESSHELPER_NO_SUMMARY OFF)
-    set(FRAMELESSHELPER_NO_DEBUG_OUTPUT OFF)
-    set(FRAMELESSHELPER_BUILD_WIDGETS OFF)
-    add_definitions(-DFRAMELESSHELPER_CORE_NO_DEBUG_OUTPUT)
-    add_definitions(-DFRAMELESSHELPER_QUICK_NO_DEBUG_OUTPUT)
-    add_subdirectory(framelesshelper)
-endif ()
+if(QT_VERSION VERSION_GREATER_EQUAL "6.3")
+    qt_standard_project_setup()
+else()
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTORCC ON)
+    set(CMAKE_AUTOUIC ON)
+endif()
 
-message("------------------------ FluentUI ------------------------")
-message("Build FluentUI demo applications.: ${FLUENTUI_BUILD_EXAMPLES}")
-message("Build FramelessHelper.: ${FLUENTUI_BUILD_FRAMELESSHEPLER}")
-message("Build static library.: ${FLUENTUI_BUILD_STATIC_LIB}")
-message("Path to FluentUI plugin.: ${FLUENTUI_QML_PLUGIN_DIRECTORY}")
+file(GLOB_RECURSE SOURCE_FILES
+    ${CMAKE_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/*.h
+    ${CMAKE_SOURCE_DIR}/src/*.hpp
+    SAST_Evento.qrc
+)
+
+file(GLOB_RECURSE SOURCE_IMPORT_PATHS
+    ${CMAKE_SOURCE_DIR}/src/controller/ui/*.h
+    ${CMAKE_SOURCE_DIR}/src/controller/ui/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/domain/model/*.h
+    ${CMAKE_SOURCE_DIR}/src/domain/model/*.cpp
+)
+foreach(filepath ${SOURCE_IMPORT_PATHS})
+    string(REPLACE "${CMAKE_SOURCE_DIR}/" "" filename ${filepath})
+    list(APPEND SOURCE_IMPORT_FILES ${filename})
+endforeach(filepath)
+
+#添加可执行文件
+qt_add_executable(SAST_Evento_Desktop ${SOURCE_FILES})
+
+qt_add_qml_module(SAST_Evento_Desktop
+    URI SAST_Evento
+    VERSION 1.0
+    SOURCES ${SOURCE_IMPORT_FILES}
+)
+
+target_include_directories(SAST_Evento_Desktop
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/include
+    ${CMAKE_SOURCE_DIR}/src/controller/ui
+    ${CMAKE_SOURCE_DIR}/src/domain/entity
+    ${CMAKE_SOURCE_DIR}/src/domain/model
+    ${CMAKE_SOURCE_DIR}/src/domain/exception
+    ${CMAKE_SOURCE_DIR}/src/infrastructure
+)
+
+#设置属性
+set_target_properties(SAST_Evento_Desktop PROPERTIES
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE
+)
+
+#链接库
+if (FLUENTUI_BUILD_STATIC_LIB)
+    target_link_libraries(SAST_Evento_Desktop PRIVATE
+        Qt6::Quick
+        Qt6::Svg
+        Qt6::Network
+        fluentui
+        fluentuiplugin
+        FramelessHelper::Core
+        FramelessHelper::Quick
+    )
+else()
+    target_link_libraries(SAST_Evento_Desktop PRIVATE
+        Qt6::Quick
+        Qt6::Svg
+        Qt6::Network
+        fluentuiplugin
+        FramelessHelper::Core
+        FramelessHelper::Quick
+    )
+endif()
+
+#安装
+install(TARGETS SAST_Evento_Desktop
+    BUNDLE DESTINATION .
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
