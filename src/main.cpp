@@ -1,14 +1,8 @@
 #include <FramelessHelper/Core/private/framelessconfig_p.h>
 #include <FramelessHelper/Quick/framelessquickmodule.h>
 
-#include <QDir>
 #include <QGuiApplication>
-#include <QNetworkProxy>
-#include <QProcess>
 #include <QQmlApplicationEngine>
-#include <QQmlContext>
-#include <QQuickWindow>
-#include <QSslConfiguration>
 
 #include "lang/AppInfo.h"
 
