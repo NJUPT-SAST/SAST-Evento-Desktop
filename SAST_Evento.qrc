@@ -1,0 +1,45 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/App.qml</file>
+        <file>res/favicon.ico</file>
+        <file>qml/window/LoginWindow.qml</file>
+        <file>qml/window/MainWindow.qml</file>
+        <file>qml/imports/CustomWindow.qml</file>
+        <file>qml/page/T_DepartmentEvents.qml</file>
+        <file>qml/page/T_EventInfo.qml</file>
+        <file>qml/page/T_Feedback.qml</file>
+        <file>qml/page/T_My.qml</file>
+        <file>qml/page/T_Plaza.qml</file>
+        <file>qml/page/T_Profile.qml</file>
+        <file>qml/page/T_Schedule.qml</file>
+        <file>qml/page/T_Settings.qml</file>
+        <file>qml/page/T_Slide.qml</file>
+        <file>qml/page/T_SouvenirCard.qml</file>
+        <file>qml/page/T_Theme.qml</file>
+        <file>qml/page/T_Timesheet.qml</file>
+        <file>qml/page/T_UserManage.qml</file>
+        <file>res/image/banner_1.jpg</file>
+        <file>res/image/banner_2.jpg</file>
+        <file>res/image/banner_3.jpg</file>
+        <file>res/image/bg_home_header.png</file>
+        <file>res/image/evento_black.png</file>
+        <file>res/image/evento_white.png</file>
+        <file>res/image/favicon.ico</file>
+        <file>res/image/ic_home_github.png</file>
+        <file>res/image/logo_openai.png</file>
+        <file>res/svg/avatar_1.svg</file>
+        <file>res/svg/avatar_2.svg</file>
+        <file>res/svg/avatar_3.svg</file>
+        <file>res/svg/avatar_4.svg</file>
+        <file>res/svg/avatar_5.svg</file>
+        <file>res/svg/avatar_6.svg</file>
+        <file>res/svg/avatar_7.svg</file>
+        <file>res/svg/avatar_8.svg</file>
+        <file>res/svg/avatar_9.svg</file>
+        <file>res/svg/avatar_10.svg</file>
+        <file>res/svg/avatar_11.svg</file>
+        <file>res/svg/avatar_12.svg</file>
+        <file>res/svg/home.svg</file>
+        <file>res/svg/home_dark.svg</file>
+    </qresource>
+</RCC>

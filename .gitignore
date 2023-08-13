@@ -45,10 +45,16 @@ target_wrapper.*
 # QtCreator CMake
 CMakeLists.txt.user*
 
-# QtCreator 4.8< compilation database
-compile_commands.json
+bin
+.DS_Store
+build
+cmake-build-*
 
-# QtCreator local machine specific files for imported projects
-*creator.user*
+out
+.idea
+.vscode
+.vs
+x86
+x64
 
-*_qmlcache.qrc
+example
