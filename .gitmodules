@@ -1,3 +1,6 @@
 [submodule "libs/FluentUI"]
 	path = libs/FluentUI
 	url = https://github.com/zhuzichu520/FluentUI.git
+[submodule "libs/Qt-Based-JsonDeserialiser"]
+	path = libs/Qt-Based-JsonDeserialiser
+	url = https://github.com/AMOSOMNUM/Qt-Based-JsonDeserialiser.git
