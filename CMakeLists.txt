@@ -64,6 +64,7 @@ target_include_directories(SAST_Evento_Desktop
     ${CMAKE_SOURCE_DIR}/src/domain/model
     ${CMAKE_SOURCE_DIR}/src/domain/exception
     ${CMAKE_SOURCE_DIR}/src/infrastructure
+    ${CMAKE_SOURCE_DIR}/libs/Qt-Based-JsonDeserialiser
 )
 
 #设置属性

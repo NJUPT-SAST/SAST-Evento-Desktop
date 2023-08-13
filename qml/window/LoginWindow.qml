@@ -15,7 +15,8 @@ CustomWindow {
     closeDestory: true
     title: "SAST Evento"
 
-    LoginController {
+    Connections {
+        target:LoginController
         onLoginStatusChanged: {
             switch (loginStatus) {
             case 1:
