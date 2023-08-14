@@ -28,7 +28,7 @@ class Repository {
     virtual bool event_subscribe(EventoID event, EventoException& err) = 0;
 
     //admin-fetch
-    virtual bool get_qualified_event(std::vector<int> type, std::vector<int> dep, QDate day, EventoException& err) = 0;
+    virtual std::vector<DTO_Evento> get_qualified_event(int type, std::vector<int> dep, QDate day, EventoException& err) = 0;
 };
 
 #endif // DTO_USER_H

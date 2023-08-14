@@ -6,7 +6,7 @@
 class LoginController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(LoginController)
-    QML_SINGLETON
+    //QML_SINGLETON
 
     Q_PROPERTY(int loginStatus MEMBER status NOTIFY loginStatusChanged)
 

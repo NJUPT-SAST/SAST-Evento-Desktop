@@ -16,7 +16,7 @@ class EventoException {
 private:
 	EventoExceptionCode code;
 	QString message;
-
+public:
     EventoException(EventoExceptionCode code, const QString& msg) : code(code), message(msg) {};
 };
 

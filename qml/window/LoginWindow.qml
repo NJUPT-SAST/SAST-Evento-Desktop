@@ -4,7 +4,7 @@ import QtQuick.Controls
 import Qt.labs.settings 1.0
 import FluentUI
 import SAST_Evento
-import "qrc:/qml/imports"
+import "../imports"
 
 CustomWindow {
     id: window
