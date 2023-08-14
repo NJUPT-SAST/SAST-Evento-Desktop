@@ -18,9 +18,6 @@
         <file>qml/page/T_Theme.qml</file>
         <file>qml/page/T_Timesheet.qml</file>
         <file>qml/page/T_UserManage.qml</file>
-        <file>res/image/banner_1.jpg</file>
-        <file>res/image/banner_2.jpg</file>
-        <file>res/image/banner_3.jpg</file>
         <file>res/image/bg_home_header.png</file>
         <file>res/image/evento_black.png</file>
         <file>res/image/evento_white.png</file>
@@ -41,5 +38,8 @@
         <file>res/svg/avatar_12.svg</file>
         <file>res/svg/home.svg</file>
         <file>res/svg/home_dark.svg</file>
+        <file>res/image/banner_1.png</file>
+        <file>res/image/banner_2.png</file>
+        <file>res/image/banner_3.png</file>
     </qresource>
 </RCC>

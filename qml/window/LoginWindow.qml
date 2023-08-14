@@ -1,10 +1,10 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import Qt.labs.settings 1.0
+import QtCore
 import FluentUI
 import SAST_Evento
-import "qrc:/qml/imports"
+import "../imports"
 
 CustomWindow {
     id: window
@@ -16,8 +16,8 @@ CustomWindow {
     title: "SAST Evento"
 
     Connections {
-        target:LoginController
-        onLoginStatusChanged: {
+        target: LoginController
+        function onLoginStatusChanged() {
             switch (loginStatus) {
             case 1:
                 hideLoading()
@@ -27,6 +27,7 @@ CustomWindow {
                 break
             case 3:
                 FluApp.navigate("/")
+                settings.username = textbox_uesrname.text
                 window.close()
                 break
             case 4:
@@ -115,6 +116,9 @@ CustomWindow {
             }
 
             // TODO
+            FluApp.navigate("/")
+            settings.username = textbox_uesrname.text
+            window.close()
         }
     }
 

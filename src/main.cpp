@@ -3,8 +3,13 @@
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QIcon>
 
 #include "lang/AppInfo.h"
+#include "slide_model.h"
+#include "undertaking_evento_model.h"
+#include "latest_evento_model.h"
+#include "user_brief_model.h"
 
 FRAMELESSHELPER_USE_NAMESPACE
 
@@ -14,6 +19,7 @@ int main(int argc, char *argv[]) {
     QGuiApplication::setOrganizationName("NJUPT-SAST-C++");
     QGuiApplication::setOrganizationDomain("https://github.com/NJUPT-SAST-Cpp");
     QGuiApplication app(argc, argv);
+    app.setWindowIcon(QIcon("../res/favicon.ico"));
     FramelessConfig::instance()->set(Global::Option::DisableLazyInitializationForMicaMaterial);
     FramelessConfig::instance()->set(Global::Option::CenterWindowBeforeShow);
     FramelessConfig::instance()->set(Global::Option::ForceNonNativeBackgroundBlur);
@@ -31,6 +37,11 @@ int main(int argc, char *argv[]) {
     engine.addImportPath("qrc:/"); // 让静态资源可以被QML引擎搜索到
 #endif
     appInfo->init(&engine);
+    qmlRegisterSingletonInstance("MyModel", 1, 0, "SlideModel", SlideModel::getInstance());
+    qmlRegisterSingletonInstance("MyModel", 1, 0, "UndertakingEventoModel", UndertakingEventoModel::getInstance());
+    qmlRegisterSingletonInstance("MyModel", 1, 0, "LatestEventoModel", LatestEventoModel::getInstance());
+    qmlRegisterSingletonInstance("MyModel", 1, 0, "UserBriefModel", UserBriefModel::getInstance());
+
     const QUrl url(QStringLiteral("qrc:/qml/App.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
         &app, [url](QObject *obj, const QUrl &objUrl) {
@@ -38,5 +49,6 @@ int main(int argc, char *argv[]) {
                 QCoreApplication::exit(-1);
         }, Qt::QueuedConnection);
     engine.load(url);
+
     return app.exec();
 }

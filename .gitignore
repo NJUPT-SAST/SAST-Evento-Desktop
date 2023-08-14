@@ -17,6 +17,7 @@ ui_*.h
 *.jsc
 Makefile*
 #*build-*
+.cmake
 
 # Qt unit tests
 target_wrapper.*
@@ -44,3 +45,7 @@ x86
 x64
 
 example
+
+# local test
+localdata
+local

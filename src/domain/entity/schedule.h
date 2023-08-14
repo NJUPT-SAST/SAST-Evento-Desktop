@@ -2,9 +2,9 @@
 #define SCHEDULE_H
 
 #include "evento.h"
-#include "image.h"
 
 struct Schedule {
+    EventoID id;
     QString title;
     EventState state;
     QString location;

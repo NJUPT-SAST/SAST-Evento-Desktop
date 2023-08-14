@@ -4,36 +4,42 @@ import QtQuick.Controls
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import Qt.labs.platform
-import Qt.labs.settings 1.0
+import QtCore
 import FluentUI
 import SAST_Evento
-import "qrc:/qml/imports"
+import "../imports"
 
 CustomWindow {
     id: window
-    title: "SAST Evento"
-    width: 1000
+    width: 1100
     height: 640
     closeDestory: false
     minimumWidth: 520
     minimumHeight: 200
     appBarVisible: false
+    autoShow: false
     launchMode: FluWindowType.SingleTask
-
-    Settings {
-        id: settings
-        property string username
-    }
+    title: "SAST Evento"
 
     closeFunc: function (event) {
         dialog_close.open()
         event.accepted = false
     }
 
+    Component.onCompleted: {
+        //        if (!UserHelper.isLogin()) {
+        //            window.autoShow = false
+        //            FluApp.navigate("/login")
+        //        } else {
+        window.autoShow = true
+        FluTools.setQuitOnLastWindowClosed(false)
+        //}
+    }
+
     SystemTrayIcon {
         id: system_tray
         visible: true
-        icon.source: "qrc:/SAST_Evento/res/image/favicon.ico"
+        icon.source: "qrc:/res/image/favicon.ico"
         tooltip: "SAST Evento"
         menu: Menu {
             MenuItem {
@@ -72,187 +78,143 @@ CustomWindow {
         }
     }
 
-    Flipable {
-        id: flipable
-        anchors.fill: parent
-        property bool flipped: false
-        property real flipAngle: 0
-        transform: Rotation {
-            id: rotation
-            origin.x: flipable.width / 2
-            origin.y: flipable.height / 2
-            axis {
-                x: 0
-                y: 1
-                z: 0
-            }
-            angle: flipable.flipAngle
-        }
-        states: State {
-            PropertyChanges {
-                target: flipable
-                flipAngle: 180
-            }
-            when: flipable.flipped
-        }
-        transitions: Transition {
-            NumberAnimation {
-                target: flipable
-                property: "flipAngle"
-                duration: 1000
-                easing.type: Easing.OutCubic
+    FluObject {
+        id: items_original
+        FluPaneItem {
+            id: item_home
+            title: lang.lang_plaza
+            icon: FluentIcons.Home
+            onTap: {
+                nav_view.push("qrc:/qml/page/T_Plaza.qml")
             }
         }
-        back: Item {
-            anchors.fill: flipable
-            visible: flipable.flipAngle !== 0
-            FluAppBar {
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
-                darkText: lang.lang_dark_mode
-                showDark: true
-                z: 7
-                darkClickListener: button => handleDarkChanged(button)
-            }
-            Row {
-                z: 8
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    topMargin: FluTools.isMacos() ? 20 : 5
-                    leftMargin: 5
-                }
-                FluIconButton {
-                    iconSource: FluentIcons.ChromeBack
-                    width: 30
-                    height: 30
-                    iconSize: 13
-                    onClicked: {
-                        flipable.flipped = false
-                    }
-                }
-                FluIconButton {
-                    iconSource: FluentIcons.Sync
-                    width: 30
-                    height: 30
-                    iconSize: 13
-                    onClicked: {
-                        loader.reload()
-                    }
-                }
-            }
-        }
-        front: Item {
-            id: page_front
-            visible: flipable.flipAngle !== 180
-            anchors.fill: flipable
-            FluAppBar {
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
-                darkText: lang.lang_dark_mode
-                showDark: true
-                darkClickListener: button => handleDarkChanged(button)
-                z: 7
-            }
-            FluNavigationView {
-                property int clickCount: 0
-                id: nav_view
-                width: parent.width
-                height: parent.height
-                z: 999
-                //Stack模式，每次切换都会将页面压入栈中，随着栈的页面增多，消耗的内存也越多，内存消耗多就会卡顿，这时候就需要按返回将页面pop掉，释放内存。该模式可以配合FluPage中的launchMode属性，设置页面的启动模式
-                //                 pageMode: FluNavigationView.Stack
-                //NoStack模式，每次切换都会销毁之前的页面然后创建一个新的页面，只需消耗少量内存（推荐）
-                footerItems: ItemsFooter
-                topPadding: FluTools.isMacos() ? 20 : 5
-                displayMode: MainEvent.displayMode
-                logo: "qrc:/SAST_Evento/res/image/favicon.ico"
-                title: "SAST Evento"
-                autoSuggestBox: FluAutoSuggestBox {
-                    width: 280
-                    anchors.centerIn: parent
-                    iconSource: FluentIcons.Search
-                    placeholderText: lang.lang_search
-                    onItemClicked: data => {
-                                       ItemsOriginal.startPageByItem(data)
-                                   }
-                }
 
-                Component.onCompleted: {
-                    ItemsFooter.navigationView = nav_view
-                }
+        FluPaneItem {
+            id: item_schedule
+            count: 9
+            title: lang.lang_schedule
+            icon: FluentIcons.Calendar
+            onTap: {
+                nav_view.push("qrc:/qml/page/T_Schedule.qml")
+            }
+        }
 
-                Connections {
-                    target: ItemsOriginal
-                    function onSourceChanged() {
-                        nav_view.pageMode = FluNavigationViewType.Stack
-                        ItemsOriginal.item.navigationView = nav_view
-                        nav_view.items = ItemsOriginal.item
-                        nav_view.setCurrentIndex(0)
-                    }
+        FluPaneItemExpander {
+            title: lang.lang_manage
+            icon: FluentIcons.AllApps
+            FluPaneItem {
+                title: lang.lang_timesheet
+                onTap: {
+                    nav_view.push("qrc:/qml/page/T_Timesheet.qml")
+                }
+            }
+            FluPaneItem {
+                title: lang.lang_feedback
+                onTap: {
+                    nav_view.push("qrc:/qml/page/T_Feedback.qml")
+                }
+            }
+        }
+
+        FluPaneItemExpander {
+            title: lang.lang_others
+            icon: FluentIcons.ViewAll
+            FluPaneItem {
+                title: lang.lang_user_manage
+                onTap: {
+                    nav_view.push("qrc:/qml/page/T_UserManage.qml")
+                }
+            }
+            FluPaneItem {
+                title: lang.lang_upload_souvenir_card
+                onTap: {
+                    nav_view.push("qrc:/page/T_SouvenirCard.qml")
+                }
+            }
+            FluPaneItem {
+                title: lang.lang_slide
+                onTap: {
+                    nav_view.push("qrc:/qml/page/T_Slide.qml")
                 }
             }
         }
     }
 
-    Component {
-        id: com_reveal
-        CircularReveal {
-            id: reveal
-            target: window.contentItem
-            anchors.fill: parent
-            onAnimationFinished: {
-                //动画结束后释放资源
-                loader_reveal.sourceComponent = undefined
-            }
-            onImageChanged: {
-                changeDark()
+    FluObject {
+        id: items_footer
+        FluPaneItemSeparator {}
+        FluPaneItem {
+            title: lang.lang_my
+            icon: FluentIcons.Contact
+            onTap: {
+                nav_view.push("qrc:/qml/page/T_My.qml")
             }
         }
-    }
 
-    Loader {
-        id: loader_reveal
-        anchors.fill: parent
-    }
+        FluPaneItem {
+            title: lang.lang_theming
+            icon: FluentIcons.Brightness
+            onTap: {
+                nav_view.push("qrc:/qml/page/T_Theme.qml")
+            }
+        }
 
-    function distance(x1, y1, x2, y2) {
-        return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
-    }
-    function handleDarkChanged(button) {
-        if (FluTools.isMacos() || !FluTheme.enableAnimation) {
-            changeDark()
-        } else {
-            loader_reveal.sourceComponent = com_reveal
-            var target = window.contentItem
-            var pos = button.mapToItem(target, 0, 0)
-            var mouseX = pos.x
-            var mouseY = pos.y
-            var radius = Math.max(distance(mouseX, mouseY, 0,
-                                           0), distance(mouseX, mouseY,
-                                                        target.width, 0),
-                                  distance(mouseX, mouseY, 0,
-                                           target.height), distance(
-                                      mouseX, mouseY,
-                                      target.width, target.height))
-            var reveal = loader_reveal.item
-            reveal.start(reveal.width * Screen.devicePixelRatio,
-                         reveal.height * Screen.devicePixelRatio,
-                         Qt.point(mouseX, mouseY), radius)
+        FluPaneItem {
+            title: lang.lang_settings
+            icon: FluentIcons.Settings
+            onTap: {
+                nav_view.push("qrc:/qml/page/T_Settings.qml")
+            }
         }
     }
 
-    function changeDark() {
-        if (FluTheme.dark) {
-            FluTheme.darkMode = FluThemeType.Light
-        } else {
-            FluTheme.darkMode = FluThemeType.Dark
+    FluAppBar {
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
         }
+        darkText: lang.lang_dark_mode
+        showDark: true
+        z: 7
+    }
+
+    FluIconButton {
+
+        anchors {
+            top: parent.top
+            left: parent.left
+            topMargin: FluTools.isMacos() ? 20 : 10
+            leftMargin: 155
+        }
+
+        iconSource: FluentIcons.Sync
+        width: 30
+        height: 30
+        iconSize: 13
+        onClicked: {
+
+            // TODO
+        }
+    }
+
+    FluNavigationView {
+        id: nav_view
+        width: parent.width
+        height: parent.height
+        z: 999
+        navWidth: 200
+        items: items_original
+        footerItems: items_footer
+        topPadding: FluTools.isMacos() ? 20 : 5
+        logo: "qrc:/res/favicon.ico"
+        title: "SAST Evento"
+        Component.onCompleted: {
+            setCurrentIndex(0)
+        }
+    }
+
+    function pushPage(item) {
+        nav_view.push(item)
     }
 }

@@ -3,69 +3,186 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
+import MyModel
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
-    Column {
-        spacing: 15
-        Layout.fillWidth: true
+    property var arr: []
+
+    Repeater {
+        id: rep
+        model: SlideModel
+
+        Item {
+            Component.onCompleted: {
+                arr.push({
+                             "url": model.url,
+                             "title": model.title
+                         })
+            }
+        }
+    }
+
+    FluCarousel {
         Layout.topMargin: 10
-        FluRectangle {
-            radius: [8, 8, 8, 8]
-            width: parent.width
-            height: 300
-            FluImage {
+        Layout.bottomMargin: 10
+        Layout.fillWidth: true
+        radius: [10, 10, 10, 10]
+        loopTime: 3000
+        indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
+        indicatorMarginTop: 15
+        model: arr
+        delegate: Component {
+            Item {
                 anchors.fill: parent
-                source: "https://gitee.com/zhu-zichu/zhu-zichu/raw/74f075efe2f8d3c3bb7ba3c2259e403450e4050b/image/banner_1.jpg"
-                fillMode: Image.PreserveAspectCrop
-                onStatusChanged: {
-                    if (status === Image.Error) {
-                        showError("图片加载失败，请重新加载")
+                Image {
+                    anchors.fill: parent
+                    source: model.url
+                    asynchronous: true
+                    fillMode: Image.PreserveAspectCrop
+                }
+                Rectangle {
+                    height: 40
+                    width: parent.width
+                    anchors.bottom: parent.bottom
+                    color: "#33000000"
+                    FluText {
+                        anchors.fill: parent
+                        verticalAlignment: Qt.AlignVCenter
+                        horizontalAlignment: Qt.AlignHCenter
+                        text: model.title
+                        color: FluColors.Grey10
+                        font.pixelSize: 15
                     }
                 }
-                clickErrorListener: function () {
-                    source = "https://gitee.com/zhu-zichu/zhu-zichu/raw/74f075efe2f8d3c3bb7ba3c2259e403450e4050b/image/banner_1.jpg"
-                }
             }
         }
+    }
 
-        FluText {
-            text: "活动标题"
-            font: FluTextStyle.TitleLarge
+    FluText {
+        id: item_title
+        text: "活动标题"
+        font: FluTextStyle.TitleLarge
+    }
+
+    Row {
+        spacing: 5
+        Layout.topMargin: 8
+        FluIcon {
+            iconSource: FluentIcons.EmojiTabFavorites
         }
-
-        FluTextButton {
-            text: "活动组织部门"
-            font: FluTextStyle.Subtitle
-
-            onClicked: {
-                ItemsOriginal.item.navigationView.push(
-                            "qrc:/SAST_Evento/qml/page/T_DepartmentEvents.qml")
-            }
-        }
-
         FluText {
-            width: parent.width
-            text: "活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息"
-            font: FluTextStyle.Body
+            text: "活动时间：2023.10.04 15:00-17:00"
             wrapMode: Text.WordWrap
+            font: FluTextStyle.Caption
+            anchors.verticalCenter: parent.verticalCenter
         }
+    }
 
-        FluToggleButton {
-            id: btn_participate
-            text: lang.lang_participate_in
-            disabled: false
-            width: 120
-            onClicked: {
-                if (checked) {
-                    text = lang.lang_cancel
-                    showSuccess("参加成功")
-                    loader.item.publishDiasabled = false
-                } else {
-                    text = lang.lang_participate_in
-                    showSuccess("取消成功")
-                    loader.item.publishDiasabled = true
-                }
+    Row {
+        spacing: 5
+        Layout.topMargin: 8
+        FluIcon {
+            iconSource: FluentIcons.EmojiTabFavorites
+        }
+        FluText {
+            text: "报名时间：2023.10.02 00:00 - 2023.10.03 24:00"
+            wrapMode: Text.WordWrap
+            font: FluTextStyle.Caption
+            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
+
+    Row {
+        id: item_location
+        spacing: 5
+        Layout.topMargin: 8
+        FluIcon {
+            iconSource: FluentIcons.POI
+        }
+        FluText {
+            text: "大学生活动中心"
+            wrapMode: Text.WordWrap
+            font: FluTextStyle.Caption
+            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
+
+    Row {
+        id: item_department
+        spacing: 5
+        Layout.topMargin: 8
+        FluIcon {
+            iconSource: FluentIcons.EMI
+        }
+        FluText {
+            text: "C++组"
+            wrapMode: Text.WordWrap
+            font: FluTextStyle.Caption
+            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
+
+    Row {
+        id: item_type
+        spacing: 5
+        Layout.topMargin: 8
+        FluIcon {
+            iconSource: FluentIcons.OEM
+        }
+        FluText {
+            text: "日常授课"
+            wrapMode: Text.WordWrap
+            font: FluTextStyle.Caption
+            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
+
+    Row {
+        id: item_tag
+        spacing: 5
+        Layout.topMargin: 8
+        FluIcon {
+            iconSource: FluentIcons.Tag
+        }
+        FluRectangle {
+            height: 20
+            width: 50
+            radius: [5, 5, 5, 5]
+            color: "#99ffcc"
+            FluText {
+                text: "标签"
+                wrapMode: Text.WordWrap
+                font: FluTextStyle.Caption
+                color: FluColors.Grey100
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+        }
+    }
+
+    FluText {
+        id: item_desc
+        Layout.topMargin: 15
+        Layout.fillWidth: true
+        text: "活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信"
+        wrapMode: Text.WrapAnywhere
+        font.pixelSize: 18
+    }
+
+    FluToggleButton {
+        id: btn_participate
+        Layout.topMargin: 10
+        Layout.fillWidth: true
+        text: lang.lang_participate_in
+        disabled: false
+        onClicked: {
+            if (checked) {
+                text = lang.lang_cancel
+                showSuccess("参加成功")
+            } else {
+                text = lang.lang_participate_in
+                showSuccess("取消成功")
             }
         }
     }
@@ -73,133 +190,39 @@ FluScrollablePage {
     Loader {
         id: loader
         sourceComponent: com_comment
+        Layout.topMargin: 15
         Layout.fillWidth: true
-        Layout.topMargin: 30
     }
 
     Component {
         id: com_comment
         Column {
-            property alias publishDiasabled: btn_publish.disabled
             width: parent.width
             spacing: 15
+
             FluText {
                 text: lang.lang_comment
                 font: FluTextStyle.Subtitle
             }
 
-            FluMultilineTextBox {
-                id: multiine_textbox
-                placeholderText: "输入你的评价，Ctrl+Enter换行"
-                width: parent.width
-                Layout.topMargin: 10
+            FluText {
+                text: "为本活动打个分吧，你的评价会被匿名上传哦"
+                font: FluTextStyle.Caption
             }
 
-            FluFilledButton {
-                id: btn_publish
+            FluRatingControl {}
+
+            FluTextBox {
+                placeholderText: "输入你的留言（选填，Ctrl+Enter换行）"
+                width: parent.width
+            }
+
+            FluButton {
                 text: lang.lang_submit
-                disabled: true
-                anchors {
-                    right: parent.right
-                }
-            }
-
-            Component {
-                id: com_item
-                Item {
-                    Layout.topMargin: 10
-                    width: parent.width
-                    height: 85 + item_comment.lineCount * 15
-                    FluArea {
-                        radius: 8
-                        width: parent.width
-                        height: 70 + item_comment.lineCount * 15
-                        anchors.centerIn: parent
-
-                        FluRectangle {
-                            id: item_img
-                            height: 40
-                            width: 40
-                            radius: [20, 20, 20, 20]
-                            anchors {
-                                top: parent.top
-                                left: parent.left
-                                margins: 10
-                            }
-                            FluImage {
-                                anchors.fill: parent
-                                source: modelData.image
-                                fillMode: Image.PreserveAspectCrop
-                            }
-                        }
-
-                        FluText {
-                            id: item_name
-                            text: modelData.name
-                            font: FluTextStyle.Title
-                            anchors {
-                                left: item_img.right
-                                leftMargin: 10
-                                top: item_img.top
-                            }
-                        }
-
-                        FluText {
-                            id: item_comment
-                            text: modelData.comment
-                            wrapMode: Text.WordWrap
-                            width: parent.width - 45
-                            font: FluTextStyle.Body
-                            anchors {
-                                top: item_img.bottom
-                                topMargin: 5
-                                left: parent.left
-                                leftMargin: 10
-                            }
-                        }
-
-                        FluIconButton {
-                            iconSource: FluentIcons.Copy
-                            anchors {
-                                right: parent.right
-                                bottom: parent.bottom
-                                rightMargin: 5
-                                bottomMargin: 5
-                            }
-                            onClicked: {
-                                FluTools.clipText(item_comment.text)
-                                showSuccess("复制成功")
-                            }
-                        }
-                    }
-                }
-            }
-
-            ListView {
-                width: parent.width
-                implicitHeight: contentHeight
-                interactive: false
-                delegate: com_item
-
-                Component.onCompleted: {
-                    model = getEventItems()
+                onClicked: {
+                    showSuccess("提交成功")
                 }
             }
         }
-    }
-
-    function getEventItems() {
-        var arr = []
-        for (var i = 0; i < 10; ++i) {
-            arr.push({
-                         "image": "qrc:/SAST_Evento/res/image/banner_3.jpg",
-                         "name": "admin",
-                         "time": "2023.07.10 15:18",
-                         "comment": "C++ 是一种高级语言，它是由 Bjarne Stroustrup 于 1979 年在贝尔实验室开始设计开发的。C++ 进一步扩充和完善了 C 语言，是一种面向对象的程序设计语言。C++ 可运行于多种平台上，如 Windows、MAC 操作系统以及 UNIX 的各种版本。
-本教程通过通俗易懂的语言来讲解 C++ 编程语言。",
-                         "id": i
-                     })
-        }
-        return arr
     }
 }

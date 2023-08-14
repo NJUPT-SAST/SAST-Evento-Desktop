@@ -4,29 +4,16 @@
 #include "types.h"
 
 struct Evento {
-    enum class ParticipationState {
-        Unsubscribed,
-        Subscribed,
-        Checked,
-        Over
-    };
-
-    enum class CheckState {
-        Disabled,
-        Checked,
-        Expired,
-        Unchecked
-    };
-
+    EventoID id;
     QString title;
     EventState state;
     QString description;
-    QString time;
-    EventType type;
+    QString eventTime;
+    QString registerTime;
+    QString departments;
     QString location;
-    QString tag;
-    ParticipationState participate;
-    CheckState checked;
+    EventType type;
+    Tag tag;
 };
 
 #endif // EVENTO_H
