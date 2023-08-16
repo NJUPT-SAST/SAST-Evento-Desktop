@@ -7,6 +7,8 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QFile>
+#include <QLockFile>
+#include <QThread>
 
 class repositoryImpl : public Repository
 {
@@ -44,7 +46,7 @@ public:
 public:
     void test(){
         EventoException error(EventoExceptionCode::UnexpectedError, "null");
-        qDebug()<<get_qrcode(1, error);
+        qDebug()<<get_home_slide_list(3, error).at(1).link;
     };
     repositoryImpl();
 
@@ -58,13 +60,22 @@ private:
 
     QByteArray readString(QString path){
         QFile file(path);
+        QLockFile lockFile("localdata/" + path + ".lock");
+
+        lockFile.tryLock(0);
+
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             qDebug()<< "Can't open the file(" + path +")!";
+            qDebug()<< file.errorString();
+            QThread::sleep(1000);
             return QByteArray();
         }
         QByteArray file_str = file.readAll();
         file.close();
+
+        lockFile.unlock();
+
         return file_str;
     }
 
