@@ -8,7 +8,7 @@
 using UserID = QString;
 using EventoID = int;
 using Image = QString;
-using Tag = QStringList;
+using Tag = QString;
 
 struct ParticipationStatus {
     bool isRegistrated;

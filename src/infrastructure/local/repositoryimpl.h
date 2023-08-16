@@ -186,7 +186,7 @@ private:
                             readFile("localdata/type.json", "allow_conflict", std::pair<QString,QString>("id", unit.value("type_id").toString())).compare("false")?true:false
                                   },
                         readLocations(unit.value("location_id").toString()),
-                        unit.contains("tag")?unit.value("tag").toString().split(" "):QStringList(),
+                        unit.contains("tag")?unit.value("tag").toString():QString(),
                         static_cast<EventState>(unit.value("state").toString().toInt()),
                         departments
                     });
