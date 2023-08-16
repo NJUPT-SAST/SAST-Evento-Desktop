@@ -24,13 +24,10 @@ QStringList repositoryImpl::get_permitted_event(EventoException &err)
 
 DTO_Permission repositoryImpl::get_event_permission(EventoID event, EventoException &err)
 {
-    QFile file("localdata/permission.json");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug()<< "Can't open the file!";
+    QByteArray file_str = readString("localdata/permission.json");
+    if(file_str.isEmpty()){
         return DTO_Permission();
     }
-    QByteArray file_str = file.readAll();
-    file.close();
 
     QJsonParseError jsonError;
     QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
@@ -51,6 +48,72 @@ DTO_Permission repositoryImpl::get_event_permission(EventoID event, EventoExcept
         }
     }
     return DTO_Permission();
+}
+
+DTO_User repositoryImpl::get_user_info(const UserID &id, EventoException &err)
+{
+    QByteArray file_str = readString("localdata/user.json");
+    if(file_str.isEmpty()){
+        return DTO_User();
+    }
+
+    QJsonParseError jsonError;
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
+    if(jsonError.error == QJsonParseError::NoError && jsonDoc.isArray()){
+        QJsonArray jsonArr = jsonDoc.array();
+        for(int i = 0; i<jsonArr.count(); i++){
+            if(!jsonArr.at(i).toObject().value("id").toString().compare("B22041234")){
+                std::vector<Department> departmentList;
+                QStringList departmentList_str = jsonArr.at(i).toObject().value("department").toString().split(" ");
+                for(int j = 0; j<departmentList_str.count(); j++){
+                    departmentList.push_back(readDepartment(departmentList_str.at(j)));
+                }
+
+                return DTO_User{
+                    id,
+                    jsonArr.at(i).toObject().value("name").toString(),
+                    jsonArr.at(i).toObject().value("avatar").toString(),
+                    jsonArr.at(i).toObject().value("email").toString(),
+                    jsonArr.at(i).toObject().value("description").toString(),
+                    readPermission(id),
+                    departmentList
+                };
+            }
+        }
+    }
+    return DTO_User();
+}
+
+std::vector<DTO_Slide> repositoryImpl::get_home_slide_list(const int &size, EventoException &err)
+{
+    std::vector<DTO_Slide> res;
+    QByteArray file_str = readString("localdata/slide.json");
+    if(file_str.isEmpty()){
+        return res;
+    }
+
+    QJsonParseError jsonError;
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
+    if(jsonError.error == QJsonParseError::NoError && jsonDoc.isArray()){
+        QJsonArray jsonArr = jsonDoc.array();
+        int countNum;
+        if(size>jsonArr.count()){
+            countNum = jsonArr.count();
+        }
+        else{
+            countNum = size;
+        }
+        for(int i = 0; i<countNum; i++){
+            QJsonObject unit = jsonArr.at(i).toObject();
+            res.push_back(DTO_Slide{
+                unit.value("id").toString().toInt(),
+                unit.value("title").toString(),
+                unit.value("link").toString(),
+                unit.value("url").toString()
+            });
+        }
+    }
+    return res;
 }
 
 std::vector<DTO_Evento> repositoryImpl::get_undertaking_list(EventoException &err)
@@ -74,6 +137,57 @@ std::vector<DTO_Evento> repositoryImpl::get_subscribed_list(EventoException &err
     return res;
 }
 
+std::vector<DTO_Evento> repositoryImpl::get_history_list(EventoException &err)
+{
+    std::vector<DTO_Evento> res;
+    QByteArray file_str = readString("localdata/participate.json");
+    if(file_str.isEmpty()){
+        return res;
+    }
+
+    QJsonParseError jsonError;
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
+    if(jsonError.error == QJsonParseError::NoError && jsonDoc.isArray()){
+        QJsonArray jsonArr = jsonDoc.array();
+        for(int i = 0; i<jsonArr.count(); i++){
+            if(!jsonArr.at(i).toObject().value("is_participate").toString().compare("true")){
+                std::vector<DTO_Evento> temp = readEvento(std::pair<QString, QString>("id", jsonArr.at(i).toObject().value("event_id").toString()));
+                res.insert(res.end(), temp.begin(), temp.end());
+            }
+        }
+    }
+    return res;
+}
+
+std::vector<DTO_Evento> repositoryImpl::get_event_list(const int &page, const int &size, EventoException &err)
+{
+    std::vector<DTO_Evento> res;
+    int beginId = (page-1) * size +1;
+    int endId = beginId + (size-1);
+
+    QByteArray file_str = readString("localdata/event.json");
+    if(file_str.isEmpty()){
+        return res;
+    }
+
+    QJsonParseError jsonError;
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
+    if(jsonError.error == QJsonParseError::NoError && jsonDoc.isArray()){
+        QJsonArray jsonArr = jsonDoc.array();
+        if(beginId>jsonArr.count()){
+            return res;
+        }
+        if(endId > jsonArr.count()){
+            endId = jsonArr.count();
+        }
+        for(int i = beginId; i <= endId; i++){
+            std::vector<DTO_Evento> temp = readEvento(std::pair("id", jsonArr.at(i-1).toObject().value("id").toString()));
+            res.insert(res.end(), temp.begin(), temp.end());
+        }
+    }
+    return res;
+}
+
 DTO_Evento repositoryImpl::get_event(EventoID event, EventoException &err)
 {
     std::vector<DTO_Evento> eventTemp = readEvento(std::pair<QString, QString>("id", QString::number(event)));
@@ -82,14 +196,11 @@ DTO_Evento repositoryImpl::get_event(EventoID event, EventoException &err)
 
 std::vector<DTO_Feedback> repositoryImpl::get_feedback_list(EventoException &err)
 {
-    QFile file("localdata/feedback.json");
     std::vector<DTO_Feedback> res;
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug()<< "Can't open the file!";
+    QByteArray file_str = readString("localdata/feedback.json");
+    if(file_str.isEmpty()){
         return res;
     }
-    QByteArray file_str = file.readAll();
-    file.close();
 
     QJsonParseError jsonError;
     QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
@@ -114,13 +225,10 @@ std::vector<DTO_Feedback> repositoryImpl::get_feedback_list(EventoException &err
 std::vector<DTO_Slide> repositoryImpl::get_slide_list(EventoException &err)
 {
     std::vector<DTO_Slide> res;
-    QFile file("localdata/slide.json");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug()<< "Can't open the file!";
-        return res;
+    QByteArray file_str = readString("localdata/slide.json");
+    if(file_str.isEmpty()){
+        return std::vector<DTO_Slide>();
     }
-    QByteArray file_str = file.readAll();
-    file.close();
 
     QJsonParseError jsonError;
     QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
@@ -137,6 +245,64 @@ std::vector<DTO_Slide> repositoryImpl::get_slide_list(EventoException &err)
         }
     }
     return res;
+}
+
+std::vector<DTO_Slide> repositoryImpl::get_event_slide_list(EventoID id, EventoException &err)
+{
+    std::vector<DTO_Slide> res;
+    QByteArray file_str = readString("localdata/slide.json");
+    if(file_str.isEmpty()){
+        return std::vector<DTO_Slide>();
+    }
+
+    QJsonParseError jsonError;
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
+    if(jsonError.error == QJsonParseError::NoError && jsonDoc.isArray()){
+        QJsonArray jsonArr = jsonDoc.array();
+        for(int i = 0; i<jsonArr.count(); i++){
+            QJsonObject unit = jsonArr.at(i).toObject();
+            if(!unit.value("event_id").toString().compare(QString::number(id))){
+                res.push_back(DTO_Slide{
+                    unit.value("id").toString().toInt(),
+                    unit.value("title").toString(),
+                    unit.value("link").toString(),
+                    unit.value("url").toString()
+                });
+            }
+        }
+    }
+    return res;
+}
+
+std::vector<EventType> repositoryImpl::get_type_list(const int &page, const int &size, EventoException &err)
+{
+
+}
+
+std::vector<Location> repositoryImpl::get_location_list(EventoException &err)
+{
+    std::vector<Location> res;
+    QByteArray file_str = readString("localdata/location.json");
+
+    QJsonParseError jsonError;
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
+    if(jsonError.error == QJsonParseError::NoError && jsonDoc.isArray()){
+        QJsonArray jsonArr = jsonDoc.array();
+        for(int i = 0; i<jsonArr.count(); i++){
+            QJsonObject unit = jsonArr.at(i).toObject();
+            res.push_back(Location{
+                unit.value("id").toString().toInt(),
+                unit.value("location_name").toString(),
+                unit.value("parent_id").toString().toInt()
+            });
+        }
+    }
+    return res;
+}
+
+QString repositoryImpl::get_qrcode(const int &eventId, EventoException &err)
+{
+    return "qrcodeLink";
 }
 
 bool repositoryImpl::event_checkin(EventoID event, const QString &code, EventoException &err)
@@ -162,13 +328,10 @@ bool repositoryImpl::event_checkin(EventoID event, const QString &code, EventoEx
 
 bool repositoryImpl::event_feedback(const DTO_Feedback &code, EventoException &err)
 {
-    QFile participationFile("localdata/participate.json");
-    if(!participationFile.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug()<< "Can't open the file!";
+    QByteArray participationFile_str = readString("localdata/participate.json");
+    if(participationFile_str.isEmpty()){
         return false;
     }
-    QByteArray participationFile_str = participationFile.readAll();
-    participationFile.close();
 
     QString participationId;
     QJsonParseError jsonError;
@@ -185,13 +348,10 @@ bool repositoryImpl::event_feedback(const DTO_Feedback &code, EventoException &e
         }
     }
 
-    QFile feedbackFile("localdata/feedback.json");
-    if(!feedbackFile.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug()<< "Can't open the file(localdata/feedback.json)!";
+    QByteArray feedbackFile_str = readString("localdata/feedback.json");
+    if(feedbackFile_str.isEmpty()){
         return false;
     }
-    QByteArray feedbackFile_str = feedbackFile.readAll();
-    feedbackFile.close();
 
     QJsonDocument feedbackJsonDoc(QJsonDocument::fromJson(feedbackFile_str, &jsonError));
     QJsonArray feedbackJsonArr;
@@ -242,7 +402,7 @@ bool repositoryImpl::event_subscribe(EventoID event, EventoException &err)
     return false;
 }
 
-std::vector<DTO_Evento> repositoryImpl::get_qualified_event(int type, std::vector<int> dep, QDate day, EventoException &err)
+std::vector<DTO_Evento> repositoryImpl::get_qualified_event(int type, const std::vector<int> &dep, const QDate &day, EventoException &err)
 {
     std::vector<DTO_Evento> res;
     std::vector<DTO_Evento> eventoList = readEvento(std::pair<QString, QString>("type_id", QString::number(type)));
@@ -251,14 +411,24 @@ std::vector<DTO_Evento> repositoryImpl::get_qualified_event(int type, std::vecto
         QDate day_temp = QDate::fromString(day_str, "yyyy-MM-dd");
         int eventId = eventoList.at(i).id;
         if(day_temp == day){
-            for(std::vector<int>::iterator it = dep.begin(); it != dep.end(); it++){
-                if(eventDepartmentMatch(eventId, *it)){
+            for(int j = 0; j < dep.size(); j++){
+                if(eventDepartmentMatch(eventId, dep.at(j))){
                     res.push_back(eventoList.at(i));
                 }
             }
         }
     }
     return res;
+}
+
+QStringList repositoryImpl::get_action_state_list(EventoException &err)
+{
+
+}
+
+QStringList repositoryImpl::get_action_list(EventoException &err)
+{
+
 }
 
 repositoryImpl::repositoryImpl()
