@@ -87,11 +87,11 @@ FluScrollablePage {
                         "mode": FluNavigationViewType.Auto
                     }]
                 delegate: FluRadioButton {
-                    checked: MainEvent.displayMode === modelData.mode
+                    checked: FluNavigationView.displayMode === modelData.mode
                     text: modelData.title
                     clickListener: function () {
                         settings.displayMode = modelData.mode
-                        MainEvent.displayMode = settings.displayMode
+                        FluNavigationView.displayMode = settings.displayMode
                     }
                 }
             }

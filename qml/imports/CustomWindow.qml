@@ -4,11 +4,18 @@ import FluentUI
 import org.wangwenx190.FramelessHelper
 
 FluWindow {
+
     id: window
+
     property bool fixSize
     property alias titleVisible: title_bar.titleVisible
+    property alias showClose: title_bar.showClose
+    property alias showMinimize: title_bar.showMinimize
+    property alias showMaximize: title_bar.showMaximize
     property bool appBarVisible: true
+    property bool autoShow: true
     default property alias content: container.data
+
     FluAppBar {
         id: title_bar
         title: window.title
@@ -20,6 +27,7 @@ FluWindow {
         }
         darkText: lang.lang_dark_mode
     }
+
     Item {
         id: container
         anchors {
@@ -30,6 +38,7 @@ FluWindow {
         }
         clip: true
     }
+
     FramelessHelper {
         id: framless_helper
         onReady: {
@@ -40,9 +49,12 @@ FluWindow {
             setHitTestVisible(title_bar.closeButton())
             setWindowFixedSize(fixSize)
             title_bar.maximizeButton.visible = !fixSize
-            if (blurBehindWindowEnabled)
+            if (blurBehindWindowEnabled) {
                 window.backgroundVisible = false
-            window.show()
+            }
+            if (window.autoShow) {
+                window.show()
+            }
         }
     }
     Connections {
@@ -53,11 +65,5 @@ FluWindow {
             else
                 FramelessUtils.systemTheme = FramelessHelperConstants.Light
         }
-    }
-    function setHitTestVisible(com) {
-        framless_helper.setHitTestVisible(com)
-    }
-    function setTitleBarItem(com) {
-        framless_helper.setTitleBarItem(com)
     }
 }

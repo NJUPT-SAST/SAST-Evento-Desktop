@@ -5,8 +5,9 @@
 
 struct UserBrief
 {
-    QString uid;
-    QString name;
+    QString userId;
+    QString studentId;
+    QString openId;
 };
 
 #endif // USER_BRIEF_H

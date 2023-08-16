@@ -6,12 +6,11 @@
 #include <vector>
 
 using UserID = QString;
-using EventoID = QString;
+using EventoID = int;
 using Image = QString;
-using Location = QStringList;
-using Tag = QStringList;
+using Tag = QString;
 
-class ParticipationStatus {
+struct ParticipationStatus {
     bool isRegistrated;
     bool isParticipated;
     bool isSubscribed;
@@ -25,15 +24,22 @@ enum class EventState {
     Over
 };
 
-class EventType {
+struct EventType {
     int id;
     QString name;
     bool allowConflict;
 };
 
-class Department {
+struct Department {
     int id;
     QString name;
+};
+
+struct Location
+{
+    int id;
+    QString locationName;
+    int parentId;
 };
 
 #endif // EVENTO_TYPES_H

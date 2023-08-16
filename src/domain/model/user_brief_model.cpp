@@ -1,11 +1,11 @@
-#include "slide_model.h"
+#include "user_brief_model.h"
 
-SlideModel::SlideModel(QObject *parent)
+UserBriefModel::UserBriefModel(QObject *parent)
     : QAbstractListModel(parent)
 {
 }
 
-int SlideModel::rowCount(const QModelIndex &parent) const
+int UserBriefModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -15,7 +15,7 @@ int SlideModel::rowCount(const QModelIndex &parent) const
     return m_data.size();
 }
 
-QVariant SlideModel::data(const QModelIndex &index, int role) const
+QVariant UserBriefModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
@@ -23,12 +23,12 @@ QVariant SlideModel::data(const QModelIndex &index, int role) const
     const auto& element = m_data.at(index.row());
 
     switch (role) {
-    case Role::Title:
-        return element.title;
-    case Role::Link:
-        return element.link;
-    case Role::Url:
-        return element.url;
+    case Role::UserId:
+        return element.userId;
+    case Role::StudentId:
+        return element.studentId;
+    case Role::OpenId:
+        return element.openId;
     default:
         break;
     }
@@ -36,18 +36,18 @@ QVariant SlideModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash<int, QByteArray> SlideModel::roleNames() const
+QHash<int, QByteArray> UserBriefModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {
-        roles.insert(Title, "title");
-        roles.insert(Link, "link");
-        roles.insert(Url, "url");
+        roles.insert(UserId, "userId");
+        roles.insert(StudentId, "studentId");
+        roles.insert(OpenId, "openId");
     }
     return roles;
 }
 
-void SlideModel::resetModel(const std::vector<Slide> &model)
+void UserBriefModel::resetModel(const std::vector<UserBrief> &model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
@@ -55,9 +55,8 @@ void SlideModel::resetModel(const std::vector<Slide> &model)
     endResetModel();
 }
 
-SlideModel *SlideModel::getInstance()
+UserBriefModel *UserBriefModel::getInstance()
 {
-    static SlideModel instance;
+    static UserBriefModel instance;
     return &instance;
 }
-

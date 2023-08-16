@@ -1,11 +1,13 @@
 #ifndef LATEST_EVENTO_H
 #define LATEST_EVENTO_H
 
-#include "evento.h"
-#include "image.h"
+#include "types.h"
 
 struct LatestEvento {
+    EventoID id;
+    QString title;
     QString time;
+    QString department;
     QString description;
     Image image;
 };

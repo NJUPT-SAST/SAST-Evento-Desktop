@@ -2,7 +2,6 @@
 #define SLIDE_MODEL_H
 
 #include <QAbstractListModel>
-#include <QtQml>
 #include <mutex>
 
 #include "slide.h"
@@ -10,11 +9,10 @@
 class SlideModel : public QAbstractListModel
 {
     Q_OBJECT
-    QML_SINGLETON
 
 public:
     enum Role {
-        Id = Qt::DisplayRole + 1,
+        Id = Qt::UserRole + 1,
         Title,
         Link,
         Url,
@@ -27,6 +25,8 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     void resetModel(const std::vector<Slide>& model);
+
+    static SlideModel* getInstance();
 
     SlideModel(const SlideModel&) = delete;
     SlideModel& operator=(const SlideModel&) = delete;

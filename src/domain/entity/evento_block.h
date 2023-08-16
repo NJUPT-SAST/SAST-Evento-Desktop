@@ -1,9 +1,10 @@
 #ifndef EVENTO_BLOCK_H
 #define EVENTO_BLOCK_H
 
-#include "evento.h"
+#include "types.h"
 
 struct EventoBlock {
+    EventoID id;
     QString title;
     EventState state;
     QString data;
