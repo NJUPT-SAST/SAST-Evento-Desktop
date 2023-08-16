@@ -47,7 +47,9 @@ foreach(filepath ${SOURCE_IMPORT_PATHS})
     list(APPEND SOURCE_IMPORT_FILES ${filename})
 endforeach(filepath)
 
-qt_policy(SET QTP0001 OLD)
+if(QT_KNOWN_POLICY_QTP0001)
+    qt_policy(SET QTP0001 OLD)
+endif()
 
 #添加可执行文件
 qt_add_executable(SAST_Evento_Desktop
