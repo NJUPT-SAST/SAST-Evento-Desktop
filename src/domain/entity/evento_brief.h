@@ -1,10 +1,10 @@
 #ifndef EVENTO_BRIEF_H
 #define EVENTO_BRIEF_H
 
-#include "evento.h"
-#include "image.h"
+#include "types.h"
 
-struct EventoBrief {    
+struct EventoBrief {
+    EventoID id;
     QString title;
     EventState state;
     QString description;

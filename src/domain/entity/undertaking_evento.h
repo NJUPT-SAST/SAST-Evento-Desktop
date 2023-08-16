@@ -1,14 +1,14 @@
 #ifndef UNDERTAKING_EVENTO_H
 #define UNDERTAKING_EVENTO_H
 
-#include "evento.h"
-#include "image.h"
+#include "types.h"
 
-struct UndertakingEvento {    
+struct UndertakingEvento {
+    EventoID id;
     QString title;
-    EventState state;
     QString time;
     QString location;
+    QString department;
     Image image;
 };
 

@@ -3,12 +3,7 @@
 
 #include <QtQML>
 
-enum class LoginStatus : int {
-    Start = 1,
-    Loading,
-    Success,
-    Failed
-};
+enum class LoginStatus : int { Start = 1, Loading, Success, Failed };
 
 class LoginController : public QObject {
     Q_OBJECT
@@ -17,13 +12,14 @@ class LoginController : public QObject {
 
     Q_PROPERTY(int loginStatus MEMBER status NOTIFY loginStatusChanged)
 
-private:
+   private:
     int status = int(LoginStatus::Start);
-signals:
+   signals:
     void loginStatusChanged();
-public:
+
+   public:
     Q_INVOKABLE void login(const QString& username, const QString& password) {}
     LoginController() = default;
 };
 
-#endif // LOGIN_CONTROLLER_H
+#endif  // LOGIN_CONTROLLER_H

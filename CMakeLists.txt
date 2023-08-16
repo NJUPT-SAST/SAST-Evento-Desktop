@@ -47,8 +47,13 @@ foreach(filepath ${SOURCE_IMPORT_PATHS})
     list(APPEND SOURCE_IMPORT_FILES ${filename})
 endforeach(filepath)
 
+qt_policy(SET QTP0001 OLD)
+
 #添加可执行文件
-qt_add_executable(SAST_Evento_Desktop ${SOURCE_FILES})
+qt_add_executable(SAST_Evento_Desktop
+    ${SOURCE_FILES}
+    SAST_Evento.rc
+)
 
 qt_add_qml_module(SAST_Evento_Desktop
     URI SAST_Evento
@@ -64,6 +69,7 @@ target_include_directories(SAST_Evento_Desktop
     ${CMAKE_SOURCE_DIR}/src/domain/model
     ${CMAKE_SOURCE_DIR}/src/domain/exception
     ${CMAKE_SOURCE_DIR}/src/infrastructure
+    ${CMAKE_SOURCE_DIR}/src/infrastructure/helper
     ${CMAKE_SOURCE_DIR}/libs/Qt-Based-JsonDeserialiser
 )
 

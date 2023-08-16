@@ -2,13 +2,23 @@
 #define USERMANAGEMENT_CONTROLLER_H
 
 #include <QtQML>
+#include "repository.h"
 
 class UserManagementController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(UserManagementController)
 
 public:
-    explicit UserManagementController(QObject *parent = nullptr) {}
+    UserManagementController() = default;
+
+    Q_INVOKABLE void loadAllUserInfo();
+
+signals:
+    void loadAllUserSuccess();
+    void loadAllUserError();
+
+private:
+    Repository* m_repository;
 };
 
 #endif // USERMANAGEMENT_CONTROLLER_H

@@ -4,20 +4,26 @@
 #include <QString>
 
 enum class EventoExceptionCode {
-	UnexpectedError = -1,
+    UnexpectedError = -1,
+    Ok,
 };
 
-template<EventoExceptionCode code = EventoExceptionCode::UnexpectedError>
+template <EventoExceptionCode code = EventoExceptionCode::UnexpectedError>
 struct DefaultMessage {
     static constexpr char msg[] = "Unexpected Error Encountered!";
 };
 
 class EventoException {
-private:
-	EventoExceptionCode code;
-	QString message;
+   private:
+    EventoExceptionCode m_code;
+    QString m_message;
 
-    EventoException(EventoExceptionCode code, const QString& msg) : code(code), message(msg) {};
+   public:
+    EventoException(EventoExceptionCode code = EventoExceptionCode::Ok,
+                    const QString& msg = "")
+        : m_code(code), m_message(msg) {}
+    QString message() { return m_message; }
+    EventoExceptionCode code() { return m_code; }
 };
 
 #endif
