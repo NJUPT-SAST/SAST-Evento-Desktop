@@ -8,7 +8,6 @@ enum class LoginStatus : int { Start = 1, Loading, Success, Failed };
 class LoginController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(LoginController)
-    //QML_SINGLETON
 
     Q_PROPERTY(int loginStatus MEMBER status NOTIFY loginStatusChanged)
 
