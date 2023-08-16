@@ -38,7 +38,7 @@ inline QString getFirstImageUrl(int eventId) {
 
 template<typename DTO, typename Entity>
 struct Convertor {
-    Entity operator()(const DTO& src);
+    Entity operator()(const DTO& src) = delete;
 };
 
 template<>
