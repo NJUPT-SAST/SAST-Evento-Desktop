@@ -8,5 +8,4 @@ struct DTO_UserBrief {
     QString studentId;
     QString openId;
 };
-
 #endif  // DTO_USER_BRIEF_H

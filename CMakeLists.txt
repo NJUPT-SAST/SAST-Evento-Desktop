@@ -1,50 +1,52 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(SAST_Evento_Desktop VERSION 0.1 LANGUAGES CXX)
+project(
+  SAST_Evento_Desktop
+  VERSION 0.1
+  LANGUAGES CXX)
 
 set(FLUENTUI_BUILD_EXAMPLES OFF)
 
 add_subdirectory(libs)
 
-#配置通用编译
+# 配置通用编译
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(APPLE)
-    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
+  set(CMAKE_OSX_ARCHITECTURES
+      "arm64;x86_64"
+      CACHE STRING "" FORCE)
 endif()
 
-#设置可执行文件输出目录
+# 设置可执行文件输出目录
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/debug)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/debug)
 else()
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/release)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/release)
 endif()
 
 find_package(Qt6 REQUIRED COMPONENTS Quick Svg Network)
 
 if(QT_VERSION VERSION_GREATER_EQUAL "6.3")
-    qt_standard_project_setup()
+  qt_standard_project_setup()
 else()
-    set(CMAKE_AUTOMOC ON)
-    set(CMAKE_AUTORCC ON)
-    set(CMAKE_AUTOUIC ON)
+  set(CMAKE_AUTOMOC ON)
+  set(CMAKE_AUTORCC ON)
+  set(CMAKE_AUTOUIC ON)
 endif()
 
-file(GLOB_RECURSE SOURCE_FILES
-    ${CMAKE_SOURCE_DIR}/src/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/*.h
-    ${CMAKE_SOURCE_DIR}/src/*.hpp
-    SAST_Evento.qrc
-)
+file(GLOB_RECURSE SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp
+     ${CMAKE_SOURCE_DIR}/src/*.h ${CMAKE_SOURCE_DIR}/src/*.hpp SAST_Evento.qrc)
 
-file(GLOB_RECURSE SOURCE_IMPORT_PATHS
-    ${CMAKE_SOURCE_DIR}/src/controller/ui/*.h
-    ${CMAKE_SOURCE_DIR}/src/controller/ui/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/domain/model/*.h
-    ${CMAKE_SOURCE_DIR}/src/domain/model/*.cpp
-)
+file(
+  GLOB_RECURSE
+  SOURCE_IMPORT_PATHS
+  ${CMAKE_SOURCE_DIR}/src/controller/ui/*.h
+  ${CMAKE_SOURCE_DIR}/src/controller/ui/*.cpp
+  ${CMAKE_SOURCE_DIR}/src/domain/model/*.h
+  ${CMAKE_SOURCE_DIR}/src/domain/model/*.cpp)
 foreach(filepath ${SOURCE_IMPORT_PATHS})
-    string(REPLACE "${CMAKE_SOURCE_DIR}/" "" filename ${filepath})
-    list(APPEND SOURCE_IMPORT_FILES ${filename})
+  string(REPLACE "${CMAKE_SOURCE_DIR}/" "" filename ${filepath})
+  list(APPEND SOURCE_IMPORT_FILES ${filename})
 endforeach(filepath)
 
 qt_policy(SET QTP0001 OLD)
@@ -55,11 +57,14 @@ qt_add_executable(SAST_Evento_Desktop
     SAST_Evento.rc
 )
 
-qt_add_qml_module(SAST_Evento_Desktop
-    URI SAST_Evento
-    VERSION 1.0
-    SOURCES ${SOURCE_IMPORT_FILES}
-)
+qt_add_qml_module(
+  SAST_Evento_Desktop
+  URI
+  SAST_Evento
+  VERSION
+  1.0
+  SOURCES
+  ${SOURCE_IMPORT_FILES})
 
 target_include_directories(SAST_Evento_Desktop
     PRIVATE
@@ -73,39 +78,35 @@ target_include_directories(SAST_Evento_Desktop
     ${CMAKE_SOURCE_DIR}/libs/Qt-Based-JsonDeserialiser
 )
 
-#设置属性
-set_target_properties(SAST_Evento_Desktop PROPERTIES
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
-)
+# 设置属性
+set_target_properties(
+  SAST_Evento_Desktop
+  PROPERTIES MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+             MACOSX_BUNDLE_SHORT_VERSION_STRING
+             ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+             MACOSX_BUNDLE TRUE
+             WIN32_EXECUTABLE TRUE)
 
-#链接库
-if (FLUENTUI_BUILD_STATIC_LIB)
-    target_link_libraries(SAST_Evento_Desktop PRIVATE
-        Qt6::Quick
-        Qt6::Svg
-        Qt6::Network
-        fluentui
-        fluentuiplugin
-        FramelessHelper::Core
-        FramelessHelper::Quick
-    )
+# 链接库
+if(FLUENTUI_BUILD_STATIC_LIB)
+  target_link_libraries(
+    SAST_Evento_Desktop
+    PRIVATE Qt6::Quick
+            Qt6::Svg
+            Qt6::Network
+            fluentui
+            fluentuiplugin
+            FramelessHelper::Core
+            FramelessHelper::Quick)
 else()
-    target_link_libraries(SAST_Evento_Desktop PRIVATE
-        Qt6::Quick
-        Qt6::Svg
-        Qt6::Network
-        fluentuiplugin
-        FramelessHelper::Core
-        FramelessHelper::Quick
-    )
+  target_link_libraries(
+    SAST_Evento_Desktop PRIVATE Qt6::Quick Qt6::Svg Qt6::Network fluentuiplugin
+                                FramelessHelper::Core FramelessHelper::Quick)
 endif()
 
-#安装
-install(TARGETS SAST_Evento_Desktop
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+# 安装
+install(
+  TARGETS SAST_Evento_Desktop
+  BUNDLE DESTINATION .
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
