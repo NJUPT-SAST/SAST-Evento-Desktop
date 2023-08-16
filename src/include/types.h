@@ -8,7 +8,6 @@
 using UserID = QString;
 using EventoID = int;
 using Image = QString;
-using Location = QStringList;
 using Tag = QStringList;
 
 struct ParticipationStatus {
@@ -34,6 +33,13 @@ struct EventType {
 struct Department {
     int id;
     QString name;
+};
+
+struct Location
+{
+    int id;
+    QString locationName;
+    int parentId;
 };
 
 #endif // EVENTO_TYPES_H

@@ -12,7 +12,7 @@ struct DTO_Evento {
     QDateTime gmtRegistrationStart;
     QDateTime gmtRegistrationEnd;
     EventType type;
-    Location location;
+    QString location;
     Tag tag;
     EventState state;
     std::vector<Department> departments;
