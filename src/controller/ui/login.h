@@ -1,22 +1,27 @@
 #ifndef LOGIN_CONTROLLER_H
 #define LOGIN_CONTROLLER_H
 
- #include <QtQml>
+#include <QtQml>
 
-enum class LoginStatus : int { Start = 1, Loading, Success, Failed };
+enum class LoginStatus : int {
+    Start = 1,
+    Loading,
+    Success,
+    Failed
+};
 
 class LoginController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(LoginController)
     Q_PROPERTY(int loginStatus MEMBER status NOTIFY loginStatusChanged)
 
-   private:
+private:
     int status = int(LoginStatus::Start);
 
-   signals:
+signals:
     void loginStatusChanged();
 
-   public:
+public:
     Q_INVOKABLE void login(const QString& username, const QString& password) {}
     LoginController() = default;
 };

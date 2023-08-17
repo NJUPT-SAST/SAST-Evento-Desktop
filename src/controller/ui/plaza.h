@@ -1,7 +1,7 @@
 #ifndef PLAZA_CONTROLLER_H
 #define PLAZA_CONTROLLER_H
 
- #include <QtQml>
+#include <QtQml>
 #include "repository.h"
 
 class PlazaController : public QObject {
