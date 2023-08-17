@@ -3,27 +3,62 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
+import SAST_Evento
 import MyModel
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
     property var arr: []
+    property int eventId
+
+    onErrorClicked: {
+        loadEventoInfo(eventId)
+    }
+
+    function loadEventoInfo(id) {
+        statusMode = FluStatusViewType.Loading
+        controller.loadEventoInfo(id)
+    }
+
+    Component.onCompleted: {
+        eventId = EventoHelper.id
+        loadEventoInfo(eventId)
+    }
+
+    EventoInfoController {
+        id: controller
+        onLoadEventoSuccessEvent: {
+            statusMode = FluStatusViewType.Success
+        }
+        onLoadEventoErrorEvent: message => {
+                                    errorText = message
+                                    statusMode = FluStatusViewType.Error
+                                }
+    }
 
     Repeater {
         id: rep
         model: SlideModel
 
         Item {
-            Component.onCompleted: {
-                arr.push({
-                             "url": model.url,
-                             "title": model.title
-                         })
+            Connections {
+                target: controller
+                function onLoadEventoSuccessEvent() {
+                    arr.push({
+                                 "url": model.url,
+                                 "title": model.title
+                             })
+                    if (arr.length === 3)
+                        rep.arrReady()
+                }
             }
         }
+
+        signal arrReady
     }
 
     FluCarousel {
+        id: carousel
         Layout.topMargin: 10
         Layout.bottomMargin: 10
         Layout.fillWidth: true
@@ -31,7 +66,14 @@ FluScrollablePage {
         loopTime: 3000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
         indicatorMarginTop: 15
-        model: arr
+
+        Connections {
+            target: rep
+            function onArrReady() {
+                carousel.model = arr
+            }
+        }
+
         delegate: Component {
             Item {
                 anchors.fill: parent
@@ -61,7 +103,7 @@ FluScrollablePage {
 
     FluText {
         id: item_title
-        text: "活动标题"
+        text: EventoHelper.title
         font: FluTextStyle.TitleLarge
     }
 
@@ -72,7 +114,7 @@ FluScrollablePage {
             iconSource: FluentIcons.EmojiTabFavorites
         }
         FluText {
-            text: "活动时间：2023.10.04 15:00-17:00"
+            text: "活动时间：" + EventoHelper.eventTime
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -86,7 +128,7 @@ FluScrollablePage {
             iconSource: FluentIcons.EmojiTabFavorites
         }
         FluText {
-            text: "报名时间：2023.10.02 00:00 - 2023.10.03 24:00"
+            text: "报名时间：" + EventoHelper.registerTime
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -101,7 +143,7 @@ FluScrollablePage {
             iconSource: FluentIcons.POI
         }
         FluText {
-            text: "大学生活动中心"
+            text: EventoHelper.location
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -116,7 +158,7 @@ FluScrollablePage {
             iconSource: FluentIcons.EMI
         }
         FluText {
-            text: "C++组"
+            text: EventoHelper.department
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -131,7 +173,7 @@ FluScrollablePage {
             iconSource: FluentIcons.OEM
         }
         FluText {
-            text: "日常授课"
+            text: EventoHelper.type
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -151,7 +193,7 @@ FluScrollablePage {
             radius: [5, 5, 5, 5]
             color: "#99ffcc"
             FluText {
-                text: "标签"
+                text: EventoHelper.tag
                 wrapMode: Text.WordWrap
                 font: FluTextStyle.Caption
                 color: FluColors.Grey100
@@ -165,7 +207,7 @@ FluScrollablePage {
         id: item_desc
         Layout.topMargin: 15
         Layout.fillWidth: true
-        text: "活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信"
+        text: EventoHelper.description
         wrapMode: Text.WrapAnywhere
         font.pixelSize: 18
     }

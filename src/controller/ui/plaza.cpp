@@ -14,11 +14,20 @@ PlazaController::PlazaController(QObject *parent)
 void PlazaController::loadPlazaInfo()
 {
     EventoException err;
+    auto slides = m_repository->get_home_slide_list(3, err);
+    if (slides.empty()) {
+        slides.emplace_back(DTO_Slide{0, "SAST Evento", "", "qrc:/res/image/banner_1.png"});
+        slides.emplace_back(DTO_Slide{0, "SAST C++", "", "qrc:/res/image/banner_2.png"});
+        slides.emplace_back(DTO_Slide{0, "SAST", "", "qrc:/res/image/banner_3.png"});
+    } else if (slides.size() == 1) {
+        slides.emplace_back(DTO_Slide{0, "SAST C++", "", "qrc:/res/image/banner_2.png"});
+        slides.emplace_back(DTO_Slide{0, "SAST", "", "qrc:/res/image/banner_3.png"});
+    } else if (slides.size() == 2) {
+        slides.emplace_back(DTO_Slide{0, "SAST", "", "qrc:/res/image/banner_3.png"});
+    }
     SlideModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Slide>,
-                  std::vector<Slide>>()(
-        m_repository->get_home_slide_list(3, err)
-    ));
+                  std::vector<Slide>>()(slides));
 
     if ((int)err.code()) {
         emit loadPlazaErrorEvent(err.message());

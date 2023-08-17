@@ -8,7 +8,6 @@ import MyModel
 import "../window"
 
 FluScrollablePage {
-
     launchMode: FluPageType.SingleInstance
     animDisabled: true
     title: lang.lang_plaza
@@ -275,7 +274,7 @@ FluScrollablePage {
                     onClicked: {
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_EventInfo.qml")
-                        enterEvento(model.id)
+                        EventoHelper.id = model.id
                     }
                 }
             }
@@ -399,11 +398,10 @@ FluScrollablePage {
                     onClicked: {
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_EventInfo.qml")
+                        EventoHelper.id = model.id
                     }
                 }
             }
         }
     }
-
-    signal enterEvento(int eventId)
 }
