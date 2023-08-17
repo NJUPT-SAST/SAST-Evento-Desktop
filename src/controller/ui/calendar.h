@@ -1,7 +1,7 @@
 #ifndef CALENDAR_CONTROLLER_H
 #define CALENDAR_CONTROLLER_H
 
-#include <QtQML>
+ #include <QtQml>
 
 class CalendarController : public QObject {
     Q_OBJECT
