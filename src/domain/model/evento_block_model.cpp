@@ -1,11 +1,12 @@
-#include "feedback_model.h"
+#include "evento_block_model.h"
 
-FeedbackModel::FeedbackModel(QObject *parent)
+/*
+EventoBlockModel::FeedbackModel(QObject *parent)
     : QAbstractListModel(parent)
 {
 }
 
-int FeedbackModel::rowCount(const QModelIndex &parent) const
+int EventoBlockModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -15,7 +16,7 @@ int FeedbackModel::rowCount(const QModelIndex &parent) const
     return m_data.size();
 }
 
-QVariant FeedbackModel::data(const QModelIndex &index, int role) const
+QVariant EventoBlockModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
@@ -40,7 +41,7 @@ QVariant FeedbackModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash<int, QByteArray> FeedbackModel::roleNames() const
+QHash<int, QByteArray> EventoBlockModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {
@@ -53,7 +54,7 @@ QHash<int, QByteArray> FeedbackModel::roleNames() const
     return roles;
 }
 
-void FeedbackModel::resetModel(const std::vector<Feedback> &model)
+void EventoBlockModel::resetModel(const std::vector<Feedback> &model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
@@ -61,8 +62,9 @@ void FeedbackModel::resetModel(const std::vector<Feedback> &model)
     endResetModel();
 }
 
-FeedbackModel *FeedbackModel::getInstance()
+EventoBlockModel *EventoBlockModel::getInstance()
 {
-    static FeedbackModel instance;
+    static EventoBlockModel instance;
     return &instance;
 }
+*/

@@ -2,8 +2,7 @@
 #define EVENTO_INFO_H
 
 #include <QtQml>
-
-class Repository;
+#include "repository.h"
 
 class EventoInfoController : public QObject
 {

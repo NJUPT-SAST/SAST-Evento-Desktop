@@ -1,7 +1,7 @@
 #ifndef USERMANAGEMENT_CONTROLLER_H
 #define USERMANAGEMENT_CONTROLLER_H
 
- #include <QtQml>
+#include <QtQml>
 #include "repository.h"
 
 class UserManagementController : public QObject {
@@ -9,16 +9,15 @@ class UserManagementController : public QObject {
     QML_NAMED_ELEMENT(UserManagementController)
 
 public:
-    UserManagementController() = default;
-
+    UserManagementController(QObject *parent = nullptr);
     Q_INVOKABLE void loadAllUserInfo();
 
 signals:
     void loadAllUserSuccess();
-    void loadAllUserError();
+    void loadAllUserError(const QString& message);
 
 private:
-    Repository* m_repository;
+    std::unique_ptr<Repository> m_repository;
 };
 
 #endif // USERMANAGEMENT_CONTROLLER_H

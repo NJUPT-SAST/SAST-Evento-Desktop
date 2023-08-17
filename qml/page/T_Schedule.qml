@@ -3,170 +3,186 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
+import SAST_Evento
+import MyModel
+import "../window"
 
 FluScrollablePage {
-
     title: lang.lang_schedule
     launchMode: FluPageType.SingleTask
 
-    ColumnLayout {
-        Layout.topMargin: 10
+    onErrorClicked: {
+        loadScheduleInfo()
+    }
+
+    function loadScheduleInfo() {
+        statusMode = FluStatusViewType.Loading
+        controller.loadSchedule()
+    }
+
+    Component.onCompleted: {
+        loadScheduleInfo()
+    }
+
+    ScheduleController {
+        id: controller
+        onLoadScheduleSuccessEvent: {
+            statusMode = FluStatusViewType.Success
+        }
+        onLoadScheduleErrorEvent: message => {
+                                      errorText = message
+                                      statusMode = FluStatusViewType.Error
+                                  }
+    }
+
+    ListView {
         Layout.fillWidth: true
+        implicitHeight: contentHeight
+        interactive: false
+        delegate: com_schedule
 
-        Component {
-            id: com_item
-            Item {
-                Layout.topMargin: 10
-                width: parent.width
-                height: 110
-                FluArea {
-                    radius: 8
-                    width: parent.width
-                    height: 100
-                    anchors.centerIn: parent
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: 8
-                        color: {
-                            if (FluTheme.dark) {
-                                if (item_mouse.containsMouse) {
-                                    return Qt.rgba(1, 1, 1, 0.03)
-                                }
-                                return Qt.rgba(0, 0, 0, 0)
-                            } else {
-                                if (item_mouse.containsMouse) {
-                                    return Qt.rgba(0, 0, 0, 0.03)
-                                }
-                                return Qt.rgba(0, 0, 0, 0)
-                            }
-                        }
-                    }
-                    FluRectangle {
-                        id: item_icon
-                        height: 80
-                        width: 80
-                        radius: [6, 6, 6, 6]
-                        anchors {
-                            left: parent.left
-                            leftMargin: 10
-                            verticalCenter: parent.verticalCenter
-                        }
-                        FluImage {
-                            anchors.fill: parent
-                            source: modelData.image
-                            fillMode: Image.PreserveAspectCrop
-                        }
-                    }
+        Component.onCompleted: {
+            model = getEventItems()
+        }
+    }
 
+    Component {
+        id: com_schedule
+        Item {
+            width: parent.width
+            height: 90
+            FluArea {
+                id: area_content
+                width: parent.width - 85
+                height: 80
+
+                FluRectangle {
+                    id: item_division
+                    width: 6
+                    height: 60
+                    radius: [3, 3, 3, 3]
+                    shadow: false
+                    color: FluTheme.primaryColor.normal
+                    anchors {
+                        left: parent.left
+                        leftMargin: 5
+                        verticalCenter: parent.verticalCenter
+                    }
+                }
+
+                Column {
+                    id: item_time
+                    anchors {
+                        left: item_division.right
+                        leftMargin: 10
+                        verticalCenter: parent.verticalCenter
+                    }
                     FluText {
-                        id: item_title
-                        text: modelData.title
+                        text: "09:00"
+                        font.pixelSize: 18
+                    }
+                    FluText {
+                        text: "10:00"
+                        font.pixelSize: 18
+                        color: "#708090"
+                    }
+                }
+
+                FluRectangle {
+                    id: item_dot
+                    anchors {
+                        left: item_time.right
+                        leftMargin: 10
+                        verticalCenter: parent.verticalCenter
+                    }
+                    width: 6
+                    height: 6
+                    radius: [3, 3, 3, 3]
+                    shadow: false
+                    color: FluColors.Orange.normal
+                }
+
+                Column {
+                    spacing: 5
+                    anchors {
+                        left: item_dot.right
+                        leftMargin: 10
+                        verticalCenter: parent.verticalCenter
+                    }
+                    FluText {
+                        text: "活动标题"
                         font: FluTextStyle.Title
-                        anchors {
-                            left: item_icon.right
-                            leftMargin: 20
-                            top: item_icon.top
-                        }
                     }
-
                     FluText {
-                        id: item_time
-                        text: modelData.time
-                        color: FluColors.Grey120
-                        wrapMode: Text.WordWrap
+                        text: "活动地点"
                         font: FluTextStyle.Caption
-                        anchors {
-                            left: item_title.left
-                            right: parent.right
-                            rightMargin: 20
-                            top: item_title.bottom
-                            topMargin: 3
-                        }
+                        color: FluColors.Grey110
                     }
+                }
 
-                    FluText {
-                        id: item_status
-                        wrapMode: Text.WordWrap
-                        font: FluTextStyle.Body
-                        anchors {
-                            left: item_title.left
-                            right: parent.right
-                            rightMargin: 20
-                            bottom: parent.bottom
-                            bottomMargin: 15
-                        }
-
-                        Loader {
-                            id: loader
-                            anchors {
-                                right: parent.right
-                            }
-                        }
-
-                        Component {
-                            id: inProgress
-                            FluTextButton {
-                                text: lang.lang_check
-                                onClicked: {
-                                    text = lang.lang_checked
-                                    showSuccess("签到成功")
-                                    disabled = true
-                                }
-                            }
-                        }
-
-                        Component {
-                            id: finished
-                            FluTextButton {
-                                text: lang.lang_comment
-                                onClicked: {
-                                    ItemsOriginal.item.navigationView.push(
-                                                "qrc:/SAST_Evento/qml/page/T_EventInfo.qml")
-                                }
-                            }
-                        }
-
-                        Component.onCompleted: {
-                            if (modelData.id % 3 === 0) {
-                                text = lang.lang_undertaking
-                                color = "#107C10"
-                                loader.sourceComponent = inProgress
-                            } else if (modelData.id % 3 === 1) {
-                                text = lang.lang_not_started
-                                color = "#0078D4"
-                            } else {
-                                text = lang.lang_over
-                                color = FluColors.Grey120
-                                loader.sourceComponent = finished
-                            }
-                        }
+                FluText {
+                    anchors {
+                        right: parent.right
+                        top: parent.top
+                        topMargin: 10
+                        rightMargin: 10
                     }
+                    text: "进行中"
+                    color: FluColors.Green.normal
+                    font.pixelSize: 20
+                }
 
-                    MouseArea {
-                        id: item_mouse
-                        anchors {
-                            fill: parent
-                            rightMargin: 80
-                        }
+                FluText {
+                    anchors {
+                        right: parent.right
+                        bottom: parent.bottom
+                        rightMargin: 10
+                        bottomMargin: 10
+                    }
+                    text: "活动部门"
+                    font: FluTextStyle.Caption
+                    color: FluColors.Grey110
+                }
 
-                        hoverEnabled: true
-                        onClicked: {
-                            ItemsOriginal.item.navigationView.push(
-                                        "qrc:/SAST_Evento/qml/page/T_EventInfo.qml")
+                Rectangle {
+                    anchors.fill: parent
+                    radius: 8
+                    color: {
+                        if (FluTheme.dark) {
+                            if (item_mouse.containsMouse) {
+                                return Qt.rgba(1, 1, 1, 0.03)
+                            }
+                            return Qt.rgba(0, 0, 0, 0)
+                        } else {
+                            if (item_mouse.containsMouse) {
+                                return Qt.rgba(0, 0, 0, 0.03)
+                            }
+                            return Qt.rgba(0, 0, 0, 0)
                         }
                     }
                 }
+
+                MouseArea {
+                    id: item_mouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        EventoHelper.id = model.id
+                        MainWindow.window.pushPage(
+                                    "qrc:/qml/page/T_EventInfo.qml")
+                    }
+                }
             }
-        }
-
-        ListView {
-            Layout.fillWidth: true
-            implicitHeight: contentHeight
-            interactive: false
-            delegate: com_item
-
-            Component.onCompleted: {
-                model = getEventItems()
+            FluFilledButton {
+                id: btn
+                anchors {
+                    left: area_content.right
+                    leftMargin: 5
+                }
+                height: 80
+                width: 75
+                text: "签到"
+                font.pixelSize: 16
             }
         }
     }
