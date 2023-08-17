@@ -17,13 +17,16 @@ inline QString periodConvertor(const QDateTime& start, const QDateTime& end) {
 }
 
 inline QString departmentConvertor(const std::vector<Department>& departments) {
-    if (departments.empty()) return {};
-    if (departments.size() == 1) {
-        return departments.begin()->name;
-    }
     QString result;
-    for (const auto& department : departments) {
-        result += ("，" + department.name);
+    auto iter = departments.cbegin();
+    if (iter != departments.cend()) {
+        result += iter->name;
+        ++iter;
+    }
+    while (iter != departments.cend()) {
+        result += "，";
+        result += iter->name;
+        ++iter;
     }
     return result;
 }
