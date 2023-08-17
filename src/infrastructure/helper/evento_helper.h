@@ -14,7 +14,8 @@ class EventoHelper : public QObject {
     Q_PROPERTY(QString title MEMBER title NOTIFY titleChanged)
     Q_PROPERTY(int state MEMBER state NOTIFY stateChanged)
     Q_PROPERTY(QString eventTime MEMBER eventTime NOTIFY eventTimeChanged)
-    Q_PROPERTY(QString registerTime MEMBER registerTime NOTIFY registerTimeChanged)
+    Q_PROPERTY(
+        QString registerTime MEMBER registerTime NOTIFY registerTimeChanged)
     Q_PROPERTY(QString department MEMBER department NOTIFY departmentChanged)
     Q_PROPERTY(QString location MEMBER location NOTIFY locationChanged)
     Q_PROPERTY(QString type MEMBER type NOTIFY typeChanged)
@@ -22,14 +23,14 @@ class EventoHelper : public QObject {
     Q_PROPERTY(QString description MEMBER description NOTIFY descriptionChanged)
     Q_PROPERTY(QString buttonText MEMBER buttonText NOTIFY buttonTextChanged)
 
-public:
+   public:
     static EventoHelper *getInstance();
 
     static EventoHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
     void updateEvento(const Evento &evento);
 
-private:
+   private:
     EventoHelper() = default;
 
     int id;
@@ -44,7 +45,7 @@ private:
     QString description;
     QString buttonText;
 
-signals:
+   signals:
     void idChanged();
     void titleChanged();
     void stateChanged();
