@@ -14,14 +14,14 @@ EventoHelper *EventoHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 
 void EventoHelper::updateEvento(const Evento &evento)
 {
-    m_id = evento.id;
-    m_title = evento.title;
-    m_state = (int)evento.state;
-    m_eventTime = evento.eventTime;
-    m_registerTime = evento.registerTime;
-    m_department = evento.departments;
-    m_location = evento.location;
-    m_tag = evento.tag;
-    m_description = evento.description;
+    title = evento.title;
+    state = (int)evento.state;
+    eventTime = evento.eventTime;
+    registerTime = evento.registerTime;
+    department = evento.department;
+    location = evento.location;
+    tag = evento.tag;
+    type = evento.type.name;
+    description = evento.description;
     //m_buttonText =
 }

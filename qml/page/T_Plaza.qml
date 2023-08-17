@@ -8,9 +8,7 @@ import MyModel
 import "../window"
 
 FluScrollablePage {
-
     launchMode: FluPageType.SingleInstance
-    animDisabled: true
     title: lang.lang_plaza
     property var arr: []
 
@@ -237,8 +235,8 @@ FluScrollablePage {
                         text: model.location
                         width: 110
                         color: FluColors.Grey120
-                        elide: Text.ElideRight
                         font: FluTextStyle.Caption
+                        elide: Text.ElideRight
                         maximumLineCount: 1
                         anchors.verticalCenter: parent.verticalCenter
                     }
@@ -259,7 +257,6 @@ FluScrollablePage {
                     }
                     FluText {
                         text: model.department
-                        width: 110
                         color: FluColors.Grey120
                         elide: Text.ElideRight
                         font: FluTextStyle.Caption
@@ -273,9 +270,9 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
+                        EventoHelper.id = model.id
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_EventInfo.qml")
-                        enterEvento(model.id)
                     }
                 }
             }
@@ -343,13 +340,14 @@ FluScrollablePage {
                     anchors {
                         left: item_title.left
                         top: item_title.bottom
+                        right: parent.right
+                        rightMargin: 20
                         topMargin: 10
                     }
                     text: model.time
                     color: FluColors.Grey120
                     width: 110
                     wrapMode: Text.WordWrap
-                    elide: Text.ElideRight
                     font: FluTextStyle.Caption
                     maximumLineCount: 2
                 }
@@ -365,12 +363,9 @@ FluScrollablePage {
                     }
                     text: model.department
                     color: FluColors.Grey120
-                    width: 110
-
                     elide: Text.ElideRight
                     font: FluTextStyle.Caption
                     maximumLineCount: 1
-                    anchors.verticalCenter: parent.verticalCenter
                 }
 
                 FluText {
@@ -380,16 +375,14 @@ FluScrollablePage {
                         right: parent.right
                         rightMargin: 20
                         top: item_department.bottom
-                        topMargin: 5
+                        topMargin: 8
                     }
                     text: model.description
                     color: FluColors.Grey120
-                    width: 110
                     wrapMode: Text.WordWrap
                     elide: Text.ElideRight
                     font: FluTextStyle.Caption
-                    maximumLineCount: 3
-                    anchors.verticalCenter: parent.verticalCenter
+                    maximumLineCount: 2
                 }
 
                 MouseArea {
@@ -397,6 +390,7 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
+                        EventoHelper.id = model.id
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_EventInfo.qml")
                     }
@@ -404,6 +398,4 @@ FluScrollablePage {
             }
         }
     }
-
-    signal enterEvento(int eventId)
 }
