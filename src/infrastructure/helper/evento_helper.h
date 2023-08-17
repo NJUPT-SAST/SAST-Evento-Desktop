@@ -3,8 +3,7 @@
 
 #include <QtQml>
 #include "types.h"
-
-class Evento;
+#include "evento.h"
 
 class EventoHelper: public QObject
 {
