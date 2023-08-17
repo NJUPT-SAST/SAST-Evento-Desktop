@@ -14,4 +14,4 @@ struct Schedule {
     Image image;
 };
 
-#endif // SCHEDULE_H
+#endif  // SCHEDULE_H

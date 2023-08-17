@@ -59,6 +59,12 @@ qt_add_executable(SAST_Evento_Desktop
     SAST_Evento.rc
 )
 
+qt_add_qml_module(SAST_Evento_Desktop
+    URI SAST_Evento
+    VERSION 1.0
+    SOURCES ${SOURCE_IMPORT_FILES}
+)
+
 qt_add_qml_module(
   SAST_Evento_Desktop
   URI

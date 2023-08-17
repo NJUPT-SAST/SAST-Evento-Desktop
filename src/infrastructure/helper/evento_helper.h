@@ -5,8 +5,7 @@
 
 struct Evento;
 
-class EventoHelper: public QObject
-{
+class EventoHelper : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(EventoHelper)
     QML_SINGLETON
@@ -15,22 +14,24 @@ class EventoHelper: public QObject
     Q_PROPERTY(QString title MEMBER m_title NOTIFY titleChanged)
     Q_PROPERTY(int state MEMBER m_state NOTIFY stateChanged)
     Q_PROPERTY(QString eventTime MEMBER m_eventTime NOTIFY eventTimeChanged)
-    Q_PROPERTY(QString registerTime MEMBER m_registerTime NOTIFY registerTimeChanged)
+    Q_PROPERTY(
+        QString registerTime MEMBER m_registerTime NOTIFY registerTimeChanged)
     Q_PROPERTY(QString department MEMBER m_department NOTIFY departmentChanged)
     Q_PROPERTY(QString location MEMBER m_location NOTIFY locationChanged)
     Q_PROPERTY(QString type MEMBER m_type NOTIFY typeChanged)
     Q_PROPERTY(QString tag MEMBER m_tag NOTIFY tagChanged)
-    Q_PROPERTY(QString description MEMBER m_description NOTIFY descriptionChanged)
+    Q_PROPERTY(
+        QString description MEMBER m_description NOTIFY descriptionChanged)
     Q_PROPERTY(QString buttonText MEMBER m_buttonText NOTIFY buttonTextChanged)
 
-public:
-    static EventoHelper* getInstance();
+   public:
+    static EventoHelper *getInstance();
 
     static EventoHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
-    void updateEvento(const Evento& evento);
+    void updateEvento(const Evento &evento);
 
-private:
+   private:
     EventoHelper() = default;
 
     int m_id;
@@ -45,7 +46,7 @@ private:
     QString m_description;
     QString m_buttonText;
 
-signals:
+   signals:
     void idChanged();
     void titleChanged();
     void stateChanged();
@@ -59,4 +60,4 @@ signals:
     void buttonTextChanged();
 };
 
-#endif // EVENTOHELPER_H
+#endif  // EVENTOHELPER_H
