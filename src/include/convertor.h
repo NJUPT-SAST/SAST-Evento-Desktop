@@ -44,6 +44,17 @@ struct Convertor {
     Entity operator()(const DTO& src) = delete;
 };
 
+template<typename DTO, typename Entity>
+struct Convertor<std::vector<DTO>, std::vector<Entity>> {
+    std::vector<Entity> operator()(const std::vector<DTO>& src) {
+        std::vector<Entity> result;
+        for (const auto& e : src) {
+            result.emplace_back(Convertor<DTO, Entity>()(e));
+        }
+        return result;
+    }
+};
+
 template<>
 struct Convertor<DTO_Evento, Evento> {
     Evento operator()(const DTO_Evento& src) {
@@ -58,52 +69,36 @@ struct Convertor<DTO_Evento, Evento> {
 };
 
 template<>
-struct Convertor<std::vector<DTO_Evento>, std::vector<UndertakingEvento>> {
-    std::vector<UndertakingEvento> operator()(const std::vector<DTO_Evento>& src) {
-        std::vector<UndertakingEvento> result;
-        for (const auto& e : src) {
-            result.emplace_back(UndertakingEvento{
+struct Convertor<DTO_Evento, UndertakingEvento> {
+    UndertakingEvento operator()(const DTO_Evento& e) {
+        return {
                 e.id, e.title,
                 periodConvertor(e.gmtEventStart, e.gmtEventEnd),
                 e.location, departmentConvertor(e.departments),
                 getFirstImageUrl(e.id)
-            });
-        }
-        return result;
+        };
     }
 };
 
 template<>
-struct Convertor<std::vector<DTO_Evento>, std::vector<LatestEvento>> {
-    std::vector<LatestEvento> operator()(const std::vector<DTO_Evento>& src) {
-        std::vector<LatestEvento> result;
-        for (const auto& e : src) {
-            result.emplace_back(LatestEvento{
+struct Convertor<DTO_Evento, LatestEvento> {
+    LatestEvento operator()(const DTO_Evento& e) {
+        return {
                 e.id, e.title,
                 periodConvertor(e.gmtEventStart, e.gmtEventEnd),
                 departmentConvertor(e.departments),
                 e.description, getFirstImageUrl(e.id)
-            });
-        }
-        return result;
+        };
     }
 };
 
 template<>
-struct Convertor<std::vector<DTO_Slide>, std::vector<Slide>> {
-    std::vector<Slide> operator()(const std::vector<DTO_Slide>& src) {
-        if (src.empty())
-            return std::vector<Slide>{
-                Slide{0, "SAST Evento", "", "qrc:/res/image/banner_3.png"}
-            };
-        std::vector<Slide> result;
-        for (const auto& e : src) {
-            result.emplace_back(Slide{
-                e.id, e.title,
-                e.link, e.url
-            });
-        }
-        return result;
+struct Convertor<DTO_Slide, Slide> {
+    Slide operator()(const DTO_Slide& e) {
+        return {
+            e.id, e.title,
+            e.link, e.url
+        };
     }
 };
 
