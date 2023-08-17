@@ -8,7 +8,7 @@ import MyModel
 import "../window"
 
 FluScrollablePage {
-    launchMode: FluPageType.SingleInstance
+    launchMode: FluPageType.SingleTask
     title: lang.lang_plaza
     property var arr: []
 
