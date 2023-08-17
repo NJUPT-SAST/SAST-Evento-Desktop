@@ -6,6 +6,12 @@
 #include "undertaking_evento.h"
 #include "slide.h"
 #include "latest_evento.h"
+#include <feedback.h>
+#include <permission_entry.h>
+#include <user_brief.h>
+#include <user.h>
+#include <evento_brief.h>
+#include <evento_block.h>
 
 inline QString periodConvertor(const QDateTime& start, const QDateTime& end) {
     if (!start.isValid() || !end.isValid()) return {};
@@ -93,6 +99,20 @@ struct Convertor<DTO_Evento, LatestEvento> {
 };
 
 template<>
+struct Convertor<DTO_Evento, EventoBrief> {
+    EventoBrief operator()(const DTO_Evento& e) {
+		return {
+				e.id, 
+                e.title,
+                e.state,
+				e.description,
+				periodConvertor(e.gmtEventStart, e.gmtEventEnd),
+				getFirstImageUrl(e.id)
+		};
+	}
+};
+
+template<>
 struct Convertor<DTO_Slide, Slide> {
     Slide operator()(const DTO_Slide& e) {
         return {
@@ -100,6 +120,45 @@ struct Convertor<DTO_Slide, Slide> {
             e.link, e.url
         };
     }
+};
+
+template<>
+struct Convertor<DTO_Feedback, Feedback> {
+    Feedback operator()(const DTO_Feedback& src) {
+        return {
+            src.event,
+            src.score,
+            src.content,
+            src.user
+        };
+    }
+};
+
+template<>
+struct Convertor <DTO_Permission, PermissionEntry> {
+PermissionEntry operator()(const DTO_Permission& src) {
+		return {
+            src.id,
+            src.eventId,
+            src.allMethodName
+		};
+	}
+};
+
+template<>
+struct Convertor <DTO_UserBrief, UserBrief> {
+    UserBrief operator()(const DTO_UserBrief& src) {
+        // FIXME: 待后端确定接口
+        return {};
+    };
+};
+
+template<>
+struct Convertor <DTO_User, User> {
+    User operator()(const DTO_User& src) {
+        // FIXME: 待后端确定接口
+        return {};
+    };
 };
 
 #endif
