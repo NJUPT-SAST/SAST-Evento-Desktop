@@ -276,7 +276,8 @@ std::vector<DTO_Slide> repositoryImpl::get_event_slide_list(EventoID id, EventoE
 
 std::vector<EventType> repositoryImpl::get_type_list(const int &page, const int &size, EventoException &err)
 {
-
+    // FIXME: implement
+    return std::vector<EventType>();
 }
 
 std::vector<Location> repositoryImpl::get_location_list(EventoException &err)
@@ -423,12 +424,14 @@ std::vector<DTO_Evento> repositoryImpl::get_qualified_event(int type, const std:
 
 QStringList repositoryImpl::get_action_state_list(EventoException &err)
 {
-
+    // FIXME: implement
+    return QStringList();
 }
 
 QStringList repositoryImpl::get_action_list(EventoException &err)
 {
-
+    // FIXME: implement
+    return QStringList();
 }
 
 repositoryImpl::repositoryImpl()
