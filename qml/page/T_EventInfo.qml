@@ -9,10 +9,20 @@ import MyModel
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
     property var arr: []
-    property int eventId
+    property int _id
+    property string _title
+    property int _state
+    property string _eventTime
+    property string _registerTime
+    property string _department
+    property string _location
+    property string _type
+    property string _tag
+    property string _description
+    property string _buttonText
 
     onErrorClicked: {
-        loadEventoInfo(eventId)
+        loadEventoInfo(EventoHelper.id)
     }
 
     function loadEventoInfo(id) {
@@ -21,8 +31,16 @@ FluScrollablePage {
     }
 
     Component.onCompleted: {
-        eventId = EventoHelper.id
-        loadEventoInfo(eventId)
+        loadEventoInfo(EventoHelper.id)
+        _title = EventoHelper.title
+        _state = EventoHelper.state
+        _eventTime = EventoHelper.eventTime
+        _registerTime = EventoHelper.registerTime
+        _department = EventoHelper.department
+        _location = EventoHelper.location
+        _type = EventoHelper.type
+        _tag = EventoHelper.tag
+        _description = EventoHelper.description
     }
 
     EventoInfoController {
@@ -103,7 +121,7 @@ FluScrollablePage {
 
     FluText {
         id: item_title
-        text: EventoHelper.title
+        text: _title
         font: FluTextStyle.TitleLarge
     }
 
@@ -114,7 +132,7 @@ FluScrollablePage {
             iconSource: FluentIcons.EmojiTabFavorites
         }
         FluText {
-            text: "活动时间：" + EventoHelper.eventTime
+            text: "活动时间：" + _eventTime
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -128,7 +146,7 @@ FluScrollablePage {
             iconSource: FluentIcons.EmojiTabFavorites
         }
         FluText {
-            text: "报名时间：" + EventoHelper.registerTime
+            text: "报名时间：" + _registerTime
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -143,7 +161,7 @@ FluScrollablePage {
             iconSource: FluentIcons.POI
         }
         FluText {
-            text: EventoHelper.location
+            text: _location
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -158,7 +176,7 @@ FluScrollablePage {
             iconSource: FluentIcons.EMI
         }
         FluText {
-            text: EventoHelper.department
+            text: _department
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -173,7 +191,7 @@ FluScrollablePage {
             iconSource: FluentIcons.OEM
         }
         FluText {
-            text: EventoHelper.type
+            text: _type
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -193,7 +211,7 @@ FluScrollablePage {
             radius: [5, 5, 5, 5]
             color: "#99ffcc"
             FluText {
-                text: EventoHelper.tag
+                text: _tag
                 wrapMode: Text.WordWrap
                 font: FluTextStyle.Caption
                 color: FluColors.Grey100
@@ -207,7 +225,7 @@ FluScrollablePage {
         id: item_desc
         Layout.topMargin: 15
         Layout.fillWidth: true
-        text: EventoHelper.description
+        text: _description
         wrapMode: Text.WrapAnywhere
         font.pixelSize: 18
     }
