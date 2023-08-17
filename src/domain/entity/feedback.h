@@ -1,7 +1,7 @@
 #ifndef FEEDBACK_H
 #define FEEDBACK_H
 
-#include <QString>
+#include "types.h"
 
 struct Feedback
 {
@@ -9,6 +9,7 @@ struct Feedback
     int score;
     QString content;
     QString userId;
+    EventoID eventId;
 };
 
 #endif // FEEDBACK_H

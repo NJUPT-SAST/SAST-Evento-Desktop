@@ -6,9 +6,9 @@
 struct EventoBrief {
     EventoID id;
     QString title;
-    EventState state;
     QString description;
     QString time;
+    QString department;
     Image image;
 };
 

@@ -10,7 +10,7 @@ struct Evento {
     QString description;
     QString eventTime;
     QString registerTime;
-    QString departments;
+    QString department;
     QString location;
     EventType type;
     Tag tag;

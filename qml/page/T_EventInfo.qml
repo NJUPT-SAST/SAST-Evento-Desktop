@@ -3,27 +3,80 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
+import SAST_Evento
 import MyModel
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
     property var arr: []
+    property int _id
+    property string _title
+    property int _state
+    property string _eventTime
+    property string _registerTime
+    property string _department
+    property string _location
+    property string _type
+    property string _tag
+    property string _description
+    property string _buttonText
+
+    onErrorClicked: {
+        loadEventoInfo(EventoHelper.id)
+    }
+
+    function loadEventoInfo(id) {
+        statusMode = FluStatusViewType.Loading
+        controller.loadEventoInfo(id)
+    }
+
+    Component.onCompleted: {
+        loadEventoInfo(EventoHelper.id)
+        _title = EventoHelper.title
+        _state = EventoHelper.state
+        _eventTime = EventoHelper.eventTime
+        _registerTime = EventoHelper.registerTime
+        _department = EventoHelper.department
+        _location = EventoHelper.location
+        _type = EventoHelper.type
+        _tag = EventoHelper.tag
+        _description = EventoHelper.description
+    }
+
+    EventoInfoController {
+        id: controller
+        onLoadEventoSuccessEvent: {
+            statusMode = FluStatusViewType.Success
+        }
+        onLoadEventoErrorEvent: message => {
+                                    errorText = message
+                                    statusMode = FluStatusViewType.Error
+                                }
+    }
 
     Repeater {
         id: rep
         model: SlideModel
 
         Item {
-            Component.onCompleted: {
-                arr.push({
-                             "url": model.url,
-                             "title": model.title
-                         })
+            Connections {
+                target: controller
+                function onLoadEventoSuccessEvent() {
+                    arr.push({
+                                 "url": model.url,
+                                 "title": model.title
+                             })
+                    if (arr.length === 3)
+                        rep.arrReady()
+                }
             }
         }
+
+        signal arrReady
     }
 
     FluCarousel {
+        id: carousel
         Layout.topMargin: 10
         Layout.bottomMargin: 10
         Layout.fillWidth: true
@@ -31,7 +84,14 @@ FluScrollablePage {
         loopTime: 3000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
         indicatorMarginTop: 15
-        model: arr
+
+        Connections {
+            target: rep
+            function onArrReady() {
+                carousel.model = arr
+            }
+        }
+
         delegate: Component {
             Item {
                 anchors.fill: parent
@@ -61,7 +121,7 @@ FluScrollablePage {
 
     FluText {
         id: item_title
-        text: "活动标题"
+        text: _title
         font: FluTextStyle.TitleLarge
     }
 
@@ -72,7 +132,7 @@ FluScrollablePage {
             iconSource: FluentIcons.EmojiTabFavorites
         }
         FluText {
-            text: "活动时间：2023.10.04 15:00-17:00"
+            text: "活动时间：" + _eventTime
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -86,7 +146,7 @@ FluScrollablePage {
             iconSource: FluentIcons.EmojiTabFavorites
         }
         FluText {
-            text: "报名时间：2023.10.02 00:00 - 2023.10.03 24:00"
+            text: "报名时间：" + _registerTime
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -101,7 +161,7 @@ FluScrollablePage {
             iconSource: FluentIcons.POI
         }
         FluText {
-            text: "大学生活动中心"
+            text: _location
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -116,7 +176,7 @@ FluScrollablePage {
             iconSource: FluentIcons.EMI
         }
         FluText {
-            text: "C++组"
+            text: _department
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -131,7 +191,7 @@ FluScrollablePage {
             iconSource: FluentIcons.OEM
         }
         FluText {
-            text: "日常授课"
+            text: _type
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
@@ -151,7 +211,7 @@ FluScrollablePage {
             radius: [5, 5, 5, 5]
             color: "#99ffcc"
             FluText {
-                text: "标签"
+                text: _tag
                 wrapMode: Text.WordWrap
                 font: FluTextStyle.Caption
                 color: FluColors.Grey100
@@ -165,7 +225,7 @@ FluScrollablePage {
         id: item_desc
         Layout.topMargin: 15
         Layout.fillWidth: true
-        text: "活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信息活动详细信"
+        text: _description
         wrapMode: Text.WrapAnywhere
         font.pixelSize: 18
     }
