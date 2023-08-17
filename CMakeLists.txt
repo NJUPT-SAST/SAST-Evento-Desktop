@@ -63,6 +63,8 @@ if(WIN32)
     set(SAST_EVENTO_RC_PATH ${CMAKE_BINARY_DIR}/SAST_Evento.rc)
     configure_file(${CMAKE_SOURCE_DIR}/windows_rc/SAST_Evento.rc.in ${SAST_EVENTO_RC_PATH})
 	target_sources(SAST_Evento_Desktop PRIVATE ${SAST_EVENTO_RC_PATH})
+
+	target_sources(SAST_Evento_Desktop PRIVATE ${CMAKE_SOURCE_DIR}/windows_rc/app.manifest)
 endif()
 
 qt_add_qml_module(SAST_Evento_Desktop
