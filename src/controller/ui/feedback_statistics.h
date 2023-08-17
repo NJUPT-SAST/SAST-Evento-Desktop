@@ -1,7 +1,7 @@
 #ifndef FEEDBACK_STATISTICS_CONTROLLER_H
 #define FEEDBACK_STATISTICS_CONTROLLER_H
 
-#include <QtQML>
+ #include <QtQml>
 
 class FeedbackStatisticsController : public QObject {
     Q_OBJECT
