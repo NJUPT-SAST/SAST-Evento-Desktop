@@ -1,7 +1,7 @@
 #ifndef LOGIN_CONTROLLER_H
 #define LOGIN_CONTROLLER_H
 
-#include <QtQML>
+ #include <QtQml>
 
 enum class LoginStatus : int { Start = 1, Loading, Success, Failed };
 
