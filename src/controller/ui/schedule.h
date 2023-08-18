@@ -10,11 +10,11 @@ class ScheduleController : public QObject {
 
 public:
     explicit ScheduleController(QObject *parent = nullptr);
-    Q_INVOKABLE void loadSchedule(int eventId);
+    Q_INVOKABLE void loadSchedule();
 
 signals:
     void loadScheduleSuccessEvent();
-    void laodScheduleErrorEvent(const QString& message);
+    void loadScheduleErrorEvent(const QString& message);
 
 private:
     std::unique_ptr<Repository> m_repository;

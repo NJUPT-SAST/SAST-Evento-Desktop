@@ -10,17 +10,17 @@ ScheduleController::ScheduleController(QObject *parent)
 
 }
 
-void ScheduleController::loadSchedule(int eventId)
+void ScheduleController::loadSchedule()
 {
     EventoException err;
 //    ScheduledEventoModel::getInstance()->resetModel(
 //        Convertor<std::vector<DTO_Evento>,
 //                  std::vector<Schedule>>()(
-//            m_repository->get_event(eventId, err)
+//            m_repository->
 //    ));
 
     if ((int)err.code()) {
-        emit laodScheduleErrorEvent(err.message());
+        emit loadScheduleErrorEvent(err.message());
         return;
     }
 
