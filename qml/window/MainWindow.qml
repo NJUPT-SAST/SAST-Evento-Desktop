@@ -208,6 +208,7 @@ CustomWindow {
         items: items_original
         footerItems: items_footer
         topPadding: FluTools.isMacos() ? 20 : 5
+        displayMode: settings.displayMode
         logo: "qrc:/res/favicon.ico"
         title: "SAST Evento"
         Component.onCompleted: {
@@ -217,5 +218,10 @@ CustomWindow {
 
     function pushPage(item) {
         nav_view.push(item)
+    }
+
+    Settings {
+        id: settings
+        property var displayMode
     }
 }
