@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtCore
+import Qt.labs.settings 1.0
 import FluentUI
 import SAST_Evento
 import "../imports"
