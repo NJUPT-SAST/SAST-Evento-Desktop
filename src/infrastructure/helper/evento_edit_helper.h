@@ -9,7 +9,7 @@ class EventoEditHelper : public QObject {
     QML_SINGLETON
 
 
-    Q_PROPERTY(QString id MEMBER id NOTIFY idChanged)
+    //Q_PROPERTY(QString id MEMBER id NOTIFY idChanged)
 
 
 public:
