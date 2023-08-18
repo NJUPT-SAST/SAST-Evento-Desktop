@@ -24,3 +24,5 @@ void EventoInfoController::loadEventoInfo(int eventId)
     }
     emit loadEventoSuccessEvent();
 }
+
+EventoInfoController::~EventoInfoController() = default;

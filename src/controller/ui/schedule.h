@@ -2,7 +2,8 @@
 #define SCHEDULE_CONTROLLER_H
 
 #include <QtQml>
-#include "repository.h"
+
+class Repository;
 
 class ScheduleController : public QObject {
     Q_OBJECT
@@ -10,6 +11,7 @@ class ScheduleController : public QObject {
 
 public:
     explicit ScheduleController(QObject *parent = nullptr);
+    ~ScheduleController();
     Q_INVOKABLE void loadSchedule();
 
 signals:

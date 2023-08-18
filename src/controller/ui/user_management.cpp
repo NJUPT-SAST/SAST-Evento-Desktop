@@ -27,3 +27,5 @@ void UserManagementController::loadAllUserInfo()
 
     emit loadAllUserSuccess();
 }
+
+UserManagementController::~UserManagementController() = default;

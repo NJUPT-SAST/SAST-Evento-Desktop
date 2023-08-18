@@ -2,7 +2,8 @@
 #define EVENTO_INFO_H
 
 #include <QtQml>
-#include "repository.h"
+
+class Repository;
 
 class EventoInfoController : public QObject
 {
@@ -11,7 +12,7 @@ class EventoInfoController : public QObject
 
 public:
     explicit EventoInfoController(QObject *parent = nullptr);
-
+    ~EventoInfoController();
     Q_INVOKABLE void loadEventoInfo(int eventId);
 
 signals:

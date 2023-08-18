@@ -10,6 +10,7 @@ import "../window"
 FluScrollablePage {
     title: lang.lang_schedule
     launchMode: FluPageType.SingleTask
+    property var arr: []
 
     onErrorClicked: {
         loadScheduleInfo()
@@ -39,22 +40,47 @@ FluScrollablePage {
         Layout.fillWidth: true
         implicitHeight: contentHeight
         interactive: false
-        delegate: com_schedule
-
+        spacing: 10
+        //model: ScheduledEventoModel
         Component.onCompleted: {
-            model = getEventItems()
+            model = getModel()
         }
+        delegate: com_schedule
     }
 
     Component {
         id: com_schedule
         Item {
+            property bool _hasSameDate: hasSameDate(modelData.date)
             width: parent.width
-            height: 90
+            height: 80 + loader.height
+
+            Loader {
+                id: loader
+                height: _hasSameDate ? 0 : 20
+                anchors {
+                    left: parent.left
+                    leftMargin: 10
+                }
+                sourceComponent: _hasSameDate ? undefined : com_date
+            }
+
+            Component {
+                id: com_date
+                FluText {
+                    text: modelData.date
+                    font.pixelSize: 18
+                }
+            }
+
             FluArea {
                 id: area_content
                 width: parent.width - 85
                 height: 80
+                anchors {
+                    top: loader.bottom
+                    topMargin: 5
+                }
 
                 FluRectangle {
                     id: item_division
@@ -72,17 +98,18 @@ FluScrollablePage {
 
                 Column {
                     id: item_time
+                    spacing: 5
                     anchors {
                         left: item_division.right
                         leftMargin: 10
                         verticalCenter: parent.verticalCenter
                     }
                     FluText {
-                        text: "09:00"
+                        text: modelData.startTime
                         font.pixelSize: 18
                     }
                     FluText {
-                        text: "10:00"
+                        text: modelData.endTime
                         font.pixelSize: 18
                         color: "#708090"
                     }
@@ -121,14 +148,15 @@ FluScrollablePage {
                 }
 
                 FluText {
+                    id: event_state
                     anchors {
                         right: parent.right
                         top: parent.top
                         topMargin: 10
                         rightMargin: 10
                     }
-                    text: "进行中"
-                    color: FluColors.Green.normal
+                    text: "未开始"
+                    color: FluColors.Yellow.normal
                     font.pixelSize: 20
                 }
 
@@ -176,6 +204,7 @@ FluScrollablePage {
             FluFilledButton {
                 id: btn
                 anchors {
+                    top: area_content.top
                     left: area_content.right
                     leftMargin: 5
                 }
@@ -184,19 +213,178 @@ FluScrollablePage {
                 text: "签到"
                 font.pixelSize: 16
             }
+
+            state: modelData.state
+
+            states: [
+                State {
+                    name: 'Before'
+                    PropertyChanges {
+                        target: event_state
+                        text: "未开始"
+                        color: FluColors.Yellow.normal
+                    }
+                    PropertyChanges {
+                        target: btn
+                        text: "签到"
+                        disabled: false
+                        onClicked: {
+
+                            // TODO
+                        }
+                    }
+                },
+                State {
+                    name: 'Undertaking'
+                    PropertyChanges {
+                        target: event_state
+                        text: "进行中"
+                        color: FluColors.Green.normal
+                    }
+                    PropertyChanges {
+                        target: btn
+                        text: "签到"
+                        disabled: false
+                        onClicked: {
+
+                            // TODO
+                        }
+                    }
+                },
+                State {
+                    name: 'isChecked'
+                    PropertyChanges {
+                        target: btn
+                        text: "已签到"
+                        disabled: true
+                        onClicked: {
+
+                            // TODO
+                        }
+                    }
+                },
+                State {
+                    name: 'Cancelled'
+                    PropertyChanges {
+                        target: event_state
+                        text: "已取消"
+                        color: FluColors.Grey110
+                    }
+                    PropertyChanges {
+                        target: btn
+                        text: ""
+                        disabled: true
+                    }
+                },
+                State {
+                    name: 'Over'
+                    PropertyChanges {
+                        target: event_state
+                        text: "已结束"
+                        color: FluColors.Red.normal
+                    }
+                    PropertyChanges {
+                        target: btn
+                        text: "评价"
+                        disabled: false
+                        onClicked: {
+
+                            // TODO
+                        }
+                    }
+                },
+                State {
+                    name: 'isFeedback'
+                    PropertyChanges {
+                        target: event_state
+                        text: "已结束"
+                        color: FluColors.Red.normal
+                    }
+                    PropertyChanges {
+                        target: btn
+                        text: "修改评价"
+                        disabled: false
+                        onClicked: {
+
+                            // TODO
+                        }
+                    }
+                }
+            ]
         }
     }
 
-    function getEventItems() {
-        var arr = []
-        for (var i = 0; i < 10; ++i) {
-            arr.push({
-                         "image": "qrc:/SAST_Evento/res/image/banner_3.jpg",
-                         "title": "活动卡片",
-                         "time": "2023.07.10 15:00-17:00",
-                         "id": i
-                     })
-        }
-        return arr
+    function hasSameDate(date) {
+        if (arr.indexOf(date) > -1)
+            return true
+        arr.push(date)
+        return false
+    }
+
+    function getModel() {
+        return [{
+                    "id": 1,
+                    "title": "活动标题",
+                    "state": 'Over',
+                    "date": "10月01日",
+                    "startTime": "09:00",
+                    "endTime": "10:00",
+                    "department": "活动部门",
+                    "location": "活动地点"
+                }, {
+                    "id": 2,
+                    "title": "活动标题",
+                    "state": 'Undertaking',
+                    "date": "10月01日",
+                    "startTime": "12:00",
+                    "endTime": "13:00",
+                    "department": "活动部门",
+                    "location": "活动地点"
+                }, {
+                    "id": 3,
+                    "title": "活动标题",
+                    "state": 'isChecked',
+                    "date": "10月03日",
+                    "startTime": "09:00",
+                    "endTime": "10:00",
+                    "department": "活动部门",
+                    "location": "活动地点"
+                }, {
+                    "id": 4,
+                    "title": "活动标题",
+                    "state": 'Over',
+                    "date": "10月04日",
+                    "startTime": "09:00",
+                    "endTime": "10:00",
+                    "department": "活动部门",
+                    "location": "活动地点"
+                }, {
+                    "id": 5,
+                    "title": "活动标题",
+                    "state": 'isFeedback',
+                    "date": "10月04日",
+                    "startTime": "15:00",
+                    "endTime": "15:30",
+                    "department": "活动部门",
+                    "location": "活动地点"
+                }, {
+                    "id": 6,
+                    "title": "活动标题",
+                    "state": 'Over',
+                    "date": "10月04日",
+                    "startTime": "17:00",
+                    "endTime": "19:00",
+                    "department": "活动部门",
+                    "location": "活动地点"
+                }, {
+                    "id": 7,
+                    "title": "活动标题",
+                    "state": 'Cancelled',
+                    "date": "10月06日",
+                    "startTime": "09:00",
+                    "endTime": "10:00",
+                    "department": "活动部门",
+                    "location": "活动地点"
+                }]
     }
 }

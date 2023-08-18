@@ -2,7 +2,8 @@
 #define USERMANAGEMENT_CONTROLLER_H
 
 #include <QtQml>
-#include "repository.h"
+
+class Repository;
 
 class UserManagementController : public QObject {
     Q_OBJECT
@@ -10,6 +11,7 @@ class UserManagementController : public QObject {
 
 public:
     UserManagementController(QObject *parent = nullptr);
+    ~UserManagementController();
     Q_INVOKABLE void loadAllUserInfo();
 
 signals:

@@ -55,3 +55,5 @@ void PlazaController::loadPlazaInfo() {
 
     emit loadPlazaSuccessEvent();
 }
+
+PlazaController::~PlazaController() = default;

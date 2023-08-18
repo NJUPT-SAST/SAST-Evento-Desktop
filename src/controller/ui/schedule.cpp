@@ -26,3 +26,5 @@ void ScheduleController::loadSchedule()
 
     emit loadScheduleSuccessEvent();
 }
+
+ScheduleController::~ScheduleController() = default;
