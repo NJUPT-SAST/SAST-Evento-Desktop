@@ -3,6 +3,7 @@
 
 #include <QAbstractListModel>
 #include <QtQml>
+#include <mutex>
 
 #include "evento_block.h"
 
@@ -13,21 +14,30 @@ class EventoBlockModel : public QAbstractListModel
 
 public:
     enum Role{
-        RowStart = Qt::UserRole + 1,
-        RowEnd,
-        ColumnStart,
-        ColumnEnd,
-        Date,
+        Id = Qt::UserRole + 1,
         Title,
-        Description,
-        Finished
+        State,
+        Data,
+        Time,
+        Location,
+        Department,
+        RowStart,
+        RowEnd,
+        ColunmStart,
+        ColunmEnd,
+        Finished,
+        Editable,
     };
 
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    QHash<int, QByteArray> roleNames() const override;
+
+    void resetModel(const std::vector<EventoBlock>& model);
+
     static EventoBlockModel* getInstance();
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override {}
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {}
 
     EventoBlockModel(const EventoBlockModel&) = delete;
     EventoBlockModel& operator=(const EventoBlockModel&) = delete;
@@ -35,7 +45,9 @@ public:
 private:
     explicit EventoBlockModel(QObject *parent = nullptr);
 
-    QList<EventoBlock> m_data;
+    std::vector<EventoBlock> m_data;
+
+    std::mutex m_mutex;
 };
 
 #endif // EVENTO_BLOCK_MODEL_H

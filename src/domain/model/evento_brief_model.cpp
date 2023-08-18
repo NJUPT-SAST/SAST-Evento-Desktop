@@ -49,3 +49,9 @@ void EventoBriefModel::resetModel(const std::vector<EventoBrief>& model)
     m_data = std::move(model);
     endResetModel();
 }
+
+EventoBriefModel *EventoBriefModel::getInstance()
+{
+    static EventoBriefModel instance;
+    return &instance;
+}

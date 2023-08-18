@@ -30,6 +30,8 @@ public:
 
     void resetModel(const std::vector<EventoBrief>& model);
 
+    static EventoBriefModel* getInstance();
+
     EventoBriefModel(const EventoBriefModel&) = delete;
     EventoBriefModel& operator=(const EventoBriefModel) = delete;
 
