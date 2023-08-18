@@ -46,8 +46,7 @@ CustomWindow {
         height: 80
         fillMode: Image.PreserveAspectFit
         source: {
-            if (settings.value("darkMode",
-                               FluThemeType.System) === FluThemeType.Dark) {
+            if (FluTheme.dark) {
                 return "qrc:/res/image/evento_white.png"
             } else {
                 return "qrc:/res/image/evento_black.png"
@@ -136,7 +135,6 @@ CustomWindow {
 
     Settings {
         id: settings
-        property int darkMode
         property string username
     }
 }
