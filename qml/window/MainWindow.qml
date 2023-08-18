@@ -5,6 +5,7 @@ import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import Qt.labs.platform
 import QtCore
+import Qt.labs.settings 1.0
 import FluentUI
 import SAST_Evento
 import "../imports"
