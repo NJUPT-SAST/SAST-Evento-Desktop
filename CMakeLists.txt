@@ -55,18 +55,22 @@ if(QT_KNOWN_POLICY_QTP0001)
 endif()
 
 set(VERSION_RC_PATH "")
+set(WIN32_MANIFEST_PATH "")
 if(WIN32)
-    set(VERSION_RC_PATH ${CMAKE_SOURCE_DIR}/SAST_Evento.rc)
+    set(VERSION_RC_PATH ${CMAKE_BINARY_DIR}/SAST_Evento.rc)
     configure_file(
         ${CMAKE_SOURCE_DIR}/.cmake/version_exe.rc.in
         ${VERSION_RC_PATH}
     )
+
+    set(WIN32_MANIFEST_PATH ${CMAKE_SOURCE_DIR}/app.manifest)
 endif()
 
 #添加可执行文件
 qt_add_executable(SAST_Evento_Desktop
     ${SOURCE_FILES}
     ${VERSION_RC_PATH}
+    ${WIN32_MANIFEST_PATH}
 )
 
 qt_add_qml_module(SAST_Evento_Desktop
