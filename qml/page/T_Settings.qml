@@ -11,9 +11,8 @@ FluScrollablePage {
 
     Settings {
         id: settings
-        property var darkMode
-        property int displayMode
         property string langMode
+        property var displayMode
     }
 
     FluArea {
@@ -87,11 +86,10 @@ FluScrollablePage {
                         "mode": FluNavigationViewType.Auto
                     }]
                 delegate: FluRadioButton {
-                    checked: FluNavigationView.displayMode === modelData.mode
+                    checked: settings.displayMode === modelData.mode
                     text: modelData.title
                     clickListener: function () {
                         settings.displayMode = modelData.mode
-                        FluNavigationView.displayMode = settings.displayMode
                     }
                 }
             }
