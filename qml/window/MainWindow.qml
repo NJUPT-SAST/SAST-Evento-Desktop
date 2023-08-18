@@ -13,7 +13,7 @@ CustomWindow {
     id: window
     width: 1100
     height: 640
-    closeDestory: false
+    closeDestory: true
     minimumWidth: 520
     minimumHeight: 200
     appBarVisible: false
