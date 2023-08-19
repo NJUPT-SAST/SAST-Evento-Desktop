@@ -1,8 +1,9 @@
 #ifndef PLAZA_CONTROLLER_H
 #define PLAZA_CONTROLLER_H
 
- #include <QtQml>
-#include "repository.h"
+#include <QtQml>
+
+class Repository;
 
 class PlazaController : public QObject {
     Q_OBJECT
@@ -10,6 +11,7 @@ class PlazaController : public QObject {
 
 public:
     explicit PlazaController(QObject *parent = nullptr);
+    ~PlazaController();
     Q_INVOKABLE void loadPlazaInfo();
 
 signals:

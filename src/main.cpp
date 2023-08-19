@@ -10,6 +10,8 @@
 #include "undertaking_evento_model.h"
 #include "latest_evento_model.h"
 #include "user_brief_model.h"
+#include "scheduled_evento_model.h"
+#include "feedback_model.h"
 
 FRAMELESSHELPER_USE_NAMESPACE
 
@@ -41,6 +43,8 @@ int main(int argc, char *argv[]) {
     qmlRegisterSingletonInstance("MyModel", 1, 0, "UndertakingEventoModel", UndertakingEventoModel::getInstance());
     qmlRegisterSingletonInstance("MyModel", 1, 0, "LatestEventoModel", LatestEventoModel::getInstance());
     qmlRegisterSingletonInstance("MyModel", 1, 0, "UserBriefModel", UserBriefModel::getInstance());
+    qmlRegisterSingletonInstance("MyModel", 1, 0, "ScheduledEventoModel", ScheduledEventoModel::getInstance());
+    qmlRegisterSingletonInstance("MyModel", 1, 0, "FeedbackModel", FeedbackModel::getInstance());
 
     const QUrl url(QStringLiteral("qrc:/qml/App.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

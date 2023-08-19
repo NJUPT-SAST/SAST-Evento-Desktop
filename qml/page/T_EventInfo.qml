@@ -9,17 +9,6 @@ import MyModel
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
     property var arr: []
-    property int _id
-    property string _title
-    property int _state
-    property string _eventTime
-    property string _registerTime
-    property string _department
-    property string _location
-    property string _type
-    property string _tag
-    property string _description
-    property string _buttonText
 
     onErrorClicked: {
         loadEventoInfo(EventoHelper.id)
@@ -32,15 +21,6 @@ FluScrollablePage {
 
     Component.onCompleted: {
         loadEventoInfo(EventoHelper.id)
-        _title = EventoHelper.title
-        _state = EventoHelper.state
-        _eventTime = EventoHelper.eventTime
-        _registerTime = EventoHelper.registerTime
-        _department = EventoHelper.department
-        _location = EventoHelper.location
-        _type = EventoHelper.type
-        _tag = EventoHelper.tag
-        _description = EventoHelper.description
     }
 
     EventoInfoController {
@@ -81,7 +61,7 @@ FluScrollablePage {
         Layout.bottomMargin: 10
         Layout.fillWidth: true
         radius: [10, 10, 10, 10]
-        loopTime: 3000
+        loopTime: 4000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
         indicatorMarginTop: 15
 
@@ -121,21 +101,12 @@ FluScrollablePage {
 
     FluText {
         id: item_title
-        text: _title
         font: FluTextStyle.TitleLarge
-    }
-
-    Row {
-        spacing: 5
-        Layout.topMargin: 8
-        FluIcon {
-            iconSource: FluentIcons.EmojiTabFavorites
-        }
-        FluText {
-            text: "活动时间：" + _eventTime
-            wrapMode: Text.WordWrap
-            font: FluTextStyle.Caption
-            anchors.verticalCenter: parent.verticalCenter
+        Connections {
+            target: controller
+            function onLoadEventoSuccessEvent() {
+                item_title.text = EventoHelper.title
+            }
         }
     }
 
@@ -146,10 +117,36 @@ FluScrollablePage {
             iconSource: FluentIcons.EmojiTabFavorites
         }
         FluText {
-            text: "报名时间：" + _registerTime
+            id: text_eventTime
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
+            Connections {
+                target: controller
+                function onLoadEventoSuccessEvent() {
+                    text_eventTime.text = "活动时间：" + EventoHelper.eventTime
+                }
+            }
+        }
+    }
+
+    Row {
+        spacing: 5
+        Layout.topMargin: 8
+        FluIcon {
+            iconSource: FluentIcons.EmojiTabFavorites
+        }
+        FluText {
+            id: text_registerTime
+            wrapMode: Text.WordWrap
+            font: FluTextStyle.Caption
+            anchors.verticalCenter: parent.verticalCenter
+            Connections {
+                target: controller
+                function onLoadEventoSuccessEvent() {
+                    text_registerTime.text = "报名时间：" + EventoHelper.registerTime
+                }
+            }
         }
     }
 
@@ -161,10 +158,16 @@ FluScrollablePage {
             iconSource: FluentIcons.POI
         }
         FluText {
-            text: _location
+            id: text_loc
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
+            Connections {
+                target: controller
+                function onLoadEventoSuccessEvent() {
+                    text_loc.text = EventoHelper.location
+                }
+            }
         }
     }
 
@@ -176,10 +179,16 @@ FluScrollablePage {
             iconSource: FluentIcons.EMI
         }
         FluText {
-            text: _department
+            id: text_dep
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
+            Connections {
+                target: controller
+                function onLoadEventoSuccessEvent() {
+                    text_dep.text = EventoHelper.department
+                }
+            }
         }
     }
 
@@ -191,10 +200,16 @@ FluScrollablePage {
             iconSource: FluentIcons.OEM
         }
         FluText {
-            text: _type
+            id: text_type
             wrapMode: Text.WordWrap
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
+            Connections {
+                target: controller
+                function onLoadEventoSuccessEvent() {
+                    text_type.text = EventoHelper.type
+                }
+            }
         }
     }
 
@@ -211,12 +226,18 @@ FluScrollablePage {
             radius: [5, 5, 5, 5]
             color: "#99ffcc"
             FluText {
-                text: _tag
+                id: text_tag
                 wrapMode: Text.WordWrap
                 font: FluTextStyle.Caption
                 color: FluColors.Grey100
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
+                Connections {
+                    target: controller
+                    function onLoadEventoSuccessEvent() {
+                        text_tag.text = EventoHelper.tag
+                    }
+                }
             }
         }
     }
@@ -225,9 +246,14 @@ FluScrollablePage {
         id: item_desc
         Layout.topMargin: 15
         Layout.fillWidth: true
-        text: _description
         wrapMode: Text.WrapAnywhere
         font.pixelSize: 18
+        Connections {
+            target: controller
+            function onLoadEventoSuccessEvent() {
+                item_desc.text = EventoHelper.description
+            }
+        }
     }
 
     FluToggleButton {
@@ -272,7 +298,7 @@ FluScrollablePage {
 
             FluRatingControl {}
 
-            FluTextBox {
+            FluMultilineTextBox {
                 placeholderText: "输入你的留言（选填，Ctrl+Enter换行）"
                 width: parent.width
             }

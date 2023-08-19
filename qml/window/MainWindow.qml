@@ -14,7 +14,7 @@ CustomWindow {
     id: window
     width: 1100
     height: 640
-    closeDestory: true
+    closeDestory: false
     minimumWidth: 520
     minimumHeight: 200
     appBarVisible: false
@@ -40,11 +40,11 @@ CustomWindow {
     SystemTrayIcon {
         id: system_tray
         visible: true
-        icon.source: "qrc:/res/image/favicon.ico"
+        icon.source: "qrc:/res/favicon.ico"
         tooltip: "SAST Evento"
         menu: Menu {
             MenuItem {
-                text: lang.lang_exit
+                text: "退出"
                 onTriggered: {
                     window.deleteWindow()
                     FluApp.closeApp()
