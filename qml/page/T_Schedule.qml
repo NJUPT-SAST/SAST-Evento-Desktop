@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 import FluentUI
 import SAST_Evento
 import MyModel
@@ -137,11 +138,11 @@ FluScrollablePage {
                         verticalCenter: parent.verticalCenter
                     }
                     FluText {
-                        text: "活动标题"
+                        text: modelData.title
                         font: FluTextStyle.Title
                     }
                     FluText {
-                        text: "活动地点"
+                        text: modelData.location
                         font: FluTextStyle.Caption
                         color: FluColors.Grey110
                     }
@@ -167,7 +168,7 @@ FluScrollablePage {
                         rightMargin: 10
                         bottomMargin: 10
                     }
-                    text: "活动部门"
+                    text: modelData.department
                     font: FluTextStyle.Caption
                     color: FluColors.Grey110
                 }
@@ -229,8 +230,7 @@ FluScrollablePage {
                         text: "签到"
                         disabled: false
                         onClicked: {
-
-                            // TODO
+                            dialog.open()
                         }
                     }
                 },
@@ -246,8 +246,7 @@ FluScrollablePage {
                         text: "签到"
                         disabled: false
                         onClicked: {
-
-                            // TODO
+                            dialog.open()
                         }
                     }
                 },
@@ -257,10 +256,6 @@ FluScrollablePage {
                         target: btn
                         text: "已签到"
                         disabled: true
-                        onClicked: {
-
-                            // TODO
-                        }
                     }
                 },
                 State {
@@ -288,8 +283,9 @@ FluScrollablePage {
                         text: "评价"
                         disabled: false
                         onClicked: {
-
-                            // TODO
+                            EventoHelper.id = modelData.id
+                            MainWindow.window.pushPage(
+                                        "qrc:/qml/page/T_EventInfo.qml")
                         }
                     }
                 },
@@ -305,12 +301,48 @@ FluScrollablePage {
                         text: "修改评价"
                         disabled: false
                         onClicked: {
-
-                            // TODO
+                            EventoHelper.id = modelData.id
+                            MainWindow.window.pushPage(
+                                        "qrc:/qml/page/T_EventInfo.qml")
                         }
                     }
                 }
             ]
+
+            FluContentDialog {
+                id: dialog
+                title: ""
+                message: "使用小程序扫描二维码或输入密钥"
+                negativeText: "取消"
+
+                Item {
+                    anchors {
+                        left: parent.left
+                        top: parent.top
+                        leftMargin: parent.width / 2 - 175
+                        topMargin: parent.height / 2 - 60
+                    }
+
+                    FluTextBox {
+                        id: textbox
+                        width: 350
+                        placeholderText: "密钥请向讲师获取哦"
+                    }
+                }
+
+                buttonFlags: FluContentDialogType.NegativeButton
+                             | FluContentDialogType.PositiveButton
+                positiveText: "签到"
+                onPositiveClicked: {
+                    if (textbox.text === "") {
+                        showError("输入为空")
+                        dialog.open()
+                    } else {
+                        showSuccess(textbox.text)
+                        state = 'isChecked'
+                    }
+                }
+            }
         }
     }
 

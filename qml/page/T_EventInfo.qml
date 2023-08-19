@@ -61,7 +61,7 @@ FluScrollablePage {
         Layout.bottomMargin: 10
         Layout.fillWidth: true
         radius: [10, 10, 10, 10]
-        loopTime: 3000
+        loopTime: 4000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
         indicatorMarginTop: 15
 
@@ -298,7 +298,7 @@ FluScrollablePage {
 
             FluRatingControl {}
 
-            FluTextBox {
+            FluMultilineTextBox {
                 placeholderText: "输入你的留言（选填，Ctrl+Enter换行）"
                 width: parent.width
             }
