@@ -21,6 +21,8 @@ public:
         Date,
         StartTime,
         EndTime,
+        IsChecked,
+        IsFeedback,
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

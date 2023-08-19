@@ -16,7 +16,7 @@ void ScheduleController::loadSchedule()
 //    ScheduledEventoModel::getInstance()->resetModel(
 //        Convertor<std::vector<DTO_Evento>,
 //                  std::vector<Schedule>>()(
-//            m_repository->
+//            m_repository->get_subscribed_list(err)
 //    ));
 
     if ((int)err.code()) {
@@ -25,6 +25,21 @@ void ScheduleController::loadSchedule()
     }
 
     emit loadScheduleSuccessEvent();
+}
+
+void ScheduleController::check(const int eventId, const QString &code)
+{
+    EventoException err;
+    auto isSuccess = m_repository->event_checkin(eventId, code, err);
+
+    qDebug() << (int)err.code();
+    if ((int)err.code())
+        return emit checkErrorEvent(err.message());
+
+    if (isSuccess)
+        return emit checkSuccessEvent();
+
+    emit checkErrorEvent("密钥错误");
 }
 
 ScheduleController::~ScheduleController() = default;

@@ -9,6 +9,7 @@ import MyModel
 import "../window"
 
 FluScrollablePage {
+    id: page
     title: lang.lang_schedule
     launchMode: FluPageType.SingleTask
     property var arr: []
@@ -35,13 +36,22 @@ FluScrollablePage {
                                       errorText = message
                                       statusMode = FluStatusViewType.Error
                                   }
+        onCheckSuccessEvent: {
+            statusMode = FluStatusViewType.Success
+            showSuccess("签到成功")
+            loadScheduleInfo()
+        }
+        onCheckErrorEvent: message => {
+                               showError("错误：" + message)
+                               loadScheduleInfo()
+                           }
     }
 
     ListView {
         Layout.fillWidth: true
         implicitHeight: contentHeight
         interactive: false
-        spacing: 10
+        spacing: 5
         //model: ScheduledEventoModel
         Component.onCompleted: {
             model = getModel()
@@ -54,7 +64,7 @@ FluScrollablePage {
         Item {
             property bool _hasSameDate: hasSameDate(modelData.date)
             width: parent.width
-            height: 80 + loader.height
+            height: 85 + loader.height
 
             Loader {
                 id: loader
@@ -157,7 +167,7 @@ FluScrollablePage {
                         rightMargin: 10
                     }
                     text: "未开始"
-                    color: FluColors.Yellow.normal
+                    color: FluColors.Blue.normal
                     font.pixelSize: 20
                 }
 
@@ -202,6 +212,29 @@ FluScrollablePage {
                     }
                 }
             }
+
+            Component.onCompleted: {
+                var modelState = modelData.state
+                var isChecked = modelData.isChecked
+                var isFeedback = modelData.isFeedback
+                if (modelState === 1 || modelState === 2) {
+                    if (isChecked)
+                        state = 'BeforeAndIsChecked'
+                    else
+                        state = 'BeforeAndNoChecked'
+                } else if (modelState === 3) {
+                    if (isChecked)
+                        state = 'UndertakingAndIsChecked'
+                    else
+                        state = 'UndertakingAndNoChecked'
+                } else if (modelState === 4)
+                    state = 'Cancelled'
+                else if (isFeedback)
+                    state = 'OverAndIsFeedback'
+                else
+                    state = 'OverAndNoFeedback'
+            }
+
             FluFilledButton {
                 id: btn
                 anchors {
@@ -211,19 +244,17 @@ FluScrollablePage {
                 }
                 height: 80
                 width: 75
-                text: "签到"
+                text: ""
                 font.pixelSize: 16
             }
 
-            state: modelData.state
-
             states: [
                 State {
-                    name: 'Before'
+                    name: 'BeforeAndNoChecked'
                     PropertyChanges {
                         target: event_state
                         text: "未开始"
-                        color: FluColors.Yellow.normal
+                        color: FluColors.Blue.normal
                     }
                     PropertyChanges {
                         target: btn
@@ -235,11 +266,24 @@ FluScrollablePage {
                     }
                 },
                 State {
-                    name: 'Undertaking'
+                    name: 'BeforeAndIsChecked'
+                    PropertyChanges {
+                        target: event_state
+                        text: "未开始"
+                        color: FluColors.Blue.normal
+                    }
+                    PropertyChanges {
+                        target: btn
+                        text: "已签到"
+                        disabled: true
+                    }
+                },
+                State {
+                    name: 'UndertakingAndNoChecked'
                     PropertyChanges {
                         target: event_state
                         text: "进行中"
-                        color: FluColors.Green.normal
+                        color: FluColors.Orange.normal
                     }
                     PropertyChanges {
                         target: btn
@@ -251,7 +295,12 @@ FluScrollablePage {
                     }
                 },
                 State {
-                    name: 'isChecked'
+                    name: 'UndertakingAndIsChecked'
+                    PropertyChanges {
+                        target: event_state
+                        text: "进行中"
+                        color: FluColors.Orange.normal
+                    }
                     PropertyChanges {
                         target: btn
                         text: "已签到"
@@ -263,7 +312,7 @@ FluScrollablePage {
                     PropertyChanges {
                         target: event_state
                         text: "已取消"
-                        color: FluColors.Grey110
+                        color: FluColors.Red.normal
                     }
                     PropertyChanges {
                         target: btn
@@ -272,11 +321,11 @@ FluScrollablePage {
                     }
                 },
                 State {
-                    name: 'Over'
+                    name: 'OverAndNoFeedback'
                     PropertyChanges {
                         target: event_state
                         text: "已结束"
-                        color: FluColors.Red.normal
+                        color: FluColors.Grey110
                     }
                     PropertyChanges {
                         target: btn
@@ -290,11 +339,11 @@ FluScrollablePage {
                     }
                 },
                 State {
-                    name: 'isFeedback'
+                    name: 'OverAndIsFeedback'
                     PropertyChanges {
                         target: event_state
                         text: "已结束"
-                        color: FluColors.Red.normal
+                        color: FluColors.Grey110
                     }
                     PropertyChanges {
                         target: btn
@@ -338,8 +387,8 @@ FluScrollablePage {
                         showError("输入为空")
                         dialog.open()
                     } else {
-                        showSuccess(textbox.text)
-                        state = 'isChecked'
+                        statusMode = FluStatusViewType.Loading
+                        controller.check(modelData.id, textbox.text)
                     }
                 }
             }
@@ -357,66 +406,80 @@ FluScrollablePage {
         return [{
                     "id": 1,
                     "title": "活动标题",
-                    "state": 'Over',
+                    "state": 5,
                     "date": "10月01日",
                     "startTime": "09:00",
                     "endTime": "10:00",
                     "department": "活动部门",
-                    "location": "活动地点"
+                    "location": "活动地点",
+                    "isChecked": true,
+                    "isFeedback": false
                 }, {
                     "id": 2,
                     "title": "活动标题",
-                    "state": 'Undertaking',
+                    "state": 3,
                     "date": "10月01日",
                     "startTime": "12:00",
                     "endTime": "13:00",
                     "department": "活动部门",
-                    "location": "活动地点"
+                    "location": "活动地点",
+                    "isChecked": true,
+                    "isFeedback": false
                 }, {
                     "id": 3,
                     "title": "活动标题",
-                    "state": 'isChecked',
+                    "state": 1,
                     "date": "10月03日",
                     "startTime": "09:00",
                     "endTime": "10:00",
                     "department": "活动部门",
-                    "location": "活动地点"
+                    "location": "活动地点",
+                    "isChecked": false,
+                    "isFeedback": false
                 }, {
                     "id": 4,
                     "title": "活动标题",
-                    "state": 'Over',
+                    "state": 5,
                     "date": "10月04日",
                     "startTime": "09:00",
                     "endTime": "10:00",
                     "department": "活动部门",
-                    "location": "活动地点"
+                    "location": "活动地点",
+                    "isChecked": true,
+                    "isFeedback": false
                 }, {
-                    "id": 5,
+                    "id": 1,
                     "title": "活动标题",
-                    "state": 'isFeedback',
+                    "state": 5,
                     "date": "10月04日",
                     "startTime": "15:00",
                     "endTime": "15:30",
                     "department": "活动部门",
-                    "location": "活动地点"
+                    "location": "活动地点",
+                    "isChecked": true,
+                    "isFeedback": true
                 }, {
-                    "id": 6,
+                    "id": 2,
                     "title": "活动标题",
-                    "state": 'Over',
+                    "state": 5,
                     "date": "10月04日",
                     "startTime": "17:00",
                     "endTime": "19:00",
                     "department": "活动部门",
-                    "location": "活动地点"
+                    "location": "活动地点",
+                    "isChecked": true,
+                    "isFeedback": false
                 }, {
-                    "id": 7,
+                    "id": 3,
                     "title": "活动标题",
-                    "state": 'Cancelled',
+                    "state": 4,
                     "date": "10月06日",
                     "startTime": "09:00",
                     "endTime": "10:00",
                     "department": "活动部门",
-                    "location": "活动地点"
+                    "location": "活动地点",
+                    "isChecked": false,
+                    "isFeedback": false
                 }]
     }
 }

@@ -12,6 +12,8 @@ struct Schedule {
     QString date;
     QString startTime;
     QString endTime;
+    bool isChecked;
+    bool isFeedback;
 };
 
 #endif  // SCHEDULE_H
