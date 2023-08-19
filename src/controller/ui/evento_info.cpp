@@ -13,10 +13,10 @@ EventoInfoController::EventoInfoController(QObject *parent)
 void EventoInfoController::loadEventoInfo(int eventId)
 {
     EventoException err;
-    EventoHelper::getInstance()->updateEvento(
-        Convertor<DTO_Evento, Evento>()(
-            m_repository->get_event(eventId, err)
-    ));
+    //EventoHelper::getInstance()->updateEvento(
+    //    Convertor<DTO_Evento, Evento>()(
+    //        m_repository->get_event(eventId, err)
+    //));
 
     if ((int)err.code()) {
         emit loadEventoErrorEvent(err.message());

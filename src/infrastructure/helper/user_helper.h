@@ -12,13 +12,13 @@ class UserHelper : public QObject {
     QML_NAMED_ELEMENT(UserHelper)
     QML_SINGLETON
 
-    Q_PROPERTY(QString id MEMBER id NOTIFY idChanged)
-    Q_PROPERTY(QString name MEMBER name NOTIFY nameChanged)
-    Q_PROPERTY(QString avatar MEMBER avatar NOTIFY avatarChanged)
-    Q_PROPERTY(QStringList department MEMBER department NOTIFY departmentChanged)
-    Q_PROPERTY(QString description MEMBER description NOTIFY descriptionChanged)
-    Q_PROPERTY(QString email MEMBER email NOTIFY emailChanged)
-    Q_PROPERTY(QStringList link MEMBER link NOTIFY linkChanged)
+    Q_PROPERTY(QString id MEMBER m_id NOTIFY idChanged)
+    Q_PROPERTY(QString name MEMBER m_name NOTIFY nameChanged)
+    Q_PROPERTY(QString avatar MEMBER m_avatar NOTIFY avatarChanged)
+    Q_PROPERTY(QStringList department MEMBER m_department NOTIFY departmentChanged)
+    Q_PROPERTY(QString description MEMBER m_description NOTIFY descriptionChanged)
+    Q_PROPERTY(QString email MEMBER m_email NOTIFY emailChanged)
+    Q_PROPERTY(QStringList link MEMBER m_link NOTIFY linkChanged)
 
 public:
     static UserHelper *getInstance();
@@ -38,13 +38,13 @@ public:
 private:
     UserHelper() = default;
 
-    QString id;
-    QString name;
-    QString avatar;
-    QStringList department;
-    QString description;
-    QString email;
-    QStringList link;
+    QString m_id;
+    QString m_name;
+    QString m_avatar;
+    QStringList m_department;
+    QString m_description;
+    QString m_email;
+    QStringList m_link;
 
 signals:
     void idChanged();

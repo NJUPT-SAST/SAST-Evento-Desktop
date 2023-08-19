@@ -14,9 +14,9 @@ FeedbackHelper *FeedbackHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngin
 
 void FeedbackHelper::updateFeedback(const Feedback &feedback)
 {
-    id = feedback.id;
-    score = feedback.score;
-    content = feedback.content;
-    userId = feedback.userId;
-    eventId = feedback.eventId;
+    m_id = feedback.id;
+    m_score = feedback.score;
+    m_content = feedback.content;
+    m_userId = feedback.userId;
+    m_eventId = feedback.eventId;
 }

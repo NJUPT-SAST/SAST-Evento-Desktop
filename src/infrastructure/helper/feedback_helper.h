@@ -10,11 +10,11 @@ class FeedbackHelper : public QObject {
     QML_NAMED_ELEMENT(FeedbackHelper)
     QML_SINGLETON
 
-    Q_PROPERTY(int id MEMBER id NOTIFY idChanged)
-    Q_PROPERTY(int score MEMBER score NOTIFY scoreChanged)
-    Q_PROPERTY(QString content MEMBER content NOTIFY contentChanged)
-    Q_PROPERTY(QString userId MEMBER userId NOTIFY userIdChanged)
-    Q_PROPERTY(int eventId MEMBER eventId NOTIFY eventIdChanged)
+    Q_PROPERTY(int id MEMBER m_id NOTIFY idChanged)
+    Q_PROPERTY(int score MEMBER m_score NOTIFY scoreChanged)
+    Q_PROPERTY(QString content MEMBER m_content NOTIFY contentChanged)
+    Q_PROPERTY(QString userId MEMBER m_userId NOTIFY userIdChanged)
+    Q_PROPERTY(int eventId MEMBER m_eventId NOTIFY eventIdChanged)
 
 public:
     static FeedbackHelper *getInstance();
@@ -26,11 +26,11 @@ public:
 private:
     FeedbackHelper() = default;
 
-    int id;
-    int score;
-    QString content;
-    QString userId;
-    int eventId;
+    int m_id;
+    int m_score;
+    QString m_content;
+    QString m_userId;
+    int m_eventId;
 
 signals:
     void idChanged();
