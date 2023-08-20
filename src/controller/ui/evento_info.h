@@ -12,7 +12,7 @@ class EventoInfoController : public QObject
 
 public:
     explicit EventoInfoController(QObject *parent = nullptr);
-
+    ~EventoInfoController();
     Q_INVOKABLE void loadEventoInfo(int eventId);
 
 signals:

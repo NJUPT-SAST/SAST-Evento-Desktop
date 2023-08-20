@@ -9,9 +9,11 @@ struct Schedule {
     EventState state;
     QString department;
     QString location;
+    QString date;
     QString startTime;
     QString endTime;
-    Image image;
+    bool isChecked;
+    bool isFeedback;
 };
 
 #endif  // SCHEDULE_H

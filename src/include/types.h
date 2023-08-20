@@ -17,7 +17,7 @@ struct ParticipationStatus {
 };
 
 enum class EventState {
-    Before,
+    Before = 1,
     Registration,
     Undertaking,
     Cancelled,

@@ -1,5 +1,4 @@
 #include "plaza.h"
-
 #include "convertor.h"
 #include "latest_evento_model.h"
 #include "local/repositoryimpl.h"
@@ -56,3 +55,5 @@ void PlazaController::loadPlazaInfo() {
 
     emit loadPlazaSuccessEvent();
 }
+
+PlazaController::~PlazaController() = default;
