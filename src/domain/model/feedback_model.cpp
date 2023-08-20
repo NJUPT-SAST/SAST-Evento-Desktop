@@ -15,9 +15,10 @@ QVariant FeedbackModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
-    const auto& element = m_data.at(index.row());
+    const auto &element = m_data.at(index.row());
 
-    switch(role) {
+    switch (role)
+    {
     case Role::Id:
         return element.id;
     case Role::Score:
@@ -38,7 +39,8 @@ QVariant FeedbackModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> FeedbackModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
-    if (roles.isEmpty()) {
+    if (roles.isEmpty())
+    {
         roles.insert(Id, "id");
         roles.insert(Score, "score");
         roles.insert(Content, "content");
@@ -54,4 +56,15 @@ void FeedbackModel::resetModel(const std::vector<Feedback> &model)
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
+}
+
+FeedbackModel *FeedbackModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
+FeedbackModel *FeedbackModel::getInstance()
+{
+    static FeedbackModel singleton;
+    return &singleton;
 }

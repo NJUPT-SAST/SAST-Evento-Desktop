@@ -13,38 +13,44 @@ class EventoBlockModel : public QAbstractListModel
     QML_NAMED_ELEMENT(EventoBlockModel)
 
 public:
-    enum Role{
-        RowStart = Qt::UserRole + 1,
-        RowEnd,
-        ColumnStart,
-        ColumnEnd,
-        Date,
+    enum Role
+    {
+        Id = Qt::UserRole + 1,
         Title,
-        Description,
-        Finished
+        State,
+        Data,
+        Time,
+        Location,
+        Department,
+        RowStart,
+        RowEnd,
+        ColunmStart,
+        ColunmEnd,
+        Finished,
+        Editable,
     };
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override {}
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {}
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    EventoBlockModel(const EventoBlockModel&) = delete;
-    EventoBlockModel& operator=(const EventoBlockModel&) = delete;
+    QHash<int, QByteArray> roleNames() const override;
+
+    void resetModel(const std::vector<EventoBlock> &model);
+
+    EventoBlockModel(const EventoBlockModel &) = delete;
+    EventoBlockModel &operator=(const EventoBlockModel &) = delete;
 
 private:
     EventoBlockModel() = default;
 
-    QList<EventoBlock> m_data;
+    std::vector<EventoBlock> m_data;
+
+    std::mutex m_mutex;
+
 public:
-    static EventoBlockModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-    {
-        return getInstance();
-    }
-    inline static EventoBlockModel *getInstance()
-    {
-        static EventoBlockModel singleton;
-        return &singleton;
-    }
+    static EventoBlockModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static EventoBlockModel *getInstance();
 };
 
 #endif // EVENTO_BLOCK_MODEL_H

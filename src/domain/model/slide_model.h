@@ -1,9 +1,8 @@
 #ifndef SLIDE_MODEL_H
 #define SLIDE_MODEL_H
 
-#include <QtQml>
 #include <QAbstractListModel>
-#include <mutex>
+#include <QtQml>
 
 #include "slide.h"
 
@@ -35,16 +34,10 @@ private:
     std::vector<Slide> m_data;
 
     std::mutex m_mutex;
+
 public:
-    static SlideModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-    {
-        return getInstance();
-    }
-    inline static SlideModel *getInstance()
-    {
-        static SlideModel singleton;
-        return &singleton;
-    }
+    static SlideModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static SlideModel *getInstance();
 };
 
 #endif // SLIDE_MODEL_H

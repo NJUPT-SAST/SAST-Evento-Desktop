@@ -16,7 +16,7 @@ public:
 
 signals:
     void loadEventoSuccessEvent();
-    void loadEventoErrorEvent(const QString& message);
+    void loadEventoErrorEvent(const QString &message);
 
 public:
     EventoInfoController() = default;

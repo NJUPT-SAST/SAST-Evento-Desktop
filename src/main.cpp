@@ -9,8 +9,9 @@
 
 FRAMELESSHELPER_USE_NAMESPACE
 
-int main(int argc, char *argv[]) {
-    qputenv("QT_QUICK_CONTROLS_STYLE","Basic");
+int main(int argc, char *argv[])
+{
+    qputenv("QT_QUICK_CONTROLS_STYLE", "Basic");
     FramelessHelper::Quick::initialize();
     QGuiApplication::setOrganizationName("NJUPT-SAST-C++");
     QGuiApplication::setOrganizationDomain("https://github.com/NJUPT-SAST-Cpp");
@@ -24,9 +25,9 @@ int main(int argc, char *argv[]) {
     FramelessConfig::instance()->set(Global::Option::ForceHideWindowFrameBorder);
 #endif
 #ifdef Q_OS_MACOS
-    FramelessConfig::instance()->set(Global::Option::ForceNonNativeBackgroundBlur,false);
+    FramelessConfig::instance()->set(Global::Option::ForceNonNativeBackgroundBlur, false);
 #endif
-    AppInfo* appInfo = new AppInfo();
+    AppInfo *appInfo = new AppInfo();
     QQmlApplicationEngine engine;
     FramelessHelper::Quick::registerTypes(&engine);
 #ifdef FLUENTUI_BUILD_STATIC_LIB
@@ -35,11 +36,13 @@ int main(int argc, char *argv[]) {
     appInfo->init(&engine);
 
     const QUrl url(QStringLiteral("qrc:/qml/App.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-        &app, [url](QObject *obj, const QUrl &objUrl) {
+    QObject::connect(
+        &engine, &QQmlApplicationEngine::objectCreated,
+        &app, [url](QObject *obj, const QUrl &objUrl)
+        {
             if (!obj && url == objUrl)
-                QCoreApplication::exit(-1);
-        }, Qt::QueuedConnection);
+                QCoreApplication::exit(-1); },
+        Qt::QueuedConnection);
     engine.load(url);
 
     return app.exec();

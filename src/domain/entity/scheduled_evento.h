@@ -3,7 +3,8 @@
 
 #include "types.h"
 
-struct Schedule {
+struct Schedule
+{
     EventoID id;
     QString title;
     EventState state;
@@ -16,4 +17,4 @@ struct Schedule {
     bool isFeedback;
 };
 
-#endif  // SCHEDULED_EVENTO_H
+#endif // SCHEDULED_EVENTO_H

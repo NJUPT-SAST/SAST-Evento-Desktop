@@ -3,7 +3,6 @@
 
 #include <QAbstractListModel>
 #include <QtQml>
-#include <mutex>
 
 #include "evento_brief.h"
 
@@ -14,7 +13,8 @@ class EventoBriefModel : public QAbstractListModel
     QML_NAMED_ELEMENT(EventoBriefModel)
 
 public:
-    enum Role {
+    enum Role
+    {
         Id = Qt::DisplayRole + 1,
         Title,
         State,
@@ -29,7 +29,10 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<EventoBrief>& model);
+    void resetModel(const std::vector<EventoBrief> &model);
+
+    EventoBriefModel(const EventoBriefModel &) = delete;
+    EventoBriefModel &operator=(const EventoBriefModel) = delete;
 
 private:
     EventoBriefModel() = default;
@@ -37,16 +40,10 @@ private:
     std::vector<EventoBrief> m_data;
 
     std::mutex m_mutex;
+
 public:
-    static EventoBriefModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-    {
-        return getInstance();
-    }
-    inline static EventoBriefModel *getInstance()
-    {
-        static EventoBriefModel singleton;
-        return &singleton;
-    }
+    static EventoBriefModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static EventoBriefModel *getInstance();
 };
 
 #endif // EVENTO_BRIEF_MODEL_H

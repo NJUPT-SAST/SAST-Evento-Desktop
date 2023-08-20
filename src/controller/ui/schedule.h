@@ -5,20 +5,21 @@
 
 class Repository;
 
-class ScheduleController : public QObject {
+class ScheduleController : public QObject
+{
     Q_OBJECT
     QML_NAMED_ELEMENT(ScheduleController)
 
 public:
     Q_INVOKABLE void loadSchedule();
-    Q_INVOKABLE void check(const int eventId, const QString& code);
+    Q_INVOKABLE void check(const int eventId, const QString &code);
 
 signals:
     void loadScheduleSuccessEvent();
-    void loadScheduleErrorEvent(const QString& message);
+    void loadScheduleErrorEvent(const QString &message);
 
     void checkSuccessEvent();
-    void checkErrorEvent(const QString& message);
+    void checkErrorEvent(const QString &message);
 
 public:
     ScheduleController() = default;

@@ -15,9 +15,10 @@ QVariant ScheduledEventoModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
-    const auto& element = m_data.at(index.row());
+    const auto &element = m_data.at(index.row());
 
-    switch(role) {
+    switch (role)
+    {
     case Role::Id:
         return element.id;
     case Role::Title:
@@ -48,7 +49,8 @@ QVariant ScheduledEventoModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> ScheduledEventoModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
-    if (roles.isEmpty()) {
+    if (roles.isEmpty())
+    {
         roles.insert(Id, "id");
         roles.insert(Title, "title");
         roles.insert(State, "state");
@@ -69,4 +71,15 @@ void ScheduledEventoModel::resetModel(const std::vector<Schedule> &model)
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
+}
+
+ScheduledEventoModel *ScheduledEventoModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
+ScheduledEventoModel *ScheduledEventoModel::getInstance()
+{
+    static ScheduledEventoModel singleton;
+    return &singleton;
 }

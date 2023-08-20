@@ -10,9 +10,11 @@ class ScheduledEventoModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_SINGLETON
+    QML_NAMED_ELEMENT(ScheduledEventoModel)
 
 public:
-    enum Role {
+    enum Role
+    {
         Id = Qt::DisplayRole + 1,
         Title,
         State,
@@ -31,19 +33,21 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<Schedule>& model);
+    void resetModel(const std::vector<Schedule> &model);
 
-    static ScheduledEventoModel* getInstance();
-
-    ScheduledEventoModel(const ScheduledEventoModel&) = delete;
-    ScheduledEventoModel& operator=(const ScheduledEventoModel&) = delete;
+    ScheduledEventoModel(const ScheduledEventoModel &) = delete;
+    ScheduledEventoModel &operator=(const ScheduledEventoModel &) = delete;
 
 private:
-    explicit ScheduledEventoModel(QObject *parent = nullptr);
+    ScheduledEventoModel() = default;
 
     std::vector<Schedule> m_data;
 
     std::mutex m_mutex;
+
+public:
+    static ScheduledEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static ScheduledEventoModel *getInstance();
 };
 
 #endif // SCHEDULED_EVENTO_MODEL_H

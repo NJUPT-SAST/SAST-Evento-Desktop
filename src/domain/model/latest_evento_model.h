@@ -36,16 +36,10 @@ private:
     std::vector<LatestEvento> m_data;
 
     std::mutex m_mutex;
+
 public:
-    static LatestEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-    {
-        return getInstance();
-    }
-    inline static LatestEventoModel *getInstance()
-    {
-        static LatestEventoModel singleton;
-        return &singleton;
-    }
+    static LatestEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static LatestEventoModel *getInstance();
 };
 
 #endif // LATEST_EVENTO_MODEL_H
