@@ -11,11 +11,23 @@ class EventoInfoController : public QObject
     QML_SINGLETON
 
 public:
-    Q_INVOKABLE void loadEventoInfo(EventoID id);
+    Q_INVOKABLE void loadEventoInfo(const EventoID id);
+    Q_INVOKABLE void registerEvento(const EventoID id, bool isParticipated);
+    Q_INVOKABLE void subscribeEvento(const EventoID id, bool isParticipated);
+    Q_INVOKABLE void feedbackEvento(const QString& content, const int score, const EventoID id);
 
 signals:
     void loadEventoSuccessEvent();
     void loadEventoErrorEvent(const QString &message);
+
+    void registerSuccessEvent();
+    void registerErrorEvent(const QString &message);
+
+    void subscribeSuccessEvent();
+    void subscribeErrorEvent(const QString &message);
+
+    void feedbackSuccessEvent();
+    void feedbackErrorEvent(const QString &message);
 
 public:
     EventoInfoController() = default;
