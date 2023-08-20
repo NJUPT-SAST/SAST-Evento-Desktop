@@ -1,10 +1,5 @@
 #include "feedback_model.h"
 
-FeedbackModel::FeedbackModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
-
 int FeedbackModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
@@ -59,10 +54,4 @@ void FeedbackModel::resetModel(const std::vector<Feedback> &model)
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
-}
-
-FeedbackModel *FeedbackModel::getInstance()
-{
-    static FeedbackModel instance;
-    return &instance;
 }

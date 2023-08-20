@@ -1,10 +1,5 @@
 #include "evento_brief_model.h"
 
-EventoBriefModel::EventoBriefModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
-
 int EventoBriefModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all

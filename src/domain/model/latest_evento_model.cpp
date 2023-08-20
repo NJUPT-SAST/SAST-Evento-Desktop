@@ -1,10 +1,5 @@
 #include "latest_evento_model.h"
 
-LatestEventoModel::LatestEventoModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
-
 int LatestEventoModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
@@ -62,10 +57,4 @@ void LatestEventoModel::resetModel(const std::vector<LatestEvento> &model)
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
-}
-
-LatestEventoModel *LatestEventoModel::getInstance()
-{
-    static LatestEventoModel instance;
-    return &instance;
 }

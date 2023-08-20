@@ -4,7 +4,7 @@
 #include <QAbstractListModel>
 #include <QtQml>
 
-#include "src/domain/entity/schedule.h"
+#include "scheduled_evento.h"
 
 class ScheduledEventoModel : public QAbstractListModel
 {

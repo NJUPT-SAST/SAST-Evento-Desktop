@@ -1,7 +1,7 @@
 ﻿#ifndef CONVERTOR_H
 #define CONVERTOR_H
 
-#include "local/repositoryimpl.h"
+#include "repository.h"
 #include "evento.h"
 #include "undertaking_evento.h"
 #include "slide.h"
@@ -29,7 +29,7 @@ inline QString departmentConvertor(const std::vector<Department>& departments) {
 }
 
 inline QString getFirstImageUrl(int eventId) {
-    std::unique_ptr<Repository> repository(new repositoryImpl);
+    auto repository = getRepo();
     EventoException err;
     const auto& result = repository->get_event_slide_list(eventId, err);
     if (result.empty() || (int)err.code()) return "qrc:/res/image/banner_3.png";

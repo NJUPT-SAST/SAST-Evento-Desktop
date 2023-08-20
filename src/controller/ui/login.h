@@ -14,20 +14,21 @@ enum class LoginStatus : int {
 
 class LoginController : public QObject {
     Q_OBJECT
+    QML_SINGLETON
     QML_NAMED_ELEMENT(LoginController)
     Q_PROPERTY(int loginStatus MEMBER status NOTIFY loginStatusChanged)
 
 private:
     int status = int(LoginStatus::Start);
-    std::unique_ptr<Repository> m_repository;
 
 signals:
     void loginStatusChanged();
 
 public:
     Q_INVOKABLE void login(const QString& username, const QString& password);
-    LoginController(QObject* parent = nullptr);
-    ~LoginController();
+    
+    LoginController() = default;
+    ~LoginController() = default;
 };
 
 #endif  // LOGIN_CONTROLLER_H

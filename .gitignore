@@ -44,6 +44,8 @@ x86
 x64
 
 example
+*.aps
+*.rc
 
 # local test
 # localdata
