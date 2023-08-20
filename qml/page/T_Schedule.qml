@@ -5,7 +5,6 @@ import QtQuick.Window
 import Qt5Compat.GraphicalEffects
 import FluentUI
 import SAST_Evento
-import MyModel
 import "../window"
 
 FluScrollablePage {
@@ -206,7 +205,7 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        EventoHelper.id = model.id
+                        EventoHelper.id = modelData.id
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_EventInfo.qml")
                     }

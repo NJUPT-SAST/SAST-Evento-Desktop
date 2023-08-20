@@ -7,7 +7,6 @@ class Repository;
 
 class UserManagementController : public QObject {
     Q_OBJECT
-    QML_SINGLETON
     QML_NAMED_ELEMENT(UserManagementController)
 
 public:

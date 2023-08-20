@@ -9,7 +9,6 @@ class Repository;
 class EventoInfoController : public QObject
 {
     Q_OBJECT
-    QML_SINGLETON
     QML_NAMED_ELEMENT(EventoInfoController)
 
 public:

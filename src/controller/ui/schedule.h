@@ -7,7 +7,6 @@ class Repository;
 
 class ScheduleController : public QObject {
     Q_OBJECT
-    QML_SINGLETON
     QML_NAMED_ELEMENT(ScheduleController)
 
 public:
@@ -21,7 +20,7 @@ signals:
     void checkSuccessEvent();
     void checkErrorEvent(const QString& message);
 
-private:
+public:
     ScheduleController() = default;
     ~ScheduleController() = default;
 };
