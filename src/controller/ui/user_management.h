@@ -7,19 +7,19 @@ class Repository;
 
 class UserManagementController : public QObject {
     Q_OBJECT
+    QML_SINGLETON
     QML_NAMED_ELEMENT(UserManagementController)
 
 public:
-    UserManagementController(QObject *parent = nullptr);
-    ~UserManagementController();
     Q_INVOKABLE void loadAllUserInfo();
 
 signals:
     void loadAllUserSuccess();
     void loadAllUserError(const QString& message);
 
-private:
-    std::unique_ptr<Repository> m_repository;
+public:
+    UserManagementController() = default;
+    ~UserManagementController() = default;
 };
 
 #endif // USERMANAGEMENT_CONTROLLER_H

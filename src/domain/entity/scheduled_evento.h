@@ -1,5 +1,5 @@
-#ifndef SCHEDULE_H
-#define SCHEDULE_H
+#ifndef SCHEDULED_EVENTO_H
+#define SCHEDULED_EVENTO_H
 
 #include "types.h"
 
@@ -16,4 +16,4 @@ struct Schedule {
     bool isFeedback;
 };
 
-#endif  // SCHEDULE_H
+#endif  // SCHEDULED_EVENTO_H

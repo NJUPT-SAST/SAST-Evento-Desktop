@@ -1,6 +1,7 @@
 #ifndef SLIDE_MODEL_H
 #define SLIDE_MODEL_H
 
+#include <QtQml>
 #include <QAbstractListModel>
 #include <mutex>
 
@@ -9,6 +10,8 @@
 class SlideModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_SINGLETON
+    QML_NAMED_ELEMENT(SlideModel)
 
 public:
     enum Role {
@@ -26,17 +29,22 @@ public:
 
     void resetModel(const std::vector<Slide>& model);
 
-    static SlideModel* getInstance();
-
-    SlideModel(const SlideModel&) = delete;
-    SlideModel& operator=(const SlideModel&) = delete;
-
 private:
-    explicit SlideModel(QObject *parent = nullptr);
+    SlideModel() = default;
 
     std::vector<Slide> m_data;
 
     std::mutex m_mutex;
+public:
+    static SlideModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+    {
+        return getInstance();
+    }
+    inline static SlideModel *getInstance()
+    {
+        static SlideModel singleton;
+        return &singleton;
+    }
 };
 
 #endif // SLIDE_MODEL_H

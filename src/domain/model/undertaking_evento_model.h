@@ -10,6 +10,7 @@ class UndertakingEventoModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_SINGLETON
+    QML_NAMED_ELEMENT(UndertakingEventoModel)
 
 public:
     enum Role {
@@ -29,17 +30,22 @@ public:
 
     void resetModel(const std::vector<UndertakingEvento>& model);
 
-    static UndertakingEventoModel* getInstance();
-
-    UndertakingEventoModel(const UndertakingEventoModel&) = delete;
-    UndertakingEventoModel& operator=(const UndertakingEventoModel&) = delete;
-
 private:
-    explicit UndertakingEventoModel(QObject *parent = nullptr);
+    UndertakingEventoModel() = default;
 
     std::vector<UndertakingEvento> m_data;
 
     std::mutex m_mutex;
+public:
+    static UndertakingEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+    {
+        return getInstance();
+    }
+    inline static UndertakingEventoModel *getInstance()
+    {
+        static UndertakingEventoModel singleton;
+        return &singleton;
+    }
 };
 
 #endif // UNDERTAKING_EVENTO_MODEL_H

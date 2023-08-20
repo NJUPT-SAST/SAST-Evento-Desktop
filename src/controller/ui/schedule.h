@@ -7,11 +7,10 @@ class Repository;
 
 class ScheduleController : public QObject {
     Q_OBJECT
+    QML_SINGLETON
     QML_NAMED_ELEMENT(ScheduleController)
 
 public:
-    explicit ScheduleController(QObject *parent = nullptr);
-    ~ScheduleController();
     Q_INVOKABLE void loadSchedule();
     Q_INVOKABLE void check(const int eventId, const QString& code);
 
@@ -23,7 +22,8 @@ signals:
     void checkErrorEvent(const QString& message);
 
 private:
-    std::unique_ptr<Repository> m_repository;
+    ScheduleController() = default;
+    ~ScheduleController() = default;
 };
 
 #endif // SCHEDULE_CONTROLLER_H

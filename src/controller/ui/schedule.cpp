@@ -1,14 +1,7 @@
-#include "src/controller/ui/schedule.h"
-#include "src/domain/entity/schedule.h"
+#include "scheduled_evento.h"
+#include "schedule.h"
 #include "scheduled_evento_model.h"
 #include "convertor.h"
-#include "local/repositoryimpl.h"
-
-ScheduleController::ScheduleController(QObject *parent)
-    :m_repository(new repositoryImpl)
-{
-
-}
 
 void ScheduleController::loadSchedule()
 {
@@ -16,7 +9,7 @@ void ScheduleController::loadSchedule()
 //    ScheduledEventoModel::getInstance()->resetModel(
 //        Convertor<std::vector<DTO_Evento>,
 //                  std::vector<Schedule>>()(
-//            m_repository->get_subscribed_list(err)
+//            getRepo()->get_subscribed_list(err)
 //    ));
 
     if ((int)err.code()) {
@@ -30,7 +23,7 @@ void ScheduleController::loadSchedule()
 void ScheduleController::check(const int eventId, const QString &code)
 {
     EventoException err;
-    auto isSuccess = m_repository->event_checkin(eventId, code, err);
+    auto isSuccess = getRepo()->event_checkin(eventId, code, err);
 
     qDebug() << (int)err.code();
     if ((int)err.code())
@@ -41,5 +34,3 @@ void ScheduleController::check(const int eventId, const QString &code)
 
     emit checkErrorEvent("密钥错误");
 }
-
-ScheduleController::~ScheduleController() = default;

@@ -57,7 +57,7 @@ endif()
 set(VERSION_RC_PATH "")
 set(WIN32_MANIFEST_PATH "")
 if(WIN32)
-    set(VERSION_RC_PATH ${CMAKE_BINARY_DIR}/SAST_Evento.rc)
+    set(VERSION_RC_PATH ${CMAKE_SOURCE_DIR}/SAST_Evento.rc)
     configure_file(
         ${CMAKE_SOURCE_DIR}/.cmake/version_exe.rc.in
         ${VERSION_RC_PATH}

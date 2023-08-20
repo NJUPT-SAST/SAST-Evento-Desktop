@@ -10,6 +10,7 @@ class FeedbackModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_SINGLETON
+    QML_NAMED_ELEMENT(FeedbackModel)
 
 public:
     enum Role {
@@ -28,17 +29,22 @@ public:
 
     void resetModel(const std::vector<Feedback>& model);
 
-    static FeedbackModel* getInstance();
-
-    FeedbackModel(const FeedbackModel&) = delete;
-    FeedbackModel& operator=(const FeedbackModel&) = delete;
-
 private:
-    explicit FeedbackModel(QObject *parent = nullptr);
+    FeedbackModel() = default;
 
     std::vector<Feedback> m_data;
 
     std::mutex m_mutex;
+public:
+    static FeedbackModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+    {
+        return getInstance();
+    }
+    inline static FeedbackModel *getInstance()
+    {
+        static FeedbackModel singleton;
+        return &singleton;
+    }
 };
 
 #endif // FEEDBACK_MODEL_H

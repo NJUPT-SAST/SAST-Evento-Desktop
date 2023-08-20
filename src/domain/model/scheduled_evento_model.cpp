@@ -1,10 +1,5 @@
 #include "scheduled_evento_model.h"
 
-ScheduledEventoModel::ScheduledEventoModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
-
 int ScheduledEventoModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
@@ -74,10 +69,4 @@ void ScheduledEventoModel::resetModel(const std::vector<Schedule> &model)
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
-}
-
-ScheduledEventoModel *ScheduledEventoModel::getInstance()
-{
-    static ScheduledEventoModel instance;
-    return &instance;
 }

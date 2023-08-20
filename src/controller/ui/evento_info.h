@@ -2,25 +2,26 @@
 #define EVENTO_INFO_H
 
 #include <QtQml>
+#include "types.h"
 
 class Repository;
 
 class EventoInfoController : public QObject
 {
     Q_OBJECT
+    QML_SINGLETON
     QML_NAMED_ELEMENT(EventoInfoController)
 
 public:
-    explicit EventoInfoController(QObject *parent = nullptr);
-    ~EventoInfoController();
-    Q_INVOKABLE void loadEventoInfo(int eventId);
+    Q_INVOKABLE void loadEventoInfo(EventoID id);
 
 signals:
     void loadEventoSuccessEvent();
     void loadEventoErrorEvent(const QString& message);
 
-private:
-    std::unique_ptr<Repository> m_repository;
+public:
+    EventoInfoController() = default;
+    ~EventoInfoController() = default;
 };
 
 #endif // EVENTO_INFO_H

@@ -6,12 +6,6 @@
 #include <QIcon>
 
 #include "lang/AppInfo.h"
-#include "slide_model.h"
-#include "undertaking_evento_model.h"
-#include "latest_evento_model.h"
-#include "user_brief_model.h"
-#include "scheduled_evento_model.h"
-#include "feedback_model.h"
 
 FRAMELESSHELPER_USE_NAMESPACE
 
@@ -39,12 +33,6 @@ int main(int argc, char *argv[]) {
     engine.addImportPath("qrc:/"); // 让静态资源可以被QML引擎搜索到
 #endif
     appInfo->init(&engine);
-    qmlRegisterSingletonInstance("MyModel", 1, 0, "SlideModel", SlideModel::getInstance());
-    qmlRegisterSingletonInstance("MyModel", 1, 0, "UndertakingEventoModel", UndertakingEventoModel::getInstance());
-    qmlRegisterSingletonInstance("MyModel", 1, 0, "LatestEventoModel", LatestEventoModel::getInstance());
-    qmlRegisterSingletonInstance("MyModel", 1, 0, "UserBriefModel", UserBriefModel::getInstance());
-    qmlRegisterSingletonInstance("MyModel", 1, 0, "ScheduledEventoModel", ScheduledEventoModel::getInstance());
-    qmlRegisterSingletonInstance("MyModel", 1, 0, "FeedbackModel", FeedbackModel::getInstance());
 
     const QUrl url(QStringLiteral("qrc:/qml/App.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

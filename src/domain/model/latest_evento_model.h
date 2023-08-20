@@ -10,6 +10,7 @@ class LatestEventoModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_SINGLETON
+    QML_NAMED_ELEMENT(LatestEventoModel)
 
 public:
     enum Role {
@@ -29,17 +30,22 @@ public:
 
     void resetModel(const std::vector<LatestEvento>& model);
 
-    static LatestEventoModel* getInstance();
-
-    LatestEventoModel(const LatestEventoModel&) = delete;
-    LatestEventoModel& operator=(const LatestEventoModel&) = delete;
-
 private:
-    explicit LatestEventoModel(QObject *parent = nullptr);
+    LatestEventoModel() = default;
 
     std::vector<LatestEvento> m_data;
 
     std::mutex m_mutex;
+public:
+    static LatestEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+    {
+        return getInstance();
+    }
+    inline static LatestEventoModel *getInstance()
+    {
+        static LatestEventoModel singleton;
+        return &singleton;
+    }
 };
 
 #endif // LATEST_EVENTO_MODEL_H
