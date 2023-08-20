@@ -7,7 +7,6 @@ class Repository;
 
 class PlazaController : public QObject {
     Q_OBJECT
-    QML_SINGLETON
     QML_NAMED_ELEMENT(PlazaController)
 
 public:

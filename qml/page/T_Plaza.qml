@@ -4,7 +4,6 @@ import QtQuick.Window
 import QtQuick.Controls
 import FluentUI
 import SAST_Evento
-import MyModel
 import "../window"
 
 FluScrollablePage {

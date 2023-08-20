@@ -181,7 +181,6 @@ CustomWindow {
     }
 
     FluIconButton {
-
         anchors {
             top: parent.top
             left: parent.left

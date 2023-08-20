@@ -25,6 +25,11 @@ signals:
     void loginStatusChanged();
 
 public:
+    static LoginController *create(QQmlEngine *, QJSEngine *) {
+        static LoginController instance;
+        return &instance;
+    }
+
     Q_INVOKABLE void login(const QString& username, const QString& password);
     
     LoginController() = default;
