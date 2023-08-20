@@ -6,13 +6,14 @@
 void ScheduleController::loadSchedule()
 {
     EventoException err;
-//    ScheduledEventoModel::getInstance()->resetModel(
-//        Convertor<std::vector<DTO_Evento>,
-//                  std::vector<Schedule>>()(
-//            getRepo()->get_subscribed_list(err)
-//    ));
+    //    ScheduledEventoModel::getInstance()->resetModel(
+    //        Convertor<std::vector<DTO_Evento>,
+    //                  std::vector<Schedule>>()(
+    //            getRepo()->get_subscribed_list(err)
+    //    ));
 
-    if ((int)err.code()) {
+    if ((int)err.code())
+    {
         emit loadScheduleErrorEvent(err.message());
         return;
     }

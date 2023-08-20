@@ -5,14 +5,16 @@
 
 class Repository;
 
-enum class LoginStatus : int {
+enum class LoginStatus : int
+{
     Start = 1,
     Loading,
     Success,
     Failed
 };
 
-class LoginController : public QObject {
+class LoginController : public QObject
+{
     Q_OBJECT
     QML_SINGLETON
     QML_NAMED_ELEMENT(LoginController)
@@ -25,15 +27,16 @@ signals:
     void loginStatusChanged();
 
 public:
-    static LoginController *create(QQmlEngine *, QJSEngine *) {
+    static LoginController *create(QQmlEngine *, QJSEngine *)
+    {
         static LoginController instance;
         return &instance;
     }
 
-    Q_INVOKABLE void login(const QString& username, const QString& password);
-    
+    Q_INVOKABLE void login(const QString &username, const QString &password);
+
     LoginController() = default;
     ~LoginController() = default;
 };
 
-#endif  // LOGIN_CONTROLLER_H
+#endif // LOGIN_CONTROLLER_H

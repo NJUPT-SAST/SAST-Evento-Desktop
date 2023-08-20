@@ -5,7 +5,8 @@
 
 class Repository;
 
-class UserManagementController : public QObject {
+class UserManagementController : public QObject
+{
     Q_OBJECT
     QML_NAMED_ELEMENT(UserManagementController)
 
@@ -14,7 +15,7 @@ public:
 
 signals:
     void loadAllUserSuccess();
-    void loadAllUserError(const QString& message);
+    void loadAllUserError(const QString &message);
 
 public:
     UserManagementController() = default;

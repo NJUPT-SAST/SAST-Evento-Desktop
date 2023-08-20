@@ -1,10 +1,5 @@
 #include "user_brief_model.h"
 
-UserBriefModel::UserBriefModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
-
 int UserBriefModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
@@ -55,8 +50,13 @@ void UserBriefModel::resetModel(const std::vector<UserBrief> &model)
     endResetModel();
 }
 
+UserBriefModel *UserBriefModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
 UserBriefModel *UserBriefModel::getInstance()
 {
-    static UserBriefModel instance;
-    return &instance;
+    static UserBriefModel singleton;
+    return &singleton;
 }

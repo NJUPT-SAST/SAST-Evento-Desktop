@@ -58,3 +58,14 @@ void UndertakingEventoModel::resetModel(const std::vector<UndertakingEvento> &mo
     m_data = std::move(model);
     endResetModel();
 }
+
+UndertakingEventoModel *UndertakingEventoModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
+UndertakingEventoModel *UndertakingEventoModel::getInstance()
+{
+    static UndertakingEventoModel singleton;
+    return &singleton;
+}

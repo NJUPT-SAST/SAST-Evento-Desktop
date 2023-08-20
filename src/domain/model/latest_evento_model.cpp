@@ -58,3 +58,14 @@ void LatestEventoModel::resetModel(const std::vector<LatestEvento> &model)
     m_data = std::move(model);
     endResetModel();
 }
+
+LatestEventoModel *LatestEventoModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
+LatestEventoModel *LatestEventoModel::getInstance()
+{
+    static LatestEventoModel singleton;
+    return &singleton;
+}

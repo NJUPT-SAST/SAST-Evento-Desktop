@@ -2,13 +2,15 @@
 #define USERBRIEFMODEL_H
 
 #include <QAbstractListModel>
-#include <mutex>
+#include <QtQml>
 
 #include "user_brief.h"
 
 class UserBriefModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_SINGLETON
+    QML_NAMED_ELEMENT(UserBriefModel)
 
 public:
     enum Role {
@@ -25,17 +27,19 @@ public:
 
     void resetModel(const std::vector<UserBrief>& model);
 
-    static UserBriefModel* getInstance();
-
     UserBriefModel(const UserBriefModel&) = delete;
     UserBriefModel& operator=(const UserBriefModel&) = delete;
 
 private:
-    explicit UserBriefModel(QObject *parent = nullptr);
+    UserBriefModel() = default;
 
     std::vector<UserBrief> m_data;
 
     std::mutex m_mutex;
+
+public:
+    static UserBriefModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static UserBriefModel *getInstance();
 };
 
 #endif // USERBRIEFMODEL_H

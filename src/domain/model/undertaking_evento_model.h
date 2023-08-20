@@ -36,16 +36,10 @@ private:
     std::vector<UndertakingEvento> m_data;
 
     std::mutex m_mutex;
+
 public:
-    static UndertakingEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-    {
-        return getInstance();
-    }
-    inline static UndertakingEventoModel *getInstance()
-    {
-        static UndertakingEventoModel singleton;
-        return &singleton;
-    }
+    static UndertakingEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static UndertakingEventoModel *getInstance();
 };
 
 #endif // UNDERTAKING_EVENTO_MODEL_H

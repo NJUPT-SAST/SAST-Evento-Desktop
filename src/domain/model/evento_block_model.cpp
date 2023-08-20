@@ -1,11 +1,5 @@
 #include "evento_block_model.h"
 
-/*
-EventoBlockModel::FeedbackModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
-
 int EventoBlockModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
@@ -21,19 +15,36 @@ QVariant EventoBlockModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
-    const auto& element = m_data.at(index.row());
+    const auto &element = m_data.at(index.row());
 
-    switch(role) {
+    switch (role)
+    {
     case Role::Id:
         return element.id;
-    case Role::Score:
-        return element.score;
-    case Role::Content:
-        return element.content;
-    case Role::UserId:
-        return element.userId;
-    case Role::EventId:
-        return element.eventId;
+    case Role::Title:
+        return element.title;
+    case Role::State:
+        return (int)element.state;
+    case Role::Data:
+        return element.data;
+    case Role::Time:
+        return element.time;
+    case Role::Location:
+        return element.location;
+    case Role::Department:
+        return element.department;
+    case Role::RowStart:
+        return element.rowStart;
+    case Role::RowEnd:
+        return element.rowEnd;
+    case Role::ColunmStart:
+        return element.colunmStart;
+    case Role::ColunmEnd:
+        return element.colunmEnd;
+    case Role::Finished:
+        return element.finished;
+    case Role::Editable:
+        return element.editable;
     default:
         break;
     }
@@ -44,17 +55,26 @@ QVariant EventoBlockModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> EventoBlockModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
-    if (roles.isEmpty()) {
+    if (roles.isEmpty())
+    {
         roles.insert(Id, "id");
-        roles.insert(Score, "score");
-        roles.insert(Content, "content");
-        roles.insert(UserId, "userId");
-        roles.insert(EventId, "eventId");
+        roles.insert(Title, "title");
+        roles.insert(State, "state");
+        roles.insert(Data, "data");
+        roles.insert(Time, "time");
+        roles.insert(Location, "location");
+        roles.insert(Department, "department");
+        roles.insert(RowStart, "rowStart");
+        roles.insert(RowEnd, "rowEnd");
+        roles.insert(ColunmStart, "colunmStart");
+        roles.insert(ColunmEnd, "colunmEnd");
+        roles.insert(Finished, "finished");
+        roles.insert(Editable, "editable");
     }
     return roles;
 }
 
-void EventoBlockModel::resetModel(const std::vector<Feedback> &model)
+void EventoBlockModel::resetModel(const std::vector<EventoBlock> &model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
@@ -62,9 +82,13 @@ void EventoBlockModel::resetModel(const std::vector<Feedback> &model)
     endResetModel();
 }
 
+EventoBlockModel *EventoBlockModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
 EventoBlockModel *EventoBlockModel::getInstance()
 {
-    static EventoBlockModel instance;
-    return &instance;
+    static EventoBlockModel singleton;
+    return &singleton;
 }
-*/
