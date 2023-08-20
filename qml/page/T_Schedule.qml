@@ -19,31 +19,43 @@ FluScrollablePage {
 
     function loadScheduleInfo() {
         statusMode = FluStatusViewType.Loading
-        controller.loadSchedule()
+        ScheduleController.loadSchedule()
     }
 
     Component.onCompleted: {
         loadScheduleInfo()
     }
 
-    ScheduleController {
-        id: controller
-        onLoadScheduleSuccessEvent: {
+    Connections {
+        target: ScheduleController
+        function onLoadScheduleSuccessEvent() {
             statusMode = FluStatusViewType.Success
         }
-        onLoadScheduleErrorEvent: message => {
-                                      errorText = message
-                                      statusMode = FluStatusViewType.Error
-                                  }
-        onCheckSuccessEvent: {
+    }
+
+    Connections {
+        target: ScheduleController
+        function onLoadScheduleErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
+    Connections {
+        target: ScheduleController
+        function onCheckSuccessEvent() {
             statusMode = FluStatusViewType.Success
             showSuccess("签到成功")
             loadScheduleInfo()
         }
-        onCheckErrorEvent: message => {
-                               showError("错误：" + message)
-                               loadScheduleInfo()
-                           }
+    }
+
+    Connections {
+        target: ScheduleController
+        function onCheckErrorEvent(message) {
+            showError("错误：" + message)
+            loadScheduleInfo()
+        }
     }
 
     ListView {
@@ -387,7 +399,7 @@ FluScrollablePage {
                         dialog.open()
                     } else {
                         statusMode = FluStatusViewType.Loading
-                        controller.check(modelData.id, textbox.text)
+                        ScheduleController.check(modelData.id, textbox.text)
                     }
                 }
             }

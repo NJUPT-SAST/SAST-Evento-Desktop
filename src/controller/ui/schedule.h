@@ -9,6 +9,7 @@ class ScheduleController : public QObject
 {
     Q_OBJECT
     QML_NAMED_ELEMENT(ScheduleController)
+    QML_SINGLETON
 
 public:
     Q_INVOKABLE void loadSchedule();
@@ -23,7 +24,7 @@ signals:
 
 public:
     ScheduleController() = default;
-    ~ScheduleController() = default;
+    static ScheduleController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 
 #endif // SCHEDULE_CONTROLLER_H

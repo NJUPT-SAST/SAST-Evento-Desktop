@@ -3,12 +3,11 @@
 
 #include <QtQml>
 
-class Repository;
-
 class UserManagementController : public QObject
 {
     Q_OBJECT
     QML_NAMED_ELEMENT(UserManagementController)
+    QML_SINGLETON
 
 public:
     Q_INVOKABLE void loadAllUserInfo();
@@ -19,7 +18,7 @@ signals:
 
 public:
     UserManagementController() = default;
-    ~UserManagementController() = default;
+    static UserManagementController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 
 #endif // USERMANAGEMENT_CONTROLLER_H
