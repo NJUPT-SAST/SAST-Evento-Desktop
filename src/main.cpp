@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     QGuiApplication::setOrganizationName("NJUPT-SAST-C++");
     QGuiApplication::setOrganizationDomain("https://github.com/NJUPT-SAST-Cpp");
     QGuiApplication app(argc, argv);
-    app.setWindowIcon(QIcon(QStringLiteral("qrc:/res/favicon.ico")));
+    app.setWindowIcon(QIcon(QStringLiteral(":/res/favicon.ico")));
     FramelessConfig::instance()->set(Global::Option::DisableLazyInitializationForMicaMaterial);
     FramelessConfig::instance()->set(Global::Option::CenterWindowBeforeShow);
     FramelessConfig::instance()->set(Global::Option::ForceNonNativeBackgroundBlur);
