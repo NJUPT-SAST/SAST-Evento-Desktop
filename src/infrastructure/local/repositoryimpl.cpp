@@ -433,8 +433,3 @@ QStringList repositoryImpl::get_action_list(EventoException &err)
     // FIXME: implement
     return QStringList();
 }
-
-repositoryImpl::repositoryImpl()
-{
-
-}

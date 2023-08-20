@@ -1,9 +1,10 @@
-#ifndef SCHEDULE_H
-#define SCHEDULE_H
+#ifndef SCHEDULED_EVENTO_H
+#define SCHEDULED_EVENTO_H
 
 #include "types.h"
 
-struct Schedule {
+struct Schedule
+{
     EventoID id;
     QString title;
     EventState state;
@@ -12,6 +13,8 @@ struct Schedule {
     QString date;
     QString startTime;
     QString endTime;
+    bool isChecked;
+    bool isFeedback;
 };
 
-#endif  // SCHEDULE_H
+#endif // SCHEDULED_EVENTO_H

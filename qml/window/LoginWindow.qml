@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtCore
+import Qt.labs.settings 1.0
 import FluentUI
 import SAST_Evento
 import "../imports"
@@ -45,8 +46,7 @@ CustomWindow {
         height: 80
         fillMode: Image.PreserveAspectFit
         source: {
-            if (settings.value("darkMode",
-                               FluThemeType.System) === FluThemeType.Dark) {
+            if (FluTheme.dark) {
                 return "qrc:/res/image/evento_white.png"
             } else {
                 return "qrc:/res/image/evento_black.png"
@@ -135,7 +135,6 @@ CustomWindow {
 
     Settings {
         id: settings
-        property int darkMode
         property string username
     }
 }

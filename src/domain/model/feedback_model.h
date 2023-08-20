@@ -10,9 +10,11 @@ class FeedbackModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_SINGLETON
+    QML_NAMED_ELEMENT(FeedbackModel)
 
 public:
-    enum Role {
+    enum Role
+    {
         Id = Qt::DisplayRole + 1,
         Score,
         Content,
@@ -26,19 +28,25 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<Feedback>& model);
-
-    static FeedbackModel* getInstance();
-
-    FeedbackModel(const FeedbackModel&) = delete;
-    FeedbackModel& operator=(const FeedbackModel&) = delete;
+    void resetModel(const std::vector<Feedback> &model);
 
 private:
-    explicit FeedbackModel(QObject *parent = nullptr);
+    FeedbackModel() = default;
 
     std::vector<Feedback> m_data;
 
     std::mutex m_mutex;
+
+public:
+    static FeedbackModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+    {
+        return getInstance();
+    }
+    inline static FeedbackModel *getInstance()
+    {
+        static FeedbackModel singleton;
+        return &singleton;
+    }
 };
 
 #endif // FEEDBACK_MODEL_H

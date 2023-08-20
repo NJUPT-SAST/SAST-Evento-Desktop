@@ -2,7 +2,9 @@
 #define EVENTO_INFO_H
 
 #include <QtQml>
-#include "repository.h"
+#include "types.h"
+
+class Repository;
 
 class EventoInfoController : public QObject
 {
@@ -10,16 +12,15 @@ class EventoInfoController : public QObject
     QML_NAMED_ELEMENT(EventoInfoController)
 
 public:
-    explicit EventoInfoController(QObject *parent = nullptr);
-
-    Q_INVOKABLE void loadEventoInfo(int eventId);
+    Q_INVOKABLE void loadEventoInfo(EventoID id);
 
 signals:
     void loadEventoSuccessEvent();
-    void loadEventoErrorEvent(const QString& message);
+    void loadEventoErrorEvent(const QString &message);
 
-private:
-    std::unique_ptr<Repository> m_repository;
+public:
+    EventoInfoController() = default;
+    ~EventoInfoController() = default;
 };
 
 #endif // EVENTO_INFO_H

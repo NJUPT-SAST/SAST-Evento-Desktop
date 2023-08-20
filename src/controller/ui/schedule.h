@@ -2,22 +2,28 @@
 #define SCHEDULE_CONTROLLER_H
 
 #include <QtQml>
-#include "repository.h"
 
-class ScheduleController : public QObject {
+class Repository;
+
+class ScheduleController : public QObject
+{
     Q_OBJECT
     QML_NAMED_ELEMENT(ScheduleController)
 
 public:
-    explicit ScheduleController(QObject *parent = nullptr);
     Q_INVOKABLE void loadSchedule();
+    Q_INVOKABLE void check(const int eventId, const QString &code);
 
 signals:
     void loadScheduleSuccessEvent();
-    void loadScheduleErrorEvent(const QString& message);
+    void loadScheduleErrorEvent(const QString &message);
 
-private:
-    std::unique_ptr<Repository> m_repository;
+    void checkSuccessEvent();
+    void checkErrorEvent(const QString &message);
+
+public:
+    ScheduleController() = default;
+    ~ScheduleController() = default;
 };
 
 #endif // SCHEDULE_CONTROLLER_H

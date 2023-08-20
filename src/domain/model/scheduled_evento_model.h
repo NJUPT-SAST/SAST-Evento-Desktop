@@ -4,7 +4,7 @@
 #include <QAbstractListModel>
 #include <QtQml>
 
-#include "src/domain/entity/schedule.h"
+#include "scheduled_evento.h"
 
 class ScheduledEventoModel : public QAbstractListModel
 {
@@ -12,7 +12,8 @@ class ScheduledEventoModel : public QAbstractListModel
     QML_SINGLETON
 
 public:
-    enum Role {
+    enum Role
+    {
         Id = Qt::DisplayRole + 1,
         Title,
         State,
@@ -21,6 +22,8 @@ public:
         Date,
         StartTime,
         EndTime,
+        IsChecked,
+        IsFeedback,
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -29,12 +32,12 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<Schedule>& model);
+    void resetModel(const std::vector<Schedule> &model);
 
-    static ScheduledEventoModel* getInstance();
+    static ScheduledEventoModel *getInstance();
 
-    ScheduledEventoModel(const ScheduledEventoModel&) = delete;
-    ScheduledEventoModel& operator=(const ScheduledEventoModel&) = delete;
+    ScheduledEventoModel(const ScheduledEventoModel &) = delete;
+    ScheduledEventoModel &operator=(const ScheduledEventoModel &) = delete;
 
 private:
     explicit ScheduledEventoModel(QObject *parent = nullptr);

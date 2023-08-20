@@ -1,11 +1,5 @@
 #include "evento_block_model.h"
 
-
-EventoBlockModel::EventoBlockModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
-
 int EventoBlockModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
@@ -21,9 +15,10 @@ QVariant EventoBlockModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
-    const auto& element = m_data.at(index.row());
+    const auto &element = m_data.at(index.row());
 
-    switch(role) {
+    switch (role)
+    {
     case Role::Id:
         return element.id;
     case Role::Title:
@@ -60,7 +55,8 @@ QVariant EventoBlockModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> EventoBlockModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
-    if (roles.isEmpty()) {
+    if (roles.isEmpty())
+    {
         roles.insert(Id, "id");
         roles.insert(Title, "title");
         roles.insert(State, "state");
@@ -84,10 +80,4 @@ void EventoBlockModel::resetModel(const std::vector<EventoBlock> &model)
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
-}
-
-EventoBlockModel *EventoBlockModel::getInstance()
-{
-    static EventoBlockModel instance;
-    return &instance;
 }

@@ -1,10 +1,5 @@
 #include "undertaking_evento_model.h"
 
-UndertakingEventoModel::UndertakingEventoModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
-
 int UndertakingEventoModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
@@ -62,10 +57,4 @@ void UndertakingEventoModel::resetModel(const std::vector<UndertakingEvento> &mo
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
-}
-
-UndertakingEventoModel *UndertakingEventoModel::getInstance()
-{
-    static UndertakingEventoModel instance;
-    return &instance;
 }

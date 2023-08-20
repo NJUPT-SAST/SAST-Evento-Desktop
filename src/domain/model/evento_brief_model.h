@@ -11,9 +11,11 @@ class EventoBriefModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_SINGLETON
+    QML_NAMED_ELEMENT(EventoBriefModel)
 
 public:
-    enum Role {
+    enum Role
+    {
         Id = Qt::DisplayRole + 1,
         Title,
         State,
@@ -28,19 +30,28 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<EventoBrief>& model);
+    void resetModel(const std::vector<EventoBrief> &model);
 
-    static EventoBriefModel* getInstance();
-
-    EventoBriefModel(const EventoBriefModel&) = delete;
-    EventoBriefModel& operator=(const EventoBriefModel) = delete;
+    EventoBriefModel(const EventoBriefModel &) = delete;
+    EventoBriefModel &operator=(const EventoBriefModel) = delete;
 
 private:
-    explicit EventoBriefModel(QObject *parent = nullptr);
+    EventoBriefModel() = default;
 
     std::vector<EventoBrief> m_data;
 
     std::mutex m_mutex;
+
+public:
+    static EventoBriefModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+    {
+        return getInstance();
+    }
+    inline static EventoBriefModel *getInstance()
+    {
+        static EventoBriefModel singleton;
+        return &singleton;
+    }
 };
 
 #endif // EVENTO_BRIEF_MODEL_H

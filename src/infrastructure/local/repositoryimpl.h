@@ -10,7 +10,14 @@
 #include <QMutex>
 
 class repositoryImpl : public Repository {
-   public:
+private:
+    repositoryImpl() = default;
+public:
+    static Repository* const getInstance() {
+        static repositoryImpl singleton;
+        return &singleton;
+    }
+public:
     // user-fetch
     QStringList get_admin_permission(
         EventoException& err) override;  // Test completed
@@ -70,7 +77,6 @@ class repositoryImpl : public Repository {
         EventoException error(EventoExceptionCode::UnexpectedError, "null");
         qDebug() << get_home_slide_list(3, error).at(1).link;
     };
-    repositoryImpl();
 
    private:
     QMutex mutex;

@@ -11,8 +11,7 @@
 #include "evento_exception.h"
 #include "types.h"
 
-class Repository {
-   public:
+struct Repository {
     // user-fetch
     virtual QStringList get_admin_permission(EventoException& err) = 0;
     virtual QStringList get_permitted_event(EventoException& err) = 0;
@@ -59,4 +58,6 @@ class Repository {
     virtual QStringList get_action_list(EventoException& err) = 0;
 };
 
-#endif  // DTO_USER_H
+Repository* getRepo();
+
+#endif  // REPOSITORY_H

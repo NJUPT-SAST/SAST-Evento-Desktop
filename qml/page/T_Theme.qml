@@ -11,9 +11,6 @@ FluScrollablePage {
 
     Settings {
         id: settings
-        property var darkMode
-        property string nativeTextSet
-        property string enableAnimationSet
         property int colorIndex
     }
 
@@ -82,16 +79,12 @@ FluScrollablePage {
             FluToggleSwitch {
                 Layout.topMargin: 5
 
-                //checked: FluTheme.nativeText
                 onClicked: {
                     FluTheme.nativeText = !FluTheme.nativeText
-                    settings.nativeTextSet = checked
-                    //console.log("nativeText ", FluTheme.nativeText)
                 }
 
                 Component.onCompleted: {
-                    //console.log("nativeText ", FluTheme.nativeText)
-                    checked = settings.value("nativeTextSet", false)
+                    checked = FluTheme.nativeText
                 }
             }
             FluText {
@@ -101,16 +94,12 @@ FluScrollablePage {
             FluToggleSwitch {
                 Layout.topMargin: 5
 
-                //checked: FluTheme.enableAnimation
                 onClicked: {
                     FluTheme.enableAnimation = !FluTheme.enableAnimation
-                    settings.enableAnimationSet = checked
-                    //console.log("animation ", FluTheme.enableAnimation)
                 }
 
                 Component.onCompleted: {
-                    //console.log("animation ", FluTheme.enableAnimation)
-                    checked = settings.value("enableAnimationSet", true)
+                    checked = FluTheme.enableAnimation
                 }
             }
         }

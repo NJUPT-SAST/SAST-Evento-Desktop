@@ -5,6 +5,7 @@ import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import Qt.labs.platform
 import QtCore
+import Qt.labs.settings 1.0
 import FluentUI
 import SAST_Evento
 import "../imports"
@@ -13,7 +14,7 @@ CustomWindow {
     id: window
     width: 1100
     height: 640
-    closeDestory: true
+    closeDestory: false
     minimumWidth: 520
     minimumHeight: 200
     appBarVisible: false
@@ -39,11 +40,11 @@ CustomWindow {
     SystemTrayIcon {
         id: system_tray
         visible: true
-        icon.source: "qrc:/res/image/favicon.ico"
+        icon.source: "qrc:/res/favicon.ico"
         tooltip: "SAST Evento"
         menu: Menu {
             MenuItem {
-                text: lang.lang_exit
+                text: "退出"
                 onTriggered: {
                     window.deleteWindow()
                     FluApp.closeApp()
@@ -180,7 +181,6 @@ CustomWindow {
     }
 
     FluIconButton {
-
         anchors {
             top: parent.top
             left: parent.left
@@ -207,6 +207,7 @@ CustomWindow {
         items: items_original
         footerItems: items_footer
         topPadding: FluTools.isMacos() ? 20 : 5
+        displayMode: settings.displayMode
         logo: "qrc:/res/favicon.ico"
         title: "SAST Evento"
         Component.onCompleted: {
@@ -216,5 +217,10 @@ CustomWindow {
 
     function pushPage(item) {
         nav_view.push(item)
+    }
+
+    Settings {
+        id: settings
+        property var displayMode
     }
 }

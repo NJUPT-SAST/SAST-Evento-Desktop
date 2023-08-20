@@ -15,12 +15,12 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "CompanyName", "ZhuZiChu"
-            VALUE "FileDescription", "${PROJECT_DESCRIPTION}"
+            VALUE "CompanyName", "NJUPT - Students' Association for Science and Technology"
+            VALUE "FileDescription", "SAST Evento Desktop"
             VALUE "FileVersion", "${GIT_SEMVER}.${GIT_COMMIT_COUNT}"
-            VALUE "InternalName", "${PROJECT_NAME}.dll"
-            VALUE "LegalCopyright", "Copyright (C) 2023 ZhuZiChu. All rights reserved."
-            VALUE "OriginalFilename", "${PROJECT_NAME}.dll"
+            VALUE "InternalName", "${PROJECT_NAME}"
+            VALUE "LegalCopyright", "Copyright (C) 2023 NJUPT-SAST. All rights reserved."
+            VALUE "OriginalFilename", "${PROJECT_NAME}.exe"
             VALUE "ProductName", "${PROJECT_NAME}"
             VALUE "ProductVersion", "${GIT_SEMVER}.0"
         END
