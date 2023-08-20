@@ -49,3 +49,14 @@ void SlideModel::resetModel(const std::vector<Slide> &model)
     m_data = std::move(model);
     endResetModel();
 }
+
+SlideModel *SlideModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
+SlideModel *SlideModel::getInstance()
+{
+    static SlideModel singleton;
+    return &singleton;
+}

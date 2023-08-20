@@ -3,7 +3,6 @@
 
 #include <QAbstractListModel>
 #include <QtQml>
-#include <mutex>
 
 #include "evento_block.h"
 
@@ -50,15 +49,8 @@ private:
     std::mutex m_mutex;
 
 public:
-    static EventoBlockModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-    {
-        return getInstance();
-    }
-    inline static EventoBlockModel *getInstance()
-    {
-        static EventoBlockModel singleton;
-        return &singleton;
-    }
+    static EventoBlockModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static EventoBlockModel *getInstance();
 };
 
 #endif // EVENTO_BLOCK_MODEL_H

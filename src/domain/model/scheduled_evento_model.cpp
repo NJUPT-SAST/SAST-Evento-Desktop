@@ -72,3 +72,14 @@ void ScheduledEventoModel::resetModel(const std::vector<Schedule> &model)
     m_data = std::move(model);
     endResetModel();
 }
+
+ScheduledEventoModel *ScheduledEventoModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
+ScheduledEventoModel *ScheduledEventoModel::getInstance()
+{
+    static ScheduledEventoModel singleton;
+    return &singleton;
+}

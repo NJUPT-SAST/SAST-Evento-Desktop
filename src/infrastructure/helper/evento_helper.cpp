@@ -13,9 +13,7 @@ EventoHelper *EventoHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 }
 
 void EventoHelper::updateEvento(const Evento &evento,
-                                const bool isRegistrated,
-                                const bool isParticipated,
-                                const bool isSubscribed,
+                                const ParticipationStatus &participationStatus,
                                 const bool isfeedback)
 {
     m_title = evento.title;
@@ -27,8 +25,8 @@ void EventoHelper::updateEvento(const Evento &evento,
     m_tag = evento.tag;
     m_type = evento.type.name;
     m_description = evento.description;
-    m_isRegistrated = isRegistrated;
-    m_isParticipated = isParticipated;
-    m_isSubscribed = isSubscribed;
+    m_isRegistrated = participationStatus.isRegistrated;
+    m_isParticipated = participationStatus.isParticipated;
+    m_isSubscribed = participationStatus.isSubscribed;
     m_isfeedback = isfeedback;
 }

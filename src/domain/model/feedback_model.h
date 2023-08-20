@@ -38,15 +38,8 @@ private:
     std::mutex m_mutex;
 
 public:
-    static FeedbackModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-    {
-        return getInstance();
-    }
-    inline static FeedbackModel *getInstance()
-    {
-        static FeedbackModel singleton;
-        return &singleton;
-    }
+    static FeedbackModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static FeedbackModel *getInstance();
 };
 
 #endif // FEEDBACK_MODEL_H

@@ -81,3 +81,14 @@ void EventoBlockModel::resetModel(const std::vector<EventoBlock> &model)
     m_data = std::move(model);
     endResetModel();
 }
+
+EventoBlockModel *EventoBlockModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
+EventoBlockModel *EventoBlockModel::getInstance()
+{
+    static EventoBlockModel singleton;
+    return &singleton;
+}

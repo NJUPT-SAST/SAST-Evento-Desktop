@@ -44,3 +44,14 @@ void EventoBriefModel::resetModel(const std::vector<EventoBrief>& model)
     m_data = std::move(model);
     endResetModel();
 }
+
+EventoBriefModel *EventoBriefModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
+EventoBriefModel *EventoBriefModel::getInstance()
+{
+    static EventoBriefModel singleton;
+    return &singleton;
+}

@@ -57,3 +57,14 @@ void FeedbackModel::resetModel(const std::vector<Feedback> &model)
     m_data = std::move(model);
     endResetModel();
 }
+
+FeedbackModel *FeedbackModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    return getInstance();
+}
+
+FeedbackModel *FeedbackModel::getInstance()
+{
+    static FeedbackModel singleton;
+    return &singleton;
+}

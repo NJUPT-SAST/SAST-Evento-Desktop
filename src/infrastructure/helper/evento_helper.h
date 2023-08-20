@@ -3,6 +3,8 @@
 
 #include <QtQml>
 
+#include "types.h"
+
 struct Evento;
 
 class EventoHelper : public QObject {
@@ -31,9 +33,7 @@ public:
     static EventoHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
     void updateEvento(const Evento &evento,
-                      const bool isRegistrated,
-                      const bool isParticipated,
-                      const bool isSubscribed,
+                      const ParticipationStatus &participationStatus,
                       const bool isfeedback);
 
 private:
