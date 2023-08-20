@@ -3,8 +3,6 @@
 
 #include <QtQml>
 
-class Repository;
-
 enum class LoginStatus : int
 {
     Start = 1,
@@ -16,8 +14,9 @@ enum class LoginStatus : int
 class LoginController : public QObject
 {
     Q_OBJECT
-    QML_SINGLETON
     QML_NAMED_ELEMENT(LoginController)
+    QML_SINGLETON
+
     Q_PROPERTY(int loginStatus MEMBER status NOTIFY loginStatusChanged)
 
 private:
@@ -27,16 +26,11 @@ signals:
     void loginStatusChanged();
 
 public:
-    static LoginController *create(QQmlEngine *, QJSEngine *)
-    {
-        static LoginController instance;
-        return &instance;
-    }
+    static LoginController *create(QQmlEngine *, QJSEngine *);
 
     Q_INVOKABLE void login(const QString &username, const QString &password);
 
     LoginController() = default;
-    ~LoginController() = default;
 };
 
 #endif // LOGIN_CONTROLLER_H

@@ -89,6 +89,6 @@ EventoBlockModel *EventoBlockModel::create(QQmlEngine *qmlEngine, QJSEngine *jsE
 
 EventoBlockModel *EventoBlockModel::getInstance()
 {
-    static EventoBlockModel singleton;
-    return &singleton;
+    static EventoBlockModel instance;
+    return &instance;
 }

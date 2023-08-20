@@ -4,12 +4,11 @@
 #include <QtQml>
 #include "types.h"
 
-class Repository;
-
 class EventoInfoController : public QObject
 {
     Q_OBJECT
     QML_NAMED_ELEMENT(EventoInfoController)
+    QML_SINGLETON
 
 public:
     Q_INVOKABLE void loadEventoInfo(EventoID id);
@@ -20,7 +19,7 @@ signals:
 
 public:
     EventoInfoController() = default;
-    ~EventoInfoController() = default;
+    static EventoInfoController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 
 #endif // EVENTO_INFO_H

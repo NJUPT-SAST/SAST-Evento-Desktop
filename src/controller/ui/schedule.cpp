@@ -35,3 +35,9 @@ void ScheduleController::check(const int eventId, const QString &code)
 
     emit checkErrorEvent("密钥错误");
 }
+
+ScheduleController *ScheduleController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    static ScheduleController instance;
+    return &instance;
+}

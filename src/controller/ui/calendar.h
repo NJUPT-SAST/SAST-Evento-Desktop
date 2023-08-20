@@ -6,6 +6,7 @@
 class CalendarController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(CalendarController)
+    QML_SINGLETON
 
     Q_PROPERTY(int calenderMode MEMBER mode NOTIFY modeChnaged)
 
@@ -20,6 +21,7 @@ public:
     };
 
     explicit CalendarController(QObject *parent = nullptr) {}
+    //static CalendarController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 
 #endif // CALENDARCONTROLLER_H

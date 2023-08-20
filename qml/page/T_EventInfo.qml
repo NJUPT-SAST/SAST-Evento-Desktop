@@ -15,22 +15,26 @@ FluScrollablePage {
 
     function loadEventoInfo(id) {
         statusMode = FluStatusViewType.Loading
-        controller.loadEventoInfo(id)
+        EventoInfoController.loadEventoInfo(id)
     }
 
     Component.onCompleted: {
         loadEventoInfo(EventoHelper.id)
     }
 
-    EventoInfoController {
-        id: controller
-        onLoadEventoSuccessEvent: {
+    Connections {
+        target: EventoInfoController
+        function onLoadEventoSuccessEvent() {
             statusMode = FluStatusViewType.Success
         }
-        onLoadEventoErrorEvent: message => {
-                                    errorText = message
-                                    statusMode = FluStatusViewType.Error
-                                }
+    }
+
+    Connections {
+        target: EventoInfoController
+        function onLoadEventoErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
     }
 
     Repeater {
@@ -39,7 +43,7 @@ FluScrollablePage {
 
         Item {
             Connections {
-                target: controller
+                target: EventoInfoController
                 function onLoadEventoSuccessEvent() {
                     arr.push({
                                  "url": model.url,
@@ -102,7 +106,7 @@ FluScrollablePage {
         id: item_title
         font: FluTextStyle.TitleLarge
         Connections {
-            target: controller
+            target: EventoInfoController
             function onLoadEventoSuccessEvent() {
                 item_title.text = EventoHelper.title
             }
@@ -121,7 +125,7 @@ FluScrollablePage {
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
             Connections {
-                target: controller
+                target: EventoInfoController
                 function onLoadEventoSuccessEvent() {
                     text_eventTime.text = "活动时间：" + EventoHelper.eventTime
                 }
@@ -141,7 +145,7 @@ FluScrollablePage {
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
             Connections {
-                target: controller
+                target: EventoInfoController
                 function onLoadEventoSuccessEvent() {
                     text_registerTime.text = "报名时间：" + EventoHelper.registerTime
                 }
@@ -162,7 +166,7 @@ FluScrollablePage {
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
             Connections {
-                target: controller
+                target: EventoInfoController
                 function onLoadEventoSuccessEvent() {
                     text_loc.text = EventoHelper.location
                 }
@@ -183,7 +187,7 @@ FluScrollablePage {
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
             Connections {
-                target: controller
+                target: EventoInfoController
                 function onLoadEventoSuccessEvent() {
                     text_dep.text = EventoHelper.department
                 }
@@ -204,7 +208,7 @@ FluScrollablePage {
             font: FluTextStyle.Caption
             anchors.verticalCenter: parent.verticalCenter
             Connections {
-                target: controller
+                target: EventoInfoController
                 function onLoadEventoSuccessEvent() {
                     text_type.text = EventoHelper.type
                 }
@@ -232,7 +236,7 @@ FluScrollablePage {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 Connections {
-                    target: controller
+                    target: EventoInfoController
                     function onLoadEventoSuccessEvent() {
                         text_tag.text = EventoHelper.tag
                     }
@@ -248,7 +252,7 @@ FluScrollablePage {
         wrapMode: Text.WrapAnywhere
         font.pixelSize: 18
         Connections {
-            target: controller
+            target: EventoInfoController
             function onLoadEventoSuccessEvent() {
                 item_desc.text = EventoHelper.description
             }

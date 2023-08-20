@@ -17,22 +17,26 @@ FluScrollablePage {
 
     function loadPlazaInfo() {
         statusMode = FluStatusViewType.Loading
-        controller.loadPlazaInfo()
+        PlazaController.loadPlazaInfo()
     }
 
     Component.onCompleted: {
         loadPlazaInfo()
     }
 
-    PlazaController {
-        id: controller
-        onLoadPlazaSuccessEvent: {
+    Connections {
+        target: PlazaController
+        function onLoadPlazaSuccessEvent() {
             statusMode = FluStatusViewType.Success
         }
-        onLoadPlazaErrorEvent: message => {
-                                   errorText = message
-                                   statusMode = FluStatusViewType.Error
-                               }
+    }
+
+    Connections {
+        target: PlazaController
+        function onLoadPlazaErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
     }
 
     Repeater {
@@ -41,7 +45,7 @@ FluScrollablePage {
 
         Item {
             Connections {
-                target: controller
+                target: PlazaController
                 function onLoadPlazaSuccessEvent() {
                     arr.push({
                                  "url": model.url,

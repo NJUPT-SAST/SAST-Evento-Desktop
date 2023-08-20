@@ -51,3 +51,9 @@ void PlazaController::loadPlazaInfo() {
 
     emit loadPlazaSuccessEvent();
 }
+
+PlazaController *PlazaController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    static PlazaController instance;
+    return &instance;
+}

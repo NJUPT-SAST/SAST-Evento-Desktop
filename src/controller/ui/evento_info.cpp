@@ -20,3 +20,9 @@ void EventoInfoController::loadEventoInfo(EventoID eventId)
 
     emit loadEventoSuccessEvent();
 }
+
+EventoInfoController *EventoInfoController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    static EventoInfoController instance;
+    return &instance;
+}

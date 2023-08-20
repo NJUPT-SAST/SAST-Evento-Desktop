@@ -21,3 +21,9 @@ void UserManagementController::loadAllUserInfo()
 
     emit loadAllUserSuccess();
 }
+
+UserManagementController *UserManagementController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    static UserManagementController instance;
+    return &instance;
+}
