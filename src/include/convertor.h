@@ -113,19 +113,73 @@ struct Convertor<DTO_Evento, EventoBrief> {
 	}
 };
 
-template<>
-struct Convertor<DTO_Evento, Schedule> {
-    Schedule operator()(const DTO_Evento& e) {
-        return {
-            e.id, 
-            e.title, 
+static void appendToScheduleVector(std::vector<Schedule>& result, const DTO_Evento& e) {
+    auto deparment = departmentConvertor(e.departments);
+
+    // FIXME: here is no api to get the check state of an event.
+    // Wait for the backend to implement it.
+    bool isChecked = false;
+
+    bool isFeedback = false;
+    // use the default `Ok` for the repo won't touch this flag when successful.
+    // needed at least for local impl.
+    EventoException err = EventoExceptionCode::Ok;
+    [[maybe_unused]] auto feedback_info = getRepo()->get_feedback_info(e.id, err);
+    if (err.code() == EventoExceptionCode::Ok) {
+        // maybe it's better to use std::optional<DTO_Feedback>,
+        // but it's not what the repo returns, anyway.
+        isFeedback = true;
+    }
+
+    QDateTime periodStart = e.gmtEventStart;
+    while (periodStart.date() != e.gmtEventEnd.date()) {
+        result.emplace_back(Schedule{
+            e.id,
+            e.title,
             e.state,
-            departmentConvertor(e.departments),
+            deparment,
             e.location,
-            e.gmtEventStart.toString(),
-            e.gmtEventEnd.toString(),
-            getFirstImageUrl(e.id)
-        };
+            periodStart.toString(QStringLiteral("MM月dd日")),
+            periodStart.toString(QStringLiteral("hh:mm")),
+            QStringLiteral("23:59"),
+            isChecked,
+            isFeedback,
+            });
+        periodStart = periodStart.addDays(1);
+        periodStart.setTime(QTime(0, 0));
+    }
+
+    result.emplace_back(Schedule{
+            e.id,
+            e.title,
+            e.state,
+            std::move(deparment),
+            e.location,
+            periodStart.toString(QStringLiteral("MM月dd日")),
+            periodStart.toString(QStringLiteral("hh:mm")),
+            e.gmtEventEnd.toString(QStringLiteral("hh:mm")),
+            isChecked,
+            isFeedback,
+        });
+}
+
+template<>
+struct Convertor<DTO_Evento, std::vector<Schedule> > {
+    std::vector<Schedule> operator()(const DTO_Evento& e) {
+        std::vector<Schedule> result;
+        appendToScheduleVector(result, e);
+        return result;
+    }
+};
+
+template<>
+struct Convertor<std::vector<DTO_Evento>, std::vector<Schedule> > {
+    std::vector<Schedule> operator()(const std::vector<DTO_Evento>& e) {
+        std::vector<Schedule> result;
+		for (const auto& i : e) {
+			appendToScheduleVector(result, i);
+		}
+		return result;
     }
 };
 
