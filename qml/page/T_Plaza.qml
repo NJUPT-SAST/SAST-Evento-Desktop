@@ -49,6 +49,7 @@ FluScrollablePage {
                 function onLoadPlazaSuccessEvent() {
                     arr.push({
                                  "url": model.url,
+                                 "link": model.link,
                                  "title": model.title
                              })
                     if (arr.length === 3)
