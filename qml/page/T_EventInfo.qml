@@ -468,19 +468,19 @@ FluScrollablePage {
 
             FluRatingControl {
                 id: rating
-                value: EventoHelper.isfeedback ? FeedbackHelper.score : score_value
+                value: FeedbackHelper.isFeedback ? FeedbackHelper.score : score_value
             }
 
             FluMultilineTextBox {
                 id: textbox_content
                 placeholderText: "输入你的留言（选填，Ctrl+Enter换行）"
-                text: EventoHelper.isfeedback ? FeedbackHelper.content : feedback_content
+                text: FeedbackHelper.isFeedback ? FeedbackHelper.content : feedback_content
                 width: parent.width
             }
 
             FluFilledButton {
                 implicitWidth: 200
-                text: EventoHelper.isfeedback ? "修改并提交" : "提交反馈"
+                text: FeedbackHelper.isFeedback ? "修改并提交" : "提交反馈"
                 disabled: rating.value === 0
                 anchors.right: parent.right
                 onClicked: {

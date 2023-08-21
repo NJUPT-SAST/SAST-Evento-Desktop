@@ -8,8 +8,8 @@ struct Feedback
     int id;
     int score;
     QString content;
-    QString userId;
-    EventoID eventId;
+    int eventId;
+    bool isFeedback;
 };
 
 #endif // FEEDBACK_H
