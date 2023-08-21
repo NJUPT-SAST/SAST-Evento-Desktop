@@ -207,10 +207,11 @@ template<>
 struct Convertor<DTO_Feedback, Feedback> {
     Feedback operator()(const DTO_Feedback& src) {
         return {
-            src.event,
+            0 /* FIXME: cannot get feedback id from `DTO_Feedback` */,
             src.score,
             src.content,
-            src.user
+            src.user,
+            src.event
         };
     }
 };
