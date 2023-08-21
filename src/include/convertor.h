@@ -12,6 +12,7 @@
 #include <user.h>
 #include <evento_brief.h>
 #include <evento_block.h>
+#include <scheduled_evento.h>
 
 inline QString periodConvertor(const QDateTime& start, const QDateTime& end) {
     if (!start.isValid() || !end.isValid()) return {};
@@ -104,12 +105,28 @@ struct Convertor<DTO_Evento, EventoBrief> {
 		return {
 				e.id, 
                 e.title,
-                e.state,
 				e.description,
 				periodConvertor(e.gmtEventStart, e.gmtEventEnd),
+                departmentConvertor(e.departments),
 				getFirstImageUrl(e.id)
 		};
 	}
+};
+
+template<>
+struct Convertor<DTO_Evento, Schedule> {
+    Schedule operator()(const DTO_Evento& e) {
+        return {
+            e.id, 
+            e.title, 
+            e.state,
+            departmentConvertor(e.departments),
+            e.location,
+            e.gmtEventStart.toString(),
+            e.gmtEventEnd.toString(),
+            getFirstImageUrl(e.id)
+        };
+    }
 };
 
 template<>
@@ -148,16 +165,34 @@ PermissionEntry operator()(const DTO_Permission& src) {
 template<>
 struct Convertor <DTO_UserBrief, UserBrief> {
     UserBrief operator()(const DTO_UserBrief& src) {
-        // FIXME: 待后端确定接口
-        return {};
+        return {
+            src.userId,
+            src.studentId,
+            src.openId,
+        };
     };
 };
 
 template<>
 struct Convertor <DTO_User, User> {
     User operator()(const DTO_User& src) {
-        // FIXME: 待后端确定接口
-        return {};
+        QStringList departments;
+        for (const auto& d : src.department) {
+            departments << d.name;
+        }
+
+        QStringList links;
+        links << "https://sast.fun/"; // FIXME: hard code
+
+        return {
+            src.id,
+            src.name,
+            src.avatar,
+            departments,
+            src.description,
+            src.email,
+            links,
+        };
     };
 };
 
