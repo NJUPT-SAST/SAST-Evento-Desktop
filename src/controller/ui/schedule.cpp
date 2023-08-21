@@ -3,7 +3,25 @@
 #include "scheduled_evento_model.h"
 #include "convertor.h"
 
-void ScheduleController::loadSchedule()
+void ScheduleController::loadRegisteredSchedule()
+{
+    EventoException err;
+    //    ScheduledEventoModel::getInstance()->resetModel(
+    //        Convertor<std::vector<DTO_Evento>,
+    //                  std::vector<Schedule>>()(
+    //            getRepo()->get_registered_list(err)
+    //    ));
+
+    if ((int)err.code())
+    {
+        emit loadRegisteredScheduleErrorEvent(err.message());
+        return;
+    }
+
+    emit loadRegisteredScheduleSuccessEvent();
+}
+
+void ScheduleController::loadSubscribedSchedule()
 {
     EventoException err;
     //    ScheduledEventoModel::getInstance()->resetModel(
@@ -14,11 +32,11 @@ void ScheduleController::loadSchedule()
 
     if ((int)err.code())
     {
-        emit loadScheduleErrorEvent(err.message());
+        emit loadSubscribedScheduleErrorEvent(err.message());
         return;
     }
 
-    emit loadScheduleSuccessEvent();
+    emit loadSubscribedScheduleSuccessEvent();
 }
 
 void ScheduleController::check(const int eventId, const QString &code)

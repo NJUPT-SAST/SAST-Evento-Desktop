@@ -272,7 +272,6 @@ FluScrollablePage {
                     EventoHelper.isRegistrated = !EventoHelper.isRegistrated
                     EventoInfoController.registerEvento(
                                 EventoHelper.id, EventoHelper.isRegistrated)
-                    console.log(EventoHelper.isRegistrated)
                 }
             }
             Connections {

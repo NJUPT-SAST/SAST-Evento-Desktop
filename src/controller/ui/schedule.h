@@ -12,12 +12,16 @@ class ScheduleController : public QObject
     QML_SINGLETON
 
 public:
-    Q_INVOKABLE void loadSchedule();
+    Q_INVOKABLE void loadRegisteredSchedule();
+    Q_INVOKABLE void loadSubscribedSchedule();
     Q_INVOKABLE void check(const int eventId, const QString &code);
 
 signals:
-    void loadScheduleSuccessEvent();
-    void loadScheduleErrorEvent(const QString &message);
+    void loadRegisteredScheduleSuccessEvent();
+    void loadRegisteredScheduleErrorEvent(const QString &message);
+
+    void loadSubscribedScheduleSuccessEvent();
+    void loadSubscribedScheduleErrorEvent(const QString &message);
 
     void checkSuccessEvent();
     void checkErrorEvent(const QString &message);
