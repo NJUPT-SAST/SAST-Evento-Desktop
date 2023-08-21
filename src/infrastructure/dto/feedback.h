@@ -8,7 +8,7 @@ struct DTO_Feedback {
     UserID user;
     int score;
     QString content;
-    ParticipationStatus participation;
+    bool isFeedback;
 };
 
 #endif // DTO_FEEDBACK_H
