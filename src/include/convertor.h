@@ -116,19 +116,29 @@ struct Convertor<DTO_Evento, EventoBrief> {
 static void appendToScheduleVector(std::vector<Schedule>& result, const DTO_Evento& e) {
     auto deparment = departmentConvertor(e.departments);
 
-    // FIXME: here is no api to get the check state of an event.
-    // Wait for the backend to implement it.
     bool isChecked = false;
+    {
+        // use the default `Ok` for the repo won't touch this flag when successful.
+        // needed at least for local impl.
+        EventoException err = EventoExceptionCode::Ok;
+        auto participate_state = getRepo()->get_user_participate(e.id, err);
+        if (err.code() == EventoExceptionCode::Ok) {
+            // check 字面意识指是否签到，但是这里的 isChecked 指是否已参加？
+            isChecked = participate_state.isParticipated;
+        }
+    }
 
     bool isFeedback = false;
-    // use the default `Ok` for the repo won't touch this flag when successful.
-    // needed at least for local impl.
-    EventoException err = EventoExceptionCode::Ok;
-    [[maybe_unused]] auto feedback_info = getRepo()->get_feedback_info(e.id, err);
-    if (err.code() == EventoExceptionCode::Ok) {
-        // maybe it's better to use std::optional<DTO_Feedback>,
-        // but it's not what the repo returns, anyway.
-        isFeedback = true;
+    {
+        // use the default `Ok` for the repo won't touch this flag when successful.
+        // needed at least for local impl.
+        EventoException err = EventoExceptionCode::Ok;
+        [[maybe_unused]] auto feedback_info = getRepo()->get_feedback_info(e.id, err);
+        if (err.code() == EventoExceptionCode::Ok) {
+            // maybe it's better to use std::optional<DTO_Feedback>,
+            // but it's not what the repo returns, anyway.
+            isFeedback = true;
+        }
     }
 
     QDateTime periodStart = e.gmtEventStart;
