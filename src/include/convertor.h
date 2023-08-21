@@ -205,15 +205,8 @@ struct Convertor<DTO_Slide, Slide> {
 
 template<>
 struct Convertor<DTO_Feedback, Feedback> {
-    Feedback operator()(const DTO_Feedback& src) {
-        return {
-            0 /* FIXME: cannot get feedback id from `DTO_Feedback` */,
-            src.score,
-            src.content,
-            src.user,
-            src.event
-        };
-    }
+    // TODO: implement this
+    Feedback operator()(const DTO_Feedback& src) = delete;
 };
 
 template<>
