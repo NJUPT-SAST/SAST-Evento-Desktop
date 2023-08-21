@@ -25,10 +25,10 @@ QVariant FeedbackModel::data(const QModelIndex &index, int role) const
         return element.score;
     case Role::Content:
         return element.content;
-    case Role::UserId:
-        return element.userId;
     case Role::EventId:
         return element.eventId;
+    case Role::IsFeedback:
+        return element.isFeedback;
     default:
         break;
     }
@@ -44,8 +44,8 @@ QHash<int, QByteArray> FeedbackModel::roleNames() const
         roles.insert(Id, "id");
         roles.insert(Score, "score");
         roles.insert(Content, "content");
-        roles.insert(UserId, "userId");
         roles.insert(EventId, "eventId");
+        roles.insert(IsFeedback, "isFeedback");
     }
     return roles;
 }
