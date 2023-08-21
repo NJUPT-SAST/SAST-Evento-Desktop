@@ -29,7 +29,6 @@ signals:
 public:
     ScheduleController() = default;
     static ScheduleController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
-    static ScheduleController *getInstance();
 };
 
 #endif // SCHEDULE_CONTROLLER_H

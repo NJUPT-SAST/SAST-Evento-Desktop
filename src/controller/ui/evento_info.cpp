@@ -50,13 +50,5 @@ void EventoInfoController::subscribeEvento(const EventoID id, bool isParticipate
 
 EventoInfoController *EventoInfoController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    auto pInstance = getInstance();
-    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
-    return pInstance;
-}
-
-EventoInfoController *EventoInfoController::getInstance()
-{
-    static EventoInfoController singleton;
-    return &singleton;
+    return new EventoInfoController();
 }

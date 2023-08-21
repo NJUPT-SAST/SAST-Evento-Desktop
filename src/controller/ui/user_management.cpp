@@ -24,13 +24,5 @@ void UserManagementController::loadAllUserInfo()
 
 UserManagementController *UserManagementController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    auto pInstance = getInstance();
-    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
-    return pInstance;
-}
-
-UserManagementController *UserManagementController::getInstance()
-{
-    static UserManagementController singleton;
-    return &singleton;
+    return new UserManagementController();
 }

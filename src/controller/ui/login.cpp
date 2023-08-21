@@ -2,8 +2,7 @@
 
 LoginController *LoginController::create(QQmlEngine *, QJSEngine *)
 {
-    static LoginController instance;
-    return &instance;
+	return new LoginController();
 }
 
 void LoginController::login(const QString &username, const QString &password)
