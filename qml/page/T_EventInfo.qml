@@ -202,7 +202,7 @@ FluScrollablePage {
 
             Row {
                 spacing: 5
-                Layout.topMargin: 8
+                Layout.topMargin: 6
                 FluIcon {
                     iconSource: FluentIcons.OEM
                 }
@@ -251,7 +251,7 @@ FluScrollablePage {
 
         FluRectangle {
             width: 4
-            height: parent.height - 20
+            height: parent.height
             radius: [2, 2, 2, 2]
             color: FluTheme.primaryColor.normal
             anchors.verticalCenter: parent.verticalCenter
@@ -260,8 +260,45 @@ FluScrollablePage {
         ColumnLayout {
             width: parent.width / 2 - 135
             anchors.verticalCenter: parent.verticalCenter
+            FluText {
+                font: FluTextStyle.Subtitle
+                text: {
+                    switch (EventoHelper.state) {
+                    case 1:
+                        return "未开始"
+                    case 2:
+                        return "报名中"
+                    case 3:
+                        return "进行中"
+                    case 4:
+                        return "已取消"
+                    case 5:
+                        return "已结束"
+                    default:
+                        return ""
+                    }
+                }
+                color: {
+                    switch (EventoHelper.state) {
+                    case 1:
+                        return FluColors.Blue.normal
+                    case 2:
+                        return FluColors.Green.normal
+                    case 3:
+                        return FluColors.Orange.normal
+                    case 4:
+                        return FluColors.Red.normal
+                    case 5:
+                        return FluColors.Grey110
+                    default:
+                        return null
+                    }
+                }
+            }
+
             FluToggleButton {
                 id: btn_register
+                Layout.topMargin: 15
                 implicitWidth: 250
                 text: EventoHelper.isRegistrated ? "取消报名" : "报名活动"
                 checked: EventoHelper.isRegistrated
@@ -293,7 +330,7 @@ FluScrollablePage {
             FluToggleButton {
                 id: btn_subscribe
                 implicitWidth: 250
-                Layout.topMargin: 20
+                Layout.topMargin: 15
                 text: EventoHelper.isSubscribed ? "取消订阅" : "订阅活动"
                 checked: EventoHelper.isSubscribed
                 disabled: EventoHelper.isParticipated
@@ -332,7 +369,7 @@ FluScrollablePage {
                 implicitWidth: 250
                 text: EventoHelper.isParticipated ? "已签到" : "签到"
                 disabled: EventoHelper.isParticipated
-                Layout.topMargin: 15
+                Layout.topMargin: 9
                 onClicked: {
                     dialog.open()
                 }
