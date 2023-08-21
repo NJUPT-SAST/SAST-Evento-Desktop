@@ -17,6 +17,6 @@ void FeedbackHelper::updateFeedback(const Feedback &feedback)
     m_id = feedback.id;
     m_score = feedback.score;
     m_content = feedback.content;
-    m_userId = feedback.userId;
     m_eventId = feedback.eventId;
+    m_isFeedback = feedback.isFeedback;
 }
