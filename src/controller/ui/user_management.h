@@ -19,6 +19,7 @@ signals:
 public:
     UserManagementController() = default;
     static UserManagementController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static UserManagementController *getInstance();
 };
 
 #endif // USERMANAGEMENT_CONTROLLER_H

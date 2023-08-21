@@ -32,6 +32,7 @@ signals:
 public:
     EventoInfoController() = default;
     static EventoInfoController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static EventoInfoController *getInstance();
 };
 
 #endif // EVENTO_INFO_H

@@ -61,7 +61,9 @@ void UndertakingEventoModel::resetModel(const std::vector<UndertakingEvento> &mo
 
 UndertakingEventoModel *UndertakingEventoModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 UndertakingEventoModel *UndertakingEventoModel::getInstance()

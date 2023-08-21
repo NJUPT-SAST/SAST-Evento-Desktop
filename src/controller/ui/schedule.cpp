@@ -56,6 +56,13 @@ void ScheduleController::check(const int eventId, const QString &code)
 
 ScheduleController *ScheduleController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    static ScheduleController instance;
-    return &instance;
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
+}
+
+ScheduleController *ScheduleController::getInstance()
+{
+    static ScheduleController singleton;
+    return &singleton;
 }

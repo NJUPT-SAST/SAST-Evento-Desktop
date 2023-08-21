@@ -21,6 +21,7 @@ signals:
 public:
     PlazaController() = default;
     static PlazaController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static PlazaController *getInstance();
 };
 
 #endif // PLAZA_CONTROLLER_H

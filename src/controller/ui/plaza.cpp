@@ -52,8 +52,15 @@ void PlazaController::loadPlazaInfo() {
     emit loadPlazaSuccessEvent();
 }
 
-PlazaController *PlazaController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+PlazaController *PlazaController::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine)
 {
-    static PlazaController instance;
-    return &instance;
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
+}
+
+PlazaController *PlazaController::getInstance()
+{
+    static PlazaController singleton;
+    return &singleton;
 }
