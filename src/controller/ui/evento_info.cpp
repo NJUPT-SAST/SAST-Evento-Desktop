@@ -48,7 +48,7 @@ void EventoInfoController::subscribeEvento(const EventoID id, bool isParticipate
     emit subscribeSuccessEvent();
 }
 
-EventoInfoController *EventoInfoController::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine)
+EventoInfoController *EventoInfoController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
