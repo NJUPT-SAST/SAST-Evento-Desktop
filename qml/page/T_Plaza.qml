@@ -100,6 +100,12 @@ FluScrollablePage {
                         font.pixelSize: 15
                     }
                 }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        PlazaController.openUrl(model.link)
+                    }
+                }
             }
         }
     }
