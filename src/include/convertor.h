@@ -123,7 +123,6 @@ static void appendToScheduleVector(std::vector<Schedule>& result, const DTO_Even
         EventoException err = EventoExceptionCode::Ok;
         auto participate_state = getRepo()->get_user_participate(e.id, err);
         if (err.code() == EventoExceptionCode::Ok) {
-            // check 字面意识指是否签到，但是这里的 isChecked 指是否已参加？
             isChecked = participate_state.isParticipated;
         }
     }
@@ -133,11 +132,9 @@ static void appendToScheduleVector(std::vector<Schedule>& result, const DTO_Even
         // use the default `Ok` for the repo won't touch this flag when successful.
         // needed at least for local impl.
         EventoException err = EventoExceptionCode::Ok;
-        [[maybe_unused]] auto feedback_info = getRepo()->get_feedback_info(e.id, err);
+        auto is_feedback = getRepo()->is_feedback(e.id, err);
         if (err.code() == EventoExceptionCode::Ok) {
-            // maybe it's better to use std::optional<DTO_Feedback>,
-            // but it's not what the repo returns, anyway.
-            isFeedback = true;
+            isFeedback = is_feedback;
         }
     }
 
@@ -204,9 +201,16 @@ struct Convertor<DTO_Slide, Slide> {
 };
 
 template<>
-struct Convertor<DTO_Feedback, Feedback> {
-    // TODO: implement this
-    Feedback operator()(const DTO_Feedback& src) = delete;
+struct Convertor<DTO_Feedback, Feedback>{
+    Feedback operator()(const DTO_Feedback& e) {
+        return {
+            e.id,
+            e.eventId,
+            e.score,
+            e.content,
+            e.isFeedback
+        };
+    }
 };
 
 template<>

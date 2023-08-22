@@ -6,9 +6,9 @@
 struct Feedback
 {
     int id;
+    EventoID eventId;
     int score;
     QString content;
-    int eventId;
     bool isFeedback;
 };
 
