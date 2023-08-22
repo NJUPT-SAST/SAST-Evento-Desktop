@@ -61,7 +61,9 @@ void LatestEventoModel::resetModel(const std::vector<LatestEvento> &model)
 
 LatestEventoModel *LatestEventoModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 LatestEventoModel *LatestEventoModel::getInstance()

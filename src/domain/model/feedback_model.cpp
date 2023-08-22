@@ -60,7 +60,9 @@ void FeedbackModel::resetModel(const std::vector<Feedback> &model)
 
 FeedbackModel *FeedbackModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 FeedbackModel *FeedbackModel::getInstance()

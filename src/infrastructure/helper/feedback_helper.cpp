@@ -9,7 +9,9 @@ FeedbackHelper *FeedbackHelper::getInstance()
 
 FeedbackHelper *FeedbackHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 void FeedbackHelper::updateFeedback(const Feedback &feedback)

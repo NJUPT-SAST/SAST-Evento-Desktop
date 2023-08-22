@@ -47,7 +47,9 @@ void EventoBriefModel::resetModel(const std::vector<EventoBrief>& model)
 
 EventoBriefModel *EventoBriefModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 EventoBriefModel *EventoBriefModel::getInstance()

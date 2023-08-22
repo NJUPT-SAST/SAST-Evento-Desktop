@@ -50,6 +50,5 @@ void EventoInfoController::subscribeEvento(const EventoID id, bool isParticipate
 
 EventoInfoController *EventoInfoController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    static EventoInfoController instance;
-    return &instance;
+    return new EventoInfoController();
 }

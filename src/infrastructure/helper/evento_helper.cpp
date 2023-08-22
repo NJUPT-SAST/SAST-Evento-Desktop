@@ -9,7 +9,9 @@ EventoHelper *EventoHelper::getInstance()
 
 EventoHelper *EventoHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 void EventoHelper::updateEvento(const Evento &evento, const ParticipationStatus &participationStatus)
