@@ -134,8 +134,8 @@ DTO_Feedback repositoryImpl::get_feedback_info(const EventoID &eventoId, EventoE
             (unit.event_id == eventoId)){
             feedback_data feedback_unit = feedback_data_list.at(i);
             return DTO_Feedback{
+                i,
                 eventoId,
-                feedback_unit.user_id,
                 feedback_unit.score.toInt(),
                 feedback_unit.content,
                 true
@@ -214,8 +214,8 @@ std::vector<DTO_Feedback> repositoryImpl::get_feedback_list(EventoID eventoId, E
         std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("id", participateId));
         if(participationList.at(0).event_id == eventoId){
             res.push_back(DTO_Feedback{
+                i,
                 participationList.at(0).event_id,
-                participationList.at(0).user_id,
                 unit.score.toInt(),
                 unit.content,
                 true
@@ -341,7 +341,7 @@ bool repositoryImpl::event_feedback(const DTO_Feedback &code, EventoException &e
 {
     QString participationId;
     for(int i = 0; i < participate_data_list.size(); i++){
-        if(!participate_data_list.at(i).event_id.compare(QString::number(code.event)) &&
+        if(!participate_data_list.at(i).event_id.compare(QString::number(code.eventId)) &&
             !participate_data_list.at(i).user_id.compare("B22041234")){
             participationId = participate_data_list.at(i).id;
             break;
