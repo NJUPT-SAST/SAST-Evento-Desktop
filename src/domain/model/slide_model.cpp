@@ -42,7 +42,7 @@ QHash<int, QByteArray> SlideModel::roleNames() const
     return roles;
 }
 
-void SlideModel::resetModel(const std::vector<Slide> &model)
+void SlideModel::resetModel(std::vector<Slide> model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();

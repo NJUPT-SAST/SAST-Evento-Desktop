@@ -261,37 +261,21 @@ FluScrollablePage {
             width: parent.width / 2 - 135
             anchors.verticalCenter: parent.verticalCenter
             FluText {
+                id: text_evento_state
                 font: FluTextStyle.Subtitle
-                text: {
-                    switch (EventoHelper.state) {
-                    case 1:
-                        return "未开始"
-                    case 2:
-                        return "报名中"
-                    case 3:
-                        return "进行中"
-                    case 4:
-                        return "已取消"
-                    case 5:
-                        return "已结束"
-                    default:
-                        return ""
+
+                Connections {
+                    target: EventoInfoController
+                    function onLoadEventoSuccessEvent() {
+                        text_evento_state.text = convert2Text(
+                                    EventoHelper.state)
                     }
                 }
-                color: {
-                    switch (EventoHelper.state) {
-                    case 1:
-                        return FluColors.Blue.normal
-                    case 2:
-                        return FluColors.Green.normal
-                    case 3:
-                        return FluColors.Orange.normal
-                    case 4:
-                        return FluColors.Red.normal
-                    case 5:
-                        return FluColors.Grey110
-                    default:
-                        return null
+                Connections {
+                    target: EventoInfoController
+                    function onLoadEventoSuccessEvent() {
+                        text_evento_state.color = convert2Color(
+                                    EventoHelper.state)
                     }
                 }
             }
@@ -300,15 +284,21 @@ FluScrollablePage {
                 id: btn_register
                 Layout.topMargin: 15
                 implicitWidth: 250
-                text: EventoHelper.isRegistrated ? "取消报名" : "报名活动"
-                checked: EventoHelper.isRegistrated
-                disabled: EventoHelper.isParticipated
 
                 onClicked: {
                     statusMode = FluStatusViewType.Loading
                     EventoHelper.isRegistrated = !EventoHelper.isRegistrated
                     EventoInfoController.registerEvento(
                                 EventoHelper.id, EventoHelper.isRegistrated)
+                }
+
+                Connections {
+                    target: EventoInfoController
+                    function onLoadEventoSuccessEvent() {
+                        btn_register.text = EventoHelper.isRegistrated ? "取消报名" : "报名活动"
+                        btn_register.checked = EventoHelper.isRegistrated
+                        btn_register.disabled = EventoHelper.state !== 2
+                    }
                 }
             }
             Connections {
@@ -331,15 +321,21 @@ FluScrollablePage {
                 id: btn_subscribe
                 implicitWidth: 250
                 Layout.topMargin: 15
-                text: EventoHelper.isSubscribed ? "取消订阅" : "订阅活动"
-                checked: EventoHelper.isSubscribed
-                disabled: EventoHelper.isParticipated
 
                 onClicked: {
                     statusMode = FluStatusViewType.Loading
                     EventoHelper.isSubscribed = !EventoHelper.isSubscribed
                     EventoInfoController.subscribeEvento(
                                 EventoHelper.id, EventoHelper.isSubscribed)
+                }
+
+                Connections {
+                    target: EventoInfoController
+                    function onLoadEventoSuccessEvent() {
+                        btn_subscribe.text = EventoHelper.isSubscribed ? "取消订阅" : "订阅活动"
+                        btn_subscribe.checked = EventoHelper.isSubscribed
+                        btn_subscribe.disabled = EventoHelper.state !== 2
+                    }
                 }
             }
             Connections {
@@ -367,11 +363,17 @@ FluScrollablePage {
             FluButton {
                 id: btn_check
                 implicitWidth: 250
-                text: EventoHelper.isParticipated ? "已签到" : "签到"
-                disabled: EventoHelper.isParticipated
                 Layout.topMargin: 9
                 onClicked: {
                     dialog.open()
+                }
+
+                Connections {
+                    target: EventoInfoController
+                    function onLoadEventoSuccessEvent() {
+                        btn_check.text = EventoHelper.isParticipated ? "已签到" : "签到"
+                        btn_check.disabled = EventoHelper.isParticipated
+                    }
                 }
             }
         }
@@ -444,9 +446,15 @@ FluScrollablePage {
 
     Loader {
         id: loader
-        sourceComponent: EventoHelper.isParticipated ? com_comment : undefined
         Layout.topMargin: 15
         Layout.fillWidth: true
+        Connections {
+            target: EventoInfoController
+            function onLoadEventoSuccessEvent() {
+                loader.sourceComponent = (EventoHelper.isParticipated
+                                          && EventoHelper.state === 5) ? com_comment : undefined
+            }
+        }
     }
 
     Component {
@@ -468,19 +476,30 @@ FluScrollablePage {
 
             FluRatingControl {
                 id: rating
-                value: FeedbackHelper.isFeedback ? FeedbackHelper.score : score_value
+                Connections {
+                    target: EventoInfoController
+                    function onLoadEventoSuccessEvent() {
+                        rating.value
+                                = FeedbackHelper.isFeedback ? FeedbackHelper.score : score_value
+                    }
+                }
             }
 
             FluMultilineTextBox {
                 id: textbox_content
                 placeholderText: "输入你的留言（选填，Ctrl+Enter换行）"
-                text: FeedbackHelper.isFeedback ? FeedbackHelper.content : feedback_content
                 width: parent.width
+                Connections {
+                    target: EventoInfoController
+                    function onLoadEventoSuccessEvent() {
+                        textbox_content.text = FeedbackHelper.isFeedback ? FeedbackHelper.content : feedback_content
+                    }
+                }
             }
 
             FluFilledButton {
+                id: btn_submit
                 implicitWidth: 200
-                text: FeedbackHelper.isFeedback ? "修改并提交" : "提交反馈"
                 disabled: rating.value === 0
                 anchors.right: parent.right
                 onClicked: {
@@ -489,6 +508,12 @@ FluScrollablePage {
                     statusMode = FluStatusViewType.Loading
                     EventoHelper.feedbackEvento(score_value, content,
                                                 EventoHelper.id)
+                }
+                Connections {
+                    target: EventoInfoController
+                    function onLoadEventoSuccessEvent() {
+                        btn_submit.text = FeedbackHelper.isFeedback ? "修改并提交" : "提交反馈"
+                    }
                 }
             }
 
@@ -508,6 +533,40 @@ FluScrollablePage {
                     loadEventoInfo()
                 }
             }
+        }
+    }
+
+    function convert2Color(s) {
+        switch (s) {
+        case 1:
+            return FluColors.Blue.normal
+        case 2:
+            return FluColors.Green.normal
+        case 3:
+            return FluColors.Orange.normal
+        case 4:
+            return FluColors.Red.normal
+        case 5:
+            return FluColors.Grey110
+        default:
+            return null
+        }
+    }
+
+    function convert2Text(s) {
+        switch (s) {
+        case 1:
+            return "未开始"
+        case 2:
+            return "报名中"
+        case 3:
+            return "进行中"
+        case 4:
+            return "已取消"
+        case 5:
+            return "已结束"
+        default:
+            return ""
         }
     }
 }

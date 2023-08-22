@@ -28,7 +28,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<UndertakingEvento>& model);
+    void resetModel(std::vector<UndertakingEvento> model);
 
 private:
     UndertakingEventoModel() = default;

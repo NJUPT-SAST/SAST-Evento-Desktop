@@ -50,7 +50,7 @@ QHash<int, QByteArray> FeedbackModel::roleNames() const
     return roles;
 }
 
-void FeedbackModel::resetModel(const std::vector<Feedback> &model)
+void FeedbackModel::resetModel(std::vector<Feedback> model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();

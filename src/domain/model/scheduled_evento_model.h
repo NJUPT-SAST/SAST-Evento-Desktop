@@ -33,7 +33,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<Schedule> &model);
+    void resetModel(std::vector<Schedule> model);
 
     ScheduledEventoModel(const ScheduledEventoModel &) = delete;
     ScheduledEventoModel &operator=(const ScheduledEventoModel &) = delete;

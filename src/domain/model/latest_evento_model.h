@@ -28,7 +28,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<LatestEvento>& model);
+    void resetModel(std::vector<LatestEvento> model);
 
 private:
     LatestEventoModel() = default;
