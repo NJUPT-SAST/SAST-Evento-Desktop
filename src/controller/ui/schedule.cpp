@@ -56,6 +56,5 @@ void ScheduleController::check(const int eventId, const QString &code)
 
 ScheduleController *ScheduleController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    static ScheduleController instance;
-    return &instance;
+    return new ScheduleController();
 }

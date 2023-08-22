@@ -24,6 +24,5 @@ void UserManagementController::loadAllUserInfo()
 
 UserManagementController *UserManagementController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    static UserManagementController instance;
-    return &instance;
+    return new UserManagementController();
 }

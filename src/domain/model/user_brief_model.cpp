@@ -52,7 +52,9 @@ void UserBriefModel::resetModel(const std::vector<UserBrief> &model)
 
 UserBriefModel *UserBriefModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 UserBriefModel *UserBriefModel::getInstance()

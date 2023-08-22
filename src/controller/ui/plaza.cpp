@@ -60,6 +60,5 @@ void PlazaController::openUrl(const QString &link)
 
 PlazaController *PlazaController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    static PlazaController instance;
-    return &instance;
+    return new PlazaController();
 }

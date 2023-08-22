@@ -52,7 +52,9 @@ void SlideModel::resetModel(const std::vector<Slide> &model)
 
 SlideModel *SlideModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 SlideModel *SlideModel::getInstance()

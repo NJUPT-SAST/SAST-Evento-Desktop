@@ -84,7 +84,9 @@ void EventoBlockModel::resetModel(const std::vector<EventoBlock> &model)
 
 EventoBlockModel *EventoBlockModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 EventoBlockModel *EventoBlockModel::getInstance()
