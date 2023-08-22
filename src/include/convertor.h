@@ -106,7 +106,8 @@ struct Convertor<DTO_Evento, EventoBrief> {
 				e.id, 
                 e.title,
 				e.description,
-				periodConvertor(e.gmtEventStart, e.gmtEventEnd),
+                periodConvertor(e.gmtEventStart, e.gmtEventEnd),
+                e.location,
                 departmentConvertor(e.departments),
 				getFirstImageUrl(e.id)
 		};

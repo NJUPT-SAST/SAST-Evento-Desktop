@@ -142,7 +142,7 @@ DTO_Feedback repositoryImpl::get_feedback_info(const EventoID &eventoId, EventoE
             };
         }
     }
-    err = EventoException(EventoExceptionCode::UnexpectedError, "no feedback info");
+    err = EventoException(EventoExceptionCode::Ok);
     return DTO_Feedback();
 }
 

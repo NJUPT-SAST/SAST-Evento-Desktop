@@ -17,9 +17,10 @@ public:
     {
         Id = Qt::DisplayRole + 1,
         Title,
-        State,
         Description,
         Time,
+        Location,
+        Department,
         Url,
     };
 
@@ -29,7 +30,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<EventoBrief> &model);
+    void resetModel(std::vector<EventoBrief> model);
 
     EventoBriefModel(const EventoBriefModel &) = delete;
     EventoBriefModel &operator=(const EventoBriefModel) = delete;
