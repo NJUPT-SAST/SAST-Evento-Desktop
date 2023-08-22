@@ -10,11 +10,11 @@ class MyPageController: public QObject
     QML_SINGLETON
 
 public:
-    Q_INVOKABLE void loadHistoryInfo();
+    Q_INVOKABLE void loadMyPageInfo();
 
 signals:
-    void loadHistorySuccessEvent();
-    void loadHistoryErrorEvent(const QString& message);
+    void loadMyPageSuccessEvent();
+    void loadMyPageErrorEvent(const QString& message);
 
 public:
     MyPageController() = default;

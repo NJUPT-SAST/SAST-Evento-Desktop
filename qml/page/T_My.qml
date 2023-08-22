@@ -11,28 +11,28 @@ FluScrollablePage {
     title: lang.lang_my
 
     onErrorClicked: {
-        loadHistoryInfo()
+        loadMyPageInfo()
     }
 
-    function loadHistoryInfo() {
+    function loadMyPageInfo() {
         statusMode = FluStatusViewType.Loading
-        MyPageController.loadHistoryInfo()
+        MyPageController.loadMyPageInfo()
     }
 
     Component.onCompleted: {
-        loadHistoryInfo()
+        loadMyPageInfo()
     }
 
     Connections {
         target: MyPageController
-        function onLoadHistorySuccessEvent() {
+        function onLoadMyPageSuccessEvent() {
             statusMode = FluStatusViewType.Success
         }
     }
 
     Connections {
         target: MyPageController
-        function onLoadHistoryErrorEvent(message) {
+        function onLoadMyPageErrorEvent(message) {
             errorText = message
             statusMode = FluStatusViewType.Error
         }
@@ -54,10 +54,16 @@ FluScrollablePage {
                 height: 70
                 radius: [35, 35, 35, 35]
                 Image {
+                    id: img_avatar
                     asynchronous: true
                     anchors.fill: parent
                     sourceSize: Qt.size(width, height)
-                    source: "qrc:/res/svg/avatar_3.svg"
+                    Connections {
+                        target: MyPageController
+                        function onLoadMyPageSuccessEvent() {
+                            img_avatar.source = UserHelper.avatar
+                        }
+                    }
                 }
             }
             Column {
@@ -68,8 +74,14 @@ FluScrollablePage {
                     font: FluTextStyle.Title
                 }
                 FluText {
-                    text: "admin"
+                    id: text_name
                     font: FluTextStyle.Subtitle
+                    Connections {
+                        target: MyPageController
+                        function onLoadMyPageSuccessEvent() {
+                            text_name.text = UserHelper.name
+                        }
+                    }
                 }
             }
         }
@@ -91,8 +103,8 @@ FluScrollablePage {
                     scale: 1.8
                     iconSource: FluentIcons.Trackers
                     onClicked: {
-
-                        //TODO
+                        MainWindow.window.pushPage(
+                                    "qrc:/qml/page/T_DepartmentEvento.qml")
                     }
                 }
                 FluText {

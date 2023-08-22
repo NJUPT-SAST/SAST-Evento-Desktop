@@ -3,7 +3,7 @@
 #include "evento_brief_model.h"
 #include "convertor.h"
 
-void MyPageController::loadHistoryInfo()
+void MyPageController::loadMyPageInfo()
 {
     EventoException err;
     EventoBriefModel::getInstance()->resetModel(
@@ -12,8 +12,8 @@ void MyPageController::loadHistoryInfo()
     ));
 
     if ((int)err.code())
-        return emit loadHistoryErrorEvent(err.message());
-    emit loadHistorySuccessEvent();
+        return emit loadMyPageErrorEvent(err.message());
+    emit loadMyPageSuccessEvent();
 }
 
 MyPageController *MyPageController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
