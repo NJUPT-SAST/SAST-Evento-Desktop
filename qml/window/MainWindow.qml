@@ -106,7 +106,7 @@ CustomWindow {
             FluPaneItem {
                 title: lang.lang_timesheet
                 onTap: {
-                    nav_view.push("qrc:/qml/page/T_Timesheet.qml")
+                    nav_view.push("qrc:/qml/page/T_Calendar.qml")
                 }
             }
             FluPaneItem {
