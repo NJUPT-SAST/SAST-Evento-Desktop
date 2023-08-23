@@ -7,6 +7,33 @@ import SAST_Evento
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
+    onErrorClicked: {
+        loadEditInfo()
+    }
+
+    function loadEditInfo() {
+        statusMode = FluStatusViewType.Loading
+        EventoEditController.loadEditInfo(EventoHelper.id)
+    }
+
+    Component.onCompleted: {
+        loadEditInfo()
+    }
+
+    Connections {
+        target: EventoEditController
+        function onLoadEditSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: EventoEditController
+        function onLoadEditErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
 
     onErrorClicked: {
         loadEditInfo()
@@ -444,8 +471,8 @@ FluScrollablePage {
                 top: item_slide.bottom
                 topMargin: 15
             }
-            model: EventoEditHelper.isEdited ? SlideModel : null
 
+            model: EventoEditHelper.isEdited ? SlideModel : null
             delegate: Component {
                 FluImage {
                     width: 200
