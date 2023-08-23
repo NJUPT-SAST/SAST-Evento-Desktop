@@ -1,3 +1,4 @@
+#include <QDesktopServices>
 #include "plaza.h"
 #include "convertor.h"
 #include "latest_evento_model.h"
@@ -52,8 +53,12 @@ void PlazaController::loadPlazaInfo() {
     emit loadPlazaSuccessEvent();
 }
 
+void PlazaController::openUrl(const QString &link)
+{
+    QDesktopServices::openUrl(QUrl(link));
+}
+
 PlazaController *PlazaController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    static PlazaController instance;
-    return &instance;
+    return new PlazaController();
 }

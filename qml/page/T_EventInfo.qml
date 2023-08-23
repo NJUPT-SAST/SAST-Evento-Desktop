@@ -48,8 +48,7 @@ FluScrollablePage {
                 target: EventoInfoController
                 function onLoadEventoSuccessEvent() {
                     arr.push({
-                                 "url": model.url,
-                                 "title": model.title
+                                 "url": model.url
                              })
                     if (arr.length === 3)
                         rep.arrReady()
@@ -84,20 +83,6 @@ FluScrollablePage {
                     source: model.url
                     asynchronous: true
                     fillMode: Image.PreserveAspectCrop
-                }
-                Rectangle {
-                    height: 40
-                    width: parent.width
-                    anchors.bottom: parent.bottom
-                    color: "#33000000"
-                    FluText {
-                        anchors.fill: parent
-                        verticalAlignment: Qt.AlignVCenter
-                        horizontalAlignment: Qt.AlignHCenter
-                        text: model.title
-                        color: FluColors.Grey10
-                        font.pixelSize: 15
-                    }
                 }
             }
         }
@@ -468,19 +453,19 @@ FluScrollablePage {
 
             FluRatingControl {
                 id: rating
-                value: EventoHelper.isfeedback ? FeedbackHelper.score : score_value
+                value: FeedbackHelper.isFeedback ? FeedbackHelper.score : score_value
             }
 
             FluMultilineTextBox {
                 id: textbox_content
                 placeholderText: "输入你的留言（选填，Ctrl+Enter换行）"
-                text: EventoHelper.isfeedback ? FeedbackHelper.content : feedback_content
+                text: FeedbackHelper.isFeedback ? FeedbackHelper.content : feedback_content
                 width: parent.width
             }
 
             FluFilledButton {
                 implicitWidth: 200
-                text: EventoHelper.isfeedback ? "修改并提交" : "提交反馈"
+                text: FeedbackHelper.isFeedback ? "修改并提交" : "提交反馈"
                 disabled: rating.value === 0
                 anchors.right: parent.right
                 onClicked: {

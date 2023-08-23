@@ -16,7 +16,7 @@
         <file>qml/page/T_Slide.qml</file>
         <file>qml/page/T_SouvenirCard.qml</file>
         <file>qml/page/T_Theme.qml</file>
-        <file>qml/page/T_Timesheet.qml</file>
+        <file>qml/page/T_Calendar.qml</file>
         <file>qml/page/T_UserManage.qml</file>
         <file>res/image/bg_home_header.png</file>
         <file>res/image/evento_black.png</file>
@@ -40,5 +40,6 @@
         <file>res/image/banner_1.png</file>
         <file>res/image/banner_2.png</file>
         <file>res/image/banner_3.png</file>
+        <file>qml/page/T_EventoEdit.qml</file>
     </qresource>
 </RCC>

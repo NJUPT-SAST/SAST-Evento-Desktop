@@ -25,16 +25,13 @@ class EventoHelper : public QObject {
     Q_PROPERTY(bool isRegistrated MEMBER m_isRegistrated NOTIFY isRegistratedChanged)
     Q_PROPERTY(bool isParticipated MEMBER m_isParticipated NOTIFY isParticipatedChanged)
     Q_PROPERTY(bool isSubscribed MEMBER m_isSubscribed NOTIFY isSubscribedChanged)
-    Q_PROPERTY(bool isfeedback MEMBER m_isfeedback NOTIFY isfeedbackChanged)
 
 public:
     static EventoHelper *getInstance();
 
     static EventoHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
-    void updateEvento(const Evento &evento,
-                      const ParticipationStatus &participationStatus,
-                      const bool isfeedback);
+    void updateEvento(const Evento &evento, const ParticipationStatus &participationStatus);
 
 private:
     EventoHelper() = default;
@@ -52,7 +49,6 @@ private:
     bool m_isRegistrated;
     bool m_isParticipated;
     bool m_isSubscribed;
-    bool m_isfeedback;
 
 signals:
     void idChanged();
@@ -68,7 +64,7 @@ signals:
     void isRegistratedChanged();
     void isParticipatedChanged();
     void isSubscribedChanged();
-    void isfeedbackChanged();
 };
 
 #endif  // EVENTOHELPER_H
+

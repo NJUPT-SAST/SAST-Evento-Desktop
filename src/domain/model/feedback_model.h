@@ -18,8 +18,8 @@ public:
         Id = Qt::DisplayRole + 1,
         Score,
         Content,
-        UserId,
         EventId,
+        IsFeedback,
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

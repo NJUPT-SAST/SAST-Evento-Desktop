@@ -4,11 +4,11 @@
 #include "types.h"
 
 struct DTO_Feedback {
-    EventoID event;
-    UserID user;
+    int id;
+    EventoID eventId;
     int score;
     QString content;
-    ParticipationStatus participation;
+    bool isFeedback;
 };
 
 #endif // DTO_FEEDBACK_H

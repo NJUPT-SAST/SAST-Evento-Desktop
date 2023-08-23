@@ -49,6 +49,7 @@ FluScrollablePage {
                 function onLoadPlazaSuccessEvent() {
                     arr.push({
                                  "url": model.url,
+                                 "link": model.link,
                                  "title": model.title
                              })
                     if (arr.length === 3)
@@ -98,6 +99,12 @@ FluScrollablePage {
                         text: model.title
                         color: FluColors.Grey10
                         font.pixelSize: 15
+                    }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        PlazaController.openUrl(model.link)
                     }
                 }
             }

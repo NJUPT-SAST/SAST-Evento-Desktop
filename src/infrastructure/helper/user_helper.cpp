@@ -9,7 +9,9 @@ UserHelper *UserHelper::getInstance()
 
 UserHelper *UserHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 void UserHelper::updateUser(const User &user)
