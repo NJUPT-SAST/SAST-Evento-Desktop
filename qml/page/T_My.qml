@@ -134,7 +134,6 @@ FluScrollablePage {
                     left: button_souvenirCard.right
                     leftMargin: parent.width / 3
                 }
-
                 FluIconButton {
                     width: 50
                     height: 50

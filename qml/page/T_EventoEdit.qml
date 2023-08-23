@@ -7,6 +7,7 @@ import SAST_Evento
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
+
     onErrorClicked: {
         loadEditInfo()
     }
@@ -445,7 +446,6 @@ FluScrollablePage {
             }
 
             model: EventoEditHelper.isEdited ? SlideModel : null
-
             delegate: Component {
                 FluImage {
                     width: 200
