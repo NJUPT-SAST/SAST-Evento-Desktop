@@ -14,10 +14,7 @@ EventoEditHelper *EventoEditHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsE
     return pInstance;
 }
 
-/*--------------------------------------/
-/                                       /
-/                                       /
-/    Waiting for the completed part     /
-/                                       /
-/                                       /
-/--------------------------------------*/
+void EventoEditHelper::updateEventoEdit(const QString &departmentJson, const QString &m_locationJson, const QString &m_typeJson, const DTO_Evento &evento)
+{
+
+}
