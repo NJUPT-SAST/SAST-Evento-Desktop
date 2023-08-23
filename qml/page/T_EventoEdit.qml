@@ -7,22 +7,91 @@ import SAST_Evento
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
+    onErrorClicked: {
+        loadEditInfo()
+    }
+
+    function loadEditInfo() {
+        statusMode = FluStatusViewType.Loading
+        EventoEditController.loadEditInfo(EventoHelper.id)
+    }
+
+    Component.onCompleted: {
+        loadEditInfo()
+    }
+
+    Connections {
+        target: EventoEditController
+        function onLoadEditSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: EventoEditController
+        function onLoadEditErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
 
     Item {
+        id: item_all
         Layout.fillWidth: true
-        height: 900
+        implicitHeight: 900 + textbox_description.implicitHeight
+        FluArea {
+            id: area1
+            width: parent.width
+            height: 255
+            anchors {
+                top: parent.top
+            }
+        }
+        FluArea {
+            id: area2
+            width: parent.width
+            height: 230
+            anchors {
+                top: area1.bottom
+                topMargin: 10
+            }
+        }
+        FluArea {
+            id: area3
+            width: parent.width
+            anchors {
+                top: area2.bottom
+                topMargin: 10
+                bottom: item_slide.top
+                bottomMargin: 20
+            }
+        }
+        FluArea {
+            id: area4
+            width: parent.width
+            height: 230
+            anchors {
+                top: area3.bottom
+                topMargin: 10
+            }
+        }
 
         FluText {
             id: item_title
             text: "标题"
-            font.pixelSize: 25
+            font.pixelSize: 20
             font.bold: true
-            anchors.top: parent.top
-            anchors.topMargin: 10
+            anchors {
+                top: parent.top
+                topMargin: 10
+                left: parent.left
+                leftMargin: 20
+            }
         }
         FluTextBox {
             id: textbox_title
             implicitWidth: 600
+            text: EventoEditHelper.isEdited ? EventoHelper.title : ""
             anchors {
                 left: item_title.right
                 leftMargin: 60
@@ -33,16 +102,18 @@ FluScrollablePage {
         FluText {
             id: item_tag
             anchors {
+                left: item_title.left
                 top: item_title.bottom
                 topMargin: 15
             }
             text: "标签"
-            font.pixelSize: 25
+            font.pixelSize: 20
             font.bold: true
         }
         FluTextBox {
             id: textbox_tag
             implicitWidth: 600
+            text: EventoEditHelper.isEdited ? EventoHelper.tag : ""
             anchors {
                 left: textbox_title.left
                 verticalCenter: item_tag.verticalCenter
@@ -51,9 +122,9 @@ FluScrollablePage {
 
         ////////////////
         FluText {
-            id: item_register_time
-            text: "报名时间"
-            font.pixelSize: 25
+            id: item_event_time
+            text: "活动时间"
+            font.pixelSize: 20
             font.bold: true
             anchors {
                 left: item_title.left
@@ -62,74 +133,9 @@ FluScrollablePage {
             }
         }
         FluText {
-            id: text_start1
-            text: "开始"
-            font.pixelSize: 22
-            anchors {
-                left: textbox_title.left
-                top: item_register_time.top
-            }
-        }
-        FluCalendarPicker {
-            id: clender_picker_register_start
-            width: 220
-            anchors {
-                left: text_start1.right
-                leftMargin: 20
-                top: item_register_time.top
-            }
-        }
-        FluTimePicker {
-            id: time_picker_register_start
-            hourFormat: FluTimePickerType.HH
-            anchors {
-                left: clender_picker_register_start.right
-                leftMargin: 15
-                top: item_register_time.top
-            }
-        }
-        FluText {
-            id: text_end1
-            text: "结束"
-            font.pixelSize: 22
-            anchors {
-                left: textbox_title.left
-                top: text_start1.bottom
-                topMargin: 15
-            }
-        }
-        FluCalendarPicker {
-            id: clender_picker_register_end
-            width: 220
-            anchors {
-                left: clender_picker_register_start.left
-                top: text_end1.top
-            }
-        }
-        FluTimePicker {
-            id: time_picker_register_end
-            hourFormat: FluTimePickerType.HH
-            anchors {
-                left: time_picker_register_start.left
-                top: text_end1.top
-            }
-        }
-        ////////////////
-        FluText {
-            id: item_event_time
-            text: "活动时间"
-            font.pixelSize: 25
-            font.bold: true
-            anchors {
-                left: item_title.left
-                top: text_end1.bottom
-                topMargin: 15
-            }
-        }
-        FluText {
             id: text_start2
             text: "开始"
-            font.pixelSize: 22
+            font.pixelSize: 18
             anchors {
                 left: textbox_title.left
                 top: item_event_time.top
@@ -154,7 +160,7 @@ FluScrollablePage {
         FluText {
             id: text_end2
             text: "结束"
-            font.pixelSize: 22
+            font.pixelSize: 18
             anchors {
                 left: textbox_title.left
                 top: text_start2.bottom
@@ -180,14 +186,80 @@ FluScrollablePage {
 
         ////////////////
         FluText {
-            id: item_location
-            text: "地点"
-            font.pixelSize: 25
+            id: item_register_time
+            text: "报名时间"
+            font.pixelSize: 20
             font.bold: true
             anchors {
                 left: item_title.left
-                top: text_end2.bottom
+                top: clender_picker_event_end.bottom
                 topMargin: 15
+            }
+        }
+        FluText {
+            id: text_start1
+            text: "开始"
+            font.pixelSize: 20
+            anchors {
+                left: textbox_title.left
+                top: item_register_time.top
+            }
+        }
+        FluCalendarPicker {
+            id: clender_picker_register_start
+            width: 220
+            anchors {
+                left: text_start1.right
+                leftMargin: 18
+                top: item_register_time.top
+            }
+        }
+        FluTimePicker {
+            id: time_picker_register_start
+            hourFormat: FluTimePickerType.HH
+            anchors {
+                left: clender_picker_register_start.right
+                leftMargin: 15
+                top: item_register_time.top
+            }
+        }
+        FluText {
+            id: text_end1
+            text: "结束"
+            font.pixelSize: 18
+            anchors {
+                left: textbox_title.left
+                top: text_start1.bottom
+                topMargin: 15
+            }
+        }
+        FluCalendarPicker {
+            id: clender_picker_register_end
+            width: 220
+            anchors {
+                left: clender_picker_register_start.left
+                top: text_end1.top
+            }
+        }
+        FluTimePicker {
+            id: time_picker_register_end
+            hourFormat: FluTimePickerType.HH
+            anchors {
+                left: time_picker_register_start.left
+                top: text_end1.top
+            }
+        }
+
+        ///////////////
+        FluText {
+            id: item_location
+            text: "地点"
+            font.pixelSize: 20
+            font.bold: true
+            anchors {
+                left: item_title.left
+                top: text_end1.bottom
+                topMargin: 40
             }
         }
 
@@ -224,7 +296,7 @@ FluScrollablePage {
         FluText {
             id: item_department
             text: "部门"
-            font.pixelSize: 25
+            font.pixelSize: 20
             font.bold: true
             anchors {
                 left: rect_location.right
@@ -267,12 +339,12 @@ FluScrollablePage {
         FluText {
             id: item_type
             text: "类型"
-            font.pixelSize: 25
+            font.pixelSize: 20
             font.bold: true
             anchors {
                 left: item_title.left
                 top: rect_location.bottom
-                topMargin: 15
+                topMargin: 40
             }
         }
         FluComboBox {
@@ -287,7 +359,7 @@ FluScrollablePage {
         FluText {
             id: item_allow_comflict
             text: "允许冲突"
-            font.pixelSize: 25
+            font.pixelSize: 20
             font.bold: true
             anchors {
                 left: item_department.left
@@ -296,6 +368,7 @@ FluScrollablePage {
         }
         FluCheckBox {
             id: check_box_allow
+            checked: EventoEditHelper.isEdited ? EventoEditHelper.allowConflict : false
             anchors {
                 left: rect_department.left
                 bottom: item_allow_comflict.bottom
@@ -305,7 +378,7 @@ FluScrollablePage {
         FluText {
             id: item_description
             text: "描述"
-            font.pixelSize: 25
+            font.pixelSize: 20
             font.bold: true
             anchors {
                 left: item_title.left
@@ -317,6 +390,7 @@ FluScrollablePage {
             id: textbox_description
             width: 600
             placeholderText: "Ctrl+Enter换行"
+            text: EventoEditHelper.isEdited ? EventoHelper.description : ""
             anchors {
                 left: textbox_title.left
                 top: item_description.top
@@ -326,17 +400,18 @@ FluScrollablePage {
         FluText {
             id: item_slide
             text: "图片"
-            font.pixelSize: 25
+            font.pixelSize: 20
             font.bold: true
             anchors {
                 left: item_title.left
-                top: item_description.bottom
-                topMargin: 15
+                top: textbox_description.bottom
+                topMargin: 40
             }
         }
         FluFilledButton {
             id: btn_open_gallery
             text: "打开图库"
+            implicitWidth: 200
             anchors {
                 left: textbox_title.left
                 top: item_slide.top
@@ -352,6 +427,7 @@ FluScrollablePage {
             font: FluTextStyle.Caption
             color: FluColors.Grey110
             anchors {
+                left: item_title.left
                 top: list_view_slide.top
             }
         }
@@ -368,22 +444,13 @@ FluScrollablePage {
                 topMargin: 15
             }
 
-            model: [{
-                    "id": 1,
-                    "url": "qrc:/res/image/banner_1.png"
-                }, {
-                    "id": 2,
-                    "url": "qrc:/res/image/banner_2.png"
-                }, {
-                    "id": 3,
-                    "url": "qrc:/res/image/banner_3.png"
-                }]
+            model: EventoEditHelper.isEdited ? SlideModel : null
 
             delegate: Component {
                 FluImage {
                     width: 200
                     height: 150
-                    source: modelData.url
+                    source: model.url
                     fillMode: Image.PreserveAspectCrop
                     MouseArea {
                         anchors.fill: parent
@@ -405,12 +472,13 @@ FluScrollablePage {
         }
 
         FluFilledButton {
-            text: "创建"
-            implicitWidth: 120
+            text: EventoEditHelper.isEdited ? "完成修改" : "创建"
+            font: FluTextStyle.Subtitle
+            implicitWidth: parent.width
+            implicitHeight: 45
             anchors {
-                bottom: parent.bottom
-                bottomMargin: 15
-                right: textbox_title.right
+                top: area4.bottom
+                topMargin: 10
             }
         }
     }

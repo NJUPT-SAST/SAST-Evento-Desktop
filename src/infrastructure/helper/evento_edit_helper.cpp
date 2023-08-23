@@ -19,6 +19,12 @@ void EventoEditHelper::updateEventoEdit(const QString & departmentJson, const QS
     setProperty("departmentJson", departmentJson);
     setProperty("locationJson", locationJson);
     setProperty("typeJson", typeJson);
+    setProperty("isEdited", true);
+    if (evento.id == 0){
+        setProperty("isEdited", false);
+        return;
+    }
+    // 编辑模式
     m_departmentIds.clear();
     for (const auto& department : evento.departments) {
         m_departmentIds.append(department.id);
