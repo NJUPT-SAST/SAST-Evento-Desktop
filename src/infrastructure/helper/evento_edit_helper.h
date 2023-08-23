@@ -12,10 +12,10 @@ class EventoEditHelper : public QObject {
     Q_PROPERTY(QString departmentJson MEMBER m_departmentJson NOTIFY departmentJsonChanged)
     Q_PROPERTY(QString locationJson MEMBER m_locationJson NOTIFY locationJsonChanged)
     Q_PROPERTY(QString typeJson MEMBER m_typeJson NOTIFY typeJsonChanged)
-    Q_PROPERTY(QString departmentIds MEMBER m_departmentIds NOTIFY departmentIdsChanged)
+    Q_PROPERTY(QVariantList departmentIds MEMBER m_departmentIds NOTIFY departmentIdsChanged)
     Q_PROPERTY(int locationId MEMBER m_locationId NOTIFY locationIdChanged)
     Q_PROPERTY(int typeId MEMBER m_typeId NOTIFY typeIdChanged)
-    Q_PROPERTY(allowConfilict typeId MEMBER m_allowConfilict NOTIFY allowConfilictChanged)
+    Q_PROPERTY(bool allowConflict MEMBER m_allowConflict NOTIFY allowConflictChanged)
 
 public:
     static EventoEditHelper *getInstance();
@@ -35,7 +35,7 @@ private:
     QVariantList m_departmentIds;
     int m_locationId;
     int m_typeId;
-    bool m_allowConfilict;
+    bool m_allowConflict;
 
 signals:
     void departmentJsonChanged();
@@ -44,7 +44,7 @@ signals:
     void departmentIdsChanged();
     void locationIdChanged();
     void typeIdChanged();
-    void allowConfilictChanged();
+    void allowConflictChanged();
 };
 
 #endif // EVENTOEDITHELPER_H
