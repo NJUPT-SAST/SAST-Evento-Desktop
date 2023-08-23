@@ -16,16 +16,16 @@ EventoHelper *EventoHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 
 void EventoHelper::updateEvento(const Evento &evento, const ParticipationStatus &participationStatus)
 {
-    m_title = evento.title;
-    m_state = (int)evento.state;
-    m_eventTime = evento.eventTime;
-    m_registerTime = evento.registerTime;
-    m_department = evento.department;
-    m_location = evento.location;
-    m_tag = evento.tag;
-    m_type = evento.type.name;
-    m_description = evento.description;
-    m_isRegistrated = participationStatus.isRegistrated;
-    m_isParticipated = participationStatus.isParticipated;
-    m_isSubscribed = participationStatus.isSubscribed;
+    setProperty("title", evento.title);
+    setProperty("state", (int)evento.state);
+    setProperty("eventTime", evento.eventTime);
+    setProperty("registerTime", evento.registerTime);
+    setProperty("department", evento.department);
+    setProperty("location", evento.location);
+    setProperty("tag", evento.tag);
+    setProperty("type", evento.type.name);
+    setProperty("description", evento.description);
+    setProperty("isRegistrated", participationStatus.isRegistrated);
+    setProperty("isParticipated", participationStatus.isParticipated);
+    setProperty("isSubscribed", participationStatus.isSubscribed);
 }
