@@ -40,5 +40,7 @@
         <file>res/image/banner_1.png</file>
         <file>res/image/banner_2.png</file>
         <file>res/image/banner_3.png</file>
+        <file>qml/page/T_SlideManagement.qml</file>
+        <file>qml/page/T_SlideManagementEdit.qml</file>
     </qresource>
 </RCC>
