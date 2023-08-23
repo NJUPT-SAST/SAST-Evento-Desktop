@@ -92,12 +92,7 @@ FluScrollablePage {
         id: item_title
         Layout.topMargin: 10
         font: FluTextStyle.TitleLarge
-        Connections {
-            target: EventoInfoController
-            function onLoadEventoSuccessEvent() {
-                item_title.text = EventoHelper.title
-            }
-        }
+        text: EventoHelper.title
     }
 
     Row {
@@ -116,12 +111,7 @@ FluScrollablePage {
                     wrapMode: Text.WordWrap
                     font: FluTextStyle.Caption
                     anchors.verticalCenter: parent.verticalCenter
-                    Connections {
-                        target: EventoInfoController
-                        function onLoadEventoSuccessEvent() {
-                            text_eventTime.text = "活动时间：" + EventoHelper.eventTime
-                        }
-                    }
+                    text: "活动时间：" + EventoHelper.eventTime
                 }
             }
 
@@ -136,12 +126,7 @@ FluScrollablePage {
                     wrapMode: Text.WordWrap
                     font: FluTextStyle.Caption
                     anchors.verticalCenter: parent.verticalCenter
-                    Connections {
-                        target: EventoInfoController
-                        function onLoadEventoSuccessEvent() {
-                            text_registerTime.text = "报名时间：" + EventoHelper.registerTime
-                        }
-                    }
+                    text: "报名时间：" + EventoHelper.registerTime
                 }
             }
 
@@ -156,12 +141,7 @@ FluScrollablePage {
                     wrapMode: Text.WordWrap
                     font: FluTextStyle.Caption
                     anchors.verticalCenter: parent.verticalCenter
-                    Connections {
-                        target: EventoInfoController
-                        function onLoadEventoSuccessEvent() {
-                            text_loc.text = EventoHelper.location
-                        }
-                    }
+                    text: EventoHelper.location
                 }
             }
 
@@ -176,12 +156,7 @@ FluScrollablePage {
                     wrapMode: Text.WordWrap
                     font: FluTextStyle.Caption
                     anchors.verticalCenter: parent.verticalCenter
-                    Connections {
-                        target: EventoInfoController
-                        function onLoadEventoSuccessEvent() {
-                            text_dep.text = EventoHelper.department
-                        }
-                    }
+                    text: EventoHelper.department
                 }
             }
 
@@ -196,12 +171,7 @@ FluScrollablePage {
                     wrapMode: Text.WordWrap
                     font: FluTextStyle.Caption
                     anchors.verticalCenter: parent.verticalCenter
-                    Connections {
-                        target: EventoInfoController
-                        function onLoadEventoSuccessEvent() {
-                            text_type.text = EventoHelper.type
-                        }
-                    }
+                    text: EventoHelper.type
                 }
             }
 
@@ -223,12 +193,7 @@ FluScrollablePage {
                         color: FluColors.Grey100
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.horizontalCenter: parent.horizontalCenter
-                        Connections {
-                            target: EventoInfoController
-                            function onLoadEventoSuccessEvent() {
-                                text_tag.text = EventoHelper.tag
-                            }
-                        }
+                        text: EventoHelper.tag
                     }
                 }
             }
@@ -246,39 +211,10 @@ FluScrollablePage {
             width: parent.width / 2 - 135
             anchors.verticalCenter: parent.verticalCenter
             FluText {
+                id: text_evento_state
                 font: FluTextStyle.Subtitle
-                text: {
-                    switch (EventoHelper.state) {
-                    case 1:
-                        return "未开始"
-                    case 2:
-                        return "报名中"
-                    case 3:
-                        return "进行中"
-                    case 4:
-                        return "已取消"
-                    case 5:
-                        return "已结束"
-                    default:
-                        return ""
-                    }
-                }
-                color: {
-                    switch (EventoHelper.state) {
-                    case 1:
-                        return FluColors.Blue.normal
-                    case 2:
-                        return FluColors.Green.normal
-                    case 3:
-                        return FluColors.Orange.normal
-                    case 4:
-                        return FluColors.Red.normal
-                    case 5:
-                        return FluColors.Grey110
-                    default:
-                        return null
-                    }
-                }
+                text: convert2Text(EventoHelper.state)
+                color: convert2Color(EventoHelper.state)
             }
 
             FluToggleButton {
@@ -287,8 +223,7 @@ FluScrollablePage {
                 implicitWidth: 250
                 text: EventoHelper.isRegistrated ? "取消报名" : "报名活动"
                 checked: EventoHelper.isRegistrated
-                disabled: EventoHelper.isParticipated
-
+                disabled: EventoHelper.state !== 2
                 onClicked: {
                     statusMode = FluStatusViewType.Loading
                     EventoHelper.isRegistrated = !EventoHelper.isRegistrated
@@ -318,8 +253,7 @@ FluScrollablePage {
                 Layout.topMargin: 15
                 text: EventoHelper.isSubscribed ? "取消订阅" : "订阅活动"
                 checked: EventoHelper.isSubscribed
-                disabled: EventoHelper.isParticipated
-
+                disabled: EventoHelper.state !== 2
                 onClicked: {
                     statusMode = FluStatusViewType.Loading
                     EventoHelper.isSubscribed = !EventoHelper.isSubscribed
@@ -352,9 +286,9 @@ FluScrollablePage {
             FluButton {
                 id: btn_check
                 implicitWidth: 250
+                Layout.topMargin: 9
                 text: EventoHelper.isParticipated ? "已签到" : "签到"
                 disabled: EventoHelper.isParticipated
-                Layout.topMargin: 9
                 onClicked: {
                     dialog.open()
                 }
@@ -368,12 +302,7 @@ FluScrollablePage {
         width: parent.width
         wrapMode: Text.WordWrap
         font.pixelSize: 18
-        Connections {
-            target: EventoInfoController
-            function onLoadEventoSuccessEvent() {
-                item_desc.text = EventoHelper.description
-            }
-        }
+        text: EventoHelper.description
     }
 
     FluContentDialog {
@@ -429,9 +358,10 @@ FluScrollablePage {
 
     Loader {
         id: loader
-        sourceComponent: EventoHelper.isParticipated ? com_comment : undefined
         Layout.topMargin: 15
         Layout.fillWidth: true
+        sourceComponent: (EventoHelper.isParticipated
+                          && EventoHelper.state === 5) ? com_comment : undefined
     }
 
     Component {
@@ -459,15 +389,16 @@ FluScrollablePage {
             FluMultilineTextBox {
                 id: textbox_content
                 placeholderText: "输入你的留言（选填，Ctrl+Enter换行）"
-                text: FeedbackHelper.isFeedback ? FeedbackHelper.content : feedback_content
                 width: parent.width
+                text: FeedbackHelper.isFeedback ? FeedbackHelper.content : feedback_content
             }
 
             FluFilledButton {
+                id: btn_submit
                 implicitWidth: 200
-                text: FeedbackHelper.isFeedback ? "修改并提交" : "提交反馈"
                 disabled: rating.value === 0
                 anchors.right: parent.right
+                text: FeedbackHelper.isFeedback ? "修改并提交" : "提交反馈"
                 onClicked: {
                     score_value = rating.value
                     feedback_content = textbox_content.text
@@ -493,6 +424,40 @@ FluScrollablePage {
                     loadEventoInfo()
                 }
             }
+        }
+    }
+
+    function convert2Color(s) {
+        switch (s) {
+        case 1:
+            return FluColors.Blue.normal
+        case 2:
+            return FluColors.Green.normal
+        case 3:
+            return FluColors.Orange.normal
+        case 4:
+            return FluColors.Red.normal
+        case 5:
+            return FluColors.Grey110
+        default:
+            return null
+        }
+    }
+
+    function convert2Text(s) {
+        switch (s) {
+        case 1:
+            return "未开始"
+        case 2:
+            return "报名中"
+        case 3:
+            return "进行中"
+        case 4:
+            return "已取消"
+        case 5:
+            return "已结束"
+        default:
+            return ""
         }
     }
 }

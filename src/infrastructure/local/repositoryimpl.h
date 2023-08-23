@@ -258,7 +258,7 @@ public:
     std::vector<DTO_Slide> get_slide_list(EventoException& err) override;  // Test completed
     std::vector<DTO_Slide> get_event_slide_list(EventoID id, EventoException& err) override;  // Test completed
     std::vector<DTO_Slide> get_home_slide_list(const int& size, EventoException& err) override;  // Test completed
-    QString get_type_list(const int& page, const int& size, EventoException& err) override;  // Test completed
+    QString get_type_list(EventoException& err) override;  // Test completed
     QString get_location_list(EventoException& err) override;  // Test completed
     QString get_department_list(EventoException& err) override;  // Test completed
     QString get_qrcode(const int& eventId, EventoException& err) override;  // Test completed

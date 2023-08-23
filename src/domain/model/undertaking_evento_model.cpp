@@ -51,7 +51,7 @@ QHash<int, QByteArray> UndertakingEventoModel::roleNames() const
     return roles;
 }
 
-void UndertakingEventoModel::resetModel(const std::vector<UndertakingEvento> &model)
+void UndertakingEventoModel::resetModel(std::vector<UndertakingEvento> model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();

@@ -4,7 +4,8 @@
 #include <QtQml>
 #include "dto/evento.h"
 
-class EventoEditHelper : public QObject {
+class EventoEditHelper : public QObject
+{
     Q_OBJECT
     QML_NAMED_ELEMENT(EventoEditHelper)
     QML_SINGLETON
@@ -16,14 +17,15 @@ class EventoEditHelper : public QObject {
     Q_PROPERTY(int locationId MEMBER m_locationId NOTIFY locationIdChanged)
     Q_PROPERTY(int typeId MEMBER m_typeId NOTIFY typeIdChanged)
     Q_PROPERTY(bool allowConflict MEMBER m_allowConflict NOTIFY allowConflictChanged)
+    Q_PROPERTY(bool isEdited MEMBER m_isEdited NOTIFY isEditedChanged)
 
 public:
     static EventoEditHelper *getInstance();
 
     static EventoEditHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
-    void updateEventoEdit(const QString& departmentJson, const QString& m_locationJson,
-                          const QString& m_typeJson, const DTO_Evento& evento = DTO_Evento());
+    void updateEventoEdit(const QString &departmentJson, const QString &m_locationJson,
+                          const QString &m_typeJson, const DTO_Evento &evento = DTO_Evento());
 
 private:
     EventoEditHelper() = default;
@@ -31,7 +33,9 @@ private:
     QString m_departmentJson;
     QString m_locationJson;
     QString m_typeJson;
+    bool m_isEdited; // true: 编辑模式 false: 创建模式
 
+    // 编辑模式属性
     QVariantList m_departmentIds;
     int m_locationId;
     int m_typeId;
@@ -45,6 +49,7 @@ signals:
     void locationIdChanged();
     void typeIdChanged();
     void allowConflictChanged();
+    void isEditedChanged();
 };
 
 #endif // EVENTOEDITHELPER_H
