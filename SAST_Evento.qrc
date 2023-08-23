@@ -13,7 +13,6 @@
         <file>qml/page/T_Profile.qml</file>
         <file>qml/page/T_Schedule.qml</file>
         <file>qml/page/T_Settings.qml</file>
-        <file>qml/page/T_Slide.qml</file>
         <file>qml/page/T_SouvenirCard.qml</file>
         <file>qml/page/T_Theme.qml</file>
         <file>qml/page/T_Calendar.qml</file>

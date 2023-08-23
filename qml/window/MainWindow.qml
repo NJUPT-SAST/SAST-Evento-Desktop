@@ -135,7 +135,7 @@ CustomWindow {
             FluPaneItem {
                 title: lang.lang_slide
                 onTap: {
-                    nav_view.push("qrc:/qml/page/T_Slide.qml")
+                    nav_view.push("qrc:/qml/page/T_SlideManagement.qml")
                 }
             }
         }
