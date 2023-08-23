@@ -74,7 +74,7 @@ QHash<int, QByteArray> EventoBlockModel::roleNames() const
     return roles;
 }
 
-void EventoBlockModel::resetModel(const std::vector<EventoBlock> &model)
+void EventoBlockModel::resetModel(std::vector<EventoBlock> model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();

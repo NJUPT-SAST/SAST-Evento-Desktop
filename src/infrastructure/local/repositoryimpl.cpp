@@ -142,7 +142,7 @@ DTO_Feedback repositoryImpl::get_feedback_info(const EventoID &eventoId, EventoE
             };
         }
     }
-    err = EventoException(EventoExceptionCode::UnexpectedError, "no feedback info");
+    err = EventoException(EventoExceptionCode::Ok);
     return DTO_Feedback();
 }
 
@@ -259,27 +259,15 @@ std::vector<DTO_Slide> repositoryImpl::get_event_slide_list(EventoID id, EventoE
     return res;
 }
 
-QString repositoryImpl::get_type_list(const int &page, const int &size, EventoException &err)
+QString repositoryImpl::get_type_list(EventoException &err)
 {
     QJsonArray res;
-    int beginId = (page-1) * size +1;
-    int endId = beginId + (size-1);
-
-    if(endId > type_data_list.size()){
-        endId = type_data_list.size();
-    }
-    if(type_data_list.size() < beginId){
-        err = EventoException(EventoExceptionCode::UnexpectedError, "get_type_list beginId too big error");
-        return QString(QJsonDocument(res).toJson(QJsonDocument::Compact).toStdString().c_str());
-    }
-    else{
-        for(int i = beginId - 1; i<endId; i++){
-            type_data unit = type_data_list.at(i);
-            QJsonObject item;
-            item.insert("id", unit.id.toInt());
-            item.insert("name", unit.type_name);
-            res.push_back(item);
-        }
+    for(int i = 0; i<type_data_list.size(); i++){
+        type_data unit = type_data_list.at(i);
+        QJsonObject item;
+        item.insert("id", unit.id.toInt());
+        item.insert("name", unit.type_name);
+        res.push_back(item);
     }
     return QString(QJsonDocument(res).toJson(QJsonDocument::Compact).toStdString().c_str());
 }
