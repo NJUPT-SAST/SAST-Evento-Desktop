@@ -134,15 +134,15 @@ DTO_Feedback repositoryImpl::get_feedback_info(const EventoID &eventoId, EventoE
             (unit.event_id == eventoId)){
             feedback_data feedback_unit = feedback_data_list.at(i);
             return DTO_Feedback{
+                i,
                 eventoId,
-                feedback_unit.user_id,
                 feedback_unit.score.toInt(),
                 feedback_unit.content,
-                unit.participationStatus
+                true
             };
         }
     }
-    err = EventoException(EventoExceptionCode::UnexpectedError, "get_feedback_info json error");
+    err = EventoException(EventoExceptionCode::Ok);
     return DTO_Feedback();
 }
 
@@ -204,7 +204,7 @@ DTO_Evento repositoryImpl::get_event(EventoID event, EventoException &err)
     return readEvento(event);
 }
 
-std::vector<DTO_Feedback> repositoryImpl::get_feedback_list(EventoException &err)
+std::vector<DTO_Feedback> repositoryImpl::get_feedback_list(EventoID eventoId, EventoException &err)
 {
     std::vector<DTO_Feedback> res;
 
@@ -212,13 +212,15 @@ std::vector<DTO_Feedback> repositoryImpl::get_feedback_list(EventoException &err
         feedback_data unit = feedback_data_list.at(i);
         QString participateId = unit.participate_id;
         std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("id", participateId));
-        res.push_back(DTO_Feedback{
-            participationList.at(0).event_id,
-            participationList.at(0).user_id,
-            unit.score.toInt(),
-            unit.content,
-            participationList.at(0).participationStatus
-        });
+        if(participationList.at(0).event_id == eventoId){
+            res.push_back(DTO_Feedback{
+                i,
+                participationList.at(0).event_id,
+                unit.score.toInt(),
+                unit.content,
+                true
+            });
+        }
     }
     return res;
 }
@@ -257,27 +259,15 @@ std::vector<DTO_Slide> repositoryImpl::get_event_slide_list(EventoID id, EventoE
     return res;
 }
 
-QString repositoryImpl::get_type_list(const int &page, const int &size, EventoException &err)
+QString repositoryImpl::get_type_list(EventoException &err)
 {
     QJsonArray res;
-    int beginId = (page-1) * size +1;
-    int endId = beginId + (size-1);
-
-    if(endId > type_data_list.size()){
-        endId = type_data_list.size();
-    }
-    if(type_data_list.size() < beginId){
-        err = EventoException(EventoExceptionCode::UnexpectedError, "get_type_list beginId too big error");
-        return QString(QJsonDocument(res).toJson(QJsonDocument::Compact).toStdString().c_str());
-    }
-    else{
-        for(int i = beginId - 1; i<endId; i++){
-            type_data unit = type_data_list.at(i);
-            QJsonObject item;
-            item.insert("id", unit.id.toInt());
-            item.insert("name", unit.type_name);
-            res.push_back(item);
-        }
+    for(int i = 0; i<type_data_list.size(); i++){
+        type_data unit = type_data_list.at(i);
+        QJsonObject item;
+        item.insert("id", unit.id.toInt());
+        item.insert("name", unit.type_name);
+        res.push_back(item);
     }
     return QString(QJsonDocument(res).toJson(QJsonDocument::Compact).toStdString().c_str());
 }
@@ -339,7 +329,7 @@ bool repositoryImpl::event_feedback(const DTO_Feedback &code, EventoException &e
 {
     QString participationId;
     for(int i = 0; i < participate_data_list.size(); i++){
-        if(!participate_data_list.at(i).event_id.compare(QString::number(code.event)) &&
+        if(!participate_data_list.at(i).event_id.compare(QString::number(code.eventId)) &&
             !participate_data_list.at(i).user_id.compare("B22041234")){
             participationId = participate_data_list.at(i).id;
             break;
@@ -348,18 +338,18 @@ bool repositoryImpl::event_feedback(const DTO_Feedback &code, EventoException &e
 
     for(int i = 0; i < feedback_data_list.size(); i++){
         if(!feedback_data_list.at(i).participate_id.compare(participationId)){
-            QJsonObject feedbackObj_temp;
-            feedback_data_list.push_back(feedback_data{
-                code.content,
-                QString::number(feedback_data_list.size() + 1),
-                participationId,
-                QString::number(code.score),
-                "B22041234"
-            });
-            return true;
+            err = EventoException(EventoExceptionCode::UnexpectedError, "has feedback");
+            return false;
         }
     }
-    return false;
+    feedback_data_list.push_back(feedback_data{
+        code.content,
+        QString::number(feedback_data_list.size() + 1),
+        participationId,
+        QString::number(code.score),
+        "B22041234"
+    });
+    return true;
 }
 
 bool repositoryImpl::event_subscribe(EventoID event, EventoException &err)

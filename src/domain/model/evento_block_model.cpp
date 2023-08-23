@@ -74,7 +74,7 @@ QHash<int, QByteArray> EventoBlockModel::roleNames() const
     return roles;
 }
 
-void EventoBlockModel::resetModel(const std::vector<EventoBlock> &model)
+void EventoBlockModel::resetModel(std::vector<EventoBlock> model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
@@ -84,7 +84,9 @@ void EventoBlockModel::resetModel(const std::vector<EventoBlock> &model)
 
 EventoBlockModel *EventoBlockModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 EventoBlockModel *EventoBlockModel::getInstance()

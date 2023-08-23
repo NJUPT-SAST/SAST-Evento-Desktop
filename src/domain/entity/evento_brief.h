@@ -8,6 +8,7 @@ struct EventoBrief {
     QString title;
     QString description;
     QString time;
+    QString location;
     QString department;
     Image image;
 };

@@ -42,7 +42,7 @@ QHash<int, QByteArray> SlideModel::roleNames() const
     return roles;
 }
 
-void SlideModel::resetModel(const std::vector<Slide> &model)
+void SlideModel::resetModel(std::vector<Slide> model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
@@ -52,7 +52,9 @@ void SlideModel::resetModel(const std::vector<Slide> &model)
 
 SlideModel *SlideModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 SlideModel *SlideModel::getInstance()

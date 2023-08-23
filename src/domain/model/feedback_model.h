@@ -18,8 +18,8 @@ public:
         Id = Qt::DisplayRole + 1,
         Score,
         Content,
-        UserId,
         EventId,
+        IsFeedback,
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -28,7 +28,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<Feedback> &model);
+    void resetModel(std::vector<Feedback> model);
 
 private:
     FeedbackModel() = default;

@@ -25,10 +25,10 @@ QVariant FeedbackModel::data(const QModelIndex &index, int role) const
         return element.score;
     case Role::Content:
         return element.content;
-    case Role::UserId:
-        return element.userId;
     case Role::EventId:
         return element.eventId;
+    case Role::IsFeedback:
+        return element.isFeedback;
     default:
         break;
     }
@@ -44,13 +44,13 @@ QHash<int, QByteArray> FeedbackModel::roleNames() const
         roles.insert(Id, "id");
         roles.insert(Score, "score");
         roles.insert(Content, "content");
-        roles.insert(UserId, "userId");
         roles.insert(EventId, "eventId");
+        roles.insert(IsFeedback, "isFeedback");
     }
     return roles;
 }
 
-void FeedbackModel::resetModel(const std::vector<Feedback> &model)
+void FeedbackModel::resetModel(std::vector<Feedback> model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
@@ -60,7 +60,9 @@ void FeedbackModel::resetModel(const std::vector<Feedback> &model)
 
 FeedbackModel *FeedbackModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 FeedbackModel *FeedbackModel::getInstance()

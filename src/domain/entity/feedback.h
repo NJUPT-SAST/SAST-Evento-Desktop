@@ -6,10 +6,10 @@
 struct Feedback
 {
     int id;
+    EventoID eventId;
     int score;
     QString content;
-    QString userId;
-    EventoID eventId;
+    bool isFeedback;
 };
 
 #endif // FEEDBACK_H

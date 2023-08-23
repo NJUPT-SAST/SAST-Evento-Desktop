@@ -25,7 +25,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<UserBrief>& model);
+    void resetModel(std::vector<UserBrief> model);
 
     UserBriefModel(const UserBriefModel&) = delete;
     UserBriefModel& operator=(const UserBriefModel&) = delete;

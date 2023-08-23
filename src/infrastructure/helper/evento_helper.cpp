@@ -9,12 +9,12 @@ EventoHelper *EventoHelper::getInstance()
 
 EventoHelper *EventoHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
-void EventoHelper::updateEvento(const Evento &evento,
-                                const ParticipationStatus &participationStatus,
-                                const bool isfeedback)
+void EventoHelper::updateEvento(const Evento &evento, const ParticipationStatus &participationStatus)
 {
     m_title = evento.title;
     m_state = (int)evento.state;
@@ -28,5 +28,4 @@ void EventoHelper::updateEvento(const Evento &evento,
     m_isRegistrated = participationStatus.isRegistrated;
     m_isParticipated = participationStatus.isParticipated;
     m_isSubscribed = participationStatus.isSubscribed;
-    m_isfeedback = isfeedback;
 }

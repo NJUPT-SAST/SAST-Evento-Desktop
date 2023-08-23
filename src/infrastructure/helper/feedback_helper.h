@@ -13,8 +13,8 @@ class FeedbackHelper : public QObject {
     Q_PROPERTY(int id MEMBER m_id NOTIFY idChanged)
     Q_PROPERTY(int score MEMBER m_score NOTIFY scoreChanged)
     Q_PROPERTY(QString content MEMBER m_content NOTIFY contentChanged)
-    Q_PROPERTY(QString userId MEMBER m_userId NOTIFY userIdChanged)
     Q_PROPERTY(int eventId MEMBER m_eventId NOTIFY eventIdChanged)
+    Q_PROPERTY(bool isFeedback MEMBER m_isFeedback NOTIFY isFeedbackChanged)
 
 public:
     static FeedbackHelper *getInstance();
@@ -29,15 +29,15 @@ private:
     int m_id;
     int m_score;
     QString m_content;
-    QString m_userId;
     int m_eventId;
+    bool m_isFeedback;
 
 signals:
     void idChanged();
     void scoreChanged();
     void contentChanged();
-    void userIdChanged();
     void eventIdChanged();
+    void isFeedbackChanged();
 };
 
 #endif // FEEDBACKHELPER_H

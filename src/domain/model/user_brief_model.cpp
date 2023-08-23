@@ -42,7 +42,7 @@ QHash<int, QByteArray> UserBriefModel::roleNames() const
     return roles;
 }
 
-void UserBriefModel::resetModel(const std::vector<UserBrief> &model)
+void UserBriefModel::resetModel(std::vector<UserBrief> model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
@@ -52,7 +52,9 @@ void UserBriefModel::resetModel(const std::vector<UserBrief> &model)
 
 UserBriefModel *UserBriefModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return getInstance();
+    auto pInstance = getInstance();
+    QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
+    return pInstance;
 }
 
 UserBriefModel *UserBriefModel::getInstance()
