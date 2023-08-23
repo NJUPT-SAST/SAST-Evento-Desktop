@@ -14,11 +14,11 @@ FluScrollablePage {
         Item {
             Layout.topMargin: 10
             width: parent.width
-            height: 80
-            FluArea{
+            height: 90
+            FluArea {
                 radius: 8
                 width: parent.width
-                height: 70
+                height: 80
                 anchors.centerIn: parent
                 Rectangle {
                     anchors.fill: parent
@@ -39,7 +39,7 @@ FluScrollablePage {
                     }
                     FluRectangle {
                         id: item_icon
-                        height: parent.height - 5
+                        height: parent.height - 20
                         width: 115
                         radius: [6, 6, 6, 6]
                         anchors {
@@ -81,7 +81,7 @@ FluScrollablePage {
                     FluIconButton {
                         id: deleteButton
                         iconSource: FluentIcons.Delete
-                        anchors{
+                        anchors {
                             bottom: parent.bottom
                             bottomMargin: 10
                             right: parent.right
@@ -96,7 +96,7 @@ FluScrollablePage {
                     FluIconButton {
                         id: editButton
                         iconSource: FluentIcons.Edit
-                        anchors{
+                        anchors {
                             bottom: parent.bottom
                             bottomMargin: 10
                             right: deleteButton.left
@@ -110,7 +110,11 @@ FluScrollablePage {
 
                     MouseArea {
                         id: item_mouse
-                        anchors.fill: parent
+                        anchors {
+                            fill: parent
+                            rightMargin: 80
+                        }
+
                         hoverEnabled: true
                         onClicked: {
 
@@ -138,5 +142,4 @@ FluScrollablePage {
         interactive: false
         delegate: com_item
     }
-
 }
