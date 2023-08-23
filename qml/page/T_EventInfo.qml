@@ -48,8 +48,7 @@ FluScrollablePage {
                 target: EventoInfoController
                 function onLoadEventoSuccessEvent() {
                     arr.push({
-                                 "url": model.url,
-                                 "title": model.title
+                                 "url": model.url
                              })
                     if (arr.length === 3)
                         rep.arrReady()
@@ -84,20 +83,6 @@ FluScrollablePage {
                     source: model.url
                     asynchronous: true
                     fillMode: Image.PreserveAspectCrop
-                }
-                Rectangle {
-                    height: 40
-                    width: parent.width
-                    anchors.bottom: parent.bottom
-                    color: "#33000000"
-                    FluText {
-                        anchors.fill: parent
-                        verticalAlignment: Qt.AlignVCenter
-                        horizontalAlignment: Qt.AlignHCenter
-                        text: model.title
-                        color: FluColors.Grey10
-                        font.pixelSize: 15
-                    }
                 }
             }
         }
