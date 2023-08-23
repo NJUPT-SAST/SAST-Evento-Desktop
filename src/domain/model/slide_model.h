@@ -26,7 +26,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<Slide>& model);
+    void resetModel(std::vector<Slide> model);
 
 private:
     SlideModel() = default;

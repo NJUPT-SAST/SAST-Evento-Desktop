@@ -65,7 +65,7 @@ QHash<int, QByteArray> ScheduledEventoModel::roleNames() const
     return roles;
 }
 
-void ScheduledEventoModel::resetModel(const std::vector<Schedule> &model)
+void ScheduledEventoModel::resetModel(std::vector<Schedule> model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();

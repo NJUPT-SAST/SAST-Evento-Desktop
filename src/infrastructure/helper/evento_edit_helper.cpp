@@ -16,13 +16,22 @@ EventoEditHelper *EventoEditHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsE
 void EventoEditHelper::updateEventoEdit(const QString &departmentJson, const QString &locationJson,
                                         const QString &typeJson, const DTO_Evento &evento)
 {
-    m_departmentJson = departmentJson;
-    m_locationJson = locationJson;
-    m_typeJson = typeJson;
+    setProperty("departmentJson", departmentJson);
+    setProperty("locationJson", locationJson);
+    setProperty("typeJson", typeJson);
+    setProperty("isEdited", true);
+    if (evento.id == 0)
+    {
+        setProperty("isEdited", false);
+        return;
+    }
+    // 编辑模式
     m_departmentIds.clear();
-    for (const auto& department : evento.departments) {
+    for (const auto &department : evento.departments)
+    {
         m_departmentIds.append(department.id);
     }
-    m_typeId = evento.type.id;
-    m_allowConflict = evento.type.allowConflict;
+    setProperty("departmentIds", m_departmentIds);
+    setProperty("typeId", evento.type.id);
+    setProperty("allowConflict", evento.type.allowConflict);
 }

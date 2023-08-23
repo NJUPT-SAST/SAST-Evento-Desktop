@@ -8,27 +8,31 @@
 void EventoInfoController::loadEventoInfo(const EventoID eventId)
 {
     EventoException err;
-//    EventoHelper::getInstance()->updateEvento(
-//        Convertor<DTO_Evento, Evento>()(
-//             getRepo()->get_event(eventId, err)),
-//    );
-
+    SlideModel::getInstance()->resetModel(
+        Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
+            getRepo()->get_event_slide_list(eventId, err)
+    ));
     if ((int)err.code())
-    {
-        emit loadEventoErrorEvent(err.message());
-        return;
-    }
+        return emit loadEventoErrorEvent(err.message());
 
-//    FeedbackHelper::getInstance()->updateFeedback(
-//        Convertor<DTO_Feedback, Feedback>()(
-//            getRepo()
-//    ));
-
+    auto event = getRepo()->get_event(eventId, err);
     if ((int)err.code())
-    {
-        emit loadEventoErrorEvent(err.message());
-        return;
-    }
+        return emit loadEventoErrorEvent(err.message());
+    auto participate = getRepo()->get_user_participate(eventId, err);
+    if ((int)err.code())
+        return emit loadEventoErrorEvent(err.message());
+
+    EventoHelper::getInstance()->updateEvento(
+        Convertor<DTO_Evento, Evento>()(event),
+        participate
+    );
+
+    FeedbackHelper::getInstance()->updateFeedback(
+        Convertor<DTO_Feedback, Feedback>()(
+            getRepo()->get_feedback_info(eventId, err)
+    ));
+    if ((int)err.code())
+        return emit loadEventoErrorEvent(err.message());
 
     emit loadEventoSuccessEvent();
 }
