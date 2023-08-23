@@ -58,12 +58,7 @@ FluScrollablePage {
                     asynchronous: true
                     anchors.fill: parent
                     sourceSize: Qt.size(width, height)
-                    Connections {
-                        target: MyPageController
-                        function onLoadMyPageSuccessEvent() {
-                            img_avatar.source = UserHelper.avatar
-                        }
-                    }
+                    source: UserHelper.avatar
                 }
             }
             Column {
@@ -76,12 +71,7 @@ FluScrollablePage {
                 FluText {
                     id: text_name
                     font: FluTextStyle.Subtitle
-                    Connections {
-                        target: MyPageController
-                        function onLoadMyPageSuccessEvent() {
-                            text_name.text = UserHelper.name
-                        }
-                    }
+                    text: UserHelper.name
                 }
             }
         }
@@ -144,7 +134,6 @@ FluScrollablePage {
                     left: button_souvenirCard.right
                     leftMargin: parent.width / 3
                 }
-
                 FluIconButton {
                     width: 50
                     height: 50

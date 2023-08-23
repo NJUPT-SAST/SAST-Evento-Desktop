@@ -15,6 +15,7 @@ FluScrollablePage {
         Layout.alignment: Qt.AlignRight
         Layout.rightMargin: 10
         onClicked: {
+            EventoHelper.id = 0
             MainWindow.window.pushPage("qrc:/qml/page/T_EventoEdit.qml")
         }
     }

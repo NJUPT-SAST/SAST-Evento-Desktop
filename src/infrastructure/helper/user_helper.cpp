@@ -16,12 +16,12 @@ UserHelper *UserHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 
 void UserHelper::updateUser(const User &user)
 {
-    m_id = user.id;
-    m_name = user.name;
-    m_avatar = user.avatar;
-    m_department = user.department;
-    m_description = user.description;
-    m_email = user.email;
-    m_link = user.link;
+    setProperty("id", user.id);
+    setProperty("name", user.name);
+    setProperty("avatar", user.avatar);
+    setProperty("department", user.department);
+    setProperty("description", user.description);
+    setProperty("email", user.email);
+    setProperty("link", user.link);
 }
 
