@@ -100,6 +100,15 @@ CustomWindow {
             }
         }
 
+        FluPaneItem {
+            id: item_departmentevents
+            title: "Department Event"
+            icon: FluentIcons.Calendar
+            onTap: {
+                nav_view.push("qrc:/qml/page/T_DepartmentEvents.qml")
+            }
+        }
+
         FluPaneItemExpander {
             title: lang.lang_manage
             icon: FluentIcons.AllApps

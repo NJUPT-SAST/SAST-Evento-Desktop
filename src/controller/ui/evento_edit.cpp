@@ -26,7 +26,6 @@ void EventoEditController::loadEditInfo(int eventId)
             return emit loadEditErrorEvent(err.message());
     }
 
-
     auto departmentList = getRepo()->get_department_list(err);
     if ((int)err.code())
         return emit loadEditErrorEvent(err.message());

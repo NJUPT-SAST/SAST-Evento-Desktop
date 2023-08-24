@@ -4,18 +4,78 @@ import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
 import SAST_Evento
+import "../imports"
+import "../window"
 
 FluScrollablePage {
+    id: page
     launchMode: FluPageType.SingleTask
+    property var locationArr: []
+    property var departmentArr: []
+    property var typeArr: []
+    property int typeId: 0
 
     onErrorClicked: {
         loadEditInfo()
     }
 
+    function parseJSON(data) {
+        var result = []
+        if (Array.isArray(data)) {
+            for (var i = 0; i < data.length; i++) {
+                var item = data[i]
+                var name = item.name
+                var isLeaf = false
+                var children = []
+
+                if (item.children && Array.isArray(item.children))
+                    children = parseJSON(item.children)
+                else
+                    isLeaf = true
+            }
+            result.push(tree_view_location.createItem(name, isLeaf, children, {
+                                                          "id": item.id
+                                                      }))
+        } else {
+            result.push(tree_view_location.createItem(data.name, true, [], {
+                                                          "id": data.id
+                                                      }))
+        }
+        return result
+    }
+
     function loadEditInfo() {
         statusMode = FluStatusViewType.Loading
         EventoEditController.loadEditInfo(EventoHelper.id)
+        locationArr = []
+        departmentArr = []
+        typeArr = []
+        var json = JSON.parse(EventoEditHelper.departmentJson)
+        for (var ii = 0; ii < json.length; ++ii) {
+            departmentArr.push(tree_view_department.createItem(json[ii].name,
+                                                               true, [], {
+                                                                   "id": json[ii].id
+                                                               }))
+        }
+        json = JSON.parse(EventoEditHelper.locationJson)
+        locationArr = parseJSON(json)
+        json = JSON.parse(EventoEditHelper.typeJson)
+        for (var j = 0; j < json.length; ++j) {
+            typeArr.push(json[j].name)
+        }
+        listReady()
     }
+
+    function findTypeId(text) {
+        json = JSON.parse(EventoEditHelper.typeJson)
+        for (var j = 0; j < json.length; ++j) {
+            if (text === json[j].name)
+                return json[j].id
+        }
+        return 0
+    }
+
+    signal listReady
 
     Component.onCompleted: {
         loadEditInfo()
@@ -145,14 +205,17 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_event_start
             width: 220
+            text: EventoEditHelper.isEdited ? EventoEditHelper.eventDateStart : "请选择日期"
             anchors {
                 left: clender_picker_register_start.left
                 top: item_event_time.top
             }
         }
-        FluTimePicker {
-            id: time_picker_evnet_start
+        TimePicker {
+            id: time_picker_event_start
             hourFormat: FluTimePickerType.HH
+            hour_value: EventoEditHelper.isEdited ? EventoEditHelper.eventTimeStartH : "时"
+            minite_value: EventoEditHelper.isEdited ? EventoEditHelper.eventTimeStartM : "分"
             anchors {
                 left: time_picker_register_start.left
                 top: item_event_time.top
@@ -171,14 +234,17 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_event_end
             width: 220
+            text: EventoEditHelper.isEdited ? EventoEditHelper.eventDateEnd : "请选择日期"
             anchors {
                 left: clender_picker_register_start.left
                 top: text_end2.top
             }
         }
-        FluTimePicker {
+        TimePicker {
             id: time_picker_event_end
             hourFormat: FluTimePickerType.HH
+            hour_value: EventoEditHelper.isEdited ? EventoEditHelper.eventTimeEndtH : "时"
+            minite_value: EventoEditHelper.isEdited ? EventoEditHelper.eventTimeEndM : "分"
             anchors {
                 left: time_picker_register_start.left
                 top: text_end2.top
@@ -209,15 +275,18 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_register_start
             width: 220
+            text: EventoEditHelper.isEdited ? EventoEditHelper.registerDateStart : "请选择日期"
             anchors {
                 left: text_start1.right
                 leftMargin: 18
                 top: item_register_time.top
             }
         }
-        FluTimePicker {
+        TimePicker {
             id: time_picker_register_start
             hourFormat: FluTimePickerType.HH
+            hour_value: EventoEditHelper.isEdited ? EventoEditHelper.registerTimeStartH : "时"
+            minite_value: EventoEditHelper.isEdited ? EventoEditHelper.registerTimeStartM : "分"
             anchors {
                 left: clender_picker_register_start.right
                 leftMargin: 15
@@ -237,14 +306,17 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_register_end
             width: 220
+            text: EventoEditHelper.isEdited ? EventoEditHelper.registerDateEnd : "请选择日期"
             anchors {
                 left: clender_picker_register_start.left
                 top: text_end1.top
             }
         }
-        FluTimePicker {
+        TimePicker {
             id: time_picker_register_end
             hourFormat: FluTimePickerType.HH
+            hour_value: EventoEditHelper.isEdited ? EventoEditHelper.registerTimeEndH : "时"
+            minite_value: EventoEditHelper.isEdited ? EventoEditHelper.registerTimeEndM : "分"
             anchors {
                 left: time_picker_register_start.left
                 top: text_end1.top
@@ -264,36 +336,31 @@ FluScrollablePage {
             }
         }
 
-        FluRectangle {
+        FluArea {
             id: rect_location
             width: 200
             height: 200
-            radius: [3, 3, 3, 3]
             anchors {
                 top: item_location.top
                 left: textbox_title.left
             }
             FluTreeView {
                 id: tree_view_location
+                property int locationId: 0
                 width: 200
                 height: 200
                 selectionMode: FluTreeViewType.Single
-
-                Component.onCompleted: {
-                    var arr = []
-                    arr.push(createItem('location1', true))
-                    arr.push(createItem('location2', true))
-                    arr.push(createItem('location3', true))
-                    arr.push(createItem('location4', true))
-                    arr.push(createItem('location5', true))
-                    arr.push(createItem('location6', true))
-                    arr.push(createItem('location7', true))
-                    // TODO
-                    updateData(arr)
+                Connections {
+                    target: page
+                    function onListReady() {
+                        tree_view_location.updateData(locationArr)
+                    }
                 }
+                onItemClicked: item => {
+                                   locationId = item.data.id
+                               }
             }
         }
-
         FluText {
             id: item_department
             text: "部门"
@@ -306,11 +373,10 @@ FluScrollablePage {
             }
         }
 
-        FluRectangle {
+        FluArea {
             id: rect_department
             width: 200
             height: 200
-            radius: [3, 3, 3, 3]
             anchors {
                 top: item_department.top
                 left: item_department.right
@@ -321,18 +387,11 @@ FluScrollablePage {
                 width: 200
                 height: 200
                 selectionMode: FluTreeViewType.Multiple
-
-                Component.onCompleted: {
-                    var arr = []
-                    arr.push(createItem('department1', true))
-                    arr.push(createItem('department2', true))
-                    arr.push(createItem('department3', true))
-                    arr.push(createItem('department4', true))
-                    arr.push(createItem('department5', true))
-                    arr.push(createItem('department6', true))
-                    arr.push(createItem('department7', true))
-                    // TODO
-                    updateData(arr)
+                Connections {
+                    target: page
+                    function onListReady() {
+                        tree_view_department.updateData(departmentArr)
+                    }
                 }
             }
         }
@@ -354,6 +413,16 @@ FluScrollablePage {
             anchors {
                 left: textbox_tag.left
                 top: item_type.top
+            }
+            onCommit: text => {
+                          typeId = findTypeId(text)
+                      }
+
+            Connections {
+                target: page
+                function onListReady() {
+                    combo_box_type.model = typeArr
+                }
             }
         }
 
@@ -418,8 +487,8 @@ FluScrollablePage {
                 top: item_slide.top
             }
             onClicked: {
-
-                //TODO
+                MainWindow.window.pushPage(
+                            "qrc:/qml/page/T_PictureSelection.qml")
             }
         }
 
@@ -480,6 +549,43 @@ FluScrollablePage {
                 top: area4.bottom
                 topMargin: 10
             }
+            onClicked: {
+                var ids = []
+                tree_view_department.multipData().map(value => ids.push(
+                                                          value.data.id))
+                if (ids.length === 0 || textbox_title.text === "" || textbox_description.text
+                        === "" || clender_picker_event_start.text === "请选择日期" || time_picker_event_start.hour_value === "时" || time_picker_event_start.minite_value === "分" || clender_picker_event_end.text === "请选择日期" || time_picker_event_end.hour_value === "时" || time_picker_event_end.minite_value === "分" || clender_picker_register_start.text === "请选择日期" || time_picker_register_start.hour_value === "时" || time_picker_register_start.minite_value === "分" || clender_picker_register_end.text === "请选择日期" || time_picker_register_end.hour_value === "时" || time_picker_register_end.minite_value
+                        === "分" || typeIdtree_view_location.locationId === 0 || textbox_tag.text
+                        === "") {
+                    showInfo("有信息未填写")
+                    return
+                }
+
+                EventoEditController.createEvento(
+                            textbox_title.text, textbox_description.text, clender_picker_event_start.text + " " + time_picker_event_start.hour_value + ":" + time_picker_event_start.minite_value + ":00",
+                            clender_picker_event_end.text + " " + time_picker_event_end.hour_value + ":" + time_picker_event_end.minite_value + ":00", clender_picker_register_start.text + " " + time_picker_register_start.hour_value + ":" + time_picker_register_start.minite_value + ":00",
+                            clender_picker_register_end.text + " " + time_picker_register_end.hour_value + ":" + time_picker_register_end.minite_value + ":00", typeId, tree_view_location.locationId,
+                            ids, textbox_tag.text)
+            }
+        }
+    }
+
+    function returnPage() {
+        MainWindow.window.pushPage("qrc:/qml/page/T_Calendar.qml")
+    }
+
+    Connections {
+        target: EventoEditController
+        function onCreateSuccessEvent() {
+            showSuccess("操作成功")
+            returnPage()
+        }
+    }
+
+    Connections {
+        target: EventoEditController
+        function onCreateErrorEvent(message) {
+            showError(message)
         }
     }
 }
