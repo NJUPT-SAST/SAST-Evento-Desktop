@@ -13,7 +13,6 @@
         <file>qml/page/T_Profile.qml</file>
         <file>qml/page/T_Schedule.qml</file>
         <file>qml/page/T_Settings.qml</file>
-        <file>qml/page/T_Slide.qml</file>
         <file>qml/page/T_SouvenirCard.qml</file>
         <file>qml/page/T_Theme.qml</file>
         <file>qml/page/T_Calendar.qml</file>
@@ -40,6 +39,8 @@
         <file>res/image/banner_1.png</file>
         <file>res/image/banner_2.png</file>
         <file>res/image/banner_3.png</file>
+        <file>qml/page/T_SlideManagement.qml</file>
+        <file>qml/page/T_SlideManagementEdit.qml</file>
         <file>qml/page/T_EventoEdit.qml</file>
     </qresource>
 </RCC>

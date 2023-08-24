@@ -36,7 +36,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(const std::vector<EventoBlock> &model);
+    void resetModel(std::vector<EventoBlock> model);
 
     EventoBlockModel(const EventoBlockModel &) = delete;
     EventoBlockModel &operator=(const EventoBlockModel &) = delete;
