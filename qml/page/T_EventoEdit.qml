@@ -558,6 +558,7 @@ FluScrollablePage {
                         === "分" || typeIdtree_view_location.locationId === 0 || textbox_tag.text
                         === "") {
                     showInfo("有信息未填写")
+                    return
                 }
 
                 EventoEditController.createEvento(
@@ -569,11 +570,15 @@ FluScrollablePage {
         }
     }
 
+    function returnPage() {
+        MainWindow.window.pushPage("qrc:/qml/page/T_Calendar.qml")
+    }
+
     Connections {
         target: EventoEditController
         function onCreateSuccessEvent() {
             showSuccess("操作成功")
-            MainWindow.window.pushPage("qrc:/qml/page/T_Calender.qml")
+            returnPage()
         }
     }
 
