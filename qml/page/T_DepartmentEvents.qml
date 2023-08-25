@@ -11,9 +11,62 @@ FluScrollablePage {
     id: control
     launchMode: FluPageType.SingleTask
 
+    property string departmentJson
+
+    function loadDepartmentEventsPage() {
+        statusMode = FluStatusViewType.Loading
+        departmentJson = DepartmentEventsController.loadDepartmentsInfo()
+        tree_view.updateData(createOrg())
+        if(departmentJson){
+            loadDepartmentEvents(JSON.parse(departmentJson)[0].id)
+        }
+    }
+
+    function loadDepartmentEvents(departmentId) {
+        DepartmentEventsController.loadDepartmentEvents(departmentId)
+    }
+
+    onErrorClicked: {
+        loadDepartmentEventsPage()
+    }
+
+    Component.onCompleted: {
+        loadDepartmentEventsPage()
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadDepartmentsSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadDepartmentsErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadDepartmentEventSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadDepartmentEventErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
     function createOrg() {
         var departmentArr = []
-        var json = JSON.parse(DepartmentEventsController.loadDepartmentsInfo())
+        var json = JSON.parse(departmentJson)
         for (var i = 0; i < json.length; ++i) {
             departmentArr.push(tree_view.createItem(json[i].name, true, [], {
                                                         "id": json[i].id
@@ -57,20 +110,16 @@ FluScrollablePage {
             height: 500
             FluTreeView {
                 id: tree_view
-                width: 240
+                width: 200
                 height: 500
                 selectionMode: FluTreeViewType.Single
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    bottom: parent.bottom
-                }
+                anchors.fill: parent
                 onItemClicked: item => {
-                                   console.log(item.data.id)
+                                   loadDepartmentEvents(item.data.id)
                                }
 
                 Component.onCompleted: {
-                    updateData(createOrg())
+
                 }
             }
         }
