@@ -11,9 +11,94 @@ FluScrollablePage {
     id: control
     launchMode: FluPageType.SingleTask
 
+    property string departmentJson
+    property int departmentId: -1
+    property var subscribeArr
+
+    function loadDepartmentEventsPage() {
+        statusMode = FluStatusViewType.Loading
+        departmentJson = DepartmentEventsController.loadDepartmentsInfo()
+        tree_view.updateData(createOrg())
+    }
+
+    function loadDepartmentEvents(departmentId) {
+        DepartmentEventsController.loadDepartmentEvents(departmentId)
+    }
+
+    onErrorClicked: {
+        loadDepartmentEventsPage()
+    }
+
+    Component.onCompleted: {
+        loadDepartmentEventsPage()
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadDepartmentsSuccessEvent() {
+            subscribeArr = JSON.parse(DepartmentEventsController.loadSubscribedDepartment())
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadDepartmentsErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadDepartmentEventSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadDepartmentEventErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadSubscribedDepartmentsSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadSubscribedDepartmentsErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onSubscribeSuccessEvent(isSubscribe, departmentId) {
+            if(isSubscribe) {
+                subscribeArr.push(departmentId)
+                subscribeButton.checked = false
+                subscribeButton.state = "hasSub"
+                showInfo("已订阅")
+            }
+            else {
+                subscribeArr.splice(subscribeArr.indexOf(departmentId), 1)
+                subscribeButton.checked = true
+                subscribeButton.state = "noSub"
+                showInfo("已取消订阅")
+            }
+        }
+    }
+
     function createOrg() {
         var departmentArr = []
-        var json = JSON.parse(DepartmentEventsController.loadDepartmentsInfo())
+        var json = JSON.parse(departmentJson)
         for (var i = 0; i < json.length; ++i) {
             departmentArr.push(tree_view.createItem(json[i].name, true, [], {
                                                         "id": json[i].id
@@ -28,19 +113,37 @@ FluScrollablePage {
     }
 
     FluTextButton {
-        text: lang.lang_subscribe
+        id: subscribeButton
         checked: true
         Layout.alignment: Qt.AlignRight
+        state: "noSub"
+        opacity: (departmentId > 0)?1:0
+        states: [
+            State {
+                name: "hasSub"
+                PropertyChanges {
+                    target: subscribeButton
+                    text: lang.lang_unsubscribe
+                    textColor: disableColor
+                }
+            },
+            State {
+                name: "noSub"
+                PropertyChanges {
+                    target: subscribeButton
+                    text: lang.lang_subscribe
+                    textColor: pressedColor
+                }
+            }
+        ]
+
         onClicked: {
             checked = !checked
             if (!checked) {
-                text = lang.lang_unsubscribe
-                showInfo("已订阅")
-                textColor = disableColor
+                DepartmentEventsController.subscribeDepartment(!checked, departmentId)
+
             } else {
-                text = lang.lang_subscribe
-                showInfo("已取消订阅")
-                textColor = pressedColor
+                DepartmentEventsController.subscribeDepartment(!checked, departmentId)
             }
         }
     }
@@ -57,20 +160,26 @@ FluScrollablePage {
             height: 500
             FluTreeView {
                 id: tree_view
-                width: 240
+                width: 200
                 height: 500
                 selectionMode: FluTreeViewType.Single
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    bottom: parent.bottom
-                }
+                anchors.fill: parent
                 onItemClicked: item => {
-                                   console.log(item.data.id)
+                                   departmentId = item.data.id
+                                   if(subscribeArr.indexOf(departmentId) !== -1) {
+                                       subscribeButton.checked = false
+                                       subscribeButton.state = "hasSub"
+                                   }
+                                   else{
+                                       subscribeButton.checked = true
+                                       subscribeButton.state = "noSub"
+                                   }
+
+                                   loadDepartmentEvents(item.data.id)
                                }
 
                 Component.onCompleted: {
-                    updateData(createOrg())
+
                 }
             }
         }
