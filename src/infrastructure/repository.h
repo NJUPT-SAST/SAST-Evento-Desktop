@@ -44,7 +44,7 @@ struct Repository {
     virtual bool is_feedback(EventoID event, EventoException& err) = 0;
 
     // admin-fetch
-    virtual std::vector<DTO_Evento> get_qualified_event(int type, const std::vector<int>& dep, const QDate& day, EventoException& err) = 0;
+    virtual std::vector<DTO_Evento> get_qualified_event(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) = 0;
     virtual QStringList get_action_state_list(EventoException& err) = 0;
     virtual QStringList get_action_list(EventoException& err) = 0;
     virtual std::vector<DTO_UserBrief> get_event_manager_list(const EventoID &eventoId, EventoException& err) = 0;

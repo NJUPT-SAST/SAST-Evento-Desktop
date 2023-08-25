@@ -270,7 +270,7 @@ public:
     bool is_feedback(EventoID event, EventoException& err) override;  // Test completed
 
     // admin-fetch
-    std::vector<DTO_Evento> get_qualified_event(int type, const std::vector<int>& dep, const QDate& day, EventoException& err) override;  // Test completed
+    std::vector<DTO_Evento> get_qualified_event(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) override;  // Test completed
     QStringList get_action_state_list(EventoException& err) override;  // Test completed
     QStringList get_action_list(EventoException& err) override;
     std::vector<DTO_UserBrief> get_event_manager_list(const EventoID &eventoId, EventoException& err) override;  // Test completed
@@ -286,7 +286,7 @@ public:
 
     void test() {
         EventoException error(EventoExceptionCode::UnexpectedError, "null");
-        qDebug().noquote() << get_manager_permission_treeData(error);
+        qDebug().noquote() << get_qualified_event(error).size();
         qDebug()<<error.message();
     };
 
@@ -645,6 +645,38 @@ private:
                                          static_cast<EventState>(unit.state.toInt()),
                                          departments});
             }
+        }
+        return res;
+    }
+
+    std::vector<DTO_Evento> readAllEvento(){
+        std::vector<DTO_Evento> res;
+
+        for (int i = 0; i < event_data_list.size(); i++) {
+            event_data unit = event_data_list.at(i);
+            std::vector<Department> departments;
+            QStringList departmentIds;
+            for(int i = 0; i<event_department_data_list.size(); i++){
+                if(!unit.id.compare(event_department_data_list.at(i).event_id)){
+                    departmentIds = event_department_data_list.at(i).department_id.split(" ");
+                }
+            }
+            for (int i = 0; i < departmentIds.count(); i++) {
+                departments.push_back(readDepartment(departmentIds.at(i)));
+            }
+            res.push_back(DTO_Evento{
+                                     unit.id.toInt(),
+                                     unit.title,
+                                     unit.description,
+                                     QDateTime::fromString(unit.gmt_event_start, "yyyy-MM-dd hh:mm:ss"),
+                                     QDateTime::fromString(unit.gmt_event_end, "yyyy-MM-dd hh:mm:ss"),
+                                     QDateTime::fromString(unit.gmt_registration_start, "yyyy-MM-dd hh:mm:ss"),
+                                     QDateTime::fromString(unit.gmt_registration_end, "yyyy-MM-dd hh:mm:ss"),
+                                     readType(unit.type_id),
+                                     readLocations(unit.location_id),
+                                     unit.tag,
+                                     static_cast<EventState>(unit.state.toInt()),
+                                     departments});
         }
         return res;
     }
