@@ -199,6 +199,18 @@ std::vector<DTO_Evento> repositoryImpl::get_event_list(const int &page, const in
     return res;
 }
 
+std::vector<DTO_Evento> repositoryImpl::get_department_event_list(const int &departmentId, EventoException &err)
+{
+    std::vector<DTO_Evento> res;
+
+    for(int i = 0; i<event_data_list.size(); i++){
+        if(eventDepartmentMatch(event_data_list.at(i).id.toInt(), departmentId)) {
+            res.push_back(readEvento(event_data_list.at(i).id.toInt()));
+        }
+    }
+    return res;
+}
+
 DTO_Evento repositoryImpl::get_event(EventoID event, EventoException &err)
 {
     return readEvento(event);
