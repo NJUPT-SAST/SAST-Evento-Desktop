@@ -67,7 +67,7 @@ FluScrollablePage {
     }
 
     function findTypeId(text) {
-        json = JSON.parse(EventoEditHelper.typeJson)
+        var json = JSON.parse(EventoEditHelper.typeJson)
         for (var j = 0; j < json.length; ++j) {
             if (text === json[j].name)
                 return json[j].id
@@ -205,17 +205,18 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_event_start
             width: 220
-            text: EventoEditHelper.isEdited ? EventoEditHelper.eventDateStart : "请选择日期"
+            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
+                                                     EventoEditHelper.eventStart) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: item_event_time.top
             }
         }
-        TimePicker {
+        FluTimePicker {
             id: time_picker_event_start
             hourFormat: FluTimePickerType.HH
-            hour_value: EventoEditHelper.isEdited ? EventoEditHelper.eventTimeStartH : "时"
-            minite_value: EventoEditHelper.isEdited ? EventoEditHelper.eventTimeStartM : "分"
+            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
+                                                     EventoEditHelper.eventStart) : new Date
             anchors {
                 left: time_picker_register_start.left
                 top: item_event_time.top
@@ -234,17 +235,18 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_event_end
             width: 220
-            text: EventoEditHelper.isEdited ? EventoEditHelper.eventDateEnd : "请选择日期"
+            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
+                                                     EventoEditHelper.eventEnd) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: text_end2.top
             }
         }
-        TimePicker {
+        FluTimePicker {
             id: time_picker_event_end
             hourFormat: FluTimePickerType.HH
-            hour_value: EventoEditHelper.isEdited ? EventoEditHelper.eventTimeEndtH : "时"
-            minite_value: EventoEditHelper.isEdited ? EventoEditHelper.eventTimeEndM : "分"
+            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
+                                                     EventoEditHelper.eventEnd) : new Date
             anchors {
                 left: time_picker_register_start.left
                 top: text_end2.top
@@ -275,18 +277,19 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_register_start
             width: 220
-            text: EventoEditHelper.isEdited ? EventoEditHelper.registerDateStart : "请选择日期"
+            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
+                                                     EventoEditHelper.registerStart) : new Date
             anchors {
                 left: text_start1.right
                 leftMargin: 18
                 top: item_register_time.top
             }
         }
-        TimePicker {
+        FluTimePicker {
             id: time_picker_register_start
             hourFormat: FluTimePickerType.HH
-            hour_value: EventoEditHelper.isEdited ? EventoEditHelper.registerTimeStartH : "时"
-            minite_value: EventoEditHelper.isEdited ? EventoEditHelper.registerTimeStartM : "分"
+            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
+                                                     EventoEditHelper.registerStart) : new Date
             anchors {
                 left: clender_picker_register_start.right
                 leftMargin: 15
@@ -306,17 +309,18 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_register_end
             width: 220
-            text: EventoEditHelper.isEdited ? EventoEditHelper.registerDateEnd : "请选择日期"
+            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
+                                                     EventoEditHelper.registerEnd) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: text_end1.top
             }
         }
-        TimePicker {
+        FluTimePicker {
             id: time_picker_register_end
             hourFormat: FluTimePickerType.HH
-            hour_value: EventoEditHelper.isEdited ? EventoEditHelper.registerTimeEndH : "时"
-            minite_value: EventoEditHelper.isEdited ? EventoEditHelper.registerTimeEndM : "分"
+            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
+                                                     EventoEditHelper.registerEnd) : (new Date)
             anchors {
                 left: time_picker_register_start.left
                 top: text_end1.top
@@ -414,9 +418,6 @@ FluScrollablePage {
                 left: textbox_tag.left
                 top: item_type.top
             }
-            onCommit: text => {
-                          typeId = findTypeId(text)
-                      }
 
             Connections {
                 target: page
@@ -551,20 +552,26 @@ FluScrollablePage {
             }
             onClicked: {
                 var ids = []
+                typeId = findTypeId(combo_box_type.editText)
                 tree_view_department.multipData().map(value => ids.push(
                                                           value.data.id))
-                if (ids.length === 0 || textbox_title.text === "" || textbox_description.text
-                        === "" || clender_picker_event_start.text === "请选择日期" || time_picker_event_start.hour_value === "时" || time_picker_event_start.minite_value === "分" || clender_picker_event_end.text === "请选择日期" || time_picker_event_end.hour_value === "时" || time_picker_event_end.minite_value === "分" || clender_picker_register_start.text === "请选择日期" || time_picker_register_start.hour_value === "时" || time_picker_register_start.minite_value === "分" || clender_picker_register_end.text === "请选择日期" || time_picker_register_end.hour_value === "时" || time_picker_register_end.minite_value
-                        === "分" || typeIdtree_view_location.locationId === 0 || textbox_tag.text
-                        === "") {
+                if (ids.length === 0 || textbox_title.text === ""
+                        || textbox_description.text === "" || typeId === 0
+                        || tree_view_location.locationId === 0
+                        || textbox_tag.text === "") {
                     showInfo("有信息未填写")
                     return
                 }
 
                 EventoEditController.createEvento(
-                            textbox_title.text, textbox_description.text, clender_picker_event_start.text + " " + time_picker_event_start.hour_value + ":" + time_picker_event_start.minite_value + ":00",
-                            clender_picker_event_end.text + " " + time_picker_event_end.hour_value + ":" + time_picker_event_end.minite_value + ":00", clender_picker_register_start.text + " " + time_picker_register_start.hour_value + ":" + time_picker_register_start.minite_value + ":00",
-                            clender_picker_register_end.text + " " + time_picker_register_end.hour_value + ":" + time_picker_register_end.minite_value + ":00", typeId, tree_view_location.locationId,
+                            textbox_title.text, textbox_description.text, clender_picker_event_start.text + " " + time_picker_event_start.current.getHours() + ":" + time_picker_event_start.current.getMinutes(
+                                ) + ":00", clender_picker_event_end.text + " "
+                            + time_picker_event_end.current.getHours() + ":" + time_picker_event_end.current.getMinutes(
+                                ) + ":00", clender_picker_register_start.text + " "
+                            + time_picker_register_start.current.getHours() + ":" + time_picker_register_start.current.getMinutes(
+                                ) + ":00", clender_picker_register_end.text + " "
+                            + time_picker_register_end.current.getHours() + ":" + time_picker_register_end.current.getMinutes(
+                                ) + ":00", typeId, tree_view_location.locationId,
                             ids, textbox_tag.text)
             }
         }
