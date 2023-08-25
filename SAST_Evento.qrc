@@ -42,6 +42,5 @@
         <file>qml/page/T_SlideManagement.qml</file>
         <file>qml/page/T_SlideManagementEdit.qml</file>
         <file>qml/page/T_EventoEdit.qml</file>
-        <file>qml/imports/TimePicker.qml</file>
     </qresource>
 </RCC>
