@@ -217,6 +217,7 @@ FluScrollablePage {
             hourFormat: FluTimePickerType.HH
             current: EventoEditHelper.isEdited ? Date.fromLocaleString(
                                                      EventoEditHelper.eventStart) : new Date
+
             anchors {
                 left: time_picker_register_start.left
                 top: item_event_time.top
@@ -242,7 +243,7 @@ FluScrollablePage {
                 top: text_end2.top
             }
         }
-        FluTimePicker {
+        TimePicker {
             id: time_picker_event_end
             hourFormat: FluTimePickerType.HH
             current: EventoEditHelper.isEdited ? Date.fromLocaleString(
@@ -285,7 +286,7 @@ FluScrollablePage {
                 top: item_register_time.top
             }
         }
-        FluTimePicker {
+        TimePicker {
             id: time_picker_register_start
             hourFormat: FluTimePickerType.HH
             current: EventoEditHelper.isEdited ? Date.fromLocaleString(
@@ -316,7 +317,7 @@ FluScrollablePage {
                 top: text_end1.top
             }
         }
-        FluTimePicker {
+        TimePicker {
             id: time_picker_register_end
             hourFormat: FluTimePickerType.HH
             current: EventoEditHelper.isEdited ? Date.fromLocaleString(
