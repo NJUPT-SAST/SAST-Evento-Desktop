@@ -27,6 +27,7 @@ struct Repository {
     virtual std::vector<DTO_Evento> get_subscribed_list(EventoException& err) = 0;
     virtual std::vector<DTO_Evento> get_history_list(EventoException& err) = 0;
     virtual std::vector<DTO_Evento> get_event_list(const int& page, const int& size, EventoException& err) = 0;
+    virtual std::vector<DTO_Evento> get_department_event_list(const int& departmentId, EventoException &err) = 0;
     virtual DTO_Evento get_event(EventoID event, EventoException& err) = 0;
     virtual std::vector<DTO_Feedback> get_feedback_list(EventoID eventoId, EventoException& err) = 0;
     virtual std::vector<DTO_Slide> get_slide_list(EventoException& err) = 0;
