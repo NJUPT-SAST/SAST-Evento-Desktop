@@ -12,14 +12,13 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
 
     property string departmentJson
+    property int departmentId: -1
+    property var subscribeArr
 
     function loadDepartmentEventsPage() {
         statusMode = FluStatusViewType.Loading
         departmentJson = DepartmentEventsController.loadDepartmentsInfo()
         tree_view.updateData(createOrg())
-        if(departmentJson){
-            loadDepartmentEvents(JSON.parse(departmentJson)[0].id)
-        }
     }
 
     function loadDepartmentEvents(departmentId) {
@@ -37,7 +36,7 @@ FluScrollablePage {
     Connections {
         target: DepartmentEventsController
         function onLoadDepartmentsSuccessEvent() {
-            statusMode = FluStatusViewType.Success
+            subscribeArr = JSON.parse(DepartmentEventsController.loadSubscribedDepartment())
         }
     }
 
@@ -64,6 +63,39 @@ FluScrollablePage {
         }
     }
 
+    Connections {
+        target: DepartmentEventsController
+        function onLoadSubscribedDepartmentsSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onLoadSubscribedDepartmentsErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
+    Connections {
+        target: DepartmentEventsController
+        function onSubscribeSuccessEvent(isSubscribe, departmentId) {
+            if(isSubscribe) {
+                subscribeArr.push(departmentId)
+                subscribeButton.checked = false
+                subscribeButton.state = "hasSub"
+                showInfo("已订阅")
+            }
+            else {
+                subscribeArr.splice(subscribeArr.indexOf(departmentId), 1)
+                subscribeButton.checked = true
+                subscribeButton.state = "noSub"
+                showInfo("已取消订阅")
+            }
+        }
+    }
+
     function createOrg() {
         var departmentArr = []
         var json = JSON.parse(departmentJson)
@@ -81,19 +113,37 @@ FluScrollablePage {
     }
 
     FluTextButton {
-        text: lang.lang_subscribe
+        id: subscribeButton
         checked: true
         Layout.alignment: Qt.AlignRight
+        state: "noSub"
+        opacity: (departmentId > 0)?1:0
+        states: [
+            State {
+                name: "hasSub"
+                PropertyChanges {
+                    target: subscribeButton
+                    text: lang.lang_unsubscribe
+                    textColor: disableColor
+                }
+            },
+            State {
+                name: "noSub"
+                PropertyChanges {
+                    target: subscribeButton
+                    text: lang.lang_subscribe
+                    textColor: pressedColor
+                }
+            }
+        ]
+
         onClicked: {
             checked = !checked
             if (!checked) {
-                text = lang.lang_unsubscribe
-                showInfo("已订阅")
-                textColor = disableColor
+                DepartmentEventsController.subscribeDepartment(!checked, departmentId)
+
             } else {
-                text = lang.lang_subscribe
-                showInfo("已取消订阅")
-                textColor = pressedColor
+                DepartmentEventsController.subscribeDepartment(!checked, departmentId)
             }
         }
     }
@@ -115,6 +165,16 @@ FluScrollablePage {
                 selectionMode: FluTreeViewType.Single
                 anchors.fill: parent
                 onItemClicked: item => {
+                                   departmentId = item.data.id
+                                   if(subscribeArr.indexOf(departmentId) !== -1) {
+                                       subscribeButton.checked = false
+                                       subscribeButton.state = "hasSub"
+                                   }
+                                   else{
+                                       subscribeButton.checked = true
+                                       subscribeButton.state = "noSub"
+                                   }
+
                                    loadDepartmentEvents(item.data.id)
                                }
 

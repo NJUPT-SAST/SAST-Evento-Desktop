@@ -15,12 +15,18 @@ QString DepartmentEventsController::loadDepartmentsInfo()
     return departmentList;
 }
 
+QString DepartmentEventsController::loadSubscribedDepartment()
+{
+    emit loadSubscribedDepartmentsSuccessEvent();
+    return "[1]";
+}
+
 void DepartmentEventsController::loadDepartmentEvents(int departmentId)
 {
     EventoException err;
     EventoBriefModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Evento>, std::vector<EventoBrief>>()(
-            getRepo()->get_qualified_event(err)));
+            getRepo()->get_department_event_list(departmentId, err)));
 
     if ((int)err.code()) {
         emit loadDepartmentEventErrorEvent(err.message());
@@ -28,6 +34,11 @@ void DepartmentEventsController::loadDepartmentEvents(int departmentId)
     }
 
     emit loadDepartmentEventSuccessEvent();
+}
+
+void DepartmentEventsController::subscribeDepartment(bool check, int departmentId)
+{
+    emit subscribeSuccessEvent(check, departmentId);
 }
 
 DepartmentEventsController *DepartmentEventsController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
