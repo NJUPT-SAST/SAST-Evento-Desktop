@@ -41,18 +41,6 @@ private:
 
     // 编辑模式属性
     QVariantList m_departmentIds;
-    QString m_eventDateStart;
-    QString m_eventTimeStartH;
-    QString m_eventTimeStartM;
-    QString m_eventDateEnd;
-    QString m_eventTimeEndH;
-    QString m_eventTimeEndM;
-    QString m_registerDateStart;
-    QString m_registerTimeStartH;
-    QString m_registerTimeStartM;
-    QString m_registerDateEnd;
-    QString m_registerTimeEndH;
-    QString m_registerTimeEndM;
     int m_locationId;
     int m_typeId;
     bool m_allowConflict;

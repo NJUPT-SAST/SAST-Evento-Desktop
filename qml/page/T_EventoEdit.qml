@@ -78,6 +78,7 @@ FluScrollablePage {
     signal listReady
 
     Component.onCompleted: {
+        statusMode = FluStatusViewType.Loading
         loadEditInfo()
     }
 
@@ -243,7 +244,7 @@ FluScrollablePage {
                 top: text_end2.top
             }
         }
-        TimePicker {
+        FluTimePicker {
             id: time_picker_event_end
             hourFormat: FluTimePickerType.HH
             current: EventoEditHelper.isEdited ? Date.fromLocaleString(
@@ -286,7 +287,7 @@ FluScrollablePage {
                 top: item_register_time.top
             }
         }
-        TimePicker {
+        FluTimePicker {
             id: time_picker_register_start
             hourFormat: FluTimePickerType.HH
             current: EventoEditHelper.isEdited ? Date.fromLocaleString(
@@ -317,7 +318,7 @@ FluScrollablePage {
                 top: text_end1.top
             }
         }
-        TimePicker {
+        FluTimePicker {
             id: time_picker_register_end
             hourFormat: FluTimePickerType.HH
             current: EventoEditHelper.isEdited ? Date.fromLocaleString(
@@ -563,6 +564,7 @@ FluScrollablePage {
                     showInfo("有信息未填写")
                     return
                 }
+                statusMode = FluStatusViewType.Loading
 
                 EventoEditController.createEvento(
                             textbox_title.text, textbox_description.text, clender_picker_event_start.text + " " + time_picker_event_start.current.getHours() + ":" + time_picker_event_start.current.getMinutes(
@@ -585,6 +587,7 @@ FluScrollablePage {
     Connections {
         target: EventoEditController
         function onCreateSuccessEvent() {
+            statusMode = FluStatusViewType.Success
             showSuccess("操作成功")
             returnPage()
         }
@@ -593,6 +596,7 @@ FluScrollablePage {
     Connections {
         target: EventoEditController
         function onCreateErrorEvent(message) {
+            statusMode = FluStatusViewType.Success
             showError(message)
         }
     }
