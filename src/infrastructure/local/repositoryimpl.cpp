@@ -384,18 +384,30 @@ bool repositoryImpl::is_feedback(EventoID event, EventoException &err)
     }
 }
 
-std::vector<DTO_Evento> repositoryImpl::get_qualified_event(int type, const std::vector<int> &dep, const QDate &day, EventoException &err)
+std::vector<DTO_Evento> repositoryImpl::get_qualified_event(EventoException& err, int type, const std::vector<int> &dep, const QDate &day)
 {
     std::vector<DTO_Evento> res;
-    std::vector<DTO_Evento> eventoList = readEventoByType(QString::number(type));
+    std::vector<DTO_Evento> eventoList;
+    if(type == -1){
+        eventoList = readAllEvento();
+    }
+    else{
+        eventoList = readEventoByType(QString::number(type));
+    }
+
     for(int i = 0; i < eventoList.size(); i++){
         QString day_str = eventoList.at(i).gmtEventStart.date().toString("yyyy-MM-dd hh:mm:ss").split(" ").at(0);
         QDate day_temp = QDate::fromString(day_str, "yyyy-MM-dd");
         int eventId = eventoList.at(i).id;
-        if(day_temp == day){
-            for(int j = 0; j < dep.size(); j++){
-                if(eventDepartmentMatch(eventId, dep.at(j))){
-                    res.push_back(eventoList.at(i));
+        if(day.isNull() || day_temp == day){
+            if(dep.empty()){
+                res.push_back(eventoList.at(i));
+            }
+            else{
+                for(int j = 0; j < dep.size(); j++){
+                    if(eventDepartmentMatch(eventId, dep.at(j))){
+                        res.push_back(eventoList.at(i));
+                    }
                 }
             }
         }
