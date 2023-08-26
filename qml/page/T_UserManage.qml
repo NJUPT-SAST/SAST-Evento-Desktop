@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
+import "../window"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
@@ -59,7 +60,8 @@ FluScrollablePage {
                             bottomMargin: 5
                         }
                         onClicked: {
-
+                            MainWindow.window.pushPage(
+                                        "qrc:/qml/page/T_UserPermission.qml")
                         }
                     }
                 }
@@ -93,7 +95,8 @@ FluScrollablePage {
                            }
         }
     }
-
+    
+    // 加载某一页的制定数目用户条数
     function loadData(page, count) {
         const dataSource = []
         for (var i = 0; i < count; i++) {
