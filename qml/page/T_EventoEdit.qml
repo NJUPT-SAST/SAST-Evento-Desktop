@@ -32,10 +32,12 @@ FluScrollablePage {
                     children = parseJSON(item.children)
                 else
                     isLeaf = true
+
+                result.push(tree_view_location.createItem(name, isLeaf,
+                                                          children, {
+                                                              "id": item.id
+                                                          }))
             }
-            result.push(tree_view_location.createItem(name, isLeaf, children, {
-                                                          "id": item.id
-                                                      }))
         } else {
             result.push(tree_view_location.createItem(data.name, true, [], {
                                                           "id": data.id
@@ -47,7 +49,6 @@ FluScrollablePage {
     function loadEditInfo() {
         statusMode = FluStatusViewType.Loading
         EventoEditController.loadEditInfo(EventoHelper.id)
-        locationArr = []
         departmentArr = []
         typeArr = []
         var json = JSON.parse(EventoEditHelper.departmentJson)

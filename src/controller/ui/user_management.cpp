@@ -1,8 +1,6 @@
 #include "user_management.h"
-#include "dto/user_brief.h"
 #include "convertor.h"
 #include "user_brief_model.h"
-#include "permission_helper.h"
 
 void UserManagementController::loadAllUserInfo()
 {
@@ -16,11 +14,26 @@ void UserManagementController::loadAllUserInfo()
     if ((int)err.code())
         return emit loadAllUserError(err.message());
 
-    if ((int)err.code())
-        return emit loadAllUserError(err.message());
-    PermissionHelper::getInstance()->updatePermission(getRepo()->get_admin_permission_treeData(err));
-
     emit loadAllUserSuccess();
+}
+
+QString UserManagementController::loadPermissionInfo()
+{
+    EventoException err;
+    auto result = getRepo()->get_admin_permission_treeData(err);
+
+    if ((int)err.code()){
+        emit loadPermissionErrorEvent(err.message());
+        return {};
+    }
+    emit loadPermissionSuccessEvent();
+    return result;
+}
+
+void UserManagementController::createUser(const QVariantList& list)
+{
+    // TODO
+    emit createSuccessEvent();
 }
 
 UserManagementController *UserManagementController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)

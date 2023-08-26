@@ -11,10 +11,18 @@ class UserManagementController : public QObject
 
 public:
     Q_INVOKABLE void loadAllUserInfo();
+    Q_INVOKABLE QString loadPermissionInfo();
+    Q_INVOKABLE void createUser(const QVariantList& list);
 
 signals:
     void loadAllUserSuccess();
-    void loadAllUserError(const QString &message);
+    void loadAllUserError(const QString& message);
+
+    void loadPermissionSuccessEvent();
+    void loadPermissionErrorEvent(const QString& message);
+
+    void createSuccessEvent();
+    void createErrorEvent(const QString& message);
 
 public:
     UserManagementController() = default;
