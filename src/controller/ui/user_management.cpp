@@ -2,6 +2,7 @@
 #include "dto/user_brief.h"
 #include "convertor.h"
 #include "user_brief_model.h"
+#include "permission_helper.h"
 
 void UserManagementController::loadAllUserInfo()
 {
@@ -12,12 +13,12 @@ void UserManagementController::loadAllUserInfo()
     //                  std::vector<UserBrief>>()(
     //            getRepo()->get_user_brief_list(err)
     //    ));
+    if ((int)err.code())
+        return emit loadAllUserError(err.message());
 
     if ((int)err.code())
-    {
-        emit loadAllUserError(err.message());
-        return;
-    }
+        return emit loadAllUserError(err.message());
+    PermissionHelper::getInstance()->updatePermission(getRepo()->get_admin_permission_treeData(err));
 
     emit loadAllUserSuccess();
 }
