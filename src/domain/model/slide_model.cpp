@@ -18,6 +18,8 @@ QVariant SlideModel::data(const QModelIndex &index, int role) const
     const auto& element = m_data.at(index.row());
 
     switch (role) {
+    case Role::Id:
+        return element.id;
     case Role::Title:
         return element.title;
     case Role::Link:
@@ -35,6 +37,7 @@ QHash<int, QByteArray> SlideModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {
+        roles.insert(Id, "id");
         roles.insert(Title, "title");
         roles.insert(Link, "link");
         roles.insert(Url, "url");
@@ -47,6 +50,16 @@ void SlideModel::resetModel(std::vector<Slide> model)
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
     m_data = std::move(model);
+    endResetModel();
+}
+
+void SlideModel::removeById(const int id)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    beginResetModel();
+    m_data.erase(std::remove_if(m_data.begin(), m_data.end(),
+                 [id](const auto& e) {return e.id == id;}),
+                 m_data.end());
     endResetModel();
 }
 

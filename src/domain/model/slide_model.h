@@ -28,6 +28,8 @@ public:
 
     void resetModel(std::vector<Slide> model);
 
+    void removeById(const int id);
+
 private:
     SlideModel() = default;
 
