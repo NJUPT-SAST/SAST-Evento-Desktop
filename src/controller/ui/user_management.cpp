@@ -40,3 +40,25 @@ UserManagementController *UserManagementController::create(QQmlEngine *qmlEngine
 {
     return new UserManagementController();
 }
+
+ void UserManagementController::updateUserId(QString id)
+ {
+    UserManagementController::userId = id;
+ }
+
+ QString UserManagementController::getUserId()
+ {
+    return userId;
+ }
+
+ void UserManagementController::updateIsEdit(bool isEdit)
+ {
+    UserManagementController::m_isEdit = isEdit;
+ }
+
+ bool UserManagementController::getIsEdit()
+ {
+    return UserManagementController::m_isEdit;
+ }
+
+

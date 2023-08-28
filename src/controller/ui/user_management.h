@@ -14,6 +14,12 @@ public:
     Q_INVOKABLE QString loadPermissionInfo();
     Q_INVOKABLE void createUser(const QVariantList& list);
 
+    Q_INVOKABLE void updateUserId(QString id);
+    Q_INVOKABLE QString getUserId();
+
+    Q_INVOKABLE void updateIsEdit(bool isEdit);
+    Q_INVOKABLE bool getIsEdit();
+
 signals:
     void loadAllUserSuccess();
     void loadAllUserError(const QString& message);
@@ -27,6 +33,9 @@ signals:
 public:
     UserManagementController() = default;
     static UserManagementController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+
+    QString userId = "null";
+    bool m_isEdit = false;
 };
 
 #endif // USERMANAGEMENT_CONTROLLER_H

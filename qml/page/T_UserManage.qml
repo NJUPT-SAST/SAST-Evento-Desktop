@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
+import SAST_Evento
+import "../imports"
 import "../window"
 
 FluScrollablePage {
@@ -16,6 +18,7 @@ FluScrollablePage {
 
         Component {
             id: com_item
+
             Item {
                 Layout.topMargin: 10
                 width: parent.width
@@ -59,9 +62,12 @@ FluScrollablePage {
                             bottom: parent.bottom
                             bottomMargin: 5
                         }
+
                         onClicked: {
+                            UserManagementController.updateUserId(modelData.id)
                             MainWindow.window.pushPage(
                                         "qrc:/qml/page/T_UserPermission.qml")
+                            console.log(modelData.id)
                         }
                     }
                 }

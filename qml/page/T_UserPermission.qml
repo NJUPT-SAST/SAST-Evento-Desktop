@@ -13,40 +13,14 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
     property var permissionArr: []
     property var arr: []
-
-    function parseJSON(data) {
-        var result = []
-        if (Array.isArray(data)) {
-            for (var i = 0; i < data.length; i++) {
-                var item = data[i]
-                var title = item.title
-                var isLeaf = false
-                var children = []
-
-                if (item.children && Array.isArray(item.children))
-                    children = parseJSON(item.children)
-                else
-                    isLeaf = true
-
-                result.push(tree_view_permission.createItem(title, isLeaf,
-                                                            children, {
-                                                                "value": item.value
-                                                            }))
-            }
-        } else {
-            result.push(tree_view_permission.createItem(data.title, true, [], {
-                                                            "value": data.value
-                                                        }))
-        }
-        return result
-    }
+    property string userId : UserManagementController.getUserId()
 
     function loadPermissionInfo() {
         statusMode = FluStatusViewType.Loading
         var permission = UserManagementController.loadPermissionInfo()
-        var json = JSON.parse(permission)
-        permissionArr = parseJSON(json)
-        tree_view_permission.updateData(permissionArr)
+        permissionArr = JSON.parse(permission)
+//        tree_view_permission.updateData(permissionArr)
+        console.log(permissionArr[1])
     }
 
     Connections {
@@ -66,6 +40,7 @@ FluScrollablePage {
 
     Component.onCompleted: {
         loadPermissionInfo()
+        text1.text = userId
     }
 
     Item {
@@ -75,8 +50,8 @@ FluScrollablePage {
 
         FluText {
             id: text1
-            text: "学号：" + "B22080222"
-            font.pixelSize: 22
+            text: "default"
+            font: FluTextStyle.Title
             anchors {
                 top: parent.top
             }
@@ -85,7 +60,7 @@ FluScrollablePage {
         FluText {
             id: text2
             text: "用户权限"
-            font.pixelSize: 22
+            font: FluTextStyle.Body
             anchors {
                 top: text1.bottom
                 topMargin: 10
@@ -95,63 +70,80 @@ FluScrollablePage {
 
         FluArea {
             id: left_check_area
-            width: 300
+            width: parent.width
             height: 500
             anchors {
                 top: text2.bottom
                 topMargin: 20
                 left: parent.left
             }
-            FluTreeView {
-                id: tree_view_permission
-                anchors.fill: parent
-                selectionMode: FluTreeViewType.Multiple
-            }
-        }
 
-        FluArea {
-            id: right_area
-            width: parent.width - 315
-            height: 500
-            anchors {
-                left: left_check_area.right
-                top: left_check_area.top
-                leftMargin: 15
-            }
+//            FluTreeView {
+//                id: tree_view_permission
+//                anchors.fill: parent
+//                selectionMode: FluTreeViewType.Multiple
+//            }
+
             FluScrollablePage {
                 anchors.fill: parent
-                implicitHeight: col.implicitHeight
+                implicitHeight: left_col.implicitHeight
                 ColumnLayout {
-                    id: col
-                    spacing: 5
+                    id: left_col
+                    spacing: 10
                     Repeater {
-                        id: rep
-                        FluText {
-                            font.pixelSize: 18
-                            text: modelData
+                        id: left_check_rep
+                        model: permissionArr
+                        FluCheckBox {
+                            text:modelData["title"]
                         }
                     }
                 }
             }
         }
 
-        FluFilledButton {
-            anchors {
-                bottom: parent.bottom
-                left: parent.left
-                leftMargin: 240
-                bottomMargin: 5
-            }
-            text: "载入"
-            onClicked: {
-                arr = []
-                tree_view_permission.multipData().map(value => {
-                                                          arr.push(value.text)
-                                                      })
-                rep.model = arr
-                btn_ok.disabled = arr.length === 0
-            }
-        }
+//        FluArea {
+//            id: right_area
+//            width: parent.width - 315
+//            height: 500
+//            anchors {
+//                left: left_check_area.right
+//                top: left_check_area.top
+//                leftMargin: 15
+//            }
+//            FluScrollablePage {
+//                anchors.fill: parent
+//                implicitHeight: col.implicitHeight
+//                ColumnLayout {
+//                    id: col
+//                    spacing: 5
+//                    Repeater {
+//                        id: rep
+//                        FluText {
+//                            font.pixelSize: 18
+//                            text: modelData
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+//        FluFilledButton {
+//            anchors {
+//                bottom: parent.bottom
+//                left: parent.left
+//                leftMargin: 240
+//                bottomMargin: 5
+//            }
+//            text: "载入"
+//            onClicked: {
+//                arr = []
+//                tree_view_permission.multipData().map(value => {
+//                                                          arr.push(value.text)
+//                                                      })
+//                rep.model = arr
+//                btn_ok.disabled = arr.length === 0
+//            }
+//        }
 
         FluFilledButton {
             id: btn_ok
