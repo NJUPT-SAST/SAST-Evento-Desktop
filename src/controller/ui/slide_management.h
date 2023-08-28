@@ -11,10 +11,13 @@ class SlideManagementController : public QObject
 
 public:
     Q_INVOKABLE void loadAllSlide();
+    Q_INVOKABLE void deleteSlide(const int slideId);
 
 signals:
     void loadAllSlideSuccess();
     void loadAllSlideError(const QString &message);
+    void deleteSlideSuccess();
+    void deleteSlideError(const QString &message);
 
 public:
     SlideManagementController() = default;
