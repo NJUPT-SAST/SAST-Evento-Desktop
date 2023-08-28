@@ -16,6 +16,7 @@ public:
 signals:
     void loadAllSlideSuccess();
     void loadAllSlideError(const QString &message);
+
     void deleteSlideSuccess();
     void deleteSlideError(const QString &message);
 

@@ -1,5 +1,4 @@
 #include "slide_helper.h"
-#include "slide.h"
 
 SlideHelper *SlideHelper::getInstance()
 {

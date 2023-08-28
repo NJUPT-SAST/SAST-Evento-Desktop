@@ -10,7 +10,7 @@ class SlideManagementEditController : public QObject
     QML_SINGLETON
 
 public:
-    Q_INVOKABLE void loadEditInfo(int slideId = 0);
+    Q_INVOKABLE void loadEditInfo(const int &slideId, const bool &isEdit);
     Q_INVOKABLE void createSlide(const QString &title, const QString &link, const QString &url);
     Q_INVOKABLE void updateSlide(const QString &title, const QString &link, const QString &url);
     Q_INVOKABLE void onClickSubmit(const QString &title, const QString &link, const QString &url, const bool &isEdit);

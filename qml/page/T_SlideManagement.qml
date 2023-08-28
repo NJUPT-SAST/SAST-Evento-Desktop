@@ -17,6 +17,11 @@ FluScrollablePage {
         SlideManagementController.loadAllSlide()
     }
 
+    function deleteSlide() {
+        statusMode = FluStatusViewType.Loading
+        SlideManagementController.deleteSlide(deleteSlideId)
+    }
+
     Connections {
         target: SlideManagementController
         function onLoadAllSlideSuccess() {
@@ -35,14 +40,16 @@ FluScrollablePage {
     Connections {
         target: SlideManagementController
         function onDeleteSlideSuccess() {
-            // TODO 删除成功
+            statusMode = FluStatusViewType.Success
+            showSuccess("删除幻灯片成功")
         }
     }
 
     Connections {
         target: SlideManagementController
         function onDeleteSlideError(message) {
-            //TODO 删除失败
+            statusMode = FluStatusViewType.Success
+            showError("删除失败(错误信息: " + message + ")")
         }
     }
 
@@ -147,7 +154,7 @@ FluScrollablePage {
 
                         onClicked: {
                             SlideHelper.isEdit = true
-                            SlideHelper.id = 1 // TODO 更改id为model.id
+                            SlideHelper.id = model.id
                             SlideHelper.title = model.title
                             SlideHelper.link = model.link
                             SlideHelper.url = model.url
@@ -165,7 +172,7 @@ FluScrollablePage {
                         hoverEnabled: true
                         onClicked: {
                             SlideHelper.isEdit = true
-                            SlideHelper.id = 1 // TODO 更改id为model.id
+                            SlideHelper.id = model.id
                             SlideHelper.title = model.title
                             SlideHelper.link = model.link
                             SlideHelper.url = model.url
@@ -207,7 +214,7 @@ FluScrollablePage {
             }
             positiveText:"确定"
             onPositiveClicked:{
-                SlideManagementController.deleteSlide(deleteSlideId)
+                deleteSlide()
             }
     }
 }

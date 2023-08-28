@@ -9,7 +9,7 @@ void SlideManagementController::loadAllSlide()
     SlideModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
             getRepo()->get_home_slide_list(3, err)));
-    // get_home_slide_list 参数更改为size和page（未来替换）
+    // TODO get_home_slide_list 参数更改为size和page（未来替换）
     if((int)err.code())
         return emit loadAllSlideError(err.message());
     return emit loadAllSlideSuccess();
@@ -17,6 +17,9 @@ void SlideManagementController::loadAllSlide()
 
 void SlideManagementController::deleteSlide(const int slideId)
 {
+    SlideModel::getInstance()->removeById(slideId);
+
+    // TODO 请求删除部分
     return emit deleteSlideSuccess();
 }
 

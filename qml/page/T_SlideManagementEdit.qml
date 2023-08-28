@@ -12,16 +12,7 @@ FluScrollablePage {
 
     function loadSlideInfo() {
         statusMode = FluStatusViewType.Loading
-        if(SlideHelper.isEdit) {
-            SlideManagementEditController.loadEditInfo(SlideHelper.id)
-        }
-        else {
-            SlideHelper.id = 0
-            SlideHelper.title = ""
-            SlideHelper.link = ""
-            SlideHelper.url = ""
-            statusMode = FluStatusViewType.Success
-        }
+        SlideManagementEditController.loadEditInfo(SlideHelper.id, SlideHelper.isEdit)
     }
 
     function returnPage() {
@@ -46,28 +37,30 @@ FluScrollablePage {
     Connections {
         target: SlideManagementEditController
         function onCreateSuccessEvent() {
-            // TODO 创建slide成功
+            showSuccess("创建幻灯片成功")
+            returnPage()
         }
     }
 
     Connections {
         target: SlideManagementEditController
         function onCreateErrorEvent(message) {
-            // TODO 创建slide失败
+            showError("创建失败(错误信息: " + message + ")")
         }
     }
 
     Connections {
         target: SlideManagementEditController
         function onUpdateSuccessEvent() {
-            // TODO 更改slide成功
+            showSuccess("更改幻灯片成功")
+            returnPage()
         }
     }
 
     Connections {
         target: SlideManagementEditController
         function onUpdateErrorEvent(message) {
-            // TODO 更改slide失败
+            showError("更改失败(错误信息: " + message + ")")
         }
     }
 
@@ -191,17 +184,17 @@ FluScrollablePage {
                     }
                     onClicked: {
                         // TODO 判断是否有url（判断是否去gallery中获取url）
-                        if(titleText.text === "" ||
-                                linkText.text === ""){
+                        if(titleTextbox.text === "" || linkTextbox.text === ""){
                             showInfo("有信息未填写")
                             return
                         }
                         statusMode = FluStatusViewType.Loading
 
                         SlideManagementEditController.onClickSubmit(
-                                    titleText.text,
-                                    linkText.text,
-                                    "url")
+                                    titleTextbox.text,
+                                    linkTextbox.text,
+                                    "url",
+                                    SlideHelper.isEdit)
                         // TODO url获取（gallery helper获取）
                     }
                 }
@@ -220,6 +213,5 @@ FluScrollablePage {
             }
         }
     }
-
 
 }

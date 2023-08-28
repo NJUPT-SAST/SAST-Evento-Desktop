@@ -1,26 +1,31 @@
 #include "slide_management_edit.h"
-#include "evento_exception.h"
+#include "slide_helper.h"
 
-void SlideManagementEditController::loadEditInfo(int slideId)
+void SlideManagementEditController::loadEditInfo(const int &slideId, const bool &isEdit)
 {
-    EventoException err;
-    if(slideId != 0){
-        if((int)err.code())
-            return emit loadEditErrorEvent(err.message());
+    if(isEdit) {
+        if(slideId != 0){
+            return emit loadEditSuccessEvent();
+        }
+        else {
+            return emit loadEditErrorEvent("no slide");
+        }
     }
     else {
-        return emit loadEditErrorEvent("no slide");
+        SlideHelper::getInstance()->updateSlide(0, "", "", "");
+        return emit loadEditSuccessEvent();
     }
-    return emit loadEditSuccessEvent();
 }
 
 void SlideManagementEditController::createSlide(const QString &title, const QString &link, const QString &url)
 {
+    // TODO 创建幻灯片
     return emit createSuccessEvent();
 }
 
 void SlideManagementEditController::updateSlide(const QString &title, const QString &link, const QString &url)
 {
+    // TODO 更改幻灯片
     return emit updateSuccessEvent();
 }
 
