@@ -14,13 +14,12 @@ FluScrollablePage {
     property var permissionArr: []
     property var arr: []
     property string userId : UserManagementController.getUserId()
+    property bool isEdit : UserManagementController.getIsEdit()
 
     function loadPermissionInfo() {
         statusMode = FluStatusViewType.Loading
         var permission = UserManagementController.loadPermissionInfo()
         permissionArr = JSON.parse(permission)
-//        tree_view_permission.updateData(permissionArr)
-        console.log(permissionArr[1])
     }
 
     Connections {
@@ -46,7 +45,7 @@ FluScrollablePage {
     Item {
         id: item_all
         Layout.fillWidth: true
-        height: 500
+        height: 560
 
         FluText {
             id: text1
@@ -69,20 +68,14 @@ FluScrollablePage {
         }
 
         FluArea {
-            id: left_check_area
+            id: check_area
             width: parent.width
-            height: 500
+            height: 500 - text1.height - text2.height - 20
             anchors {
                 top: text2.bottom
                 topMargin: 20
                 left: parent.left
             }
-
-//            FluTreeView {
-//                id: tree_view_permission
-//                anchors.fill: parent
-//                selectionMode: FluTreeViewType.Multiple
-//            }
 
             FluScrollablePage {
                 anchors.fill: parent
@@ -101,67 +94,51 @@ FluScrollablePage {
             }
         }
 
-//        FluArea {
-//            id: right_area
-//            width: parent.width - 315
-//            height: 500
-//            anchors {
-//                left: left_check_area.right
-//                top: left_check_area.top
-//                leftMargin: 15
-//            }
-//            FluScrollablePage {
-//                anchors.fill: parent
-//                implicitHeight: col.implicitHeight
-//                ColumnLayout {
-//                    id: col
-//                    spacing: 5
-//                    Repeater {
-//                        id: rep
-//                        FluText {
-//                            font.pixelSize: 18
-//                            text: modelData
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
-//        FluFilledButton {
-//            anchors {
-//                bottom: parent.bottom
-//                left: parent.left
-//                leftMargin: 240
-//                bottomMargin: 5
-//            }
-//            text: "载入"
-//            onClicked: {
-//                arr = []
-//                tree_view_permission.multipData().map(value => {
-//                                                          arr.push(value.text)
-//                                                      })
-//                rep.model = arr
-//                btn_ok.disabled = arr.length === 0
-//            }
-//        }
-
         FluFilledButton {
             id: btn_ok
             anchors {
-                bottom: parent.bottom
-                right: parent.right
+                top: check_area.bottom
+                topMargin: 20
+                right: check_area.right
                 rightMargin: 10
-                bottomMargin: 5
             }
-            disabled: true
+            disabled: false
             text: "确定"
 
             onClicked: {
                 statusMode = FluStatusViewType.Loading
+                arr = []
+
+                // 遍历复选框，检查勾选状态，并将文本和勾选状态添加到数组
+                for (var i = 0; i < left_check_rep.count; i++) {
+                    var permissionTitle = left_check_rep.itemAt(i).text
+                    var permissionState = left_check_rep.itemAt(i).checked ? true : false;
+                    arr.push([permissionTitle,permissionState])
+                }
+
                 UserManagementController.createUser(arr)
             }
         }
+
+        FluButton {
+            id: btn_cancel
+            anchors {
+                top: btn_ok.top
+                right: btn_ok.left
+                rightMargin: 20
+            }
+            disabled: false
+            text: "取消"
+
+            onClicked: {
+                statusMode = FluStatusViewType.Loading
+                returnPage()
+            }
+        }
+
     }
+
+
 
     Connections {
         target: UserManagementController
