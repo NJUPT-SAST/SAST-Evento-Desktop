@@ -24,6 +24,22 @@ FluScrollablePage {
         }
     }
 
+    FluContentDialog {
+        id: ensure_dialog
+        title: "警告！"
+        message: "你正在进行删除管理员操作，是否确认删除？"
+        negativeText: "取消"
+        positiveText: "确认"
+    }
+
+    Connections {
+        target: ensure_dialog
+        function onPositiveClicked() {
+            //to do
+            showSuccess("删除成功")
+        }
+    }
+
     Column {
         id: users_col
         width: parent.width
@@ -95,8 +111,8 @@ FluScrollablePage {
                         }
 
                         onClicked: {
+                            ensure_dialog.open()
                             //wait to be completed
-                            showSuccess("删除成功")
                         }
                     }
                 }
