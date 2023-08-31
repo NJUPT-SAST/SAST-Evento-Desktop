@@ -138,7 +138,13 @@ CustomWindow {
             FluPaneItem {
                 title: lang.lang_upload_souvenir_card
                 onTap: {
-                    nav_view.push("qrc:/page/T_SouvenirCard.qml")
+                    nav_view.push("qrc:/qml/page/T_SouvenirCard.qml")
+                }
+            }
+            FluPaneItem {
+                title: "图库"
+                onTap: {
+                    nav_view.push("qrc:/qml/page/T_Gallery.qml")
                 }
             }
             FluPaneItem {

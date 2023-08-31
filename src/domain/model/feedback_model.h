@@ -1,9 +1,8 @@
-#ifndef FEEDBACK_MODEL_H
-#define FEEDBACK_MODEL_H
+#ifndef FEEDBACKMODEL_H
+#define FEEDBACKMODEL_H
 
 #include <QAbstractListModel>
 #include <QtQml>
-
 #include "feedback.h"
 
 class FeedbackModel : public QAbstractListModel
@@ -13,13 +12,9 @@ class FeedbackModel : public QAbstractListModel
     QML_NAMED_ELEMENT(FeedbackModel)
 
 public:
-    enum Role
-    {
-        Id = Qt::DisplayRole + 1,
-        Score,
+    enum Role {
+        Score = Qt::DisplayRole + 1,
         Content,
-        EventId,
-        IsFeedback,
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -42,4 +37,4 @@ public:
     static FeedbackModel *getInstance();
 };
 
-#endif // FEEDBACK_MODEL_H
+#endif // FEEDBACKMODEL_H
