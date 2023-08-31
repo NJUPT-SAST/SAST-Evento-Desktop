@@ -1,7 +1,7 @@
 #ifndef FEEDBACK_STATISTICS_CONTROLLER_H
 #define FEEDBACK_STATISTICS_CONTROLLER_H
 
- #include <QtQml>
+#include <QtQml>
 
 class FeedbackStatisticsController : public QObject {
     Q_OBJECT
@@ -9,8 +9,15 @@ class FeedbackStatisticsController : public QObject {
     QML_SINGLETON
 
 public:
-    explicit FeedbackStatisticsController(QObject *parent = nullptr) {}
-    //static FeedbackStatisticsController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    Q_INVOKABLE void loadFeedbackInfo(int page = 1);
+
+signals:
+    void loadFeedbackSuccessEvent();
+    void loadFeedbackErrorEvent(const QString &message);
+
+public:
+    FeedbackStatisticsController() = default;
+    static FeedbackStatisticsController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 
 #endif // FEEDBACKSTATISTICSCONTROLLER_H

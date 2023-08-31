@@ -4,7 +4,7 @@
 #include <QAbstractListModel>
 #include <QtQml>
 
-#include "feedback.h"
+#include "feedback_summary.h"
 
 class FeedbackModel : public QAbstractListModel
 {
@@ -13,13 +13,10 @@ class FeedbackModel : public QAbstractListModel
     QML_NAMED_ELEMENT(FeedbackModel)
 
 public:
-    enum Role
-    {
-        Id = Qt::DisplayRole + 1,
-        Score,
-        Content,
-        EventId,
-        IsFeedback,
+    enum Role {
+        EventId = Qt::DisplayRole + 1,
+        Title,
+        FeedbackNum,
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -28,12 +25,12 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(std::vector<Feedback> model);
+    void resetModel(std::vector<FeedbackSummary> model);
 
 private:
     FeedbackModel() = default;
 
-    std::vector<Feedback> m_data;
+    std::vector<FeedbackSummary> m_data;
 
     std::mutex m_mutex;
 
