@@ -10,7 +10,7 @@ class FeedbackSummaryModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_SINGLETON
-    QML_NAMED_ELEMENT(FeedbackModel)
+    QML_NAMED_ELEMENT(FeedbackSummaryModel)
 
 public:
     enum Role {

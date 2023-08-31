@@ -43,5 +43,6 @@
         <file>qml/page/T_SlideManagementEdit.qml</file>
         <file>qml/page/T_EventoEdit.qml</file>
         <file>qml/page/T_FeedbackInfo.qml</file>
+        <file>qml/page/T_Gallery.qml</file>
     </qresource>
 </RCC>
