@@ -2,10 +2,21 @@
 #include "convertor.h"
 #include "evento_exception.h"
 
-void FeedbackStatisticsController::loadFeedbackInfo(int page)
+int FeedbackStatisticsController::loadSummaryInfo(int page)
 {
     EventoException err;
-    //getRepo()->get_feedback_info(page, 10);
+    // TODO
+    if ((int) err.code()) {
+        emit loadSummaryErrorEvent(err.message());
+        return 0;
+    }
+    emit loadSummarySuccessEvent();
+    return 30;
+}
+
+void FeedbackStatisticsController::loadFeedbackInfo()
+{
+    EventoException err;
     if ((int) err.code())
         return emit loadFeedbackErrorEvent(err.message());
     emit loadFeedbackSuccessEvent();

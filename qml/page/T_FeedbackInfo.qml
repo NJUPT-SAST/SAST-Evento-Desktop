@@ -9,6 +9,34 @@ import "../window"
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
 
+    onErrorClicked: {
+        loadFeedbackInfo(page)
+    }
+
+    function loadFeedbackInfo() {
+        statusMode = FluStatusViewType.Loading
+        FeedbackStatisticsController.loadFeedbackInfo()
+    }
+
+    Component.onCompleted: {
+        loadFeedbackInfo()
+    }
+
+    Connections {
+        target: FeedbackStatisticsController
+        function onLoadFeedbackSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: FeedbackStatisticsController
+        function onLoadFeedbackErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
     FluArea {
         Layout.fillWidth: true
         height: 90
@@ -40,7 +68,7 @@ FluScrollablePage {
                 font: FluTextStyle.BodyStrong
             }
             FluText {
-                text: "15"
+                text: FeedbackStatisticsHelper.registerNum
             }
         }
         RowLayout {
@@ -56,7 +84,7 @@ FluScrollablePage {
                 font: FluTextStyle.BodyStrong
             }
             FluText {
-                text: "14"
+                text: FeedbackStatisticsHelper.checkedNum
             }
         }
         RowLayout {
@@ -72,7 +100,7 @@ FluScrollablePage {
                 font: FluTextStyle.BodyStrong
             }
             FluText {
-                text: "4.8"
+                text: FeedbackStatisticsHelper.aveScore
             }
         }
     }
@@ -97,29 +125,7 @@ FluScrollablePage {
         implicitHeight: contentHeight
         interactive: false
         delegate: com_item
-        //model: EventoBriefModel
-        model: [{
-                "score": 4,
-                "content": "abcdeee"
-            }, {
-                "score": 5,
-                "content": "abcdeee"
-            }, {
-                "score": 4,
-                "content": "反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容"
-            }, {
-                "score": 4,
-                "content": "反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容"
-            }, {
-                "score": 4,
-                "content": "反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容"
-            }, {
-                "score": 4,
-                "content": "反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容"
-            }, {
-                "score": 4,
-                "content": "反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容反馈内容"
-            }]
+        model: FeedbackModel
     }
 
     Component {
@@ -152,7 +158,7 @@ FluScrollablePage {
 
                 FluText {
                     id: item_score
-                    text: "评分：" + modelData.score
+                    text: "评分：" + model.score
                     font: FluTextStyle.Subtitle
                     anchors {
                         left: parent.left
@@ -171,7 +177,7 @@ FluScrollablePage {
                         top: item_score.bottom
                         topMargin: 5
                     }
-                    text: modelData.content
+                    text: model.content
                     wrapMode: Text.WordWrap
                     font: FluTextStyle.Body
                 }

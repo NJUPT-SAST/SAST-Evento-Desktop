@@ -9,11 +9,15 @@ class FeedbackStatisticsController : public QObject {
     QML_SINGLETON
 
 public:
-    Q_INVOKABLE void loadFeedbackInfo(int page = 1);
+    Q_INVOKABLE int loadSummaryInfo(int page = 1);
+    Q_INVOKABLE void loadFeedbackInfo();
 
 signals:
+    void loadSummarySuccessEvent();
+    void loadSummaryErrorEvent(const QString &message);
+
     void loadFeedbackSuccessEvent();
-    void loadFeedbackErrorEvent(const QString &message);
+    void loadFeedbackErrorEvent(const QString &massage);
 
 public:
     FeedbackStatisticsController() = default;

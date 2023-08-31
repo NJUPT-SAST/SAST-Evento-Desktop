@@ -17,14 +17,11 @@ QVariant FeedbackModel::data(const QModelIndex &index, int role) const
 
     const auto &element = m_data.at(index.row());
 
-    switch (role)
-    {
-    case Role::EventId:
-        return element.eventId;
-    case Role::Title:
-        return element.title;
-    case Role::FeedbackNum:
-        return element.feedbackNum;
+    switch (role) {
+    case Role::Score:
+        return element.score;
+    case Role::Content:
+        return element.content;
     default:
         break;
     }
@@ -35,16 +32,14 @@ QVariant FeedbackModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> FeedbackModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
-    if (roles.isEmpty())
-    {
-        roles.insert(EventId, "eventId");
-        roles.insert(Title, "title");
-        roles.insert(FeedbackNum, "feedbackNum");
+    if (roles.isEmpty()) {
+        roles.insert(Score, "score");
+        roles.insert(Content, "content");
     }
     return roles;
 }
 
-void FeedbackModel::resetModel(std::vector<FeedbackSummary> model)
+void FeedbackModel::resetModel(std::vector<Feedback> model)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();

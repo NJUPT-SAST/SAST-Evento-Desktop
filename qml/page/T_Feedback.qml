@@ -10,7 +10,6 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
     title: lang.lang_feedback
     property int page: 1
-    property int itemTotal: 1
 
     onErrorClicked: {
         loadFeedbackInfo(page)
@@ -18,7 +17,8 @@ FluScrollablePage {
 
     function loadFeedbackInfo() {
         statusMode = FluStatusViewType.Loading
-        FeedbackStatisticsController.loadFeedbackInfo(page)
+        pagination.itemCount = FeedbackStatisticsController.loadSummaryInfo(
+                    page)
     }
 
     Component.onCompleted: {
@@ -28,14 +28,14 @@ FluScrollablePage {
 
     Connections {
         target: FeedbackStatisticsController
-        function onLoadFeedbackSuccessEvent() {
+        function onLoadSummarySuccessEvent() {
             statusMode = FluStatusViewType.Success
         }
     }
 
     Connections {
         target: FeedbackStatisticsController
-        function onLoadFeedbackErrorEvent(message) {
+        function onLoadSummaryErrorEvent(message) {
             errorText = message
             statusMode = FluStatusViewType.Error
         }
@@ -48,24 +48,17 @@ FluScrollablePage {
         implicitHeight: contentHeight
         interactive: false
         delegate: com_item
-        //model: EventoBriefModel
-        model: [{
-                "title": "title",
-                "feedbackNum": 6
-            }, {
-                "title": "title",
-                "feedbackNum": 6
-            }, {
-                "title": "title",
-                "feedbackNum": 6
-            }]
+        model: FeedbackSummaryModel
     }
 
     FluPagination {
+        id: pagination
         Layout.topMargin: 10
         Layout.alignment: Qt.AlignHCenter
         pageCurrent: page
-        itemCount: 23
+        onRequestPage: (page, size) => {
+                           loadFeedbackInfo(page)
+                       }
     }
 
     Component {
@@ -99,7 +92,7 @@ FluScrollablePage {
 
                 FluText {
                     id: item_title
-                    text: modelData.title
+                    text: model.title
                     font: FluTextStyle.Subtitle
                     anchors {
                         left: parent.left
@@ -118,7 +111,7 @@ FluScrollablePage {
                         top: item_title.bottom
                         topMargin: 5
                     }
-                    text: "反馈数量：" + modelData.feedbackNum
+                    text: "反馈数量：" + model.feedbackNum
                     color: FluColors.Grey120
                     wrapMode: Text.WordWrap
                     font: FluTextStyle.Caption
@@ -129,7 +122,6 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_FeedbackInfo.qml")
                     }
