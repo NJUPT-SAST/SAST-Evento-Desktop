@@ -4,10 +4,70 @@ import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
 import SAST_Evento
+import "../window"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
-    title: "Slide Management Edit"
+    // title: "Slide Management Edit"
+
+    function loadSlideInfo() {
+        statusMode = FluStatusViewType.Loading
+        SlideManagementEditController.loadEditInfo(SlideHelper.id, SlideHelper.isEdit)
+    }
+
+    function returnPage() {
+        MainWindow.window.pushPage("qrc:/qml/page/T_SlideManagement.qml")
+    }
+
+    Connections {
+        target: SlideManagementEditController
+        function onLoadEditSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: SlideManagementEditController
+        function onLoadEditErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
+    Connections {
+        target: SlideManagementEditController
+        function onCreateSuccessEvent() {
+            showSuccess("创建幻灯片成功")
+            returnPage()
+        }
+    }
+
+    Connections {
+        target: SlideManagementEditController
+        function onCreateErrorEvent(message) {
+            showError("创建失败(错误信息: " + message + ")")
+        }
+    }
+
+    Connections {
+        target: SlideManagementEditController
+        function onUpdateSuccessEvent() {
+            showSuccess("更改幻灯片成功")
+            returnPage()
+        }
+    }
+
+    Connections {
+        target: SlideManagementEditController
+        function onUpdateErrorEvent(message) {
+            showError("更改失败(错误信息: " + message + ")")
+        }
+    }
+
+    Component.onCompleted: {
+        statusMode = FluStatusViewType.Loading
+        loadSlideInfo()
+    }
 
     FluArea {
         Layout.fillWidth: true
@@ -22,74 +82,77 @@ FluScrollablePage {
                 left: parent.left
             }
             RowLayout{
-                spacing: 10
-                anchors{
-                    left: parent.left
-                }
+                spacing: 9
+                Layout.leftMargin: 0
 
                 FluText {
                     id: titleText
-                    text: "标题"
-                    font: FluTextStyle.Body
+                    text: "title"
+                    font: FluTextStyle.BodyStrong
+                    width: 50
                     Layout.topMargin: 1
                     Layout.bottomMargin: 1
                 }
 
                 FluTextBox {
                     id: titleTextbox
-                    width: 180
+                    implicitWidth: 750
                     Layout.topMargin: 1
                     Layout.bottomMargin: 1
+                    text: SlideHelper.title
                 }
             }
 
             RowLayout{
                 spacing: 10
-                anchors{
-                    left: parent.left
-                }
+                Layout.leftMargin: 0
 
                 FluText {
                     id: linkText
-                    text: "链接"
-                    font: FluTextStyle.Body
+                    text: "link"
+                    font: FluTextStyle.BodyStrong
+                    width: 50
                     Layout.topMargin: 1
                     Layout.bottomMargin: 1
                 }
 
                 FluTextBox {
                     id: linkTextbox
-                    width: 180
+                    implicitWidth: 750
                     Layout.topMargin: 1
                     Layout.bottomMargin: 1
+                    text: SlideHelper.link
                 }
             }
 
             RowLayout{
-                spacing: 10
-                anchors{
-                    left: parent.left
-                }
+                spacing: 15
+                Layout.leftMargin: 0
 
                 FluText {
                     id: urlText
-                    text: "链接"
-                    font: FluTextStyle.Body
+                    text: "url"
+                    font: FluTextStyle.BodyStrong
                     Layout.topMargin: 1
                     Layout.bottomMargin: 1
                 }
 
-                FluButton{
+                FluFilledButton{
                     id: urlButton
                     text: "打开图库"
                     Layout.topMargin: 1
                     Layout.bottomMargin: 1
+                    onClicked: {
+                        // TODO 打开图库跳转
+                    }
                 }
             }
 
             FluText {
                 id: viewText
                 text: "幻灯片预览"
+                Layout.leftMargin: 10
+                font: FluTextStyle.BodyStrong
             }
 
             FluRectangle {
@@ -100,7 +163,7 @@ FluScrollablePage {
                 Layout.leftMargin: 10
                 FluImage {
                     anchors.fill: parent
-                    source: "qrc:/res/image/banner_3.png"
+                    source: SlideHelper.link
                     fillMode: Image.PreserveAspectCrop
                 }
             }
@@ -112,17 +175,43 @@ FluScrollablePage {
                 radius: [6, 6, 6, 6]
                 Layout.leftMargin: 10
                 color: Qt.rgba(0, 0, 0, 0)
-                FluButton{
+                FluFilledButton{
                     id: submitButton
                     text: "提交"
-                    anchors.right: parent.right
+                    anchors{
+                        rightMargin: 10
+                        right: parent.right
+                    }
                     onClicked: {
+                        // TODO 判断是否有url（判断是否去gallery中获取url）
+                        if(titleTextbox.text === "" || linkTextbox.text === ""){
+                            showInfo("有信息未填写")
+                            return
+                        }
+                        statusMode = FluStatusViewType.Loading
 
+                        SlideManagementEditController.onClickSubmit(
+                                    titleTextbox.text,
+                                    linkTextbox.text,
+                                    "url",
+                                    SlideHelper.isEdit)
+                        // TODO url获取（gallery helper获取）
+                    }
+                }
+                FluButton{
+                    id: cancelButton
+                    text: "取消"
+                    anchors {
+                        right: submitButton.left
+                        rightMargin: 10
+                    }
+
+                    onClicked: {
+                        returnPage()
                     }
                 }
             }
         }
     }
-
 
 }
