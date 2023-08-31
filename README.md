@@ -1,5 +1,5 @@
 <div align=center>
-  <img width=64 src="res/favicon.ico">
+  <img width=64 src="app.ico">
 </div>
 
 <h1 align="center">

@@ -40,7 +40,7 @@ CustomWindow {
     SystemTrayIcon {
         id: system_tray
         visible: true
-        icon.source: "qrc:/res/favicon.ico"
+        icon.source: "qrc:/app.ico"
         tooltip: "SAST Evento"
         menu: Menu {
             MenuItem {
@@ -223,7 +223,7 @@ CustomWindow {
         footerItems: items_footer
         topPadding: FluTools.isMacos() ? 20 : 5
         displayMode: settings.displayMode
-        logo: "qrc:/res/favicon.ico"
+        logo: "qrc:/app.ico"
         title: "SAST Evento"
         Component.onCompleted: {
             setCurrentIndex(0)
