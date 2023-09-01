@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/App.qml</file>
-        <file>res/favicon.ico</file>
         <file>qml/window/LoginWindow.qml</file>
         <file>qml/window/MainWindow.qml</file>
         <file>qml/imports/CustomWindow.qml</file>
@@ -43,5 +42,8 @@
         <file>qml/page/T_SlideManagementEdit.qml</file>
         <file>qml/page/T_EventoEdit.qml</file>
         <file>qml/page/T_UserPermission.qml</file>
+        <file>qml/page/T_FeedbackInfo.qml</file>
+        <file>qml/page/T_Gallery.qml</file>
+        <file>app.ico</file>
     </qresource>
 </RCC>

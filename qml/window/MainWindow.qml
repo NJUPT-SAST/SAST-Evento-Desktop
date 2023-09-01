@@ -40,7 +40,7 @@ CustomWindow {
     SystemTrayIcon {
         id: system_tray
         visible: true
-        icon.source: "qrc:/res/favicon.ico"
+        icon.source: "qrc:/app.ico"
         tooltip: "SAST Evento"
         menu: Menu {
             MenuItem {
@@ -138,7 +138,13 @@ CustomWindow {
             FluPaneItem {
                 title: lang.lang_upload_souvenir_card
                 onTap: {
-                    nav_view.push("qrc:/page/T_SouvenirCard.qml")
+                    nav_view.push("qrc:/qml/page/T_SouvenirCard.qml")
+                }
+            }
+            FluPaneItem {
+                title: "图库"
+                onTap: {
+                    nav_view.push("qrc:/qml/page/T_Gallery.qml")
                 }
             }
             FluPaneItem {
@@ -217,7 +223,7 @@ CustomWindow {
         footerItems: items_footer
         topPadding: FluTools.isMacos() ? 20 : 5
         displayMode: settings.displayMode
-        logo: "qrc:/res/favicon.ico"
+        logo: "qrc:/app.ico"
         title: "SAST Evento"
         Component.onCompleted: {
             setCurrentIndex(0)

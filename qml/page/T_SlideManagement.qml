@@ -4,16 +4,64 @@ import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
 import SAST_Evento
+import "../window"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
     title: "Slide Management"
 
+    property int deleteSlideId: 0
+
+    function loadAllSlide(){
+        statusMode = FluStatusViewType.Loading
+        SlideManagementController.loadAllSlide()
+    }
+
+    function deleteSlide() {
+        statusMode = FluStatusViewType.Loading
+        SlideManagementController.deleteSlide(deleteSlideId)
+    }
+
+    Connections {
+        target: SlideManagementController
+        function onLoadAllSlideSuccess() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: SlideManagementController
+        function onLoadAllSlideError(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
+    Connections {
+        target: SlideManagementController
+        function onDeleteSlideSuccess() {
+            statusMode = FluStatusViewType.Success
+            showSuccess("删除幻灯片成功")
+        }
+    }
+
+    Connections {
+        target: SlideManagementController
+        function onDeleteSlideError(message) {
+            statusMode = FluStatusViewType.Success
+            showError("删除失败(错误信息: " + message + ")")
+        }
+    }
+
+    Component.onCompleted: {
+        loadAllSlide()
+    }
+
     Component {
         id: com_item
         Item {
             Layout.topMargin: 10
-            width: parent.width
+            width: listView.width
             height: 90
             FluArea {
                 radius: 8
@@ -49,14 +97,14 @@ FluScrollablePage {
                         }
                         FluImage {
                             anchors.fill: parent
-                            source: "qrc:/res/image/banner_3.png"
+                            source: model.link
                             fillMode: Image.PreserveAspectCrop
                         }
                     }
 
                     FluText {
                         id: com_title
-                        text: title
+                        text: model.title
                         font: FluTextStyle.Title
                         anchors {
                             left: item_icon.right
@@ -68,7 +116,7 @@ FluScrollablePage {
 
                     FluText {
                         id: com_link
-                        text: link
+                        text: model.link
                         font: FluTextStyle.Body
                         anchors {
                             top: com_title.bottom
@@ -89,7 +137,8 @@ FluScrollablePage {
                         }
 
                         onClicked: {
-
+                            deleteSlideId = model.id
+                            delete_btn_dialog.open()
                         }
                     }
 
@@ -104,7 +153,12 @@ FluScrollablePage {
                         }
 
                         onClicked: {
-
+                            SlideHelper.isEdit = true
+                            SlideHelper.id = model.id
+                            SlideHelper.title = model.title
+                            SlideHelper.link = model.link
+                            SlideHelper.url = model.url
+                            MainWindow.window.pushPage("qrc:/qml/page/T_SlideManagementEdit.qml")
                         }
                     }
 
@@ -117,7 +171,12 @@ FluScrollablePage {
 
                         hoverEnabled: true
                         onClicked: {
-
+                            SlideHelper.isEdit = true
+                            SlideHelper.id = model.id
+                            SlideHelper.title = model.title
+                            SlideHelper.link = model.link
+                            SlideHelper.url = model.url
+                            MainWindow.window.pushPage("qrc:/qml/page/T_SlideManagementEdit.qml")
                         }
                     }
                 }
@@ -130,7 +189,8 @@ FluScrollablePage {
         iconSource: FluentIcons.Add
         Layout.alignment: Qt.AlignRight
         onClicked: {
-
+            SlideHelper.isEdit = false
+            MainWindow.window.pushPage("qrc:/qml/page/T_SlideManagementEdit.qml")
         }
     }
 
@@ -141,5 +201,20 @@ FluScrollablePage {
         implicitHeight: contentHeight
         interactive: false
         delegate: com_item
+    }
+
+    FluContentDialog{
+            id:delete_btn_dialog
+            title:"删除幻灯片"
+            message:"是否确定删除幻灯片？"
+            buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
+            negativeText:"取消"
+            onNegativeClicked:{
+                // 取消删除操作
+            }
+            positiveText:"确定"
+            onPositiveClicked:{
+                deleteSlide()
+            }
     }
 }

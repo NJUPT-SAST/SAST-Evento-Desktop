@@ -544,14 +544,29 @@ FluScrollablePage {
             }
         }
 
-        FluFilledButton {
-            text: EventoEditHelper.isEdited ? "完成修改" : "创建"
-            font: FluTextStyle.Subtitle
-            implicitWidth: parent.width
-            implicitHeight: 45
+        FluButton {
+            text: "取消"
+            implicitWidth: 100
+            implicitHeight: 35
             anchors {
                 top: area4.bottom
                 topMargin: 10
+                right: area4.right
+                rightMargin: 110
+            }
+            onClicked: {
+                returnPage()
+            }
+        }
+
+        FluFilledButton {
+            text: EventoEditHelper.isEdited ? "完成修改" : "创建"
+            implicitWidth: 100
+            implicitHeight: 35
+            anchors {
+                top: area4.bottom
+                topMargin: 10
+                right: area4.right
             }
             onClicked: {
                 var ids = []

@@ -17,18 +17,11 @@ QVariant FeedbackModel::data(const QModelIndex &index, int role) const
 
     const auto &element = m_data.at(index.row());
 
-    switch (role)
-    {
-    case Role::Id:
-        return element.id;
+    switch (role) {
     case Role::Score:
         return element.score;
     case Role::Content:
         return element.content;
-    case Role::EventId:
-        return element.eventId;
-    case Role::IsFeedback:
-        return element.isFeedback;
     default:
         break;
     }
@@ -39,13 +32,9 @@ QVariant FeedbackModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> FeedbackModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
-    if (roles.isEmpty())
-    {
-        roles.insert(Id, "id");
+    if (roles.isEmpty()) {
         roles.insert(Score, "score");
         roles.insert(Content, "content");
-        roles.insert(EventId, "eventId");
-        roles.insert(IsFeedback, "isFeedback");
     }
     return roles;
 }
