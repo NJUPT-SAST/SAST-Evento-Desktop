@@ -17,7 +17,7 @@ Window {
         property int enableAnimationSet
         property int colorIndex
         property string langMode
-        property var displayMode
+        property int displayMode
     }
 
     Component.onCompleted: {
