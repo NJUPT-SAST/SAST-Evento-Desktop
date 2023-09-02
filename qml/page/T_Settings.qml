@@ -4,6 +4,7 @@ import QtQuick.Window
 import QtQuick.Controls
 import QtCore
 import FluentUI
+import "../window"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
@@ -12,7 +13,7 @@ FluScrollablePage {
     Settings {
         id: settings
         property string langMode
-        property var displayMode
+        property int displayMode
     }
 
     FluArea {
@@ -90,6 +91,7 @@ FluScrollablePage {
                     text: modelData.title
                     clickListener: function () {
                         settings.displayMode = modelData.mode
+                        MainWindow.window.displayMode = modelData.mode
                     }
                 }
             }

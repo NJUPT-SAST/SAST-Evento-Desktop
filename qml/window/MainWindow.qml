@@ -195,23 +195,7 @@ CustomWindow {
         z: 7
     }
 
-    FluIconButton {
-        anchors {
-            top: parent.top
-            left: parent.left
-            topMargin: FluTools.isMacos() ? 20 : 10
-            leftMargin: 155
-        }
-
-        iconSource: FluentIcons.Sync
-        width: 30
-        height: 30
-        iconSize: 13
-        onClicked: {
-
-            // TODO
-        }
-    }
+    property alias displayMode: nav_view.displayMode
 
     FluNavigationView {
         id: nav_view
