@@ -155,7 +155,7 @@ FluScrollablePage {
 
         FluArea {
             paddings: 10
-            width: 250
+            width: 200
             Layout.alignment: Qt.AlignTop
             height: 500
             FluTreeView {
