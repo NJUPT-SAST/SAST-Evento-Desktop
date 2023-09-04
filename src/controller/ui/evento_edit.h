@@ -23,10 +23,10 @@ public:
 
 signals:
     void loadEditSuccessEvent();
-    void loadEditErrorEvent(const QString& messge);
+    void loadEditErrorEvent(const QString messge);
 
     void createSuccessEvent();
-    void createErrorEvent(const QString& message);
+    void createErrorEvent(const QString message);
 
 public:
     static EventoEditController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);

@@ -18,16 +18,16 @@ public:
 
 signals:
     void loadEventoSuccessEvent();
-    void loadEventoErrorEvent(const QString &message);
+    void loadEventoErrorEvent(const QString message);
 
     void registerSuccessEvent();
-    void registerErrorEvent(const QString &message);
+    void registerErrorEvent(const QString message);
 
     void subscribeSuccessEvent();
-    void subscribeErrorEvent(const QString &message);
+    void subscribeErrorEvent(const QString message);
 
     void feedbackSuccessEvent();
-    void feedbackErrorEvent(const QString &message);
+    void feedbackErrorEvent(const QString message);
 
 public:
     EventoInfoController() = default;

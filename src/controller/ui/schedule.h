@@ -16,10 +16,10 @@ public:
 
 signals:
     void loadRegisteredScheduleSuccessEvent();
-    void loadRegisteredScheduleErrorEvent(const QString &message);
+    void loadRegisteredScheduleErrorEvent(const QString message);
 
     void loadSubscribedScheduleSuccessEvent();
-    void loadSubscribedScheduleErrorEvent(const QString &message);
+    void loadSubscribedScheduleErrorEvent(const QString message);
 
     void checkSuccessEvent();
     void checkErrorEvent(const QString &message);

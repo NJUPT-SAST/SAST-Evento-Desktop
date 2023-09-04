@@ -3,11 +3,42 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
-//import SAST_Evento
+import SAST_Evento
 import "../window"
 
 FluScrollablePage {
+    id: control
     launchMode: FluPageType.SingleTask
+
+    property string dateString: date2String(new Date)
+
+    function loadAllInfo(date) {
+        statusMode = FluStatusViewType.Loading
+        CalendarController.loadAllEventoInfo(date)
+    }
+
+    Component.onCompleted: {
+        loadAllInfo(dateString)
+    }
+
+    Connections {
+        target: CalendarController
+        function onLoadAllEventoSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+        }
+    }
+
+    Connections {
+        target: CalendarController
+        function onLoadAllEventoErrorEvent(message) {
+            errorText = message
+            statusMode = FluStatusViewType.Error
+        }
+    }
+
+    onErrorClicked: {
+        loadAllInfo(dateString)
+    }
 
     Item {
         width: 885
@@ -22,10 +53,10 @@ FluScrollablePage {
                 verticalCenter: parent.verticalCenter
             }
             onClicked: {
-
-                //                var date = new Date(date_picker.current)
-                //                date.setDate(date_picker.current.getDate() + 7)
-                //                date_picker.current.setDate(date)
+                var date = new Date(date_picker.current)
+                date.setDate(date_picker.current.getDate() - 7)
+                date_picker.current = date
+                dateString = date2String(date)
             }
         }
         FluCalendarPicker {
@@ -35,6 +66,10 @@ FluScrollablePage {
                 verticalCenter: parent.verticalCenter
             }
             current: new Date
+            onAccepted: {
+                dateString = date_picker.text
+                loadAllInfo(dateString)
+            }
         }
         FluIconButton {
             id: btn_right
@@ -44,8 +79,10 @@ FluScrollablePage {
                 verticalCenter: parent.verticalCenter
             }
             onClicked: {
-
-                // TODO
+                var date = new Date(date_picker.current)
+                date.setDate(date_picker.current.getDate() + 7)
+                date_picker.current = date
+                dateString = date2String(date)
             }
         }
 
@@ -340,15 +377,17 @@ FluScrollablePage {
 
         Component.onCompleted: {
             for (var i = 0; i < rep_block.count; i++) {
-                var item = rep_block.itemAt(i)
-                rep_block.itemAt(i).x = rep_date.itemAt(1).x + 53
-                rep_block.itemAt(i).y = rep_time.itemAt(5).y + 60
+                var itemModel = rep_block.itemAt(i).model
+                rep_block.itemAt(i).x = rep_date.itemAt(
+                            itemModel.colunmStart).x + 53
+                rep_block.itemAt(i).y = rep_time.itemAt(
+                            itemModel.rowStart).y + 60
             }
         }
 
         Repeater {
             id: rep_block
-            model: 1
+            model: EventoBlockModel
             delegate: com_rec
         }
     }
@@ -356,8 +395,8 @@ FluScrollablePage {
     Component {
         id: com_rec
         FluArea {
-            height: 43.1 * 2 // TODO
-            width: 115 * 1
+            height: 43.1 * (model.rowEnd - model.rowStart)
+            width: 115
             border.color: FluTheme.primaryColor.normal
             Rectangle {
                 anchors.fill: parent
@@ -399,5 +438,10 @@ FluScrollablePage {
         var nextDate = new Date(date)
         nextDate.setDate(date.getDate() + days)
         return nextDate.getDate()
+    }
+
+    function date2String(date) {
+        return date.getFullYear() + "-" + (date.getMonth(
+                                               ) + 1) + "-" + date.getDate()
     }
 }

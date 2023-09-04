@@ -14,7 +14,7 @@ public:
 
 signals:
     void loadMyPageSuccessEvent();
-    void loadMyPageErrorEvent(const QString& message);
+    void loadMyPageErrorEvent(const QString message);
 
 public:
     MyPageController() = default;
