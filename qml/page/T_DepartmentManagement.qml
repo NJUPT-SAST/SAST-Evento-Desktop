@@ -7,108 +7,108 @@ import SAST_Evento
 import "../window"
 
 FluScrollablePage {
-    id: typePage
+    id: departmentPage
     launchMode: FluPageType.SingleTask
-    title: "Type Management"
+    title: "Department Management"
 
-    property int deleteTypeId: -1
-    property string typeListJson_str: ""
-    property var typeListJson
+    property int deleteDepartmentId: -1
+    property string departmentListJson_str: ""
+    property var departmentListJson
     property int newIndex: -1
     property int freshIndex: -1
 
-    signal cancelNewType()
+    signal cancelNewDepartment()
 
     function loadModel() {
-        for(var i = 0; i<typeListJson.length; i++) {
-            typeListModel.append(typeListJson[i])
+        for(var i = 0; i<departmentListJson.length; i++) {
+            departmentListModel.append(departmentListJson[i])
         }
     }
 
-    function loadAllType(){
+    function loadAllDepartment(){
         statusMode = FluStatusViewType.Loading
-        typeListJson = JSON.parse(TypeManagementController.loadAllType())
-        typeListModel.clear()
+        departmentListJson = JSON.parse(DepartmentManagementController.loadAllDepartment())
+        departmentListModel.clear()
         loadModel()
     }
 
-    function deleteType() {
+    function deleteDepartment() {
         statusMode = FluStatusViewType.Loading
-        TypeManagementController.deleteType(deleteTypeId)
+        DepartmentManagementController.deleteDepartment(deleteDepartmentId)
     }
 
     function freshList() {
-        loadAllType()
+        loadAllDepartment()
         newIndex = -1
         freshIndex = -1
     }
 
     Connections {
-        target: TypeManagementController
-        function onLoadAllTypeSuccess() {
+        target: DepartmentManagementController
+        function onLoadAllDepartmentSuccess() {
             statusMode = FluStatusViewType.Success
         }
     }
 
     Connections {
-        target: TypeManagementController
-        function onLoadAllTypeError(message) {
+        target: DepartmentManagementController
+        function onLoadAllDepartmentError(message) {
             errorText = message
             statusMode = FluStatusViewType.Error
         }
     }
 
     Connections {
-        target: TypeManagementController
-        function onDeleteTypeSuccess() {
-            loadAllType()
-            showSuccess("删除类型成功")
+        target: DepartmentManagementController
+        function onDeleteDepartmentSuccess() {
+            loadAllDepartment()
+            showSuccess("删除部门成功")
         }
     }
 
     Connections {
-        target: TypeManagementController
-        function onDeleteTypeError(message) {
+        target: DepartmentManagementController
+        function onDeleteDepartmentError(message) {
             statusMode = FluStatusViewType.Success
             showError("删除失败(错误信息: " + message + ")")
         }
     }
 
     Connections {
-        target: TypeManagementController
-        function onChangeTypeNameSuccess() {
+        target: DepartmentManagementController
+        function onChangeDepartmentNameSuccess() {
             freshList()
             showSuccess("更改成功")
         }
     }
 
     Connections {
-        target: TypeManagementController
-        function onChangeTypeNameError(message) {
+        target: DepartmentManagementController
+        function onChangeDepartmentNameError(message) {
             freshList()
             showError("更改失败(错误信息: " + message + ")")
         }
     }
 
     Connections {
-        target: TypeManagementController
-        function onAddTypeSuccess() {
+        target: DepartmentManagementController
+        function onAddDepartmentSuccess() {
             freshList()
             showSuccess("添加成功")
         }
     }
 
     Connections {
-        target: TypeManagementController
-        function onAddTypeError(message) {
+        target: DepartmentManagementController
+        function onAddDepartmentError(message) {
             freshList()
             showError("添加失败(错误信息: " + message + ")")
         }
     }
 
     Component.onCompleted: {
-        loadAllType()
-        cancelNewType.connect(freshList)
+        loadAllDepartment()
+        cancelNewDepartment.connect(freshList)
     }
 
     Component {
@@ -174,14 +174,14 @@ FluScrollablePage {
                                     showInfo("类型名不能为空")
                                     return
                                 }
-                                typeLoadText.visible = true
+                                departmentLoadText.visible = true
                                 editBox.visible = false
                                 com_name.opacity = 1
                                 if(newIndex === index) {
-                                    TypeManagementController.addType(name_edit.text)
+                                    DepartmentManagementController.addDepartment(name_edit.text)
                                 }
                                 else {
-                                    TypeManagementController.changeTypeName(model.id, name_edit.text)
+                                    DepartmentManagementController.changeDepartmentName(model.id, name_edit.text)
                                 }
                             }
                         }
@@ -198,7 +198,7 @@ FluScrollablePage {
                             onClicked: {
                                 if(newIndex !== -1) {
                                     newIndex = -1
-                                    typeListModel.remove(index)
+                                    departmentListModel.remove(index)
                                     return
                                 }
 
@@ -213,7 +213,7 @@ FluScrollablePage {
                     }
 
                     FluText {
-                        id: typeLoadText
+                        id: departmentLoadText
                         visible: false
                         font: FluTextStyle.Body
                         text: newIndex===index?"添加类型中...":"更改类型中..."
@@ -236,7 +236,7 @@ FluScrollablePage {
                         }
 
                         onClicked: {
-                            deleteTypeId = model.id
+                            deleteDepartmentId = model.id
                             delete_btn_dialog.open()
                         }
                     }
@@ -283,15 +283,15 @@ FluScrollablePage {
                 showError("有未编辑提交的类型名")
                 return
             }
-            newIndex = typeListJson.length
+            newIndex = departmentListJson.length
             var jsonItem = JSON.parse("{\"name\": \"\",\"id\":" + newIndex + "}")
-            typeListModel.append(jsonItem)
+            departmentListModel.append(jsonItem)
         }
     }
 
     ListView {
         id: listView
-        model: typeListModel
+        model: departmentListModel
         Layout.fillWidth: true
         implicitHeight: contentHeight
         interactive: false
@@ -309,12 +309,12 @@ FluScrollablePage {
             }
             positiveText:"确定"
             onPositiveClicked:{
-                deleteType()
+                deleteDepartment()
             }
     }
 
     ListModel {
-        id: typeListModel
-        objectName: "typeListModel"
+        id: departmentListModel
+        objectName: "departmentListModel"
     }
 }
