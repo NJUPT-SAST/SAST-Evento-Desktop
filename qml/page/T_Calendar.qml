@@ -22,9 +22,10 @@ FluScrollablePage {
                 verticalCenter: parent.verticalCenter
             }
             onClicked: {
-                var date = new Date(date_picker.current)
-                date.setDate(date_picker.current.getDate() + 7)
-                date_picker.current.setDate(date)
+
+                //                var date = new Date(date_picker.current)
+                //                date.setDate(date_picker.current.getDate() + 7)
+                //                date_picker.current.setDate(date)
             }
         }
         FluCalendarPicker {
@@ -41,6 +42,10 @@ FluScrollablePage {
             anchors {
                 left: date_picker.right
                 verticalCenter: parent.verticalCenter
+            }
+            onClicked: {
+
+                // TODO
             }
         }
 
@@ -118,8 +123,8 @@ FluScrollablePage {
     }
 
     FluArea {
-        height: 1150
-        width: 885
+        height: 780
+        width: 890
         color: "transparent"
         Row {
             anchors {
@@ -190,54 +195,6 @@ FluScrollablePage {
             }
             spacing: 30
 
-            FluText {
-                id: text_0
-                text: "00:00"
-                font: FluTextStyle.Caption
-                color: FluColors.Grey110
-            }
-            FluText {
-                id: text_1
-                text: "01:00"
-                font: FluTextStyle.Caption
-                color: FluColors.Grey110
-            }
-            FluText {
-                id: text_2
-                text: "02:00"
-                font: FluTextStyle.Caption
-                color: FluColors.Grey110
-            }
-            FluText {
-                id: text_3
-                text: "03:00"
-                font: FluTextStyle.Caption
-                color: FluColors.Grey110
-            }
-            FluText {
-                id: text_4
-                text: "04:00"
-                font: FluTextStyle.Caption
-                color: FluColors.Grey110
-            }
-            FluText {
-                id: text_5
-                text: "05:00"
-                font: FluTextStyle.Caption
-                color: FluColors.Grey110
-            }
-            FluText {
-                id: text_6
-                text: "06:00"
-                font: FluTextStyle.Caption
-                color: FluColors.Grey110
-            }
-            FluText {
-                id: text_7
-                text: "07:00"
-                font: FluTextStyle.Caption
-                color: FluColors.Grey110
-            }
             FluText {
                 id: text_8
                 text: "08:00"
@@ -369,7 +326,7 @@ FluScrollablePage {
             spacing: 44.1
             Repeater {
                 id: rep_time
-                model: 24
+                model: 16
                 FluRectangle {
                     width: parent.width
                     height: 1
@@ -385,7 +342,7 @@ FluScrollablePage {
             for (var i = 0; i < rep_block.count; i++) {
                 var item = rep_block.itemAt(i)
                 rep_block.itemAt(i).x = rep_date.itemAt(1).x + 53
-                rep_block.itemAt(i).y = rep_time.itemAt(14).y + 60
+                rep_block.itemAt(i).y = rep_time.itemAt(5).y + 60
             }
         }
 

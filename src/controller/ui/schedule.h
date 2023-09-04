@@ -3,8 +3,6 @@
 
 #include <QtQml>
 
-class Repository;
-
 class ScheduleController : public QObject
 {
     Q_OBJECT

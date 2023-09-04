@@ -3,8 +3,6 @@
 
 #include <QtQml>
 
-class Repository;
-
 class PlazaController : public QObject
 {
     Q_OBJECT
