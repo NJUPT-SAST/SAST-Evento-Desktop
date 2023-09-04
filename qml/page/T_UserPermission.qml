@@ -12,14 +12,52 @@ FluScrollablePage {
     id: page
     launchMode: FluPageType.SingleTask
     property var permissionArr: []
-    property var arr: []
-    property string userId : UserManagementController.getUserId()
-    property bool isEdit : UserManagementController.getIsEdit()
+    property var allStateArr: []
+    property var createPermissionArr: []
+    property var linearPermissionArr: []
+    property string userId: UserManagementController.getUserId()
+    property bool isEdit: UserManagementController.getIsEdit()
+
+    //返回一个用于辅助创建权限列表的数组
+    function parseJSON(data) {
+        var result = []
+        if (Array.isArray(data)) {
+            // 是一个数组，存在多个对象的情况
+            for (var i = 0; i < data.length; i++) {
+                var item = data[i]
+                var title = item.title
+                var isLeaf = false
+                var children = []
+
+                if (item.children && Array.isArray(item.children)) {
+                    linearPermissionArr.push([title, isLeaf])
+                    children = parseJSON(item.children)
+                } else {
+                    isLeaf = true
+                    linearPermissionArr.push([title, isLeaf])
+                }
+
+                result.push([title, isLeaf, children])
+            }
+        } else {
+            // 只有一个对象的情况
+            linearPermissionArr.push([title, isLeaf])
+            result.push([title, isLeaf, children])
+        }
+        return result
+    }
 
     function loadPermissionInfo() {
         statusMode = FluStatusViewType.Loading
         var permission = UserManagementController.loadPermissionInfo()
         permissionArr = JSON.parse(permission)
+        createPermissionArr = parseJSON(JSON.parse(permission))
+        left_check_rep.model = linearPermissionArr
+        console.log(linearPermissionArr)
+    }
+
+    function getLeftMargin(state) {
+        return state ? 30 : 0
     }
 
     Connections {
@@ -85,9 +123,12 @@ FluScrollablePage {
                     spacing: 10
                     Repeater {
                         id: left_check_rep
-                        model: permissionArr
                         FluCheckBox {
-                            text:modelData["title"]
+                            text: modelData[0]
+                            anchors {
+                                left: parent.left
+                                leftMargin: getLeftMargin(modelData[1])
+                            }
                         }
                     }
                 }
@@ -107,16 +148,17 @@ FluScrollablePage {
 
             onClicked: {
                 statusMode = FluStatusViewType.Loading
-                arr = []
+                allStateArr = []
 
                 // 遍历复选框，检查勾选状态，并将文本和勾选状态添加到数组
                 for (var i = 0; i < left_check_rep.count; i++) {
                     var permissionTitle = left_check_rep.itemAt(i).text
-                    var permissionState = left_check_rep.itemAt(i).checked ? true : false;
-                    arr.push([permissionTitle,permissionState])
+                    var permissionState = left_check_rep.itemAt(
+                                i).checked ? true : false
+                    allStateArr.push([permissionTitle, permissionState])
                 }
 
-                UserManagementController.createUser(arr)
+                UserManagementController.createUser(allStateArr)
             }
         }
 
@@ -135,10 +177,7 @@ FluScrollablePage {
                 returnPage()
             }
         }
-
     }
-
-
 
     Connections {
         target: UserManagementController
