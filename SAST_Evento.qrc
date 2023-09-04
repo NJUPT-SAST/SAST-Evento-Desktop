@@ -44,5 +44,6 @@
         <file>qml/page/T_FeedbackInfo.qml</file>
         <file>qml/page/T_Gallery.qml</file>
         <file>app.ico</file>
+        <file>qml/page/T_TypeManagement.qml</file>
     </qresource>
 </RCC>
