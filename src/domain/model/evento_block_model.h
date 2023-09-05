@@ -13,20 +13,13 @@ class EventoBlockModel : public QAbstractListModel
     QML_NAMED_ELEMENT(EventoBlockModel)
 
 public:
-    enum Role
-    {
-        Id = Qt::UserRole + 1,
+    enum Role {
+        Id = Qt::DisplayRole + 1,
         Title,
-        State,
-        Data,
         Time,
-        Location,
-        Department,
         RowStart,
         RowEnd,
-        ColunmStart,
-        ColunmEnd,
-        Finished,
+        ColumnStart,
         Editable,
     };
 
@@ -42,7 +35,13 @@ public:
     EventoBlockModel &operator=(const EventoBlockModel &) = delete;
 
 private:
-    EventoBlockModel() = default;
+    EventoBlockModel() //= default;
+    {
+        m_data.push_back({1, "title1", "10:00 - 11:00", 4, 5, 2, false});
+        m_data.push_back({2, "title2", "14:00 - 16:00", 7, 9, 4, true});
+        m_data.push_back({3, "title3", "14:30 - 15:30", 7.5, 8.5, 3, true});
+        m_data.push_back({4, "title4", "19:00 - 20:00", 12, 13, 6, true});
+    }
 
     std::vector<EventoBlock> m_data;
 

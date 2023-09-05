@@ -6,16 +6,10 @@
 struct EventoBlock {
     EventoID id;
     QString title;
-    EventState state;
-    QString data;
     QString time;
-    QString location;
-    QString department;
-    int rowStart;
-    int rowEnd;
-    int colunmStart;
-    int colunmEnd;
-    bool finished;
+    double rowStart; // index: 8:00 -> 0
+    double rowEnd;   // index: 23:00 -> 15
+    int columnStart; // index: Monday -> 0
     bool editable;
 };
 

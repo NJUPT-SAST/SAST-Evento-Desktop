@@ -19,23 +19,13 @@ void EventoEditHelper::updateEventoEdit(const QString &departmentJson, const QSt
     setProperty("departmentJson", departmentJson);
     setProperty("locationJson", locationJson);
     setProperty("typeJson", typeJson);
-    setProperty("isEdited", true);
-    if (evento.id == 0)
-    {
-        setProperty("isEdited", false);
+    if (property("isEdited") == false)
         return;
-    }
-    // 编辑模式
-    m_departmentIds.clear();
-    for (const auto &department : evento.departments)
-    {
-        m_departmentIds.append(department.id);
-    }
-    setProperty("departmentIds", m_departmentIds);
+    // edit mode
     setProperty("typeId", evento.type.id);
     setProperty("allowConflict", evento.type.allowConflict);
-    setProperty("eventStart", evento.gmtEventStart.toString());
-    setProperty("eventEnd", evento.gmtEventEnd.toString());
-    setProperty("registerStart", evento.gmtRegistrationStart.toString());
-    setProperty("registerEnd", evento.gmtRegistrationEnd.toString());
+    setProperty("eventStart", evento.gmtEventStart.toString("yyyy年MM月dd日 HH:mm:ss"));
+    setProperty("eventEnd", evento.gmtEventEnd.toString("yyyy年MM月dd日 HH:mm:ss"));
+    setProperty("registerStart", evento.gmtRegistrationStart.toString("yyyy年MM月dd日 HH:mm:ss"));
+    setProperty("registerEnd", evento.gmtRegistrationEnd.toString("yyyy年MM月dd日 HH:mm:ss"));
 }

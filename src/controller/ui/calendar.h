@@ -12,7 +12,8 @@ class CalendarController : public QObject
 
 public:
     Q_INVOKABLE void loadAllEventoInfo(const QString &date);
-    Q_INVOKABLE void loadEventoInfo(const EventoID id);
+    Q_INVOKABLE void loadEventoInfo(const EventoID eventId);
+    Q_INVOKABLE void deleteEvento(const EventoID eventId);
 
 signals:
     void loadAllEventoSuccessEvent();
@@ -20,6 +21,9 @@ signals:
 
     void loadEventoSuccessEvent();
     void loadEventoErrorEvent(const QString message);
+
+    void deleteSuccessEvent();
+    void deleteErrorEvent(const QString message);
 
 public:
     CalendarController() = default;
