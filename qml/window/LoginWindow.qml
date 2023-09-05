@@ -16,25 +16,25 @@ CustomWindow {
 
     Connections {
         target: LoginController
-        function onLoginStatusChanged() {
-            switch (LoginController.loginStatus) {
-            case 1:
-                hideLoading()
-                break
-            case 2:
-                showLoading()
-                break
-            case 3:
-                FluApp.navigate("/")
-                window.close()
-                break
-            case 4:
-                hideLoading()
-                showError("登录错误")
-                break
-            default:
-                break
-            }
+        function onLoginProcessing() {
+            showLoading()
+        }
+    }
+
+    Connections {
+        target: LoginController
+        function onLoginSuccess() {
+            hideLoading()
+            FluApp.navigate("/")
+            window.close()
+        }
+    }
+
+    Connections {
+        target: LoginController
+        function onLoginFailed(reason) {
+            hideLoading(reason)
+            showError(reason)
         }
     }
 
@@ -74,8 +74,7 @@ CustomWindow {
         }
         focus: true
         onClicked: {
-            LoginController.loginStatus = 3
-            // TODO
+            LoginController.beginLoginViaSastLink()
         }
     }
 
