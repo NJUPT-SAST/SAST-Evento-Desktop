@@ -4,6 +4,8 @@
 #include <QString>
 
 enum class EventoExceptionCode {
+    NetworkError = -3,
+    JsonError = -2,
     UnexpectedError = -1,
     Ok,
 };
