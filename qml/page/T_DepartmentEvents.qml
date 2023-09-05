@@ -15,6 +15,7 @@ FluScrollablePage {
     property int departmentId: -1
     property var subscribeArr
 
+
     function loadDepartmentEventsPage() {
         statusMode = FluStatusViewType.Loading
         departmentJson = DepartmentEventsController.loadDepartmentsInfo()

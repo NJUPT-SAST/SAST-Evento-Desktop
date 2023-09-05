@@ -16,7 +16,7 @@ QString GalleryController::loadGalleryUrlList()
         return QString();
     }
 
-    QString galleryUrlList = "[{\"id\":1,\"name\":\"default\"},{\"id\":2,\"name\":\"1st dir\"},{\"id\":3,\"name\":\"2nd dir\"},{\"id\":4,\"name\":\"1st dir\"},{\"id\":5,\"name\":\"2nd dir\"},{\"id\":6,\"name\":\"1st dir\"},{\"id\":7,\"name\":\"2nd dir\"}]";
+    QString galleryUrlList = "[{\"id\":1,\"name\":\"default\"},{\"id\":2,\"name\":\"1st dir\"},{\"id\":3,\"name\":\"2nd dir\"}]";
 
     emit loadGalleryUrlListSuccessEvent();
     return galleryUrlList;
