@@ -15,10 +15,10 @@ public:
 
 signals:
     void loadAllSlideSuccess();
-    void loadAllSlideError(const QString &message);
+    void loadAllSlideError(const QString message);
 
     void deleteSlideSuccess();
-    void deleteSlideError(const QString &message);
+    void deleteSlideError(const QString message);
 
 public:
     SlideManagementController() = default;

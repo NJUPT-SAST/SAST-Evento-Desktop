@@ -12,7 +12,7 @@ import "../imports"
 
 CustomWindow {
     id: window
-    width: 1100
+    width: 1110
     height: 640
     closeDestory: false
     minimumWidth: 520

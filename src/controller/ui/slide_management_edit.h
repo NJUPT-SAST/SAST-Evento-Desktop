@@ -17,13 +17,13 @@ public:
 
 signals:
     void loadEditSuccessEvent();
-    void loadEditErrorEvent(const QString& messge);
+    void loadEditErrorEvent(const QString messge);
 
     void createSuccessEvent();
-    void createErrorEvent(const QString &message);
+    void createErrorEvent(const QString message);
 
     void updateSuccessEvent();
-    void updateErrorEvent(const QString &message);
+    void updateErrorEvent(const QString message);
 
 public:
     static SlideManagementEditController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);

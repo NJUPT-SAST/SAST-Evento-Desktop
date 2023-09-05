@@ -39,24 +39,34 @@ FluScrollablePage {
         }
     }
 
-    Repeater {
-        id: rep
-        model: SlideModel
+    Loader {
+        id: loader
+        sourceComponent: undefined
+    }
 
-        Item {
-            Connections {
-                target: EventoInfoController
-                function onLoadEventoSuccessEvent() {
+    Component {
+        id: slide_com
+        Repeater {
+            id: rep
+            model: SlideModel
+            Item {
+                Component.onCompleted: {
                     arr.push({
                                  "url": model.url
                              })
-                    if (arr.length === 3)
-                        rep.arrReady()
                 }
             }
         }
+    }
 
-        signal arrReady
+    Connections {
+        target: loader
+        function onSourceComponentChanged() {
+            if (loader.sourceComponent !== undefined) {
+                carousel.model = arr
+            }
+            loader.sourceComponent = undefined
+        }
     }
 
     FluCarousel {
@@ -186,6 +196,7 @@ FluScrollablePage {
                     width: 50
                     radius: [5, 5, 5, 5]
                     color: "#99ffcc"
+                    shadow: false
                     FluText {
                         id: text_tag
                         wrapMode: Text.WordWrap

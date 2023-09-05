@@ -1,30 +1,11 @@
 #include "evento_edit.h"
-#include "evento_exception.h"
 #include "evento_edit_helper.h"
-#include "evento_helper.h"
+#include "evento_exception.h"
 #include "repository.h"
-#include "convertor.h"
-#include "slide_model.h"
 
 void EventoEditController::loadEditInfo(int eventId)
 {
     EventoException err;
-    auto evento = DTO_Evento();
-    if (eventId != 0) {
-        evento = getRepo()->get_event(eventId, err);
-        EventoHelper::getInstance()->updateEvento(
-            Convertor<DTO_Evento, Evento>()(evento),
-            ParticipationStatus{}
-        );
-        if ((int)err.code())
-            return emit loadEditErrorEvent(err.message());
-        SlideModel::getInstance()->resetModel(
-            Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
-                getRepo()->get_event_slide_list(eventId, err)
-        ));
-        if ((int)err.code())
-            return emit loadEditErrorEvent(err.message());
-    }
 
     auto departmentList = getRepo()->get_department_list(err);
     if ((int)err.code())
@@ -36,12 +17,10 @@ void EventoEditController::loadEditInfo(int eventId)
     if ((int)err.code())
         return emit loadEditErrorEvent(err.message());
 
-    EventoEditHelper::getInstance()->updateEventoEdit(
-        departmentList,
-        locationList,
-        typeList,
-        evento
-    );
+    EventoEditHelper::getInstance()->updateEventoEdit(departmentList,
+                                                      locationList,
+                                                      typeList,
+                                                      DTO_Evento{});
     emit loadEditSuccessEvent();
 }
 
