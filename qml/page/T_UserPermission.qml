@@ -18,6 +18,9 @@ FluScrollablePage {
     property string userId: UserManagementController.getUserId()
     property bool isEdit: UserManagementController.getIsEdit()
 
+    //TODO
+    signal fatherCheckStateChanged
+
     //返回一个用于辅助创建权限列表的数组
     function parseJSON(data) {
         var result = []
@@ -52,8 +55,8 @@ FluScrollablePage {
         var permission = UserManagementController.loadPermissionInfo()
         permissionArr = JSON.parse(permission)
         createPermissionArr = parseJSON(JSON.parse(permission))
-        left_check_rep.model = linearPermissionArr
-        console.log(linearPermissionArr)
+        outer_check_rep.model = createPermissionArr
+        console.log(createPermissionArr)
     }
 
     function getLeftMargin(state) {
@@ -115,19 +118,53 @@ FluScrollablePage {
                 left: parent.left
             }
 
+
+            /*
+                repeater套repeater:使用createPermissionArr作为外层repeater的model，
+                text设置为modelData[0]；在外层repeater中创建子repeater设置model为parent.modelData[2]
+            */
             FluScrollablePage {
                 anchors.fill: parent
-                implicitHeight: left_col.implicitHeight
+                implicitHeight: permission_col.implicitHeight
                 ColumnLayout {
-                    id: left_col
+                    id: permission_col
                     spacing: 10
                     Repeater {
-                        id: left_check_rep
-                        FluCheckBox {
-                            text: modelData[0]
-                            anchors {
-                                left: parent.left
-                                leftMargin: getLeftMargin(modelData[1])
+                        id: outer_check_rep
+                        model: createPermissionArr
+
+                        delegate: Item {
+                            width: parent.width
+                            height: inner_list.implicitHeight + father_check_box.implicitHeight
+                            FluCheckBox {
+                                id: father_check_box
+                                text: modelData[0]
+                                onCheckedChanged: {
+
+                                    //TODO
+                                    //发送一个带有checkstate信息的信号给一个函数处理
+                                }
+                            }
+
+                            //使用listview替代column+repeater
+                            ListView {
+                                id: inner_list
+                                width: parent.width
+                                implicitHeight: contentHeight
+                                anchors {
+                                    top: father_check_box.bottom
+                                    topMargin: 10
+                                }
+                                spacing: 10
+                                model: modelData[2]
+
+                                delegate: FluCheckBox {
+                                    text: modelData[0]
+                                    anchors {
+                                        left: parent.left
+                                        leftMargin: 30
+                                    }
+                                }
                             }
                         }
                     }
@@ -151,9 +188,9 @@ FluScrollablePage {
                 allStateArr = []
 
                 // 遍历复选框，检查勾选状态，并将文本和勾选状态添加到数组
-                for (var i = 0; i < left_check_rep.count; i++) {
-                    var permissionTitle = left_check_rep.itemAt(i).text
-                    var permissionState = left_check_rep.itemAt(
+                for (var i = 0; i < outer_check_rep.count; i++) {
+                    var permissionTitle = outer_check_rep.itemAt(i).text
+                    var permissionState = outer_check_rep.itemAt(
                                 i).checked ? true : false
                     allStateArr.push([permissionTitle, permissionState])
                 }
