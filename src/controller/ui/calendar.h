@@ -1,27 +1,37 @@
-#ifndef CALENDAR_CONTROLLER_H
-#define CALENDAR_CONTROLLER_H
+#ifndef CALENDARCONTROLLER_H
+#define CALENDARCONTROLLER_H
 
- #include <QtQml>
+#include <QtQml>
+#include "types.h"
 
-class CalendarController : public QObject {
+class CalendarController : public QObject
+{
     Q_OBJECT
     QML_NAMED_ELEMENT(CalendarController)
     QML_SINGLETON
 
-    Q_PROPERTY(int calenderMode MEMBER mode NOTIFY modeChnaged)
-
-private:
-    int mode;
-signals:
-    void modeChnaged();
 public:
-    enum class CalendaerMode {
-        Overall = 0,
-        Mine = 1
-    };
+    Q_INVOKABLE void loadAllEventoInfo(const QString &date);
+    Q_INVOKABLE void loadEventoInfo(const EventoID eventId);
+    Q_INVOKABLE void deleteEvento(const EventoID eventId);
+    Q_INVOKABLE QString loadCheckCode(const EventoID eventId);
 
-    explicit CalendarController(QObject *parent = nullptr) {}
-    //static CalendarController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+signals:
+    void loadAllEventoSuccessEvent();
+    void loadAllEventoErrorEvent(const QString message);
+
+    void loadEventoSuccessEvent();
+    void loadEventoErrorEvent(const QString message);
+
+    void deleteSuccessEvent();
+    void deleteErrorEvent(const QString message);
+
+    void loadCheckCodeSuccessEvent();
+    void loadCheckCodeErrorEvent(const QString message);
+
+public:
+    CalendarController() = default;
+    static CalendarController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 
 #endif // CALENDARCONTROLLER_H

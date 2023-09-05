@@ -44,6 +44,7 @@
         <file>qml/page/T_FeedbackInfo.qml</file>
         <file>qml/page/T_Gallery.qml</file>
         <file>app.ico</file>
+        <file>qml/window/EventoBlockWindow.qml</file>
         <file>qml/page/T_TypeManagement.qml</file>
         <file>qml/page/T_DepartmentManagement.qml</file>
     </qresource>

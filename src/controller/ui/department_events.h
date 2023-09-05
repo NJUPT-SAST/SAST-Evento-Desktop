@@ -17,13 +17,13 @@ public:
 
 signals:
     void loadSubscribedDepartmentsSuccessEvent();
-    void loadSubscribedDepartmentsErrorEvent(const QString &message);
+    void loadSubscribedDepartmentsErrorEvent(const QString message);
     void loadDepartmentsSuccessEvent();
-    void loadDepartmentsErrorEvent(const QString &message);
+    void loadDepartmentsErrorEvent(const QString message);
     void loadDepartmentEventSuccessEvent();
-    void loadDepartmentEventErrorEvent(const QString &message);
+    void loadDepartmentEventErrorEvent(const QString message);
     void subscribeSuccessEvent(const bool isSubscribe, const int departmentId);
-    void subscribeEventEvent(const QString &message);
+    void subscribeEventEvent(const QString message);
 
 public:
     static DepartmentEventsController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);

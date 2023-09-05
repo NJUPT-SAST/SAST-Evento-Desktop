@@ -3,8 +3,6 @@
 
 #include <QtQml>
 
-class Repository;
-
 class PlazaController : public QObject
 {
     Q_OBJECT
@@ -17,7 +15,7 @@ public:
 
 signals:
     void loadPlazaSuccessEvent();
-    void loadPlazaErrorEvent(const QString &message);
+    void loadPlazaErrorEvent(const QString message);
 
 public:
     PlazaController() = default;
