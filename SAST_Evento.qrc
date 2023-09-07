@@ -47,5 +47,6 @@
         <file>qml/window/EventoBlockWindow.qml</file>
         <file>qml/page/T_TypeManagement.qml</file>
         <file>qml/page/T_DepartmentManagement.qml</file>
+        <file>qml/page/T_LocationManagement.qml</file>
     </qresource>
 </RCC>
