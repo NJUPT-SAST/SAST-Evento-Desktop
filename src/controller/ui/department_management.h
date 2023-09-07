@@ -11,7 +11,7 @@ class DepartmentManagementController : public QObject
 
 public:
     Q_INVOKABLE QString loadAllDepartment();
-    Q_INVOKABLE void deleteDepartment(const int typeId);
+    Q_INVOKABLE void deleteDepartment(const int departmentId);
     Q_INVOKABLE void changeDepartmentName(int id, const QString name);
     Q_INVOKABLE void addDepartment(const QString name);
 
