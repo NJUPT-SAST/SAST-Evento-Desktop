@@ -40,7 +40,7 @@ FluScrollablePage {
     }
 
     Loader {
-        id: loader
+        id: loader_slide
         sourceComponent: undefined
     }
 
@@ -60,12 +60,12 @@ FluScrollablePage {
     }
 
     Connections {
-        target: loader
+        target: loader_slide
         function onSourceComponentChanged() {
-            if (loader.sourceComponent !== undefined) {
+            if (loader_slide.sourceComponent !== undefined) {
                 carousel.model = arr
             }
-            loader.sourceComponent = undefined
+            loader_slide.sourceComponent = undefined
         }
     }
 
@@ -77,13 +77,6 @@ FluScrollablePage {
         loopTime: 4000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
         indicatorMarginTop: 15
-
-        Connections {
-            target: rep
-            function onArrReady() {
-                carousel.model = arr
-            }
-        }
 
         delegate: Component {
             Item {
