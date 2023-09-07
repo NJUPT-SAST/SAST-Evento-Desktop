@@ -7,6 +7,7 @@ import SAST_Evento
 import "../window"
 
 FluScrollablePage {
+    id: slidePage
     launchMode: FluPageType.SingleTask
     title: "Slide Management"
 
@@ -117,13 +118,24 @@ FluScrollablePage {
                     FluText {
                         id: com_link
                         text: model.link
-                        font: FluTextStyle.Body
+                        width: slidePage.width -
+                               slidePage.rightPadding -
+                               slidePage.leftPadding -
+                               anchors.leftMargin -
+                               editButton.width -
+                               editButton.anchors.rightMargin -
+                               deleteButton.width -
+                               deleteButton.anchors.rightMargin -
+                               item_icon.width -
+                               item_icon.anchors.leftMargin
                         anchors {
                             top: com_title.bottom
                             topMargin: 5
                             left: item_icon.right
                             leftMargin: 10
                         }
+                        elide: Text.ElideRight
+                        font: FluTextStyle.Body
                     }
 
                     FluIconButton {
