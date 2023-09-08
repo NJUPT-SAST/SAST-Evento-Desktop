@@ -239,8 +239,8 @@ declare_object(user_data,
 struct repositoryImpl : public Repository {
 public:
     // user-fetch
-    QStringList get_admin_permission(EventoException& err) override;  // Test completed
-    QStringList get_manager_permission(const EventoID &eventoId, EventoException& err) override;  // Test completed
+    DTO_PermissionTree get_admin_permission(EventoException& err) override;  // Test completed
+    DTO_PermissionTree get_manager_permission(const EventoID &eventoId, EventoException& err) override;  // Test completed
     QStringList get_permitted_event(EventoException& err) override;  // Test completed
     DTO_Permission get_event_permission(EventoID event, EventoException& err) override;  // Test completed
     DTO_User get_user_info(const UserID& id, EventoException& err) override;  // Test completed
@@ -415,43 +415,64 @@ private:
         UserID user_id;
     };
 
-    QStringList adminPerission{
-        "addAdmin",
-        "deletePicture",
-        "addEvent",
-        "deleteAdmin",
-        "updateAction",
-        "deleteHomeSlide",
-        "getStates",
-        "deleteType",
-        "getAdmins",
-        "addHomeSlide",
-        "getFeedbackEvents",
-        "updateLocation",
-        "getLocations",
-        "addLocation",
-        "getFeedbacks",
-        "addPicture",
-        "patchHomeSlide",
-        "putAdmin",
-        "deleteLocation",
-        "addType",
-        "getActionList",
-        "eventQrcodeGet",
-        "getTypes",
-        "updateType"
+    DTO_PermissionTree adminPermission{
+        DTO_PermissionTreeItem{"feedback", "feedback", {
+                                                           DTO_PermissionTreeItem{"获取活动及其反馈数量列表", "getFeedbackEvents"},
+                                                       }},
+        DTO_PermissionTreeItem{"checkIn", "checkIn", {
+                                                         DTO_PermissionTreeItem{"获取活动签到二维码", "getEventQrcode"},
+                                                     }},
+        DTO_PermissionTreeItem{"slide", "slide", {
+                                                     DTO_PermissionTreeItem{"删除首页幻灯片", "deleteHomeSlide"},
+                                                     DTO_PermissionTreeItem{"添加首页幻灯片", "addHomeSlide"},
+                                                     DTO_PermissionTreeItem{"编辑首页幻灯片", "patchHomeSlide"},
+                                                 }},
+        DTO_PermissionTreeItem{"permission", "permission", {
+                                                               DTO_PermissionTreeItem{"添加后台管理者", "addAdmin"},
+                                                               DTO_PermissionTreeItem{"删除后台管理者", "deleteAdmin"},
+                                                               DTO_PermissionTreeItem{"编辑后台管理者权限", "putAdmin"},
+                                                           }},
+        DTO_PermissionTreeItem{"location", "location", {
+                                                           DTO_PermissionTreeItem{"添加活动地点", "addLocation"},
+                                                           DTO_PermissionTreeItem{"修改活动地点名称", "updateLocationName"},
+                                                           DTO_PermissionTreeItem{"删除活动地点", "deleteLocation"},
+                                                       }},
+        DTO_PermissionTreeItem{"event", "event", {
+                                                     DTO_PermissionTreeItem{"发起活动", "addEvent"},
+                                                 }},
+        DTO_PermissionTreeItem{"department", "department", {
+                                                               DTO_PermissionTreeItem{"添加组织部门", "addDepartment"},
+                                                               DTO_PermissionTreeItem{"删除部门", "deleteDepartment"},
+                                                               DTO_PermissionTreeItem{"修改组织部门名称", "putDepartment"},
+                                                           }},
+        DTO_PermissionTreeItem{"type", "type", {
+                                                   DTO_PermissionTreeItem{"删除活动类型", "deleteType"},
+                                                   DTO_PermissionTreeItem{"添加活动类型", "addType"},
+                                                   DTO_PermissionTreeItem{"修改活动类型", "updateType"},
+                                               }},
+        DTO_PermissionTreeItem{"picture", "picture", {
+                                                         DTO_PermissionTreeItem{"删除图片", "deletePicture"},
+                                                         DTO_PermissionTreeItem{"添加图片", "addPicture"},
+                                                     }},
     };
 
-    QStringList managerPerission{
-        "addEventSlide",
-        "deleteManager",
-        "deleteEventSlide",
-        "deleteEvent",
-        "patchEvent",
-        "addManager",
-        "patchEventSlide",
-        "putManager",
-        "putEvent"
+
+    DTO_PermissionTree managerPermission{
+        DTO_PermissionTreeItem{"slide", "slide", {
+                                                     DTO_PermissionTreeItem{"添加活动幻灯片", "addEventSlide"},
+                                                     DTO_PermissionTreeItem{"删除活动幻灯片", "deleteEventSlide"},
+                                                     DTO_PermissionTreeItem{"编辑活动幻灯片", "patchEventSlide"},
+                                                 }},
+        DTO_PermissionTreeItem{"permission", "permission", {
+                                                               DTO_PermissionTreeItem{"删除活动管理者", "deleteManager"},
+                                                               DTO_PermissionTreeItem{"添加活动管理者", "addManager"},
+                                                               DTO_PermissionTreeItem{"编辑活动管理者权限", "putManager"},
+                                                           }},
+        DTO_PermissionTreeItem{"event", "event", {
+                                                     DTO_PermissionTreeItem{"删除活动", "deleteEvent"},
+                                                     DTO_PermissionTreeItem{"取消活动", "cancelEvent"},
+                                                     DTO_PermissionTreeItem{"修改活动", "putEvent"},
+                                                 }},
     };
 
     QByteArray readFile(QString path) {

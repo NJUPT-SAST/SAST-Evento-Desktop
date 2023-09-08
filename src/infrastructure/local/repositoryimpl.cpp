@@ -1,6 +1,6 @@
 #include "repositoryimpl.h"
 
-QStringList repositoryImpl::get_admin_permission(EventoException &err)
+DTO_PermissionTree repositoryImpl::get_admin_permission(EventoException &err)
 {
     QByteArray file_str = admin_user_data;
 
@@ -10,25 +10,25 @@ QStringList repositoryImpl::get_admin_permission(EventoException &err)
         QJsonArray jsonArr = jsonDoc.array();
         for(int i = 0; i<jsonArr.count(); i++){
             if(!jsonArr.at(i).toString().compare("B22041234")){
-                return adminPerission;
+                return adminPermission;
             }
         }
-        return QStringList();
+        return {};
     }
     err = EventoException(EventoExceptionCode::UnexpectedError, "get_admin_permission json error");
-    return QStringList();
+    return {};
 }
 
-QStringList repositoryImpl::get_manager_permission(const EventoID &eventoId, EventoException &err)
+DTO_PermissionTree repositoryImpl::get_manager_permission(const EventoID &eventoId, EventoException &err)
 {
     for(int i = 0; i<manager_user_data_list.size(); i++){
         if(!manager_user_data_list.at(i).event_id.compare(QString::number(eventoId)) &&
             manager_user_data_list.at(i).manager_id.split(" ").contains("B22041234")){
-            return managerPerission;
+            return managerPermission;
         }
     }
     err = EventoException(EventoExceptionCode::UnexpectedError, "get_manager_permission json error");
-    return QStringList();
+    return {};
 }
 
 QStringList repositoryImpl::get_permitted_event(EventoException &err)

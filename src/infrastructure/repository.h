@@ -13,8 +13,8 @@
 
 struct Repository {
     // user-fetch
-    virtual QStringList get_admin_permission(EventoException& err) = 0;
-    virtual QStringList get_manager_permission(const EventoID &eventoId, EventoException& err) = 0;
+    virtual DTO_PermissionTree get_admin_permission(EventoException& err) = 0;
+    virtual DTO_PermissionTree get_manager_permission(const EventoID &eventoId, EventoException& err) = 0;
     virtual QStringList get_permitted_event(EventoException& err) = 0;
     virtual DTO_Permission get_event_permission(EventoID event, EventoException& err) = 0;
     virtual DTO_User get_user_info(const UserID& id, EventoException& err) = 0;
