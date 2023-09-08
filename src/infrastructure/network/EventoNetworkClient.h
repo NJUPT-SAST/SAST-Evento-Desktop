@@ -10,6 +10,8 @@
 #include <QUrlQuery>
 #include <evento_exception.h>
 #include <dto/user.h>
+#include <dto/permission.h>
+#include <dto/feedback.h>
 
 class EventoNetworkClient
 {
@@ -46,7 +48,7 @@ protected:
     QFuture<std::variant<QJsonValue, EventoException>> deleteResource(const QUrl &url);
 
 public:
-    QFuture<std::variant<DTO_User, EventoException>> get_user_info(const UserID &id);
+    QFuture<std::variant<DTO_User, EventoException>> getUserInfo(const UserID &id);
 
     EventoNetworkClient();
 };

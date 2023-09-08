@@ -164,7 +164,7 @@ QFuture<std::variant<QJsonValue, EventoException>> EventoNetworkClient::deleteRe
     return handleNetworkReply(reply);
 }
 
-QFuture<std::variant<DTO_User, EventoException>> EventoNetworkClient::get_user_info(const UserID &id)
+QFuture<std::variant<DTO_User, EventoException>> EventoNetworkClient::getUserInfo(const UserID &id)
 {
     auto url = endpoint(QStringLiteral("/user/info"), [&](QUrlQuery params) {
         params.addQueryItem("userId", id);
