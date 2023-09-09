@@ -490,8 +490,8 @@ FluScrollablePage {
                 top: item_slide.top
             }
             onClicked: {
-                MainWindow.window.pushPage(
-                            "qrc:/qml/page/T_PictureSelection.qml")
+                GalleryHelper.maxNum = 3
+                MainWindow.window.pushPage("qrc:/qml/page/T_PictureSelection.qml")
             }
         }
 
