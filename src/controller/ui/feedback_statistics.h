@@ -14,10 +14,10 @@ public:
 
 signals:
     void loadSummarySuccessEvent();
-    void loadSummaryErrorEvent(const QString &message);
+    void loadSummaryErrorEvent(const QString message);
 
     void loadFeedbackSuccessEvent();
-    void loadFeedbackErrorEvent(const QString &massage);
+    void loadFeedbackErrorEvent(const QString massage);
 
 public:
     FeedbackStatisticsController() = default;

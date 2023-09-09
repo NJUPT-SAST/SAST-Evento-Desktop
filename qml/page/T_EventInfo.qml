@@ -39,24 +39,34 @@ FluScrollablePage {
         }
     }
 
-    Repeater {
-        id: rep
-        model: SlideModel
+    Loader {
+        id: loader_slide
+        sourceComponent: undefined
+    }
 
-        Item {
-            Connections {
-                target: EventoInfoController
-                function onLoadEventoSuccessEvent() {
+    Component {
+        id: slide_com
+        Repeater {
+            id: rep
+            model: SlideModel
+            Item {
+                Component.onCompleted: {
                     arr.push({
                                  "url": model.url
                              })
-                    if (arr.length === 3)
-                        rep.arrReady()
                 }
             }
         }
+    }
 
-        signal arrReady
+    Connections {
+        target: loader_slide
+        function onSourceComponentChanged() {
+            if (loader_slide.sourceComponent !== undefined) {
+                carousel.model = arr
+            }
+            loader_slide.sourceComponent = undefined
+        }
     }
 
     FluCarousel {
@@ -67,13 +77,6 @@ FluScrollablePage {
         loopTime: 4000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
         indicatorMarginTop: 15
-
-        Connections {
-            target: rep
-            function onArrReady() {
-                carousel.model = arr
-            }
-        }
 
         delegate: Component {
             Item {
@@ -186,6 +189,7 @@ FluScrollablePage {
                     width: 50
                     radius: [5, 5, 5, 5]
                     color: "#99ffcc"
+                    shadow: false
                     FluText {
                         id: text_tag
                         wrapMode: Text.WordWrap
