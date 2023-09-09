@@ -14,12 +14,8 @@ FluScrollablePage {
     property var permissionArr: []
     property var allStateArr: []
     property var createPermissionArr: []
-    property var linearPermissionArr: []
     property string userId: UserManagementController.getUserId()
     property bool isEdit: UserManagementController.getIsEdit()
-
-    //TODO
-    signal fatherCheckStateChanged
 
     //返回一个用于辅助创建权限列表的数组
     function parseJSON(data) {
@@ -33,18 +29,15 @@ FluScrollablePage {
                 var children = []
 
                 if (item.children && Array.isArray(item.children)) {
-                    linearPermissionArr.push([title, isLeaf])
                     children = parseJSON(item.children)
                 } else {
                     isLeaf = true
-                    linearPermissionArr.push([title, isLeaf])
                 }
 
                 result.push([title, isLeaf, children])
             }
         } else {
             // 只有一个对象的情况
-            linearPermissionArr.push([title, isLeaf])
             result.push([title, isLeaf, children])
         }
         return result
@@ -56,11 +49,6 @@ FluScrollablePage {
         permissionArr = JSON.parse(permission)
         createPermissionArr = parseJSON(JSON.parse(permission))
         outer_check_rep.model = createPermissionArr
-        console.log(createPermissionArr)
-    }
-
-    function getLeftMargin(state) {
-        return state ? 30 : 0
     }
 
     Connections {
@@ -80,7 +68,7 @@ FluScrollablePage {
 
     Component.onCompleted: {
         loadPermissionInfo()
-        text1.text = userId
+        text1Text.text = userId
     }
 
     Item {
@@ -88,12 +76,35 @@ FluScrollablePage {
         Layout.fillWidth: true
         height: 560
 
-        FluText {
-            id: text1
-            text: "default"
-            font: FluTextStyle.Title
+        Loader {
+            id: title_loader
             anchors {
                 top: parent.top
+            }
+            sourceComponent: isEdit ? text1 : editable_text
+        }
+
+        Component {
+            id: text1
+            FluText {
+                id: text1Text
+                text: "BBBB"
+                font: FluTextStyle.Title
+                anchors {
+                    top: parent.top
+                }
+            }
+        }
+
+        Component {
+            id: editable_text
+            FluTextBox {
+                text: '请填写学号'
+                width: 150
+                height: 40
+                anchors {
+                    top: parent.top
+                }
             }
         }
 
@@ -102,7 +113,7 @@ FluScrollablePage {
             text: "用户权限"
             font: FluTextStyle.Body
             anchors {
-                top: text1.bottom
+                top: title_loader.bottom
                 topMargin: 10
                 leftMargin: 20
             }
@@ -111,18 +122,13 @@ FluScrollablePage {
         FluArea {
             id: check_area
             width: parent.width
-            height: 500 - text1.height - text2.height - 20
+            height: 500 - title_loader.height - text2.height - 20
             anchors {
                 top: text2.bottom
                 topMargin: 20
                 left: parent.left
             }
 
-
-            /*
-                repeater套repeater:使用createPermissionArr作为外层repeater的model，
-                text设置为modelData[0]；在外层repeater中创建子repeater设置model为parent.modelData[2]
-            */
             FluScrollablePage {
                 anchors.fill: parent
                 implicitHeight: permission_col.implicitHeight
@@ -139,14 +145,8 @@ FluScrollablePage {
                             FluCheckBox {
                                 id: father_check_box
                                 text: modelData[0]
-                                onCheckedChanged: {
-
-                                    //TODO
-                                    //发送一个带有checkstate信息的信号给一个函数处理
-                                }
                             }
 
-                            //使用listview替代column+repeater
                             ListView {
                                 id: inner_list
                                 width: parent.width
@@ -159,10 +159,21 @@ FluScrollablePage {
                                 model: modelData[2]
 
                                 delegate: FluCheckBox {
+                                    id: child_check_box
+                                    checked: father_check_box.checked
                                     text: modelData[0]
                                     anchors {
                                         left: parent.left
                                         leftMargin: 30
+                                    }
+                                    Connections {
+                                        target: father_check_box
+                                        function onCheckedChanged() {
+                                            child_check_box.checked = Qt.binding(
+                                                        function () {
+                                                            return father_check_box.checked
+                                                        })
+                                        }
                                     }
                                 }
                             }
