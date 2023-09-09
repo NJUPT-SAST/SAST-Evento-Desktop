@@ -1,6 +1,7 @@
 #include "gallery.h"
+#include "gallery_helper.h"
 
-QString GalleryController::loadGalleryUrlList()
+void GalleryController::loadGalleryDirJson()
 {
     /*--------------------------------------/
     /                                       /
@@ -13,16 +14,18 @@ QString GalleryController::loadGalleryUrlList()
     int err = 0;
     if(err == 1){
         emit loadGalleryUrlListErrorEvent("url list error");
-        return QString();
+        GalleryHelper::getInstance()->updateDirJson(QString());
+        return;
     }
 
     QString galleryUrlList = "[{\"id\":1,\"name\":\"default\"},{\"id\":2,\"name\":\"1st dir\"},{\"id\":3,\"name\":\"2nd dir\"}]";
 
     emit loadGalleryUrlListSuccessEvent();
-    return galleryUrlList;
+    GalleryHelper::getInstance()->updateDirJson(galleryUrlList);
+    return;
 }
 
-QString GalleryController::loadGalleryDirImgInfo(const QString& dirName, const int pageNumber){
+void GalleryController::loadGalleryDirImgInfo(const QString& dirName, const int pageNumber){
     /*--------------------------------------/
     /                                       /
     /                                       /
@@ -39,7 +42,8 @@ QString GalleryController::loadGalleryDirImgInfo(const QString& dirName, const i
     //}
     if(err == 1){
         emit loadGalleryDirImgInfoErrorEvent("Dir Img Info error");
-        return QString();
+        GalleryHelper::getInstance()->updateDirImgInfo(QString());
+        return;
     }
 
     int num;
@@ -51,18 +55,13 @@ QString GalleryController::loadGalleryDirImgInfo(const QString& dirName, const i
         num = 3;
     }
     int pageItemCount = 120 + 20 * num;
-    QString imgJson = "[\"qrc:/res/image/banner_3.png\",\"qrc:/res/image/banner_3.png\"";
-    for(int i = 0; i < pageNumber + num + 2; i++){
-        imgJson = imgJson + ",\"qrc:/res/image/banner_3.png\"";
-
-    }
-    imgJson = imgJson + ",\"qrc:/res/image/banner_3.png\"]";
-
+    QString imgJson = "[\"qrc:/res/image/ic_home_github.png\",\"qrc:/res/image/banner_3.png\",\"qrc:/res/image/banner_2.png\",\"qrc:/res/image/banner_1.png\"]";
     QString galleryDirImgInfo = "{\"count\":\"" + QString::number(pageItemCount) + "\",\"url\":" + imgJson + "}";
 
 
     emit loadGalleryDirImgInfoSuccessEvent();
-    return galleryDirImgInfo;
+    GalleryHelper::getInstance()->updateDirImgInfo(galleryDirImgInfo);
+    return;
 }
 
 void GalleryController::deleteImgRequest(const QString& url){

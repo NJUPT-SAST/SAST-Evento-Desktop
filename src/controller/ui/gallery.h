@@ -9,8 +9,8 @@ class GalleryController : public QObject {
     QML_SINGLETON
 
 public:
-    Q_INVOKABLE QString loadGalleryUrlList();
-    Q_INVOKABLE QString loadGalleryDirImgInfo(const QString& dirName, const int pageNumber);
+    Q_INVOKABLE void loadGalleryDirJson();
+    Q_INVOKABLE void loadGalleryDirImgInfo(const QString& dirName, const int pageNumber);
     Q_INVOKABLE void deleteImgRequest(const QString& url);
 
 signals:

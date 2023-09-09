@@ -77,7 +77,8 @@ FluScrollablePage {
 
     function loadGalleryUrlListInfo() {
         statusMode = FluStatusViewType.Loading
-        galleryDirJson = GalleryController.loadGalleryUrlList() //这里controller刻意少写了一个Info
+        GalleryController.loadGalleryDirJson()
+        galleryDirJson = GalleryHelper.dirJson
         tree_view.updateData(createDir())
     }
 
@@ -101,9 +102,10 @@ FluScrollablePage {
     function trySwitchImgPage(dirName, pageNumber){
         inside_page.visible = true
         inside_page.statusMode = FluStatusViewType.Loading
-        var dirJson = JSON.parse(GalleryController.loadGalleryDirImgInfo(dirName, pageNumber))
+        GalleryController.loadGalleryDirImgInfo(dirName, pageNumber)
+        var dirJson = JSON.parse(GalleryHelper.dirImgInfo)
         img_pagination.itemCount = dirJson.count
-        eventCard.model = dirJson.url
+        img_review.model = dirJson.url
     }
 
     FluText{
@@ -154,7 +156,7 @@ FluScrollablePage {
             }
             onClicked: {
                 showSuccess("TODO:触发添加页面")
-                MainWindow.window.pushPage("qrc:/qml/page/T_PictureSelection.qml")
+                //MainWindow.window.pushPage("qrc:/qml/page/T_PictureSelection.qml")
             }
         }
     }
@@ -241,7 +243,7 @@ FluScrollablePage {
                         property int spacing: 20
                         //spacing: 20
                         //Spacing is not its attribute, but it has been incorporated into the calculation here
-                        id: eventCard
+                        id: img_review
                         Layout.fillWidth: true
                         implicitHeight: contentHeight
                         cellWidth: second_area.width > 780 ? ((second_area.width - 3 * spacing) / 4 ) : (160 + spacing)
@@ -282,8 +284,8 @@ FluScrollablePage {
     Component {
         id: com_item
         Item {
-            width: eventCard.cellWidth - eventCard.spacing
-            height: eventCard.cellHeight - eventCard.spacing
+            width: img_review.cellWidth - img_review.spacing
+            height: img_review.cellHeight - img_review.spacing
             FluRectangle{
                 anchors.fill: parent
                 shadow: false

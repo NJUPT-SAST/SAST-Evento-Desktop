@@ -6,11 +6,15 @@ import FluentUI
 import SAST_Evento
 import "../window"
 
+//This qml is same to T_Gallery.qml. Use Gallery_controller Together
 FluScrollablePage {
     id: galleryPage
     launchMode: FluPageType.SingleTask
 
+    property bool isSelectedDir: false
     property string galleryDirJson
+    property int maxSelectionNumber: GalleryHelper.maxNum
+    property var selectedUrlList: []
 
     onErrorClicked: {
         loadGalleryUrlListInfo()
@@ -51,9 +55,16 @@ FluScrollablePage {
         }
     }
 
+    function refreshPageSelection(){
+        for(var i = 0; i < img_review.count; i++){
+            img_review.itemAtIndex(i).refreshSelfSelection()
+        }
+    }
+
     function loadGalleryUrlListInfo() {
         statusMode = FluStatusViewType.Loading
-        galleryDirJson = GalleryController.loadGalleryUrlList() //这里controller刻意少写了一个Info
+        GalleryController.loadGalleryDirJson()
+        galleryDirJson = GalleryHelper.dirJson
         tree_view.updateData(createDir())
     }
 
@@ -77,9 +88,10 @@ FluScrollablePage {
     function trySwitchImgPage(dirName, pageNumber){
         inside_page.visible = true
         inside_page.statusMode = FluStatusViewType.Loading
-        var dirJson = JSON.parse(GalleryController.loadGalleryDirImgInfo(dirName, pageNumber))
+        GalleryController.loadGalleryDirImgInfo(dirName, pageNumber)
+        var dirJson = JSON.parse(GalleryHelper.dirImgInfo)
         img_pagination.itemCount = dirJson.count
-        eventCard.model = dirJson.url
+        img_review.model = dirJson.url
     }
 
     FluText{
@@ -88,6 +100,31 @@ FluScrollablePage {
         text: "图片选择"
         height: contentHeight
         padding: 0
+    }
+
+    FluArea{
+        id: top_area
+        height: 38
+        color: Qt.rgba(0,0,0,0)
+        border.color: Qt.rgba(0,0,0,0)
+        width: galleryPage.width -
+               galleryPage.rightPadding -
+               galleryPage.leftPadding
+        FluFilledButton {
+            id: selection_finished
+            text: "选定"
+            anchors.right: parent.right
+            onClicked: {
+                GalleryHelper.urlList = selectedUrlList
+                console.log(GalleryHelper.urlList)
+                returnPage()
+            }
+        }
+    }
+
+    function returnPage(){
+        MainWindow.window.pushPage(maxSelectionNumber === 1 ?
+                                       "qrc:/qml/page/T_SlideManagementEdit.qml" : "qrc:/qml/page/T_EventoEdit.qml")
     }
 
     RowLayout {
@@ -104,6 +141,9 @@ FluScrollablePage {
             height: galleryPage.height -
                     galleryPage.topPadding -
                     galleryPage.bottomPadding -
+                    top_area.Layout.topMargin -
+                    top_area.Layout.bottomMargin -
+                    top_area.height -
                     text_title.height
             FluTreeView {
                 property string currentName
@@ -140,6 +180,9 @@ FluScrollablePage {
             height: galleryPage.height -
                     galleryPage.topPadding -
                     galleryPage.bottomPadding -
+                    top_area.Layout.topMargin -
+                    top_area.Layout.bottomMargin -
+                    top_area.height -
                     text_title.height
             FluArea{
                 color: Qt.rgba(0,0,0,0)
@@ -166,7 +209,7 @@ FluScrollablePage {
                         property int spacing: 20
                         //spacing: 20
                         //Spacing is not its attribute, but it has been incorporated into the calculation here
-                        id: eventCard
+                        id: img_review
                         Layout.fillWidth: true
                         implicitHeight: contentHeight
                         cellWidth: second_area.width > 780 ? ((second_area.width - 3 * spacing) / 4 ) : (160 + spacing)
@@ -207,28 +250,59 @@ FluScrollablePage {
     Component {
         id: com_item
         Item {
-            width: eventCard.cellWidth - eventCard.spacing
-            height: eventCard.cellHeight - eventCard.spacing
+            property string item_img_url: model.modelData
+            width: img_review.cellWidth - img_review.spacing
+            height: img_review.cellHeight - img_review.spacing
             FluRectangle{
+                id: item_rectangle
                 anchors.fill: parent
                 shadow: false
                 radius: [6,6,6,6]
                 FluImage {
+                    id: item_img
                     anchors.fill: parent
-                    source: model.modelData
+                    source: item_img_url
                     fillMode: Image.PreserveAspectCrop
+                    FluCheckBox{
+                        id: img_checkbox
+                        //visible: selectedUrlList.indexOf(item_img_url) > -1
+                        disableColor: Qt.rgba(101/255,101/255,101/255,1)
+                        checked: selectedUrlList.indexOf(item_img_url) > -1
+                        disabled: !checked && selectedUrlList.length >= maxSelectionNumber
+                    }
                     FluIconButton {
                         id: delete_button
                         visible: true
                         anchors.fill: parent
-                        pressedColor: Qt.rgba(175/255,0,0,0.7)
-                        hoverColor: Qt.rgba(175/255,0,0,0.5)
+                        normalColor: (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0)
+                        pressedColor: (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0.5)
+                        hoverColor: (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0.3)
                         anchors.right: parent.right
                         onClicked: {
-                            showSuccess("点击图片")
+                            if((selectedUrlList.length >= maxSelectionNumber) && (!img_checkbox.checked)){
+                                showError("抱歉，只能选择"+maxSelectionNumber+"张图片哦")
+                            }else{
+                                if(img_checkbox.checked){
+                                    selectedUrlList = selectedUrlList.filter(function(item) {
+                                      return item !== item_img_url
+                                    });
+                                }else{
+                                    selectedUrlList.push(item_img_url)
+                                    //console.log(selectedUrlList)
+                                }
+                                refreshPageSelection()
+                            }
                         }
                     }
                 }
+            }
+            function refreshSelfSelection(){
+                //img_checkbox.visible = selectedUrlList.indexOf(item_img_url) > -1
+                img_checkbox.checked = selectedUrlList.indexOf(item_img_url) > -1
+                img_checkbox.disabled = !img_checkbox.checked && selectedUrlList.length >= maxSelectionNumber
+                delete_button.normalColor = (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0)
+                delete_button.pressedColor = (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0.5)
+                delete_button.hoverColor = (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0.3)
             }
         }
     }
