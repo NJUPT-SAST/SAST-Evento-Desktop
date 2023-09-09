@@ -143,7 +143,8 @@ FluScrollablePage {
                     Layout.topMargin: 1
                     Layout.bottomMargin: 1
                     onClicked: {
-                        // TODO 打开图库跳转
+                        GalleryHelper.maxNum = 1
+                        MainWindow.window.pushPage("qrc:/qml/page/T_PictureSelection.qml")
                     }
                 }
             }

@@ -6,14 +6,15 @@ import FluentUI
 import SAST_Evento
 import "../window"
 
+//This qml is same to T_Gallery.qml. Use Gallery_controller Together
 FluScrollablePage {
     id: galleryPage
     launchMode: FluPageType.SingleTask
 
-    property int deleteMode: 0
-    property int isDirShowMode: 0
-    property string deletedUrl: ""
+    property bool isSelectedDir: false
     property string galleryDirJson
+    property int maxSelectionNumber: GalleryHelper.maxNum
+    property var selectedUrlList: []
 
     onErrorClicked: {
         loadGalleryUrlListInfo()
@@ -54,24 +55,9 @@ FluScrollablePage {
         }
     }
 
-    Connections {
-        target: GalleryController
-        function onDeleteImgRequestSuccessEvent() {
-            showSuccess("删除成功")
-            galleryPage.statusMode = FluStatusViewType.Success
-            trySwitchImgPage(tree_view.currentName, img_pagination.pageCurrent)
-            //loading_cover.visible = false
-            //loading_mouse_cover.visible = false
-        }
-    }
-
-    Connections {
-        target: GalleryController
-        function onDeleteImgRequestErrorEvent(message) {
-            showError(message)
-            galleryPage.statusMode = FluStatusViewType.Success
-            //loading_cover.visible = false
-            //loading_mouse_cover.visible = false
+    function refreshPageSelection(){
+        for(var i = 0; i < img_review.count; i++){
+            img_review.itemAtIndex(i).refreshSelfSelection()
         }
     }
 
@@ -111,7 +97,7 @@ FluScrollablePage {
     FluText{
         id:text_title
         font: FluTextStyle.Title
-        text: "图库"
+        text: "图片选择"
         height: contentHeight
         padding: 0
     }
@@ -124,41 +110,21 @@ FluScrollablePage {
         width: galleryPage.width -
                galleryPage.rightPadding -
                galleryPage.leftPadding
-
-        FluIconButton {
-            id: delete_button
-            iconSource: FluentIcons.Delete
-            pressedColor: deleteMode ? (FluTheme.dark ? Qt.rgba(175/255,0,0,0.6) : Qt.rgba(255/255,73/255,73/255,0.9)) :
-                                        (FluTheme.dark ? Qt.rgba(1,1,1,0.06) : Qt.rgba(0,0,0,0.06))
-            normalColor: deleteMode ? (FluTheme.dark ? Qt.rgba(175/255,0,0,0.9) : Qt.rgba(255/255,73/255,73/255,0.6)):
-                                       (FluTheme.dark ? Qt.rgba(0,0,0,0) : Qt.rgba(0,0,0,0))
-            hoverColor:deleteMode ? (FluTheme.dark ? Qt.rgba(175/255,0,0,0.75) : Qt.rgba(255/255,73/255,73/255,0.75)):
-                                     (FluTheme.dark ? Qt.rgba(1,1,1,0.03) : Qt.rgba(0,0,0,0.03))
+        FluFilledButton {
+            id: selection_finished
+            text: "选定"
             anchors.right: parent.right
             onClicked: {
-                if(deleteMode == 0){
-                    deleteMode = 1
-                    showSuccess("切换到删除模式")
-                }else {
-                    deleteMode = 0
-                    showSuccess("退出删除模式")
-                }
+                GalleryHelper.urlList = selectedUrlList
+                console.log(GalleryHelper.urlList)
+                returnPage()
             }
         }
+    }
 
-        FluIconButton {
-            id: addgalleryButton
-            iconSource: FluentIcons.Add
-            anchors{
-                top: delete_button.top
-                right: delete_button.left
-                rightMargin: 10
-            }
-            onClicked: {
-                showSuccess("TODO:触发添加页面")
-                //MainWindow.window.pushPage("qrc:/qml/page/T_PictureSelection.qml")
-            }
-        }
+    function returnPage(){
+        MainWindow.window.pushPage(maxSelectionNumber === 1 ?
+                                       "qrc:/qml/page/T_SlideManagementEdit.qml" : "qrc:/qml/page/T_EventoEdit.qml")
     }
 
     RowLayout {
@@ -284,62 +250,60 @@ FluScrollablePage {
     Component {
         id: com_item
         Item {
+            property string item_img_url: model.modelData
             width: img_review.cellWidth - img_review.spacing
             height: img_review.cellHeight - img_review.spacing
             FluRectangle{
+                id: item_rectangle
                 anchors.fill: parent
                 shadow: false
                 radius: [6,6,6,6]
                 FluImage {
+                    id: item_img
                     anchors.fill: parent
-                    source: model.modelData
+                    source: item_img_url
                     fillMode: Image.PreserveAspectCrop
+                    FluCheckBox{
+                        id: img_checkbox
+                        //visible: selectedUrlList.indexOf(item_img_url) > -1
+                        disableColor: Qt.rgba(101/255,101/255,101/255,1)
+                        checked: selectedUrlList.indexOf(item_img_url) > -1
+                        disabled: !checked && selectedUrlList.length >= maxSelectionNumber
+                    }
                     FluIconButton {
                         id: delete_button
-                        visible: deleteMode
+                        visible: true
                         anchors.fill: parent
-                        pressedColor: Qt.rgba(175/255,0,0,0.7)
-                        hoverColor: Qt.rgba(175/255,0,0,0.5)
+                        normalColor: (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0)
+                        pressedColor: (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0.5)
+                        hoverColor: (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0.3)
                         anchors.right: parent.right
                         onClicked: {
-                            delete_img_dialog.open()
+                            if((selectedUrlList.length >= maxSelectionNumber) && (!img_checkbox.checked)){
+                                showError("抱歉，只能选择"+maxSelectionNumber+"张图片哦")
+                            }else{
+                                if(img_checkbox.checked){
+                                    selectedUrlList = selectedUrlList.filter(function(item) {
+                                      return item !== item_img_url
+                                    });
+                                }else{
+                                    selectedUrlList.push(item_img_url)
+                                    //console.log(selectedUrlList)
+                                }
+                                refreshPageSelection()
+                            }
                         }
                     }
                 }
             }
-            FluContentDialog{
-                    id:delete_img_dialog
-                    title:"删除图片"
-                    message:"是否确定删除图片？"
-                    buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
-                    negativeText:"取消"
-                    positiveText:"确定"
-                    onPositiveClicked:{
-                        //showSuccess("TODO:触发向后端发送删除图片 url: " + model.modelData)
-                        //loading_cover.visible = true
-                        //loading_mouse_cover.visible = true
-                        galleryPage.statusMode = FluStatusViewType.Loading
-                        GalleryController.deleteImgRequest(model.modelData)
-                    }
+            function refreshSelfSelection(){
+                //img_checkbox.visible = selectedUrlList.indexOf(item_img_url) > -1
+                img_checkbox.checked = selectedUrlList.indexOf(item_img_url) > -1
+                img_checkbox.disabled = !img_checkbox.checked && selectedUrlList.length >= maxSelectionNumber
+                delete_button.normalColor = (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0)
+                delete_button.pressedColor = (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0.5)
+                delete_button.hoverColor = (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0,0,0,0.6) : Qt.rgba(0,0,0,0.3)
             }
         }
     }
-    /*
-    FluStatusView{
-        id: loading_cover
-        visible: false
-        anchors.fill: parent
-        color: FluTheme.dark ? Qt.rgba(0,0,0,0.5) : Qt.rgba(1,1,1,0.5)
-        statusMode: FluStatusViewType.Loading
-        Rectangle{
-            anchors.fill: parent
-            color:FluTheme.primaryColor.dark
-        }
-    }
-    MouseArea{
-        id: loading_mouse_cover
-        visible: false
-        anchors.fill: parent
-    }
-    */
 }
