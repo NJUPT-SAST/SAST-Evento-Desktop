@@ -517,25 +517,12 @@ FluScrollablePage {
                 top: item_slide.bottom
                 topMargin: 15
             }
-            ListModel {
-                id: listmodel
-
-                ListElement {
-                    index: 0
-                }
-                ListElement {
-                    index: 1
-                }
-                ListElement {
-                    index: 2
-                }
-            }
-            model: listmodel
+            model: GalleryHelper.urlList
             delegate: Component {
                 FluImage {
                     width: 200
                     height: 150
-                    source: GalleryHelper.urlList[index]
+                    source: model.modelData
                     fillMode: Image.PreserveAspectCrop
                     MouseArea {
                         anchors.fill: parent
@@ -547,7 +534,7 @@ FluScrollablePage {
                         FluMenuItem {
                             text: "删除"
                             onClicked: {
-                                GalleryHelper.removeByIndex(index)
+                                GalleryHelper.removeByIndex(model.index)
                             }
                         }
                     }
