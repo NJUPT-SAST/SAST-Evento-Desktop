@@ -22,13 +22,13 @@ public:
 
 signals:
     void loadAllUserSuccess();
-    void loadAllUserError(const QString& message);
+    void loadAllUserError(const QString message);
 
     void loadPermissionSuccessEvent();
-    void loadPermissionErrorEvent(const QString& message);
+    void loadPermissionErrorEvent(const QString message);
 
     void createSuccessEvent();
-    void createErrorEvent(const QString& message);
+    void createErrorEvent(const QString message);
 
 public:
     UserManagementController() = default;

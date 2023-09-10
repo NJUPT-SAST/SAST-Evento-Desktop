@@ -10,23 +10,24 @@ class EventoEditController : public QObject {
 
 public:
     Q_INVOKABLE void loadEditInfo(int eventId = 0);
-    Q_INVOKABLE void createEvento(const QString& title,
-                                  const QString& description,
-                                  const QString& eventStart,
-                                  const QString& eventEnd,
-                                  const QString& registerStart,
-                                  const QString& registerEnd,
+    Q_INVOKABLE void createEvento(QString title,
+                                  QString description,
+                                  QString eventStart,
+                                  QString eventEnd,
+                                  QString registerStart,
+                                  QString registerEnd,
                                   int typeId,
                                   int loactionId,
-                                  const QVariantList& departmentId,
-                                  const QString& tag);
+                                  QVariantList departmentId,
+                                  QString tag,
+                                  QVariantList urlList);
 
 signals:
     void loadEditSuccessEvent();
-    void loadEditErrorEvent(const QString& messge);
+    void loadEditErrorEvent(const QString messge);
 
     void createSuccessEvent();
-    void createErrorEvent(const QString& message);
+    void createErrorEvent(const QString message);
 
 public:
     static EventoEditController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);

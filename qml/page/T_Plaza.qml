@@ -103,6 +103,7 @@ FluScrollablePage {
                 }
                 MouseArea {
                     anchors.fill: parent
+                    anchors.topMargin: 30
                     onClicked: {
                         PlazaController.openUrl(model.link)
                     }

@@ -23,26 +23,14 @@ QVariant EventoBlockModel::data(const QModelIndex &index, int role) const
         return element.id;
     case Role::Title:
         return element.title;
-    case Role::State:
-        return (int)element.state;
-    case Role::Data:
-        return element.data;
     case Role::Time:
         return element.time;
-    case Role::Location:
-        return element.location;
-    case Role::Department:
-        return element.department;
     case Role::RowStart:
         return element.rowStart;
     case Role::RowEnd:
         return element.rowEnd;
-    case Role::ColunmStart:
-        return element.colunmStart;
-    case Role::ColunmEnd:
-        return element.colunmEnd;
-    case Role::Finished:
-        return element.finished;
+    case Role::ColumnStart:
+        return element.columnStart;
     case Role::Editable:
         return element.editable;
     default:
@@ -59,16 +47,10 @@ QHash<int, QByteArray> EventoBlockModel::roleNames() const
     {
         roles.insert(Id, "id");
         roles.insert(Title, "title");
-        roles.insert(State, "state");
-        roles.insert(Data, "data");
         roles.insert(Time, "time");
-        roles.insert(Location, "location");
-        roles.insert(Department, "department");
         roles.insert(RowStart, "rowStart");
         roles.insert(RowEnd, "rowEnd");
-        roles.insert(ColunmStart, "colunmStart");
-        roles.insert(ColunmEnd, "colunmEnd");
-        roles.insert(Finished, "finished");
+        roles.insert(ColumnStart, "columnStart");
         roles.insert(Editable, "editable");
     }
     return roles;

@@ -17,7 +17,7 @@ Window {
         property int enableAnimationSet
         property int colorIndex
         property string langMode
-        property var displayMode
+        property int displayMode
     }
 
     Component.onCompleted: {
@@ -34,7 +34,8 @@ Window {
         appInfo.changeLang(settings.value("langMode", "En"))
         FluApp.routes = {
             "/": "qrc:/qml/window/MainWindow.qml",
-            "/login": "qrc:/qml/window/LoginWindow.qml"
+            "/login": "qrc:/qml/window/LoginWindow.qml",
+            "/block": "qrc:/qml/window/EventoBlockWindow.qml"
         }
         FluApp.initialRoute = "/login"
         FluApp.run()

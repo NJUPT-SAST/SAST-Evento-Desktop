@@ -24,6 +24,8 @@ class EventoException {
         : m_code(code), m_message(msg) {}
     QString message() { return m_message; }
     EventoExceptionCode code() { return m_code; }
+
+    operator bool() { return m_code != EventoExceptionCode::Ok; }
 };
 
 #endif
