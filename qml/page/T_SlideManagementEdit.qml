@@ -8,11 +8,11 @@ import "../window"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
-    // title: "Slide Management Edit"
 
     function loadSlideInfo() {
         statusMode = FluStatusViewType.Loading
-        SlideManagementEditController.loadEditInfo(SlideHelper.id, SlideHelper.isEdit)
+        SlideManagementEditController.loadEditInfo(SlideHelper.id,
+                                                   SlideHelper.isEdit)
     }
 
     function returnPage() {
@@ -76,12 +76,12 @@ FluScrollablePage {
         paddings: 10
         color: Qt.rgba(0, 0, 0, 0)
 
-        ColumnLayout{
+        ColumnLayout {
             spacing: 5
-            anchors{
+            anchors {
                 left: parent.left
             }
-            RowLayout{
+            RowLayout {
                 spacing: 9
                 Layout.leftMargin: 0
 
@@ -103,7 +103,7 @@ FluScrollablePage {
                 }
             }
 
-            RowLayout{
+            RowLayout {
                 spacing: 10
                 Layout.leftMargin: 0
 
@@ -125,7 +125,7 @@ FluScrollablePage {
                 }
             }
 
-            RowLayout{
+            RowLayout {
                 spacing: 15
                 Layout.leftMargin: 0
 
@@ -137,14 +137,15 @@ FluScrollablePage {
                     Layout.bottomMargin: 1
                 }
 
-                FluFilledButton{
+                FluFilledButton {
                     id: urlButton
                     text: "打开图库"
                     Layout.topMargin: 1
                     Layout.bottomMargin: 1
                     onClicked: {
                         GalleryHelper.maxNum = 1
-                        MainWindow.window.pushPage("qrc:/qml/page/T_PictureSelection.qml")
+                        MainWindow.window.pushPage(
+                                    "qrc:/qml/page/T_PictureSelection.qml")
                     }
                 }
             }
@@ -163,9 +164,20 @@ FluScrollablePage {
                 radius: [6, 6, 6, 6]
                 Layout.leftMargin: 10
                 FluImage {
+                    id: img
                     anchors.fill: parent
-                    source: SlideHelper.link
+                    source: SlideHelper.url
                     fillMode: Image.PreserveAspectCrop
+                }
+                Connections {
+                    target: GalleryHelper
+                    function onUrlListChanged() {
+                        var arr = GalleryHelper.urlList
+                        if (arr.length !== 0)
+                            SlideHelper.url = arr[0]
+                        else
+                            SlideHelper.url = ""
+                    }
                 }
             }
 
@@ -176,30 +188,27 @@ FluScrollablePage {
                 radius: [6, 6, 6, 6]
                 Layout.leftMargin: 10
                 color: Qt.rgba(0, 0, 0, 0)
-                FluFilledButton{
+                FluFilledButton {
                     id: submitButton
                     text: "提交"
-                    anchors{
+                    anchors {
                         rightMargin: 10
                         right: parent.right
                     }
                     onClicked: {
-                        // TODO 判断是否有url（判断是否去gallery中获取url）
-                        if(titleTextbox.text === "" || linkTextbox.text === ""){
+                        if (titleTextbox.text === "" || linkTextbox.text === ""
+                                || SlideHelper.url === "") {
                             showInfo("有信息未填写")
                             return
                         }
                         statusMode = FluStatusViewType.Loading
 
                         SlideManagementEditController.onClickSubmit(
-                                    titleTextbox.text,
-                                    linkTextbox.text,
-                                    "url",
-                                    SlideHelper.isEdit)
-                        // TODO url获取（gallery helper获取）
+                                    titleTextbox.text, linkTextbox.text,
+                                    SlideHelper.url, SlideHelper.isEdit)
                     }
                 }
-                FluButton{
+                FluButton {
                     id: cancelButton
                     text: "取消"
                     anchors {
@@ -214,5 +223,4 @@ FluScrollablePage {
             }
         }
     }
-
 }
