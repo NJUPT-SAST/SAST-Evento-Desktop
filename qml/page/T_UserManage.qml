@@ -3,18 +3,51 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
+import SAST_Evento
+import "../imports"
+import "../window"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
     title: lang.lang_user_manage
     Layout.fillWidth: true
 
+    FluIconButton {
+        id:btn_add
+        iconSource: FluentIcons.Add
+        Layout.alignment: Qt.AlignRight
+
+        onClicked: {
+            UserManagementController.updateIsEdit(false)
+            MainWindow.window.pushPage(
+                        "qrc:/qml/page/T_UserPermission.qml")
+        }
+    }
+
+    FluContentDialog {
+        id: ensure_dialog
+        title: "警告！"
+        message: "你正在进行删除管理员操作，是否确认删除？"
+        negativeText: "取消"
+        positiveText: "确认"
+    }
+
+    Connections {
+        target: ensure_dialog
+        function onPositiveClicked() {
+            //to do
+            showSuccess("删除成功")
+        }
+    }
+
     Column {
+        id: users_col
         width: parent.width
         spacing: 15
 
         Component {
             id: com_item
+
             Item {
                 Layout.topMargin: 10
                 width: parent.width
@@ -52,14 +85,34 @@ FluScrollablePage {
                     }
 
                     FluIconButton {
+                        id: btn_edit
                         iconSource: FluentIcons.Edit
                         anchors {
                             right: item_comment.right
                             bottom: parent.bottom
                             bottomMargin: 5
                         }
-                        onClicked: {
 
+                        onClicked: {
+                            UserManagementController.updateUserId(modelData.id)
+                            UserManagementController.updateIsEdit(true)
+                            MainWindow.window.pushPage(
+                                        "qrc:/qml/page/T_UserPermission.qml")
+                        }
+                    }
+
+                    FluIconButton {
+                        id: btn_del
+                        iconSource: FluentIcons.Delete
+                        anchors {
+                            right: btn_edit.left
+                            top: btn_edit.top
+                            rightMargin: 10
+                        }
+
+                        onClicked: {
+                            ensure_dialog.open()
+                            //wait to be completed
                         }
                     }
                 }
@@ -93,7 +146,8 @@ FluScrollablePage {
                            }
         }
     }
-
+    
+    // 加载某一页的制定数目用户条数
     function loadData(page, count) {
         const dataSource = []
         for (var i = 0; i < count; i++) {
