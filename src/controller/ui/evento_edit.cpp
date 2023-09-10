@@ -24,16 +24,17 @@ void EventoEditController::loadEditInfo(int eventId)
     emit loadEditSuccessEvent();
 }
 
-void EventoEditController::createEvento(const QString &title,
-                                        const QString &description,
-                                        const QString &eventStart,
-                                        const QString &eventEnd,
-                                        const QString &registerStart,
-                                        const QString &registerEnd,
+void EventoEditController::createEvento(QString title,
+                                        QString description,
+                                        QString eventStart,
+                                        QString eventEnd,
+                                        QString registerStart,
+                                        QString registerEnd,
                                         int typeId,
                                         int loactionId,
-                                        const QVariantList &departmentId,
-                                        const QString &tag)
+                                        QVariantList departmentId,
+                                        QString tag,
+                                        QVariantList urlList)
 {
     emit createSuccessEvent();
 }
