@@ -3,14 +3,15 @@
 
 #include <QtQml>
 
-class GalleryHelper : public QObject {
+class GalleryHelper : public QObject
+{
     Q_OBJECT
     QML_NAMED_ELEMENT(GalleryHelper)
     QML_SINGLETON
 
     Q_PROPERTY(int maxNum MEMBER m_maxNum NOTIFY maxNumChanged)
     Q_PROPERTY(QString dirJson MEMBER m_dirJson NOTIFY dirJsonChanged)
-    Q_PROPERTY(QVariantList urlList MEMBER m_urlList NOTIFY urlListChanged)
+    Q_PROPERTY(QStringList urlList MEMBER m_urlList NOTIFY urlListChanged)
     Q_PROPERTY(QString dirImgInfo MEMBER m_dirImgInfo NOTIFY dirImgInfoChanged)
 
 public:
@@ -21,12 +22,14 @@ public:
     void updateDirJson(const QString &dirJson);
     void updateDirImgInfo(const QString &dirImgInfo);
 
+    Q_INVOKABLE void removeByIndex(int index);
+
 private:
     GalleryHelper() = default;
 
     int m_maxNum;
     QString m_dirJson;
-    QVariantList m_urlList;
+    QStringList m_urlList = QStringList(3, "");
     QString m_dirImgInfo;
 
 signals:
@@ -35,6 +38,5 @@ signals:
     void urlListChanged();
     void dirImgInfoChanged();
 };
-
 
 #endif // GALLERYHELPER_H

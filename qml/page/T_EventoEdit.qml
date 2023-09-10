@@ -491,7 +491,8 @@ FluScrollablePage {
             }
             onClicked: {
                 GalleryHelper.maxNum = 3
-                MainWindow.window.pushPage("qrc:/qml/page/T_PictureSelection.qml")
+                MainWindow.window.pushPage(
+                            "qrc:/qml/page/T_PictureSelection.qml")
             }
         }
 
@@ -516,13 +517,25 @@ FluScrollablePage {
                 top: item_slide.bottom
                 topMargin: 15
             }
+            ListModel {
+                id: listmodel
 
-            model: EventoEditHelper.isEdited ? SlideModel : null
+                ListElement {
+                    index: 0
+                }
+                ListElement {
+                    index: 1
+                }
+                ListElement {
+                    index: 2
+                }
+            }
+            model: listmodel
             delegate: Component {
                 FluImage {
                     width: 200
                     height: 150
-                    source: model.url
+                    source: GalleryHelper.urlList[index]
                     fillMode: Image.PreserveAspectCrop
                     MouseArea {
                         anchors.fill: parent
@@ -534,8 +547,7 @@ FluScrollablePage {
                         FluMenuItem {
                             text: "删除"
                             onClicked: {
-
-                                // TODO
+                                GalleryHelper.removeByIndex(index)
                             }
                         }
                     }
@@ -590,7 +602,7 @@ FluScrollablePage {
                                 ) + ":00", clender_picker_register_end.text + " "
                             + time_picker_register_end.current.getHours() + ":" + time_picker_register_end.current.getMinutes(
                                 ) + ":00", typeId, tree_view_location.locationId,
-                            ids, textbox_tag.text)
+                            ids, textbox_tag.text, GalleryHelper.urlList)
             }
         }
     }
