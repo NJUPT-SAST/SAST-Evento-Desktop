@@ -479,12 +479,10 @@ std::vector<DTO_UserBrief> repositoryImpl::get_admin_user_list(EventoException &
 
 QString repositoryImpl::get_admin_permission_treeData(EventoException &err)
 {
-    QByteArray file_str = admin_permission_data;
-    return QString(file_str.toStdString().c_str());
+   return QString(QJsonDocument::fromJson(admin_permission_data).toJson(QJsonDocument::Compact).toStdString().c_str());
 }
 
 QString repositoryImpl::get_manager_permission_treeData(EventoException &err)
 {
-    QByteArray file_str = manager_permission_data;
-    return QString(file_str.toStdString().c_str());
+    return QString(QJsonDocument::fromJson(manager_permission_data).toJson(QJsonDocument::Compact).toStdString().c_str());
 }
