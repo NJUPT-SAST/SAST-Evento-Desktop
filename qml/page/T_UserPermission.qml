@@ -68,7 +68,6 @@ FluScrollablePage {
 
     Component.onCompleted: {
         loadPermissionInfo()
-        text1Text.text = userId
     }
 
     Item {
@@ -88,7 +87,7 @@ FluScrollablePage {
             id: text1
             FluText {
                 id: text1Text
-                text: "BBBB"
+                text: userId
                 font: FluTextStyle.Title
                 anchors {
                     top: parent.top
