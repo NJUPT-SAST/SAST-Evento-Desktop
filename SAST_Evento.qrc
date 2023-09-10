@@ -50,5 +50,6 @@
         <file>qml/page/T_TypeManagement.qml</file>
         <file>qml/page/T_DepartmentManagement.qml</file>
         <file>qml/page/T_LocationManagement.qml</file>
+        <file>res/svg/sast_link.svg</file>
     </qresource>
 </RCC>

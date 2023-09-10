@@ -1,8 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import QtCore
-import Qt.labs.settings 1.0
 import FluentUI
 import SAST_Evento
 import "../imports"
@@ -14,12 +12,12 @@ CustomWindow {
     fixSize: true
     launchMode: FluWindowType.SingleTask
     closeDestory: true
-    title: "SAST Evento"
+    title: lang.lang_login
 
     Connections {
         target: LoginController
         function onLoginStatusChanged() {
-            switch (loginStatus) {
+            switch (LoginController.loginStatus) {
             case 1:
                 hideLoading()
                 break
@@ -28,12 +26,11 @@ CustomWindow {
                 break
             case 3:
                 FluApp.navigate("/")
-                settings.username = textbox_uesrname.text
                 window.close()
                 break
             case 4:
                 hideLoading()
-                showError("账号或密码错误")
+                showError("登录错误")
                 break
             default:
                 break
@@ -60,81 +57,49 @@ CustomWindow {
         }
     }
 
-    FluAutoSuggestBox {
-        id: textbox_uesrname
-        anchors {
-            top: logo.bottom
-            topMargin: 30
-            horizontalCenter: parent.horizontalCenter
-        }
-        items: [{
-                "title": settings.value("username", "")
-            }]
-        placeholderText: lang.lang_username
-        width: 180
-        Layout.alignment: Qt.AlignHCenter
-        Layout.topMargin: 40
-    }
-
-    FluTextBox {
-        id: textbox_password
-        anchors {
-            top: textbox_uesrname.bottom
-            topMargin: 15
-            horizontalCenter: parent.horizontalCenter
-        }
-
-        width: 180
-        placeholderText: lang.lang_password
-        echoMode: TextInput.Password
-        Keys.onEnterPressed: {
-            btn.clicked()
-        }
-        Keys.onReturnPressed: {
-            btn.clicked()
-        }
-    }
-
-    FluFilledButton {
-        text: lang.lang_login
-        width: 180
-        height: 36
+    FluButton {
+        id: btn_login
+        text: "       使用 Link 登入"
+        font.pixelSize: 16
+        font.bold: true
+        textColor: Qt.rgba(250 / 255, 250 / 255, 250 / 255, 1)
+        width: 190
+        height: 45
+        normalColor: Qt.rgba(28 / 255, 31 / 255, 36 / 255, 1)
+        hoverColor: Qt.rgba(38 / 255, 41 / 255, 46 / 255, 1)
         anchors {
             bottom: parent.bottom
-            bottomMargin: 60
+            bottomMargin: 100
             horizontalCenter: parent.horizontalCenter
         }
         focus: true
         onClicked: {
-            if (textbox_uesrname.text === "") {
-                showError("账号为空")
-                return
-            }
-            if (textbox_password.text === "") {
-                showError("密码为空")
-                return
-            }
-
+            LoginController.loginStatus = 3
             // TODO
-            FluApp.navigate("/")
-            settings.username = textbox_uesrname.text
-            window.close()
+        }
+    }
+
+    Image {
+        width: implicitWidth
+        height: implicitHeight
+        source: "qrc:/res/svg/sast_link.svg"
+        anchors {
+            verticalCenter: btn_login.verticalCenter
+            left: btn_login.left
+            leftMargin: 20
         }
     }
 
     FluText {
-        text: "V0.2.8.9"
+        text: "SAST-C++组开发\nV0.2.9.4 alpha"
         color: FluColors.Grey100
         font: FluTextStyle.Caption
+        horizontalAlignment: Text.AlignHCenter
+        lineHeight: 1.5
         anchors {
             bottom: parent.bottom
             bottomMargin: 15
             horizontalCenter: parent.horizontalCenter
         }
-    }
-
-    Settings {
-        id: settings
-        property string username
     }
 }
