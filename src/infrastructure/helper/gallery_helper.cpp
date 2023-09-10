@@ -25,6 +25,6 @@ void GalleryHelper::updateDirImgInfo(const QString &dirImgInfo)
 
 void GalleryHelper::removeByIndex(int index)
 {
-    m_urlList[index] = "";
+    m_urlList.remove(index, 1);
     emit urlListChanged();
 }
