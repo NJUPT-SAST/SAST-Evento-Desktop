@@ -416,6 +416,18 @@ QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getLatestLis
     });
 }
 
+QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getRegisteredList()
+{
+    auto url = endpoint(QStringLiteral("/user/registered"));
+    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_Evento>> {
+        if (auto rootValue = std::get_if<QJsonValue>(&result)) {
+            return asEventoDTOArray(*rootValue);
+        } else {
+            return std::get<EventoException>(result);
+        }
+    });
+}
+
 QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getSubscribedList()
 {
     auto url = endpoint(QStringLiteral("/user/subscribed"));

@@ -67,6 +67,7 @@ public:
     // eventFetch
     QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList();
     QFuture<EventoResult<std::vector<DTO_Evento>>> getLatestList();
+    QFuture<EventoResult<std::vector<DTO_Evento>>> getRegisteredList();
     QFuture<EventoResult<std::vector<DTO_Evento>>> getSubscribedList();
     QFuture<EventoResult<std::vector<DTO_Evento>>> getHistoryList();
     QFuture<EventoResult<std::vector<DTO_Evento>>> getEventList(int page, int size);
