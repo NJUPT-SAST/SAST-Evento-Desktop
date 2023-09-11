@@ -24,6 +24,7 @@ CustomWindow {
     Connections {
         target: LoginController
         function onLoginSuccess() {
+            window.requestActivate()
             hideLoading()
             FluApp.navigate("/")
             window.close()
