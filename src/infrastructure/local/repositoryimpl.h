@@ -250,6 +250,7 @@ public:
     // event-fetch
     std::vector<DTO_Evento> get_undertaking_list(EventoException& err) override;  // Test completed
     std::vector<DTO_Evento> get_latest_list(EventoException& err) override;  // Test completed
+    std::vector<DTO_Evento> get_registered_list(EventoException &err) override;   // Test completed
     std::vector<DTO_Evento> get_subscribed_list(EventoException& err) override;  // Test completed
     std::vector<DTO_Evento> get_history_list(EventoException& err) override;  // Test completed
     std::vector<DTO_Evento> get_event_list(const int& page, const int& size, EventoException& err) override;  // Test completed

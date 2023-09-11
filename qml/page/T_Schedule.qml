@@ -21,7 +21,7 @@ FluScrollablePage {
 
     function loadSubscribedScheduleInfo() {
         statusMode = FluStatusViewType.Loading
-        ScheduleController.loadSubsribedSchedule()
+        ScheduleController.loadSubscribedSchedule()
     }
 
     Component.onCompleted: {
@@ -92,15 +92,7 @@ FluScrollablePage {
                 implicitHeight: contentHeight
                 interactive: false
                 spacing: 5
-                //model: ScheduledEventoModel
-                model: getModel1()
-                onCurrentIndexChanged: {
-                    arr1 = []
-                    if (currentIndex === 0) {
-
-                        listHeight = contentHeight
-                    }
-                }
+                model: ScheduledEventoModel
                 delegate: com_schedule1
             }
         }
@@ -113,16 +105,17 @@ FluScrollablePage {
                 implicitHeight: contentHeight
                 interactive: false
                 spacing: 5
-                //model: ScheduledEventoModel
-                model: getModel2()
-                onCurrentIndexChanged: {
-                    arr2 = []
-                    if (currentIndex === 1) {
-                        loadSubscribedScheduleInfo()
-                        listHeight = contentHeight
-                    }
-                }
+                model: ScheduledEventoModel
                 delegate: com_schedule2
+            }
+        }
+        onCurrentIndexChanged: {
+            arr1 = []
+            arr2 = []
+            if (currentIndex === 0) {
+                loadRegisteredScheduleInfo()
+            } else if (currentIndex === 1) {
+                loadSubscribedScheduleInfo()
             }
         }
     }
@@ -130,7 +123,7 @@ FluScrollablePage {
     Component {
         id: com_schedule1
         Item {
-            property bool _hasSameDate: hasSameDate(arr1, modelData.date)
+            property bool _hasSameDate: hasSameDate(arr1, model.date)
             width: parent.width
             height: 85 + loader.height
 
@@ -147,7 +140,7 @@ FluScrollablePage {
             Component {
                 id: com_date
                 FluText {
-                    text: modelData.date
+                    text: model.date
                     font.pixelSize: 18
                 }
             }
@@ -184,11 +177,11 @@ FluScrollablePage {
                         verticalCenter: parent.verticalCenter
                     }
                     FluText {
-                        text: modelData.startTime
+                        text: model.startTime
                         font.pixelSize: 18
                     }
                     FluText {
-                        text: modelData.endTime
+                        text: model.endTime
                         font.pixelSize: 18
                         color: "#708090"
                     }
@@ -216,11 +209,11 @@ FluScrollablePage {
                         verticalCenter: parent.verticalCenter
                     }
                     FluText {
-                        text: modelData.title
+                        text: model.title
                         font: FluTextStyle.Title
                     }
                     FluText {
-                        text: modelData.location
+                        text: model.location
                         font: FluTextStyle.Caption
                         color: FluColors.Grey110
                     }
@@ -246,7 +239,7 @@ FluScrollablePage {
                         rightMargin: 10
                         bottomMargin: 10
                     }
-                    text: modelData.department
+                    text: model.department
                     font: FluTextStyle.Caption
                     color: FluColors.Grey110
                 }
@@ -274,7 +267,7 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        EventoHelper.id = modelData.id
+                        EventoHelper.id = model.id
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_EventInfo.qml")
                     }
@@ -282,9 +275,9 @@ FluScrollablePage {
             }
 
             Component.onCompleted: {
-                var modelState = modelData.state
-                var isChecked = modelData.isChecked
-                var isFeedback = modelData.isFeedback
+                var modelState = model.state
+                var isChecked = model.isChecked
+                var isFeedback = model.isFeedback
                 if (modelState === 1 || modelState === 2) {
                     if (isChecked)
                         state = 'BeforeAndIsChecked'
@@ -400,7 +393,7 @@ FluScrollablePage {
                         text: "评价"
                         disabled: false
                         onClicked: {
-                            EventoHelper.id = modelData.id
+                            EventoHelper.id = model.id
                             MainWindow.window.pushPage(
                                         "qrc:/qml/page/T_EventInfo.qml")
                         }
@@ -418,7 +411,7 @@ FluScrollablePage {
                         text: "修改评价"
                         disabled: false
                         onClicked: {
-                            EventoHelper.id = modelData.id
+                            EventoHelper.id = model.id
                             MainWindow.window.pushPage(
                                         "qrc:/qml/page/T_EventInfo.qml")
                         }
@@ -456,7 +449,7 @@ FluScrollablePage {
                         dialog.open()
                     } else {
                         statusMode = FluStatusViewType.Loading
-                        ScheduleController.check(modelData.id, textbox.text)
+                        ScheduleController.check(model.id, textbox.text)
                     }
                 }
             }
@@ -465,7 +458,7 @@ FluScrollablePage {
     Component {
         id: com_schedule2
         Item {
-            property bool _hasSameDate: hasSameDate(arr2, modelData.date)
+            property bool _hasSameDate: hasSameDate(arr2, model.date)
             width: parent.width
             height: 85 + loader.height
 
@@ -482,7 +475,7 @@ FluScrollablePage {
             Component {
                 id: com_date
                 FluText {
-                    text: modelData.date
+                    text: model.date
                     font.pixelSize: 18
                 }
             }
@@ -519,11 +512,11 @@ FluScrollablePage {
                         verticalCenter: parent.verticalCenter
                     }
                     FluText {
-                        text: modelData.startTime
+                        text: model.startTime
                         font.pixelSize: 18
                     }
                     FluText {
-                        text: modelData.endTime
+                        text: model.endTime
                         font.pixelSize: 18
                         color: "#708090"
                     }
@@ -551,11 +544,11 @@ FluScrollablePage {
                         verticalCenter: parent.verticalCenter
                     }
                     FluText {
-                        text: modelData.title
+                        text: model.title
                         font: FluTextStyle.Title
                     }
                     FluText {
-                        text: modelData.location
+                        text: model.location
                         font: FluTextStyle.Caption
                         color: FluColors.Grey110
                     }
@@ -581,7 +574,7 @@ FluScrollablePage {
                         rightMargin: 10
                         bottomMargin: 10
                     }
-                    text: modelData.department
+                    text: model.department
                     font: FluTextStyle.Caption
                     color: FluColors.Grey110
                 }
@@ -609,7 +602,7 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        EventoHelper.id = modelData.id
+                        EventoHelper.id = model.id
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_EventInfo.qml")
                     }
@@ -617,9 +610,9 @@ FluScrollablePage {
             }
 
             Component.onCompleted: {
-                var modelState = modelData.state
-                var isChecked = modelData.isChecked
-                var isFeedback = modelData.isFeedback
+                var modelState = model.state
+                var isChecked = model.isChecked
+                var isFeedback = model.isFeedback
                 if (modelState === 1 || modelState === 2) {
                     if (isChecked)
                         state = 'BeforeAndIsChecked'
@@ -735,7 +728,7 @@ FluScrollablePage {
                         text: "评价"
                         disabled: false
                         onClicked: {
-                            EventoHelper.id = modelData.id
+                            EventoHelper.id = model.id
                             MainWindow.window.pushPage(
                                         "qrc:/qml/page/T_EventInfo.qml")
                         }
@@ -753,7 +746,7 @@ FluScrollablePage {
                         text: "修改评价"
                         disabled: false
                         onClicked: {
-                            EventoHelper.id = modelData.id
+                            EventoHelper.id = model.id
                             MainWindow.window.pushPage(
                                         "qrc:/qml/page/T_EventInfo.qml")
                         }
@@ -791,7 +784,7 @@ FluScrollablePage {
                         dialog.open()
                     } else {
                         statusMode = FluStatusViewType.Loading
-                        ScheduleController.check(modelData.id, textbox.text)
+                        ScheduleController.check(model.id, textbox.text)
                     }
                 }
             }
@@ -803,156 +796,5 @@ FluScrollablePage {
             return true
         arr.push(date)
         return false
-    }
-
-    function getModel1() {
-        return [{
-                    "id": 1,
-                    "title": "活动标题",
-                    "state": 5,
-                    "date": "10月01日",
-                    "startTime": "09:00",
-                    "endTime": "10:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": true,
-                    "isFeedback": false
-                }, {
-                    "id": 2,
-                    "title": "活动标题",
-                    "state": 3,
-                    "date": "10月01日",
-                    "startTime": "12:00",
-                    "endTime": "13:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": true,
-                    "isFeedback": false
-                }, {
-                    "id": 3,
-                    "title": "活动标题",
-                    "state": 1,
-                    "date": "10月03日",
-                    "startTime": "09:00",
-                    "endTime": "10:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": false,
-                    "isFeedback": false
-                }, {
-                    "id": 4,
-                    "title": "活动标题",
-                    "state": 5,
-                    "date": "10月04日",
-                    "startTime": "09:00",
-                    "endTime": "10:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": true,
-                    "isFeedback": false
-                }, {
-                    "id": 1,
-                    "title": "活动标题",
-                    "state": 5,
-                    "date": "10月04日",
-                    "startTime": "15:00",
-                    "endTime": "15:30",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": true,
-                    "isFeedback": true
-                }, {
-                    "id": 2,
-                    "title": "活动标题",
-                    "state": 5,
-                    "date": "10月04日",
-                    "startTime": "17:00",
-                    "endTime": "19:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": true,
-                    "isFeedback": false
-                }, {
-                    "id": 3,
-                    "title": "活动标题",
-                    "state": 4,
-                    "date": "10月06日",
-                    "startTime": "09:00",
-                    "endTime": "10:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": false,
-                    "isFeedback": false
-                }]
-    }
-
-    function getModel2() {
-        return [{
-                    "id": 1,
-                    "title": "活动标题",
-                    "state": 5,
-                    "date": "10月01日",
-                    "startTime": "09:00",
-                    "endTime": "10:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": true,
-                    "isFeedback": false
-                }, {
-                    "id": 2,
-                    "title": "活动标题",
-                    "state": 3,
-                    "date": "10月01日",
-                    "startTime": "12:00",
-                    "endTime": "13:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": true,
-                    "isFeedback": false
-                }, {
-                    "id": 3,
-                    "title": "活动标题",
-                    "state": 1,
-                    "date": "10月03日",
-                    "startTime": "09:00",
-                    "endTime": "10:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": false,
-                    "isFeedback": false
-                }, {
-                    "id": 4,
-                    "title": "活动标题",
-                    "state": 5,
-                    "date": "10月04日",
-                    "startTime": "09:00",
-                    "endTime": "10:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": true,
-                    "isFeedback": false
-                }, {
-                    "id": 2,
-                    "title": "活动标题",
-                    "state": 5,
-                    "date": "10月04日",
-                    "startTime": "17:00",
-                    "endTime": "19:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": true,
-                    "isFeedback": false
-                }, {
-                    "id": 3,
-                    "title": "活动标题",
-                    "state": 4,
-                    "date": "10月06日",
-                    "startTime": "09:00",
-                    "endTime": "10:00",
-                    "department": "活动部门",
-                    "location": "活动地点",
-                    "isChecked": false,
-                    "isFeedback": false
-                }]
     }
 }

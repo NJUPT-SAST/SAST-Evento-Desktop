@@ -156,6 +156,17 @@ std::vector<DTO_Evento> repositoryImpl::get_latest_list(EventoException &err)
     return readEventoByState("1");
 }
 
+std::vector<DTO_Evento> repositoryImpl::get_registered_list(EventoException &err)
+{
+    std::vector<DTO_Evento> res;
+    for (int i = 0; i < participate_data_list.size(); i++) {
+        if (!participate_data_list.at(i).user_id.compare("B22041234") && !participate_data_list.at(i).is_registration.compare("true")) {
+            res.push_back(readEvento(participate_data_list.at(i).event_id.toInt()));
+        }
+    }
+    return res;
+}
+
 std::vector<DTO_Evento> repositoryImpl::get_subscribed_list(EventoException &err)
 {
     std::vector<DTO_Evento> res;
