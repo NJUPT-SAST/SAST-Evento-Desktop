@@ -4,7 +4,7 @@
 #include <QString>
 
 constexpr const char *AUTH_SERVER_URL = "https://link.sast.fun/auth";
-constexpr const char *AUTH_CLIENT_ID = "69d79710-23e3-45ee-a743-5f37c4afe0b6";
+constexpr const char *AUTH_CLIENT_ID = "93f24f17-0423-4baf-9a98-b0ad418a68b8";
 
 static QString genCodeChallengeS256(QStringView code_verifier)
 {
