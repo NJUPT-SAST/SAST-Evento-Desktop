@@ -2,14 +2,7 @@
 #define LOGIN_CONTROLLER_H
 
 #include <QtQml>
-
-enum class LoginStatus : int
-{
-    Start = 1,
-    Loading,
-    Success,
-    Failed
-};
+#include <QHttpServer>
 
 class LoginController : public QObject
 {
@@ -17,20 +10,22 @@ class LoginController : public QObject
     QML_NAMED_ELEMENT(LoginController)
     QML_SINGLETON
 
-    Q_PROPERTY(int loginStatus MEMBER status NOTIFY loginStatusChanged)
-
 private:
-    int status = int(LoginStatus::Start);
+    QHttpServer login_redirect_server;
+    QString state;
+    QString code_verifier;
 
 signals:
-    void loginStatusChanged();
+    void loginProcessing();
+    void loginSuccess();
+    void loginFailed(const QString &reason);
 
 public:
     static LoginController *create(QQmlEngine *, QJSEngine *);
 
-    Q_INVOKABLE void login(const QString &username, const QString &password);
+    Q_INVOKABLE void beginLoginViaSastLink();
 
-    LoginController() = default;
+    LoginController();
 };
 
 #endif // LOGIN_CONTROLLER_H
