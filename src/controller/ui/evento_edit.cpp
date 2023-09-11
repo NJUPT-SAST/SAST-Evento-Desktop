@@ -7,13 +7,13 @@ void EventoEditController::loadEditInfo(int eventId)
 {
     EventoException err;
 
-    auto departmentList = getRepo()->get_department_list(err);
+    auto departmentList = getRepo()->getDepartmentList(err);
     if ((int)err.code())
         return emit loadEditErrorEvent(err.message());
-    auto locationList = getRepo()->get_location_list(err);
+    auto locationList = getRepo()->getLocationList(err);
     if ((int)err.code())
         return emit loadEditErrorEvent(err.message());
-    auto typeList = getRepo()->get_type_list(err);
+    auto typeList = getRepo()->getTypeList(err);
     if ((int)err.code())
         return emit loadEditErrorEvent(err.message());
 

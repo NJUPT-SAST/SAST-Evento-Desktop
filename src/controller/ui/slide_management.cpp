@@ -8,8 +8,8 @@ void SlideManagementController::loadAllSlide()
     EventoException err;
     SlideModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
-            getRepo()->get_home_slide_list(3, err)));
-    // TODO get_home_slide_list 参数更改为size和page（未来替换）
+            getRepo()->getHomeSlideList(3, err)));
+    // TODO getHomeSlideList 参数更改为size和page（未来替换）
     if((int)err.code())
         return emit loadAllSlideError(err.message());
     return emit loadAllSlideSuccess();

@@ -1,6 +1,6 @@
 #include "repositoryimpl.h"
 
-QStringList repositoryImpl::get_admin_permission(EventoException &err)
+QStringList repositoryImpl::getAdminPermission(EventoException &err)
 {
     QByteArray file_str = admin_user_data;
 
@@ -19,7 +19,7 @@ QStringList repositoryImpl::get_admin_permission(EventoException &err)
     return QStringList();
 }
 
-QStringList repositoryImpl::get_manager_permission(const EventoID &eventoId, EventoException &err)
+QStringList repositoryImpl::getManagerPermission(const EventoID &eventoId, EventoException &err)
 {
     for(int i = 0; i<manager_user_data_list.size(); i++){
         if(!manager_user_data_list.at(i).event_id.compare(QString::number(eventoId)) &&
@@ -31,7 +31,7 @@ QStringList repositoryImpl::get_manager_permission(const EventoID &eventoId, Eve
     return QStringList();
 }
 
-QStringList repositoryImpl::get_permitted_event(EventoException &err)
+QStringList repositoryImpl::getPermittedEvent(EventoException &err)
 {
     QStringList res;
     for(int i = 0; i<permission_data_list.size(); i++){
@@ -42,7 +42,7 @@ QStringList repositoryImpl::get_permitted_event(EventoException &err)
     return res;
 }
 
-DTO_Permission repositoryImpl::get_event_permission(EventoID event, EventoException &err)
+DTO_Permission repositoryImpl::getEventPermission(EventoID event, EventoException &err)
 {
     for(int i = 0; i<permission_data_list.size(); i++){
         if(!permission_data_list.at(i).user_id.compare("B22041234") &&
@@ -61,7 +61,7 @@ DTO_Permission repositoryImpl::get_event_permission(EventoID event, EventoExcept
     return DTO_Permission();
 }
 
-DTO_User repositoryImpl::get_user_info(const UserID &id, EventoException &err)
+DTO_User repositoryImpl::getUserInfo(const UserID &id, EventoException &err)
 {
     for(int i = 0; i<user_data_list.size(); i++){
         if(!user_data_list.at(i).id.compare("B22041234")){
@@ -86,7 +86,7 @@ DTO_User repositoryImpl::get_user_info(const UserID &id, EventoException &err)
     return DTO_User();
 }
 
-std::vector<DTO_Slide> repositoryImpl::get_home_slide_list(const int &size, EventoException &err)
+std::vector<DTO_Slide> repositoryImpl::getHomeSlideList(const int &size, EventoException &err)
 {
     std::vector<DTO_Slide> res;
 
@@ -109,7 +109,7 @@ std::vector<DTO_Slide> repositoryImpl::get_home_slide_list(const int &size, Even
     return res;
 }
 
-ParticipationStatus repositoryImpl::get_user_participate(const EventoID &eventoId, EventoException& err)
+ParticipationStatus repositoryImpl::getUserParticipate(const EventoID &eventoId, EventoException& err)
 {
     for(int i = 0; i<participate_data_list.size(); i++){
         participate_data unit = participate_data_list.at(i);
@@ -126,7 +126,7 @@ ParticipationStatus repositoryImpl::get_user_participate(const EventoID &eventoI
     return ParticipationStatus();
 }
 
-DTO_Feedback repositoryImpl::get_feedback_info(const EventoID &eventoId, EventoException& err)
+DTO_Feedback repositoryImpl::getFeedbackInfo(const EventoID &eventoId, EventoException& err)
 {
     for(int i = 0; i<feedback_data_list.size(); i++){
         Participation unit = readParticipation(std::pair("id", feedback_data_list.at(i).participate_id)).at(0);
@@ -146,17 +146,17 @@ DTO_Feedback repositoryImpl::get_feedback_info(const EventoID &eventoId, EventoE
     return DTO_Feedback();
 }
 
-std::vector<DTO_Evento> repositoryImpl::get_undertaking_list(EventoException &err)
+std::vector<DTO_Evento> repositoryImpl::getUndertakingList(EventoException &err)
 {
     return readEventoByState("3");
 }
 
-std::vector<DTO_Evento> repositoryImpl::get_latest_list(EventoException &err)
+std::vector<DTO_Evento> repositoryImpl::getLatestList(EventoException &err)
 {
     return readEventoByState("1");
 }
 
-std::vector<DTO_Evento> repositoryImpl::get_registered_list(EventoException &err)
+std::vector<DTO_Evento> repositoryImpl::getRegisteredList(EventoException &err)
 {
     std::vector<DTO_Evento> res;
     for (int i = 0; i < participate_data_list.size(); i++) {
@@ -167,7 +167,7 @@ std::vector<DTO_Evento> repositoryImpl::get_registered_list(EventoException &err
     return res;
 }
 
-std::vector<DTO_Evento> repositoryImpl::get_subscribed_list(EventoException &err)
+std::vector<DTO_Evento> repositoryImpl::getSubscribedList(EventoException &err)
 {
     std::vector<DTO_Evento> res;
     for(int i = 0; i<participate_data_list.size(); i++){
@@ -179,7 +179,7 @@ std::vector<DTO_Evento> repositoryImpl::get_subscribed_list(EventoException &err
     return res;
 }
 
-std::vector<DTO_Evento> repositoryImpl::get_history_list(EventoException &err)
+std::vector<DTO_Evento> repositoryImpl::getHistoryList(EventoException &err)
 {
     std::vector<DTO_Evento> res;
 
@@ -191,7 +191,7 @@ std::vector<DTO_Evento> repositoryImpl::get_history_list(EventoException &err)
     return res;
 }
 
-std::vector<DTO_Evento> repositoryImpl::get_event_list(const int &page, const int &size, EventoException &err)
+std::vector<DTO_Evento> repositoryImpl::getEventList(const int &page, const int &size, EventoException &err)
 {
     std::vector<DTO_Evento> res;
     int beginId = (page-1) * size +1;
@@ -210,7 +210,7 @@ std::vector<DTO_Evento> repositoryImpl::get_event_list(const int &page, const in
     return res;
 }
 
-std::vector<DTO_Evento> repositoryImpl::get_department_event_list(const int &departmentId, EventoException &err)
+std::vector<DTO_Evento> repositoryImpl::getDepartmentEventList(const int &departmentId, EventoException &err)
 {
     std::vector<DTO_Evento> res;
 
@@ -222,12 +222,12 @@ std::vector<DTO_Evento> repositoryImpl::get_department_event_list(const int &dep
     return res;
 }
 
-DTO_Evento repositoryImpl::get_event(EventoID event, EventoException &err)
+DTO_Evento repositoryImpl::getEvent(EventoID event, EventoException &err)
 {
     return readEvento(event);
 }
 
-std::vector<DTO_Feedback> repositoryImpl::get_feedback_list(EventoID eventoId, EventoException &err)
+std::vector<DTO_Feedback> repositoryImpl::getFeedbackList(EventoID eventoId, EventoException &err)
 {
     std::vector<DTO_Feedback> res;
 
@@ -248,7 +248,7 @@ std::vector<DTO_Feedback> repositoryImpl::get_feedback_list(EventoID eventoId, E
     return res;
 }
 
-std::vector<DTO_Slide> repositoryImpl::get_slide_list(EventoException &err)
+std::vector<DTO_Slide> repositoryImpl::getSlideList(EventoException &err)
 {
     std::vector<DTO_Slide> res;
 
@@ -264,7 +264,7 @@ std::vector<DTO_Slide> repositoryImpl::get_slide_list(EventoException &err)
     return res;
 }
 
-std::vector<DTO_Slide> repositoryImpl::get_event_slide_list(EventoID id, EventoException &err)
+std::vector<DTO_Slide> repositoryImpl::getEventSlideList(EventoID id, EventoException &err)
 {
     std::vector<DTO_Slide> res;
 
@@ -282,7 +282,7 @@ std::vector<DTO_Slide> repositoryImpl::get_event_slide_list(EventoID id, EventoE
     return res;
 }
 
-QString repositoryImpl::get_type_list(EventoException &err)
+QString repositoryImpl::getTypeList(EventoException &err)
 {
     QJsonArray res;
     for(int i = 0; i<type_data_list.size(); i++){
@@ -295,7 +295,7 @@ QString repositoryImpl::get_type_list(EventoException &err)
     return QString(QJsonDocument(res).toJson(QJsonDocument::Compact).toStdString().c_str());
 }
 
-QString repositoryImpl::get_location_list(EventoException &err)
+QString repositoryImpl::getLocationList(EventoException &err)
 {
     QJsonArray res;
 
@@ -309,7 +309,7 @@ QString repositoryImpl::get_location_list(EventoException &err)
     return QString(QJsonDocument(res).toJson(QJsonDocument::Compact).toStdString().c_str());
 }
 
-QString repositoryImpl::get_department_list(EventoException &err)
+QString repositoryImpl::getDepartmentList(EventoException &err)
 {
     QJsonArray res;
 
@@ -323,12 +323,12 @@ QString repositoryImpl::get_department_list(EventoException &err)
     return QString(QJsonDocument(res).toJson(QJsonDocument::Compact).toStdString().c_str());
 }
 
-QString repositoryImpl::get_qrcode(const int &eventId, EventoException &err)
+QString repositoryImpl::getQRCode(const int &eventId, EventoException &err)
 {
     return "qrcodeLink";
 }
 
-bool repositoryImpl::event_checkin(EventoID event, const QString &code, EventoException &err)
+bool repositoryImpl::checkInEvent(EventoID event, const QString &code, EventoException &err)
 {
     std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("event_id", QString::number(event)));
     for(int i = 0; i<participationList.size(); i++){
@@ -348,7 +348,7 @@ bool repositoryImpl::event_checkin(EventoID event, const QString &code, EventoEx
     return false;
 }
 
-bool repositoryImpl::event_feedback(const DTO_Feedback &code, EventoException &err)
+bool repositoryImpl::feedbackEvent(const DTO_Feedback &code, EventoException &err)
 {
     QString participationId;
     for(int i = 0; i < participate_data_list.size(); i++){
@@ -375,7 +375,7 @@ bool repositoryImpl::event_feedback(const DTO_Feedback &code, EventoException &e
     return true;
 }
 
-bool repositoryImpl::event_subscribe(EventoID event, EventoException &err)
+bool repositoryImpl::subscribeEvent(EventoID event, EventoException &err)
 {
     std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("event_id", QString::number(event)));
     for(int i = 0; i<participationList.size(); i++){
@@ -395,10 +395,10 @@ bool repositoryImpl::event_subscribe(EventoID event, EventoException &err)
     return false;
 }
 
-bool repositoryImpl::is_feedback(EventoID event, EventoException &err)
+bool repositoryImpl::isFeedbacked(EventoID event, EventoException &err)
 {
     EventoException error(EventoExceptionCode::Ok, "null");
-    DTO_Feedback feedbackList = get_feedback_info(event, error);
+    DTO_Feedback feedbackList = getFeedbackInfo(event, error);
     if(error.code() == EventoExceptionCode::UnexpectedError){
         return false;
     }
@@ -407,7 +407,7 @@ bool repositoryImpl::is_feedback(EventoID event, EventoException &err)
     }
 }
 
-std::vector<DTO_Evento> repositoryImpl::get_qualified_event(EventoException& err, int type, const std::vector<int> &dep, const QDate &day)
+std::vector<DTO_Evento> repositoryImpl::getQualifiedEvent(EventoException& err, int type, const std::vector<int> &dep, const QDate &day)
 {
     std::vector<DTO_Evento> res;
     std::vector<DTO_Evento> eventoList;
@@ -438,7 +438,7 @@ std::vector<DTO_Evento> repositoryImpl::get_qualified_event(EventoException& err
     return res;
 }
 
-QStringList repositoryImpl::get_action_state_list(EventoException &err)
+QStringList repositoryImpl::getActionStateList(EventoException &err)
 {
     return QStringList{
                        "ADMIN",
@@ -449,13 +449,13 @@ QStringList repositoryImpl::get_action_state_list(EventoException &err)
     };
 }
 
-QStringList repositoryImpl::get_action_list(EventoException &err)
+QStringList repositoryImpl::getActionList(EventoException &err)
 {
     // FIXME: implement
     return QStringList();
 }
 
-std::vector<DTO_UserBrief> repositoryImpl::get_event_manager_list(const EventoID &eventoId, EventoException& err)
+std::vector<DTO_UserBrief> repositoryImpl::getEventManagerList(const EventoID &eventoId, EventoException& err)
 {
     std::vector<DTO_UserBrief> res;
 
@@ -472,7 +472,7 @@ std::vector<DTO_UserBrief> repositoryImpl::get_event_manager_list(const EventoID
     return res;
 }
 
-std::vector<DTO_UserBrief> repositoryImpl::get_admin_user_list(EventoException &err)
+std::vector<DTO_UserBrief> repositoryImpl::getAdminUserList(EventoException &err)
 {
     std::vector<DTO_UserBrief> res;
     QByteArray file_str = admin_user_data;
@@ -488,12 +488,12 @@ std::vector<DTO_UserBrief> repositoryImpl::get_admin_user_list(EventoException &
     return res;
 }
 
-QString repositoryImpl::get_admin_permission_treeData(EventoException &err)
+QString repositoryImpl::getAdminPermissionTreeData(EventoException &err)
 {
    return QString(QJsonDocument::fromJson(admin_permission_data).toJson(QJsonDocument::Compact).toStdString().c_str());
 }
 
-QString repositoryImpl::get_manager_permission_treeData(EventoException &err)
+QString repositoryImpl::getManagerPermissionTreeData(EventoException &err)
 {
     return QString(QJsonDocument::fromJson(manager_permission_data).toJson(QJsonDocument::Compact).toStdString().c_str());
 }

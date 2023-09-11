@@ -4,7 +4,7 @@
 QString LocationManagementController::loadAllLocation()
 {
     EventoException err;
-    QString res = getRepo()->get_location_list(err);
+    QString res = getRepo()->getLocationList(err);
     if((int)err.code()) {
         emit loadAllLocationError(err.message());
         return QString();

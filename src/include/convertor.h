@@ -41,7 +41,7 @@ inline QString departmentConvertor(const std::vector<Department>& departments) {
 inline QString getFirstImageUrl(int eventId) {
     auto repository = getRepo();
     EventoException err;
-    const auto& result = repository->get_event_slide_list(eventId, err);
+    const auto& result = repository->getEventSlideList(eventId, err);
     if (result.empty() || (int)err.code()) return "qrc:/res/image/banner_3.png";
     return result[0].url;
 }
@@ -122,7 +122,7 @@ static void appendToScheduleVector(std::vector<Schedule>& result, const DTO_Even
         // use the default `Ok` for the repo won't touch this flag when successful.
         // needed at least for local impl.
         EventoException err = EventoExceptionCode::Ok;
-        auto participate_state = getRepo()->get_user_participate(e.id, err);
+        auto participate_state = getRepo()->getUserParticipate(e.id, err);
         if (err.code() == EventoExceptionCode::Ok) {
             isChecked = participate_state.isParticipated;
         }
@@ -133,7 +133,7 @@ static void appendToScheduleVector(std::vector<Schedule>& result, const DTO_Even
         // use the default `Ok` for the repo won't touch this flag when successful.
         // needed at least for local impl.
         EventoException err = EventoExceptionCode::Ok;
-        auto is_feedback = getRepo()->is_feedback(e.id, err);
+        auto is_feedback = getRepo()->isFeedbacked(e.id, err);
         if (err.code() == EventoExceptionCode::Ok) {
             isFeedback = is_feedback;
         }

@@ -9,7 +9,7 @@ void ScheduleController::loadRegisteredSchedule()
     ScheduledEventoModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Evento>,
                     std::vector<Schedule>>()(
-            getRepo()->get_registered_list(err)
+            getRepo()->getRegisteredList(err)
     ));
 
     if (err)
@@ -27,7 +27,7 @@ void ScheduleController::loadSubscribedSchedule()
     ScheduledEventoModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Evento>,
                     std::vector<Schedule>>()(
-            getRepo()->get_subscribed_list(err)
+            getRepo()->getSubscribedList(err)
     ));
 
     if (err)
@@ -42,7 +42,7 @@ void ScheduleController::loadSubscribedSchedule()
 void ScheduleController::check(const int eventId, const QString &code)
 {
     EventoException err;
-    auto isSuccess = getRepo()->event_checkin(eventId, code, err);
+    auto isSuccess = getRepo()->checkInEvent(eventId, code, err);
 
     qDebug() << (int)err.code();
     if ((int)err.code())
