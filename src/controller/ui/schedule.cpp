@@ -6,13 +6,13 @@
 void ScheduleController::loadRegisteredSchedule()
 {
     EventoException err;
-    //    ScheduledEventoModel::getInstance()->resetModel(
-    //        Convertor<std::vector<DTO_Evento>,
-    //                  std::vector<Schedule>>()(
-    //            getRepo()->get_registered_list(err)
-    //    ));
+    ScheduledEventoModel::getInstance()->resetModel(
+        Convertor<std::vector<DTO_Evento>,
+                    std::vector<Schedule>>()(
+            getRepo()->get_registered_list(err)
+    ));
 
-    if ((int)err.code())
+    if (err)
     {
         emit loadRegisteredScheduleErrorEvent(err.message());
         return;
@@ -24,13 +24,13 @@ void ScheduleController::loadRegisteredSchedule()
 void ScheduleController::loadSubscribedSchedule()
 {
     EventoException err;
-    //    ScheduledEventoModel::getInstance()->resetModel(
-    //        Convertor<std::vector<DTO_Evento>,
-    //                  std::vector<Schedule>>()(
-    //            getRepo()->get_subscribed_list(err)
-    //    ));
+    ScheduledEventoModel::getInstance()->resetModel(
+        Convertor<std::vector<DTO_Evento>,
+                    std::vector<Schedule>>()(
+            getRepo()->get_subscribed_list(err)
+    ));
 
-    if ((int)err.code())
+    if (err)
     {
         emit loadSubscribedScheduleErrorEvent(err.message());
         return;
