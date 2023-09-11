@@ -73,7 +73,16 @@ LoginController::LoginController()
         }
 
         finished:
-        QHttpServerResponse resp(status_code);
+        QHttpServerResponse resp(QHttpServerResponder::StatusCode::InternalServerError);
+        if (status_code == QHttpServerResponder::StatusCode::Ok) {
+            resp = QHttpServerResponse("text/html",
+                                       "<!DOCTYPE html><html><head><title>Completed</title></head><body><script>window.close();</script><p>Authentication completed. Please close this window. </p></body></html>",
+                                       status_code);
+        } else {
+            resp = QHttpServerResponse("text/plain",
+                                       QStringLiteral("Error %1").arg((int)status_code).toUtf8(),
+                                       status_code);
+        }
         resp.setHeader("Access-Control-Allow-Origin", "https://link.sast.fun");
         resp.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
         resp.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
