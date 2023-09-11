@@ -7,7 +7,7 @@
 
 void PlazaController::loadPlazaInfo() {
     EventoException err;
-    auto slides = getRepo()->get_home_slide_list(3, err);
+    auto slides = getRepo()->getHomeSlideList(3, err);
     if (slides.empty()) {
         slides.emplace_back(
             DTO_Slide{0, "SAST Evento", "", "qrc:/res/image/banner_1.png"});
@@ -34,7 +34,7 @@ void PlazaController::loadPlazaInfo() {
 
     UndertakingEventoModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Evento>, std::vector<UndertakingEvento>>()(
-            getRepo()->get_undertaking_list(err)));
+            getRepo()->getUndertakingList(err)));
 
     if ((int)err.code()) {
         emit loadPlazaErrorEvent(err.message());
@@ -43,7 +43,7 @@ void PlazaController::loadPlazaInfo() {
 
     LatestEventoModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Evento>, std::vector<LatestEvento>>()(
-            getRepo()->get_latest_list(err)));
+            getRepo()->getLatestList(err)));
 
     if ((int)err.code()) {
         emit loadPlazaErrorEvent(err.message());

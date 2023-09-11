@@ -6,7 +6,7 @@
 QString DepartmentEventsController::loadDepartmentsInfo()
 {
     EventoException err;
-    auto departmentList = getRepo()->get_department_list(err);
+    auto departmentList = getRepo()->getDepartmentList(err);
     if ((int)err.code()){
         emit loadDepartmentsErrorEvent(err.message());
         return QString();
@@ -26,7 +26,7 @@ void DepartmentEventsController::loadDepartmentEvents(int departmentId)
     EventoException err;
     EventoBriefModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Evento>, std::vector<EventoBrief>>()(
-            getRepo()->get_department_event_list(departmentId, err)));
+            getRepo()->getDepartmentEventList(departmentId, err)));
 
     if ((int)err.code()) {
         emit loadDepartmentEventErrorEvent(err.message());

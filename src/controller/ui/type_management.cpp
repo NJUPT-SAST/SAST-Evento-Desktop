@@ -4,7 +4,7 @@
 QString TypeManagementController::loadAllType()
 {
     EventoException err;
-    QString res = getRepo()->get_type_list(err);
+    QString res = getRepo()->getTypeList(err);
     if((int)err.code()) {
         emit loadAllTypeError(err.message());
         return QString();

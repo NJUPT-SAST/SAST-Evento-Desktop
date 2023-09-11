@@ -20,7 +20,7 @@ void UserManagementController::loadAllUserInfo()
 QString UserManagementController::loadPermissionInfo()
 {
     EventoException err;
-    auto result = getRepo()->get_admin_permission_treeData(err);
+    auto result = getRepo()->getAdminPermissionTreeData(err);
 
     if ((int)err.code()){
         emit loadPermissionErrorEvent(err.message());

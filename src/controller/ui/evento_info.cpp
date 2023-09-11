@@ -10,15 +10,15 @@ void EventoInfoController::loadEventoInfo(const EventoID eventId)
     EventoException err;
     SlideModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
-            getRepo()->get_event_slide_list(eventId, err)
+            getRepo()->getEventSlideList(eventId, err)
     ));
     if ((int)err.code())
         return emit loadEventoErrorEvent(err.message());
 
-    auto event = getRepo()->get_event(eventId, err);
+    auto event = getRepo()->getEvent(eventId, err);
     if ((int)err.code())
         return emit loadEventoErrorEvent(err.message());
-    auto participate = getRepo()->get_user_participate(eventId, err);
+    auto participate = getRepo()->getUserParticipate(eventId, err);
     if ((int)err.code())
         return emit loadEventoErrorEvent(err.message());
 
@@ -29,7 +29,7 @@ void EventoInfoController::loadEventoInfo(const EventoID eventId)
 
     FeedbackHelper::getInstance()->updateFeedback(
         Convertor<DTO_Feedback, Feedback>()(
-            getRepo()->get_feedback_info(eventId, err)
+            getRepo()->getFeedbackInfo(eventId, err)
     ));
     if ((int)err.code())
         return emit loadEventoErrorEvent(err.message());

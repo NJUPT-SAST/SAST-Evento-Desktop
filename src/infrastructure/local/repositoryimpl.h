@@ -239,46 +239,46 @@ declare_object(user_data,
 struct repositoryImpl : public Repository {
 public:
     // user-fetch
-    QStringList get_admin_permission(EventoException& err) override;  // Test completed
-    QStringList get_manager_permission(const EventoID &eventoId, EventoException& err) override;  // Test completed
-    QStringList get_permitted_event(EventoException& err) override;  // Test completed
-    DTO_Permission get_event_permission(EventoID event, EventoException& err) override;  // Test completed
-    DTO_User get_user_info(const UserID& id, EventoException& err) override;  // Test completed
-    ParticipationStatus get_user_participate(const EventoID &eventoId, EventoException& err) override; // Test completed
-    DTO_Feedback get_feedback_info(const EventoID &eventoId, EventoException& err) override;  // Test completed
+    QStringList getAdminPermission(EventoException& err) override;  // Test completed
+    QStringList getManagerPermission(const EventoID &eventoId, EventoException& err) override;  // Test completed
+    QStringList getPermittedEvent(EventoException& err) override;  // Test completed
+    DTO_Permission getEventPermission(EventoID event, EventoException& err) override;  // Test completed
+    DTO_User getUserInfo(const UserID& id, EventoException& err) override;  // Test completed
+    ParticipationStatus getUserParticipate(const EventoID &eventoId, EventoException& err) override; // Test completed
+    DTO_Feedback getFeedbackInfo(const EventoID &eventoId, EventoException& err) override;  // Test completed
 
     // event-fetch
-    std::vector<DTO_Evento> get_undertaking_list(EventoException& err) override;  // Test completed
-    std::vector<DTO_Evento> get_latest_list(EventoException& err) override;  // Test completed
-    std::vector<DTO_Evento> get_registered_list(EventoException &err) override;   // Test completed
-    std::vector<DTO_Evento> get_subscribed_list(EventoException& err) override;  // Test completed
-    std::vector<DTO_Evento> get_history_list(EventoException& err) override;  // Test completed
-    std::vector<DTO_Evento> get_event_list(const int& page, const int& size, EventoException& err) override;  // Test completed
-    std::vector<DTO_Evento> get_department_event_list(const int& departmentId, EventoException &err) override;
-    DTO_Evento get_event(EventoID event, EventoException& err) override;  // Test completed
-    std::vector<DTO_Feedback> get_feedback_list(EventoID eventoId, EventoException& err) override;  // Test completed
-    std::vector<DTO_Slide> get_slide_list(EventoException& err) override;  // Test completed
-    std::vector<DTO_Slide> get_event_slide_list(EventoID id, EventoException& err) override;  // Test completed
-    std::vector<DTO_Slide> get_home_slide_list(const int& size, EventoException& err) override;  // Test completed
-    QString get_type_list(EventoException& err) override;  // Test completed
-    QString get_location_list(EventoException& err) override;  // Test completed
-    QString get_department_list(EventoException& err) override;  // Test completed
-    QString get_qrcode(const int& eventId, EventoException& err) override;  // Test completed
+    std::vector<DTO_Evento> getUndertakingList(EventoException& err) override;  // Test completed
+    std::vector<DTO_Evento> getLatestList(EventoException& err) override;  // Test completed
+    std::vector<DTO_Evento> getRegisteredList(EventoException &err) override;   // Test completed
+    std::vector<DTO_Evento> getSubscribedList(EventoException& err) override;  // Test completed
+    std::vector<DTO_Evento> getHistoryList(EventoException& err) override;  // Test completed
+    std::vector<DTO_Evento> getEventList(const int& page, const int& size, EventoException& err) override;  // Test completed
+    std::vector<DTO_Evento> getDepartmentEventList(const int& departmentId, EventoException &err) override;
+    DTO_Evento getEvent(EventoID event, EventoException& err) override;  // Test completed
+    std::vector<DTO_Feedback> getFeedbackList(EventoID eventoId, EventoException& err) override;  // Test completed
+    std::vector<DTO_Slide> getSlideList(EventoException& err) override;  // Test completed
+    std::vector<DTO_Slide> getEventSlideList(EventoID id, EventoException& err) override;  // Test completed
+    std::vector<DTO_Slide> getHomeSlideList(const int& size, EventoException& err) override;  // Test completed
+    QString getTypeList(EventoException& err) override;  // Test completed
+    QString getLocationList(EventoException& err) override;  // Test completed
+    QString getDepartmentList(EventoException& err) override;  // Test completed
+    QString getQRCode(const int& eventId, EventoException& err) override;  // Test completed
 
     // event-upload
-    bool event_checkin(EventoID event, const QString& code, EventoException& err) override;  // Test completed
-    bool event_feedback(const DTO_Feedback& code, EventoException& err) override;  // Test completed
-    bool event_subscribe(EventoID event, EventoException& err) override;  // Test completed
-    bool is_feedback(EventoID event, EventoException& err) override;  // Test completed
+    bool checkInEvent(EventoID event, const QString& code, EventoException& err) override;  // Test completed
+    bool feedbackEvent(const DTO_Feedback& code, EventoException& err) override;  // Test completed
+    bool subscribeEvent(EventoID event, EventoException& err) override;  // Test completed
+    bool isFeedbacked(EventoID event, EventoException& err) override;  // Test completed
 
     // admin-fetch
-    std::vector<DTO_Evento> get_qualified_event(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) override;  // Test completed
-    QStringList get_action_state_list(EventoException& err) override;  // Test completed
-    QStringList get_action_list(EventoException& err) override;
-    std::vector<DTO_UserBrief> get_event_manager_list(const EventoID &eventoId, EventoException& err) override;  // Test completed
-    std::vector<DTO_UserBrief> get_admin_user_list(EventoException& err) override;  // Test completed
-    QString get_admin_permission_treeData(EventoException& err) override;  // Test completed
-    QString get_manager_permission_treeData(EventoException& err) override;  // Test completed
+    std::vector<DTO_Evento> getQualifiedEvent(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) override;  // Test completed
+    QStringList getActionStateList(EventoException& err) override;  // Test completed
+    QStringList getActionList(EventoException& err) override;
+    std::vector<DTO_UserBrief> getEventManagerList(const EventoID &eventoId, EventoException& err) override;  // Test completed
+    std::vector<DTO_UserBrief> getAdminUserList(EventoException& err) override;  // Test completed
+    QString getAdminPermissionTreeData(EventoException& err) override;  // Test completed
+    QString getManagerPermissionTreeData(EventoException& err) override;  // Test completed
 
 public:
     static repositoryImpl * getInstance(){
@@ -288,7 +288,7 @@ public:
 
     void test() {
         EventoException error(EventoExceptionCode::UnexpectedError, "null");
-        qDebug().noquote() << get_department_event_list(1, error).size();
+        qDebug().noquote() << getDepartmentEventList(1, error).size();
         qDebug()<<error.message();
     };
 

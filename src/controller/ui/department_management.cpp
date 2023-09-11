@@ -4,7 +4,7 @@
 QString DepartmentManagementController::loadAllDepartment()
 {
     EventoException err;
-    QString res = getRepo()->get_department_list(err);
+    QString res = getRepo()->getDepartmentList(err);
     if((int)err.code()) {
         emit loadAllDepartmentError(err.message());
         return QString();

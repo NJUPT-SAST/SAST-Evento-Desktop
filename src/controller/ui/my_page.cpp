@@ -8,7 +8,7 @@ void MyPageController::loadMyPageInfo()
     EventoException err;
     EventoBriefModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Evento>, std::vector<EventoBrief> >()(
-            getRepo()->get_history_list(err)
+            getRepo()->getHistoryList(err)
     ));
 
     if ((int)err.code())
