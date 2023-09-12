@@ -77,16 +77,16 @@ public:
     QFuture<EventoResult<std::vector<DTO_Slide>>> getSlideList();
     QFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id);
     QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(int size);
-    QFuture<EventoResult<QString>> getTypeList();
+    QFuture<EventoResult<std::vector<EventType>>> getTypeList();
     QFuture<EventoResult<QString>> getLocationList();
     QFuture<EventoResult<QString>> getDepartmentList();
     QFuture<EventoResult<QString>> getQRCode(int eventId);
 
     // eventUpload
-    QFuture<EventoResult<bool>> eventCheckin(EventoID event, const QString &code);
-    QFuture<EventoResult<bool>> eventFeedback(const DTO_Feedback &feedback);
-    QFuture<EventoResult<bool>> eventSubscribe(EventoID event, bool targetState);
-    QFuture<EventoResult<bool>> isFeedback(EventoID event);
+    QFuture<EventoResult<bool>> checkInEvent(EventoID event, const QString &code);
+    QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback &feedback);
+    QFuture<EventoResult<bool>> subscribEvent(EventoID event, bool targetState);
+    QFuture<EventoResult<bool>> isFeedbacked(EventoID event);
 
     // adminFetch
     QFuture<EventoResult<std::vector<DTO_Evento>>> getQualifiedEvent(int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate());

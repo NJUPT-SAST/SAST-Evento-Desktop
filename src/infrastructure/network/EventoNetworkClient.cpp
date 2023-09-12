@@ -578,10 +578,22 @@ QFuture<EventoResult<std::vector<DTO_Slide>>> EventoNetworkClient::getHomeSlideL
     });
 }
 
-QFuture<EventoResult<QString>> EventoNetworkClient::getTypeList()
+QFuture<EventoResult<std::vector<EventType>>> EventoNetworkClient::getTypeList()
 {
-    // TODO: implement
-    return {};
+    auto url = endpoint(QStringLiteral("/admin/types"));
+    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<std::vector<EventType>> {
+        if (auto rootValue = std::get_if<QJsonValue>(&result)) {
+            std::vector<EventType> result;
+            if (rootValue->isArray()) {
+                declare_top_deserialiser(result, deserialiser_holder);
+                JsonDeserialise::JsonDeserialiser deserialiser(deserialiser_holder);
+                deserialiser.deserialise_array(rootValue->toArray());
+            }
+            return result;
+        } else {
+            return std::get<EventoException>(result);
+        }
+    });
 }
 
 QFuture<EventoResult<QString>> EventoNetworkClient::getLocationList()
@@ -611,7 +623,7 @@ QFuture<EventoResult<QString>> EventoNetworkClient::getQRCode(int eventId)
 }
 
 // eventUpload
-QFuture<EventoResult<bool>> EventoNetworkClient::eventCheckin(EventoID event, const QString &code)
+QFuture<EventoResult<bool>> EventoNetworkClient::checkInEvent(EventoID event, const QString &code)
 {
     auto url = endpoint(QStringLiteral("/event/authcode"), [&](QUrlQuery params) {
         params.addQueryItem("eventId", QString::number(event));
@@ -629,7 +641,7 @@ QFuture<EventoResult<bool>> EventoNetworkClient::eventCheckin(EventoID event, co
     });
 }
 
-QFuture<EventoResult<bool>> EventoNetworkClient::eventFeedback(const DTO_Feedback &feedback)
+QFuture<EventoResult<bool>> EventoNetworkClient::feedbackEvent(const DTO_Feedback &feedback)
 {
     QUrlQuery params;
     params.addQueryItem("content", feedback.content);
@@ -648,7 +660,7 @@ QFuture<EventoResult<bool>> EventoNetworkClient::eventFeedback(const DTO_Feedbac
     });
 }
 
-QFuture<EventoResult<bool>> EventoNetworkClient::eventSubscribe(EventoID event, bool targetState)
+QFuture<EventoResult<bool>> EventoNetworkClient::subscribEvent(EventoID event, bool targetState)
 {
     auto url = endpoint(QStringLiteral("/user/subscribe"), [&](QUrlQuery params) {
         params.addQueryItem("eventId", QString::number(event));
@@ -666,7 +678,7 @@ QFuture<EventoResult<bool>> EventoNetworkClient::eventSubscribe(EventoID event, 
     });
 }
 
-QFuture<EventoResult<bool>> EventoNetworkClient::isFeedback(EventoID event)
+QFuture<EventoResult<bool>> EventoNetworkClient::isFeedbacked(EventoID event)
 {
     auto url = endpoint(QStringLiteral("/feedback/user/info"), [&](QUrlQuery params) {
         params.addQueryItem("eventId", QString::number(event));
@@ -683,8 +695,26 @@ QFuture<EventoResult<bool>> EventoNetworkClient::isFeedback(EventoID event)
 // adminFetch
 QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getQualifiedEvent(int type, const std::vector<int> &dep, const QDate &day)
 {
-    // TODO: implement
-    return {};
+    QUrlQuery params;
+    if (type != -1)
+        params.addQueryItem("typeId", QString::number(type));
+    if (!dep.empty()) {
+        QString departmentIds = QString::number(dep[0]);
+        for (int i = 1; i < dep.size(); ++i) {
+			departmentIds += QStringLiteral(",") + QString::number(dep[i]);
+		}
+        params.addQueryItem("departmentId", departmentIds);
+    }
+    if (day.isValid())
+        params.addQueryItem("time", day.toString("yyyy-MM-dd"));
+    auto url = endpoint(QStringLiteral("/event/list"));
+    return this->post(url, params).then([](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_Evento>> {
+        if (auto rootValue = std::get_if<QJsonValue>(&result)) {
+            return asEventoDTOArray(*rootValue);
+        } else {
+            return std::get<EventoException>(result);
+        }
+    });
 }
 
 QFuture<EventoResult<QStringList>> EventoNetworkClient::getActionStateList()
@@ -699,16 +729,48 @@ QFuture<EventoResult<QStringList>> EventoNetworkClient::getActionList()
     return {};
 }
 
+register_object_member(DTO_UserBrief, "userId", userId);
+register_object_member(DTO_UserBrief, "email", email);
+declare_object(DTO_UserBrief,
+               object_member(DTO_UserBrief, userId),
+               object_member(DTO_UserBrief, email));
+
 QFuture<EventoResult<std::vector<DTO_UserBrief>>> EventoNetworkClient::getEventManagerList(const EventoID &eventoId)
 {
-    // TODO: implement
-    return {};
+    auto url = endpoint(QStringLiteral("/permission/event/managers"), [&](QUrlQuery params) {
+        params.addQueryItem("eventId", QString::number(eventoId));
+    });
+    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_UserBrief>> {
+        if (auto rootValue = std::get_if<QJsonValue>(&result)) {
+            std::vector<DTO_UserBrief> result;
+            if (rootValue->isArray()) {
+                declare_top_deserialiser(result, deserialiser_holder);
+                JsonDeserialise::JsonDeserialiser deserialiser(deserialiser_holder);
+                deserialiser.deserialise_array(rootValue->toArray());
+            }
+            return result;
+        } else {
+            return std::get<EventoException>(result);
+        }
+    });
 }
 
 QFuture<EventoResult<std::vector<DTO_UserBrief>>> EventoNetworkClient::getAdminUserList()
 {
-    // TODO: implement
-    return {};
+    auto url = endpoint(QStringLiteral("/permission/admins"));
+    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_UserBrief>> {
+        if (auto rootValue = std::get_if<QJsonValue>(&result)) {
+            std::vector<DTO_UserBrief> result;
+            if (rootValue->isArray()) {
+                declare_top_deserialiser(result, deserialiser_holder);
+                JsonDeserialise::JsonDeserialiser deserialiser(deserialiser_holder);
+                deserialiser.deserialise_array(rootValue->toArray());
+            }
+            return result;
+        } else {
+            return std::get<EventoException>(result);
+        }
+    });
 }
 
 QFuture<EventoResult<QString>> EventoNetworkClient::getAdminPermissionTreeData()
