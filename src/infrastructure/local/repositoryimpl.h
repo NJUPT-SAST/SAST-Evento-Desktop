@@ -775,8 +775,7 @@ private:
             if(!user_data_list.at(i).id.compare(userId)){
                 return DTO_UserBrief{
                     userId,
-                    user_data_list.at(i).student_id,
-                    user_data_list.at(i).open_id
+                    user_data_list.at(i).student_id + "@njupt.edu.cn",
                 };
             }
         }
