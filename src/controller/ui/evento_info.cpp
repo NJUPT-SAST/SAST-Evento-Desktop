@@ -12,16 +12,21 @@ void EventoInfoController::loadEventoInfo(const EventoID eventId)
         Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
             getRepo()->getEventSlideList(eventId, err)
     ));
-    if ((int)err.code())
+    if (err)
         return emit loadEventoErrorEvent(err.message());
 
-    auto event = getRepo()->getEvent(eventId, err);
-    if ((int)err.code())
+    auto future = getRepo()->getEventById(eventId);
+    future.waitForFinished();
+    auto result = future.takeResult();
+    if (!result)
+        err = result;
+    if (err)
         return emit loadEventoErrorEvent(err.message());
     auto participate = getRepo()->getUserParticipate(eventId, err);
-    if ((int)err.code())
+    if (err)
         return emit loadEventoErrorEvent(err.message());
 
+    auto event = result.take();
     EventoHelper::getInstance()->updateEvento(
         Convertor<DTO_Evento, Evento>()(event),
         participate
@@ -31,7 +36,7 @@ void EventoInfoController::loadEventoInfo(const EventoID eventId)
         Convertor<DTO_Feedback, Feedback>()(
             getRepo()->getFeedbackInfo(eventId, err)
     ));
-    if ((int)err.code())
+    if (err)
         return emit loadEventoErrorEvent(err.message());
 
     emit loadEventoSuccessEvent();

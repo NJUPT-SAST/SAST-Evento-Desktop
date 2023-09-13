@@ -12,13 +12,15 @@ void CalendarController::loadAllEventoInfo(const QString &date)
 
 void CalendarController::loadEventoInfo(const EventoID eventId)
 {
-    EventoException err;
-    auto evento = getRepo()->getEvent(eventId, err);
+    auto future = getRepo()->getEventById(eventId);
+    future.waitForFinished();
+    auto event = future.takeResult();
+    if (!event)
+        return emit loadEventoErrorEvent(event.message());
+    auto evento = event.take();
     EventoHelper::getInstance()->updateEvento(Convertor<DTO_Evento, Evento>()(evento),
                                               ParticipationStatus{});
-
-    if (err)
-        return emit loadEventoErrorEvent(err.message());
+    EventoException err;
     SlideModel::getInstance()->resetModel(Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
         getRepo()->getEventSlideList(eventId, err)));
     if (err)

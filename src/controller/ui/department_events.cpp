@@ -23,15 +23,15 @@ QString DepartmentEventsController::loadSubscribedDepartment()
 
 void DepartmentEventsController::loadDepartmentEvents(int departmentId)
 {
-    EventoException err;
-    EventoBriefModel::getInstance()->resetModel(
-        Convertor<std::vector<DTO_Evento>, std::vector<EventoBrief>>()(
-            getRepo()->getDepartmentEventList(departmentId, err)));
-
-    if ((int)err.code()) {
-        emit loadDepartmentEventErrorEvent(err.message());
+    auto future = getRepo()->getDepartmentEventList(departmentId);
+    future.waitForFinished();
+    auto result = future.takeResult();
+    if (!result) {
+        emit loadDepartmentEventErrorEvent(result.message());
         return;
     }
+    EventoBriefModel::getInstance()->resetModel(
+        Convertor<std::vector<DTO_Evento>, std::vector<EventoBrief>>()(result.take()));
 
     emit loadDepartmentEventSuccessEvent();
 }

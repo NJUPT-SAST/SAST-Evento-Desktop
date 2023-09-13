@@ -9,7 +9,10 @@
 #include <dto/user_brief.h>
 
 #include "evento_exception.h"
+#include "result.h"
 #include "types.h"
+
+#include <QFuture>
 
 struct Repository {
     // user-fetch
@@ -22,14 +25,14 @@ struct Repository {
     virtual DTO_Feedback getFeedbackInfo(const EventoID &eventoId, EventoException& err) = 0;
 
     // event-fetch
-    virtual std::vector<DTO_Evento> getUndertakingList(EventoException& err) = 0;
-    virtual std::vector<DTO_Evento> getLatestList(EventoException& err) = 0;
-    virtual std::vector<DTO_Evento> getRegisteredList(EventoException &err) = 0;
-    virtual std::vector<DTO_Evento> getSubscribedList(EventoException& err) = 0;
-    virtual std::vector<DTO_Evento> getHistoryList(EventoException& err) = 0;
-    virtual std::vector<DTO_Evento> getEventList(const int& page, const int& size, EventoException& err) = 0;
-    virtual std::vector<DTO_Evento> getDepartmentEventList(const int& departmentId, EventoException &err) = 0;
-    virtual DTO_Evento getEvent(EventoID event, EventoException& err) = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList() = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getLatestList() = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getRegisteredList() = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getSubscribedList() = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getHistoryList() = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListInPage(int page, int size) = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId) = 0;
+    virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) = 0;
     virtual std::vector<DTO_Feedback> getFeedbackList(EventoID eventoId, EventoException& err) = 0;
     virtual std::vector<DTO_Slide> getSlideList(EventoException& err) = 0;
     virtual std::vector<DTO_Slide> getEventSlideList(EventoID id, EventoException& err) = 0;
@@ -40,10 +43,10 @@ struct Repository {
     virtual QString getQRCode(const int& eventId, EventoException& err) = 0;
 
     // event-upload
-    virtual bool checkInEvent(EventoID event, const QString& code, EventoException& err) = 0;
+    virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) = 0;
+    virtual QFuture<EventoResult<bool>> subscribe(EventoID event) = 0;
+    virtual QFuture<EventoResult<bool>> hasFeedbacked(EventoID event) = 0;
     virtual bool feedbackEvent(const DTO_Feedback& code, EventoException& err) = 0;
-    virtual bool subscribeEvent(EventoID event, EventoException& err) = 0;
-    virtual bool isFeedbacked(EventoID event, EventoException& err) = 0;
 
     // admin-fetch
     virtual std::vector<DTO_Evento> getQualifiedEvent(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) = 0;

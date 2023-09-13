@@ -22,7 +22,7 @@ else()
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/release)
 endif()
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Svg Network HttpServer)
+find_package(Qt6 REQUIRED COMPONENTS Quick Svg Network HttpServer Concurrent)
 
 if(QT_VERSION VERSION_GREATER_EQUAL "6.3")
     qt_standard_project_setup()
@@ -106,6 +106,7 @@ if (FLUENTUI_BUILD_STATIC_LIB)
         Qt6::Svg
         Qt6::Network
         Qt6::HttpServer
+        Qt6::Concurrent
         fluentui
         fluentuiplugin
         FramelessHelper::Core
@@ -117,6 +118,7 @@ else()
         Qt6::Svg
         Qt6::Network
         Qt6::HttpServer
+        Qt6::Concurrent
         fluentuiplugin
         FramelessHelper::Core
         FramelessHelper::Quick

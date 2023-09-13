@@ -146,92 +146,110 @@ DTO_Feedback repositoryImpl::getFeedbackInfo(const EventoID &eventoId, EventoExc
     return DTO_Feedback();
 }
 
-std::vector<DTO_Evento> repositoryImpl::getUndertakingList(EventoException &err)
+QFuture<EventoResult<std::vector<DTO_Evento>>> repositoryImpl::getUndertakingList()
 {
     return readEventoByState("3");
 }
 
-std::vector<DTO_Evento> repositoryImpl::getLatestList(EventoException &err)
+QFuture<EventoResult<std::vector<DTO_Evento>>> repositoryImpl::getLatestList()
 {
     return readEventoByState("1");
 }
 
-std::vector<DTO_Evento> repositoryImpl::getRegisteredList(EventoException &err)
+QFuture<EventoResult<std::vector<DTO_Evento>>> repositoryImpl::getRegisteredList()
 {
-    std::vector<DTO_Evento> res;
-    for (int i = 0; i < participate_data_list.size(); i++) {
-        if (!participate_data_list.at(i).user_id.compare("B22041234") && !participate_data_list.at(i).is_registration.compare("true")) {
-            res.push_back(readEvento(participate_data_list.at(i).event_id.toInt()));
+    return QtConcurrent::run([this]{
+        std::vector<DTO_Evento> res;
+
+        for (int i = 0; i < participate_data_list.size(); i++) {
+            if (!participate_data_list.at(i).user_id.compare("B22041234") && !participate_data_list.at(i).is_registration.compare("true")) {
+                res.push_back(readEvento(participate_data_list.at(i).event_id.toInt()));
+            }
         }
-    }
-    return res;
+
+        return EventoResult(std::move(res));
+    });
 }
 
-std::vector<DTO_Evento> repositoryImpl::getSubscribedList(EventoException &err)
+QFuture<EventoResult<std::vector<DTO_Evento>>> repositoryImpl::getSubscribedList()
 {
-    std::vector<DTO_Evento> res;
-    for(int i = 0; i<participate_data_list.size(); i++){
-        if(!participate_data_list.at(i).user_id.compare("B22041234") &&
-            !participate_data_list.at(i).is_subscribe.compare("true")){
-            res.push_back(readEvento(participate_data_list.at(i).event_id.toInt()));
+    return QtConcurrent::run([this]{
+        std::vector<DTO_Evento> res;
+
+        for(int i = 0; i<participate_data_list.size(); i++) {
+            if(!participate_data_list.at(i).user_id.compare("B22041234")
+                && !participate_data_list.at(i).is_subscribe.compare("true")) {
+                res.push_back(readEvento(participate_data_list.at(i).event_id.toInt()));
+            }
         }
-    }
-    return res;
+
+        return EventoResult(std::move(res));
+    });
 }
 
-std::vector<DTO_Evento> repositoryImpl::getHistoryList(EventoException &err)
+QFuture<EventoResult<std::vector<DTO_Evento>>> repositoryImpl::getHistoryList()
 {
-    std::vector<DTO_Evento> res;
+    return QtConcurrent::run([this]{
+        std::vector<DTO_Evento> res;
 
-    for(int i = 0; i<participate_data_list.size(); i++){
-        if(!participate_data_list.at(i).is_participate.compare("true")){
-            res.push_back(readEvento(participate_data_list.at(i).event_id.toInt()));
+        for(int i = 0; i<participate_data_list.size(); i++) {
+            if(!participate_data_list.at(i).is_participate.compare("true")) {
+                res.push_back(readEvento(participate_data_list.at(i).event_id.toInt()));
+            }
         }
-    }
-    return res;
+
+        return EventoResult(std::move(res));
+    });
 }
 
-std::vector<DTO_Evento> repositoryImpl::getEventList(const int &page, const int &size, EventoException &err)
+QFuture<EventoResult<std::vector<DTO_Evento>>> repositoryImpl::getEventListInPage(int page, int size)
 {
-    std::vector<DTO_Evento> res;
-    int beginId = (page-1) * size +1;
-    int endId = beginId + (size-1);
+    return QtConcurrent::run([=]{
+        std::vector<DTO_Evento> res;
+        int beginId = (page - 1) * size +1;
+        int endId = beginId + (size - 1);
 
-    if(beginId>event_data_list.size()){
-        err = EventoException(EventoExceptionCode::UnexpectedError, "count too big");
-        return res;
-    }
-    if(endId > event_data_list.size()){
-        endId = event_data_list.size();
-    }
-    for(int i = beginId; i <= endId; i++){
-        res.push_back(readEvento(event_data_list.at(i-1).id.toInt()));
-    }
-    return res;
-}
-
-std::vector<DTO_Evento> repositoryImpl::getDepartmentEventList(const int &departmentId, EventoException &err)
-{
-    std::vector<DTO_Evento> res;
-
-    for(int i = 0; i<event_data_list.size(); i++){
-        if(eventDepartmentMatch(event_data_list.at(i).id.toInt(), departmentId)) {
-            res.push_back(readEvento(event_data_list.at(i).id.toInt()));
+        if(beginId > event_data_list.size()){
+            return EventoResult<std::vector<DTO_Evento>>(EventoExceptionCode::UnexpectedError, "count too big");
         }
-    }
-    return res;
+        if(endId > event_data_list.size()){
+            endId = event_data_list.size();
+        }
+        for(int i = beginId; i <= endId; i++){
+            res.push_back(readEvento(event_data_list.at(i-1).id.toInt()));
+        }
+
+        return EventoResult(std::move(res));
+    });
 }
 
-DTO_Evento repositoryImpl::getEvent(EventoID event, EventoException &err)
+QFuture<EventoResult<std::vector<DTO_Evento>>> repositoryImpl::getDepartmentEventList(int departmentId)
 {
-    return readEvento(event);
+    return QtConcurrent::run([=]{
+        std::vector<DTO_Evento> res;
+
+        for(int i = 0; i < event_data_list.size(); i++) {
+            if (eventDepartmentMatch(event_data_list.at(i).id.toInt(), departmentId)) {
+                res.push_back(readEvento(event_data_list.at(i).id.toInt()));
+            }
+        }
+
+        return EventoResult(std::move(res));
+    });
+}
+
+QFuture<EventoResult<DTO_Evento>> repositoryImpl::getEventById(EventoID event)
+{
+    return QtConcurrent::run([=]{
+        return EventoResult(std::move(readEvento(event)));
+    });
 }
 
 std::vector<DTO_Feedback> repositoryImpl::getFeedbackList(EventoID eventoId, EventoException &err)
 {
     std::vector<DTO_Feedback> res;
 
-    for(int i = 0; i<feedback_data_list.size(); i++){
+    for(int i = 0; i<feedback_data_list.size(); i++) {
         feedback_data unit = feedback_data_list.at(i);
         QString participateId = unit.participate_id;
         std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("id", participateId));
@@ -252,7 +270,7 @@ std::vector<DTO_Slide> repositoryImpl::getSlideList(EventoException &err)
 {
     std::vector<DTO_Slide> res;
 
-    for(int i = 0; i<slide_data_list.size(); i++){
+    for(int i = 0; i<slide_data_list.size(); i++) {
         slide_data unit = slide_data_list.at(i);
         res.push_back(DTO_Slide{
             unit.id.toInt(),
@@ -268,7 +286,7 @@ std::vector<DTO_Slide> repositoryImpl::getEventSlideList(EventoID id, EventoExce
 {
     std::vector<DTO_Slide> res;
 
-    for(int i = 0; i<slide_data_list.size(); i++){
+    for(int i = 0; i<slide_data_list.size(); i++) {
         slide_data unit = slide_data_list.at(i);
         if(!unit.event_id.compare(QString::number(id))){
             res.push_back(DTO_Slide{
@@ -285,7 +303,7 @@ std::vector<DTO_Slide> repositoryImpl::getEventSlideList(EventoID id, EventoExce
 QString repositoryImpl::getTypeList(EventoException &err)
 {
     QJsonArray res;
-    for(int i = 0; i<type_data_list.size(); i++){
+    for(int i = 0; i<type_data_list.size(); i++) {
         type_data unit = type_data_list.at(i);
         QJsonObject item;
         item.insert("id", unit.id.toInt());
@@ -299,7 +317,7 @@ QString repositoryImpl::getLocationList(EventoException &err)
 {
     QJsonArray res;
 
-    for(int i = 0; i<location_data_list.size(); i++){
+    for(int i = 0; i<location_data_list.size(); i++) {
         if(!location_data_list.at(i).parent_id.compare("0")){
             res.push_back(formatToTree(location_data_list,
                                        location_data_list.at(i).id,
@@ -328,24 +346,26 @@ QString repositoryImpl::getQRCode(const int &eventId, EventoException &err)
     return "qrcodeLink";
 }
 
-bool repositoryImpl::checkInEvent(EventoID event, const QString &code, EventoException &err)
+QFuture<EventoResult<bool>> repositoryImpl::checkIn(EventoID event, const QString &code)
 {
-    std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("event_id", QString::number(event)));
-    for(int i = 0; i<participationList.size(); i++){
-        if(!participationList.at(i).user_id.compare("B22041234")){
-            if(participationList.at(i).participationStatus.isParticipated){
-                err = EventoException(EventoExceptionCode::UnexpectedError, "has checkin");
-                return false;
+    return QtConcurrent::run([=]{
+        std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("event_id", QString::number(event)));
+
+        for(int i = 0; i<participationList.size(); i++) {
+            if(participationList.at(i).user_id.compare("B22041234"))
+                break;
+            if (participationList.at(i).participationStatus.isParticipated) {
+                return EventoResult<bool>(EventoExceptionCode::UnexpectedError, "has checkin");
             }
-            else{
-                if(writeParticipation("is_participate", "true", event)){
-                    return true;
+            else {
+                if (writeParticipation("is_participate", "true", event)) {
+                    return EventoResult();
                 }
             }
+
         }
-    }
-    err = EventoException(EventoExceptionCode::UnexpectedError, "not participation");
-    return false;
+        return EventoResult<bool>(EventoExceptionCode::UnexpectedError, "not participation");
+    });
 }
 
 bool repositoryImpl::feedbackEvent(const DTO_Feedback &code, EventoException &err)
@@ -353,7 +373,7 @@ bool repositoryImpl::feedbackEvent(const DTO_Feedback &code, EventoException &er
     QString participationId;
     for(int i = 0; i < participate_data_list.size(); i++){
         if(!participate_data_list.at(i).event_id.compare(QString::number(code.eventId)) &&
-            !participate_data_list.at(i).user_id.compare("B22041234")){
+            !participate_data_list.at(i).user_id.compare("B22041234")) {
             participationId = participate_data_list.at(i).id;
             break;
         }
@@ -375,46 +395,46 @@ bool repositoryImpl::feedbackEvent(const DTO_Feedback &code, EventoException &er
     return true;
 }
 
-bool repositoryImpl::subscribeEvent(EventoID event, EventoException &err)
+QFuture<EventoResult<bool>> repositoryImpl::subscribe(EventoID event)
 {
-    std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("event_id", QString::number(event)));
-    for(int i = 0; i<participationList.size(); i++){
-        if(!participationList.at(i).user_id.compare("B22041234")){
-            if(participationList.at(i).participationStatus.isSubscribed){
-                err = EventoException(EventoExceptionCode::UnexpectedError, "has Subscribed");
-                return false;
+    return QtConcurrent::run([=]{
+        std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("event_id", QString::number(event)));
+
+        for(int i = 0; i<participationList.size(); i++) {
+            if (participationList.at(i).user_id.compare("B22041234"))
+                break;
+            if (participationList.at(i).participationStatus.isSubscribed) {
+                return EventoResult<bool>(EventoExceptionCode::UnexpectedError, "has Subscribed");
             }
-            else{
+            else {
                 if(writeParticipation("is_subscribe", "true", event)){
-                    return true;
+                    return EventoResult();
                 }
             }
+
         }
-    }
-    err = EventoException(EventoExceptionCode::UnexpectedError, "no user or file error");
-    return false;
+
+        return EventoResult<bool>(EventoExceptionCode::UnexpectedError, "no user or file error");
+    });
 }
 
-bool repositoryImpl::isFeedbacked(EventoID event, EventoException &err)
+QFuture<EventoResult<bool>> repositoryImpl::hasFeedbacked(EventoID event)
 {
-    EventoException error(EventoExceptionCode::Ok, "null");
-    DTO_Feedback feedbackList = getFeedbackInfo(event, error);
-    if(error.code() == EventoExceptionCode::UnexpectedError){
-        return false;
-    }
-    else{
-        return true;
-    }
+    return QtConcurrent::run([=]{
+        EventoException error(EventoExceptionCode::Ok, "null");
+        DTO_Feedback feedbackList = getFeedbackInfo(event, error);
+        return EventoResult(std::move(error));
+    });
 }
 
 std::vector<DTO_Evento> repositoryImpl::getQualifiedEvent(EventoException& err, int type, const std::vector<int> &dep, const QDate &day)
 {
     std::vector<DTO_Evento> res;
     std::vector<DTO_Evento> eventoList;
-    if(type == -1){
+    if(type == -1) {
         eventoList = readAllEvento();
     }
-    else{
+    else {
         eventoList = readEventoByType(QString::number(type));
     }
 
