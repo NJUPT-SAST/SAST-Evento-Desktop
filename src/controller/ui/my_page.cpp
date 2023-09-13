@@ -1,18 +1,17 @@
 #include "my_page.h"
-#include "evento_exception.h"
 #include "evento_brief_model.h"
 #include "convertor.h"
 
 void MyPageController::loadMyPageInfo()
 {
-    EventoException err;
+    auto future = getRepo()->getHistoryList();
+    future.waitForFinished();
+    auto result = future.takeResult();
+    if (!result)
+        return emit loadMyPageErrorEvent(result.message());
     EventoBriefModel::getInstance()->resetModel(
-        Convertor<std::vector<DTO_Evento>, std::vector<EventoBrief> >()(
-            getRepo()->getHistoryList(err)
-    ));
+        Convertor<std::vector<DTO_Evento>, std::vector<EventoBrief>>()(result.take()));
 
-    if ((int)err.code())
-        return emit loadMyPageErrorEvent(err.message());
     emit loadMyPageSuccessEvent();
 }
 

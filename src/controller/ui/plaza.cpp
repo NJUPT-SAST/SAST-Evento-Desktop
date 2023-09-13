@@ -27,23 +27,26 @@ void PlazaController::loadPlazaInfo() {
     SlideModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(slides));
 
-    if ((int)err.code()) {
+    if (err) {
         emit loadPlazaErrorEvent(err.message());
         return;
     }
 
+    auto future = getRepo()->getUndertakingList();
+    future.waitForFinished();
+    auto result = future.takeResult();
+    if (!result) {
+        emit loadPlazaErrorEvent(result.message());
+        return;
+    }
     UndertakingEventoModel::getInstance()->resetModel(
-        Convertor<std::vector<DTO_Evento>, std::vector<UndertakingEvento>>()(
-            getRepo()->getUndertakingList(err)));
+        Convertor<std::vector<DTO_Evento>, std::vector<UndertakingEvento>>()(result.take()));
 
-    if ((int)err.code()) {
-        emit loadPlazaErrorEvent(err.message());
-        return;
-    }
-
+    future = getRepo()->getLatestList();
+    future.waitForFinished();
+    result = future.takeResult();
     LatestEventoModel::getInstance()->resetModel(
-        Convertor<std::vector<DTO_Evento>, std::vector<LatestEvento>>()(
-            getRepo()->getLatestList(err)));
+        Convertor<std::vector<DTO_Evento>, std::vector<LatestEvento>>()(result.take()));
 
     if ((int)err.code()) {
         emit loadPlazaErrorEvent(err.message());

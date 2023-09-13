@@ -3,10 +3,7 @@
 
 #include <repository.h>
 
-#include <QFile>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QJsonParseError>
+#include <QtConcurrent>
 #include <QMutex>
 
 #include "json_deserialise.hpp"
@@ -239,58 +236,59 @@ declare_object(user_data,
 struct repositoryImpl : public Repository {
 public:
     // user-fetch
-    QStringList getAdminPermission(EventoException& err) override;  // Test completed
-    QStringList getManagerPermission(const EventoID &eventoId, EventoException& err) override;  // Test completed
-    QStringList getPermittedEvent(EventoException& err) override;  // Test completed
-    DTO_Permission getEventPermission(EventoID event, EventoException& err) override;  // Test completed
-    DTO_User getUserInfo(const UserID& id, EventoException& err) override;  // Test completed
-    ParticipationStatus getUserParticipate(const EventoID &eventoId, EventoException& err) override; // Test completed
-    DTO_Feedback getFeedbackInfo(const EventoID &eventoId, EventoException& err) override;  // Test completed
+    virtual QStringList getAdminPermission(EventoException& err) override;
+    virtual QStringList getManagerPermission(const EventoID &eventoId, EventoException& err) override;
+    virtual QStringList getPermittedEvent(EventoException& err) override;
+    virtual DTO_Permission getEventPermission(EventoID event, EventoException& err) override;
+    virtual DTO_User getUserInfo(const UserID& id, EventoException& err) override;
+    virtual ParticipationStatus getUserParticipate(const EventoID &eventoId, EventoException& err) override;
+    virtual DTO_Feedback getFeedbackInfo(const EventoID &eventoId, EventoException& err) override;
 
     // event-fetch
-    std::vector<DTO_Evento> getUndertakingList(EventoException& err) override;  // Test completed
-    std::vector<DTO_Evento> getLatestList(EventoException& err) override;  // Test completed
-    std::vector<DTO_Evento> getRegisteredList(EventoException &err) override;   // Test completed
-    std::vector<DTO_Evento> getSubscribedList(EventoException& err) override;  // Test completed
-    std::vector<DTO_Evento> getHistoryList(EventoException& err) override;  // Test completed
-    std::vector<DTO_Evento> getEventList(const int& page, const int& size, EventoException& err) override;  // Test completed
-    std::vector<DTO_Evento> getDepartmentEventList(const int& departmentId, EventoException &err) override;
-    DTO_Evento getEvent(EventoID event, EventoException& err) override;  // Test completed
-    std::vector<DTO_Feedback> getFeedbackList(EventoID eventoId, EventoException& err) override;  // Test completed
-    std::vector<DTO_Slide> getSlideList(EventoException& err) override;  // Test completed
-    std::vector<DTO_Slide> getEventSlideList(EventoID id, EventoException& err) override;  // Test completed
-    std::vector<DTO_Slide> getHomeSlideList(const int& size, EventoException& err) override;  // Test completed
-    QString getTypeList(EventoException& err) override;  // Test completed
-    QString getLocationList(EventoException& err) override;  // Test completed
-    QString getDepartmentList(EventoException& err) override;  // Test completed
-    QString getQRCode(const int& eventId, EventoException& err) override;  // Test completed
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList() override;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getLatestList() override;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getRegisteredList() override;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getSubscribedList() override;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getHistoryList() override;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListInPage(int page, int size) override;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId) override;
+    virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) override;
+    virtual std::vector<DTO_Feedback> getFeedbackList(EventoID eventoId, EventoException& err) override;
+    virtual std::vector<DTO_Slide> getSlideList(EventoException& err) override;
+    virtual std::vector<DTO_Slide> getEventSlideList(EventoID id, EventoException& err) override;
+    virtual std::vector<DTO_Slide> getHomeSlideList(const int& size, EventoException& err) override;
+    virtual QString getTypeList(EventoException& err) override;
+    virtual QString getLocationList(EventoException& err) override;
+    virtual QString getDepartmentList(EventoException& err) override;
+    virtual QString getQRCode(const int& eventId, EventoException& err) override;
 
     // event-upload
-    bool checkInEvent(EventoID event, const QString& code, EventoException& err) override;  // Test completed
-    bool feedbackEvent(const DTO_Feedback& code, EventoException& err) override;  // Test completed
-    bool subscribeEvent(EventoID event, EventoException& err) override;  // Test completed
-    bool isFeedbacked(EventoID event, EventoException& err) override;  // Test completed
+    virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) override;
+    virtual QFuture<EventoResult<bool>> subscribe(EventoID event) override;
+    virtual QFuture<EventoResult<bool>> hasFeedbacked(EventoID event) override;
+    virtual bool feedbackEvent(const DTO_Feedback& code, EventoException& err) override;
 
     // admin-fetch
-    std::vector<DTO_Evento> getQualifiedEvent(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) override;  // Test completed
-    QStringList getActionStateList(EventoException& err) override;  // Test completed
-    QStringList getActionList(EventoException& err) override;
-    std::vector<DTO_UserBrief> getEventManagerList(const EventoID &eventoId, EventoException& err) override;  // Test completed
-    std::vector<DTO_UserBrief> getAdminUserList(EventoException& err) override;  // Test completed
-    QString getAdminPermissionTreeData(EventoException& err) override;  // Test completed
-    QString getManagerPermissionTreeData(EventoException& err) override;  // Test completed
+    virtual std::vector<DTO_Evento> getQualifiedEvent(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) override;
+    virtual QStringList getActionStateList(EventoException& err) override;
+    virtual QStringList getActionList(EventoException& err) override;
+    virtual std::vector<DTO_UserBrief> getEventManagerList(const EventoID &eventoId, EventoException& err) override;
+    virtual std::vector<DTO_UserBrief> getAdminUserList(EventoException& err) override;
+    virtual QString getAdminPermissionTreeData(EventoException& err) override;
+    virtual QString getManagerPermissionTreeData(EventoException& err) override;
 
 public:
     static repositoryImpl * getInstance(){
         static repositoryImpl instance;
         return &instance;
     }
-
+/*
     void test() {
         EventoException error(EventoExceptionCode::UnexpectedError, "null");
         qDebug().noquote() << getDepartmentEventList(1, error).size();
         qDebug()<<error.message();
     };
+*/
 
     ~repositoryImpl(){
         declare_serialiser("department_data_list", department_data_list, department_data_list_holder);
@@ -583,11 +581,13 @@ private:
         return DTO_Evento();
     }
 
-    std::vector<DTO_Evento> readEventoByState(const QString &state) {
-        std::vector<DTO_Evento> res;
+    QFuture<EventoResult<std::vector<DTO_Evento>>> readEventoByState(const QString &state) {
+        return QtConcurrent::run([=](){
+            std::vector<DTO_Evento> res;
 
-        for (int i = 0; i < event_data_list.size(); i++) {
-            if (!event_data_list.at(i).state.compare(state)) {
+            for (int i = 0; i < event_data_list.size(); i++) {
+                if (event_data_list.at(i).state.compare(state))
+                    break;
                 event_data unit = event_data_list.at(i);
                 std::vector<Department> departments;
                 QStringList departmentIds;
@@ -613,8 +613,9 @@ private:
                                          static_cast<EventState>(unit.state.toInt()),
                                          departments});
             }
-        }
-        return res;
+
+            return EventoResult(std::move(res));
+        });
     }
 
     std::vector<DTO_Evento> readEventoByType(const QString &type) {

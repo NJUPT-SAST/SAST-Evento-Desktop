@@ -60,7 +60,4 @@ x64
 example
 *.aps
 *.rc
-
-# local test
-# localdata
-# local
+localdata

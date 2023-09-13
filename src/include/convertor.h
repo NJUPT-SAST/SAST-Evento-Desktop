@@ -130,13 +130,9 @@ static void appendToScheduleVector(std::vector<Schedule>& result, const DTO_Even
 
     bool isFeedback = false;
     {
-        // use the default `Ok` for the repo won't touch this flag when successful.
-        // needed at least for local impl.
-        EventoException err = EventoExceptionCode::Ok;
-        auto is_feedback = getRepo()->isFeedbacked(e.id, err);
-        if (err.code() == EventoExceptionCode::Ok) {
-            isFeedback = is_feedback;
-        }
+        auto future = getRepo()->hasFeedbacked(e.id);
+        future.waitForFinished();
+        isFeedback = future.takeResult();
     }
 
     QDateTime periodStart = e.gmtEventStart;
