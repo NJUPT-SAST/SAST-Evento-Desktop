@@ -1,4 +1,5 @@
 #include "undertaking_evento_model.h"
+#include "evento_service.h"
 
 int UndertakingEventoModel::rowCount(const QModelIndex &parent) const
 {
@@ -28,7 +29,7 @@ QVariant UndertakingEventoModel::data(const QModelIndex &index, int role) const
         return element.location;
     case Role::Department:
         return element.department;
-    case Role::Url:
+    case Role::Image:
         return element.image;
     default:
         break;
@@ -46,14 +47,13 @@ QHash<int, QByteArray> UndertakingEventoModel::roleNames() const
         roles.insert(Time, "time");
         roles.insert(Location, "location");
         roles.insert(Department, "department");
-        roles.insert(Url, "url");
+        roles.insert(Image, "image");
     }
     return roles;
 }
 
-void UndertakingEventoModel::resetModel(std::vector<UndertakingEvento> model)
+void UndertakingEventoModel::resetModel(std::vector<UndertakingEvento>&& model)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
     m_data = std::move(model);
     endResetModel();

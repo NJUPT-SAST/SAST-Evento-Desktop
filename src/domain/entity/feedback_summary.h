@@ -10,7 +10,7 @@ struct FeedbackSummary
     int subscribedNum;
     int registeredNum;
     int checkedNum;
-    std::size_t feedbackNum;
+    int feedbackNum;
     QString aveScore;
 };
 
