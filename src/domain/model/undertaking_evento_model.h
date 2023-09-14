@@ -19,7 +19,7 @@ public:
         Time,
         Location,
         Department,
-        Url,
+        Image,
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -28,14 +28,12 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(std::vector<UndertakingEvento> model);
+    void resetModel(std::vector<UndertakingEvento>&& model);
 
 private:
     UndertakingEventoModel() = default;
 
     std::vector<UndertakingEvento> m_data;
-
-    std::mutex m_mutex;
 
 public:
     static UndertakingEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);

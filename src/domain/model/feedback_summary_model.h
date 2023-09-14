@@ -14,7 +14,7 @@ class FeedbackSummaryModel : public QAbstractListModel
 
 public:
     enum Role {
-        EventId = Qt::DisplayRole + 1,
+        EventId = Qt::UserRole + 1,
         Title,
         FeedbackNum,
     };

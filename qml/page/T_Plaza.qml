@@ -188,7 +188,7 @@ FluScrollablePage {
                     }
                     FluImage {
                         anchors.fill: parent
-                        source: model.url
+                        source: model.image
                         fillMode: Image.PreserveAspectCrop
                     }
                 }

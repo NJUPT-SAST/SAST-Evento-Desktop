@@ -36,12 +36,12 @@ public:
     EventoException(EventoExceptionCode code = EventoExceptionCode::Ok, const QString& msg = DefaultMessage<EventoExceptionCode::Ok>::msg) : m_code(code), m_message(msg) {}
     EventoException(const EventoException&) = default;
 
-    inline QString message() {
+    inline QString message() const {
         return *this ? m_message : QStringLiteral("No Error!");
     }
-    inline EventoExceptionCode code() { return m_code; }
+    inline EventoExceptionCode code() const { return m_code; }
 
-    inline operator bool() {
+    inline operator bool() const {
         return m_code != EventoExceptionCode::Ok;
     }
 };
