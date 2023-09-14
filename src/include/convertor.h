@@ -205,7 +205,7 @@ struct Convertor<DTO_Feedback, Feedback>{
             e.eventId,
             e.score,
             e.content,
-            e.isFeedback
+            true
         };
     }
 };
@@ -214,7 +214,7 @@ template<>
 struct Convertor <DTO_Permission, PermissionEntry> {
 PermissionEntry operator()(const DTO_Permission& src) {
 		return {
-            src.id,
+            1,
             src.eventId,
             src.allMethodName
 		};

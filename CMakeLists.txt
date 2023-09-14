@@ -82,6 +82,7 @@ qt_add_qml_module(SAST_Evento_Desktop
 target_include_directories(SAST_Evento_Desktop
     PRIVATE
     ${CMAKE_SOURCE_DIR}/src/include
+    ${CMAKE_SOURCE_DIR}/src/controller
     ${CMAKE_SOURCE_DIR}/src/controller/ui
     ${CMAKE_SOURCE_DIR}/src/domain/entity
     ${CMAKE_SOURCE_DIR}/src/domain/model

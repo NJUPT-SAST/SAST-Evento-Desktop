@@ -760,12 +760,10 @@ private:
         std::vector<DTO_Permission> res;
         for (int i = 0; i < permission_data_list.size(); i++) {
             if (!permission_data_list.at(i).user_id.compare("B22041234")) {
-                res.push_back(DTO_Permission{
-                                             permission_data_list.at(i).id.toInt(),
+                res.push_back(DTO_Permission {
                                              permission_data_list.at(i).all_method_name.split(" "),
-                                             permission_data_list.at(i).user_id,
                                              permission_data_list.at(i).event_id.toInt(),
-                                             QDateTime::fromString(permission_data_list.at(i).gmt_update, "yyyy-MM-dd hh:mm:ss")});
+                });
             }
         }
         return res;

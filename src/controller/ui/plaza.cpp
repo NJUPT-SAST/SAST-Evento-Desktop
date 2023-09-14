@@ -10,19 +10,19 @@ void PlazaController::loadPlazaInfo() {
     auto slides = getRepo()->getHomeSlideList(3, err);
     if (slides.empty()) {
         slides.emplace_back(
-            DTO_Slide{0, "SAST Evento", "", "qrc:/res/image/banner_1.png"});
+            DTO_Slide{0, 0, "SAST Evento", "", "qrc:/res/image/banner_1.png"});
         slides.emplace_back(
-            DTO_Slide{0, "SAST C++", "", "qrc:/res/image/banner_2.png"});
+            DTO_Slide{0, 0, "SAST C++", "", "qrc:/res/image/banner_2.png"});
         slides.emplace_back(
-            DTO_Slide{0, "SAST", "", "qrc:/res/image/banner_3.png"});
+            DTO_Slide{0, 0, "SAST", "", "qrc:/res/image/banner_3.png"});
     } else if (slides.size() == 1) {
         slides.emplace_back(
-            DTO_Slide{0, "SAST C++", "", "qrc:/res/image/banner_2.png"});
+            DTO_Slide{0, 0, "SAST C++", "", "qrc:/res/image/banner_2.png"});
         slides.emplace_back(
-            DTO_Slide{0, "SAST", "", "qrc:/res/image/banner_3.png"});
+            DTO_Slide{0, 0, "SAST", "", "qrc:/res/image/banner_3.png"});
     } else if (slides.size() == 2) {
         slides.emplace_back(
-            DTO_Slide{0, "SAST", "", "qrc:/res/image/banner_3.png"});
+            DTO_Slide{0, 0, "SAST", "", "qrc:/res/image/banner_3.png"});
     }
     SlideModel::getInstance()->resetModel(
         Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(slides));

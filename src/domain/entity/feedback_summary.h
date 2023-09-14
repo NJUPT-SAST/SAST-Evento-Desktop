@@ -7,7 +7,11 @@ struct FeedbackSummary
 {
     EventoID eventId;
     QString title;
-    int feedbackNum;
+    int subscribedNum;
+    int registeredNum;
+    int checkedNum;
+    std::size_t feedbackNum;
+    QString aveScore;
 };
 
 #endif // FEEDBACK_SUMMARY_H
