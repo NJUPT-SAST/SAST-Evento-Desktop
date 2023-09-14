@@ -1,5 +1,5 @@
 #include "feedback_statistics_helper.h"
-#include "dto/feedback_summary.h"
+#include "feedback_summary.h"
 
 FeedbackStatisticsHelper *FeedbackStatisticsHelper::getInstance()
 {
@@ -15,9 +15,11 @@ FeedbackStatisticsHelper *FeedbackStatisticsHelper::create(QQmlEngine *qmlEngine
     return pInstance;
 }
 
-void FeedbackStatisticsHelper::updateFeedbackStatistics(const DTO_FeedbackSummary &e)
+void FeedbackStatisticsHelper::updateFeedbackStatistics(const FeedbackSummary &e)
 {
-    setProperty("registerNum", e.registerNum);
+    setProperty("registerNum", e.registeredNum);
     setProperty("checkedNum", e.checkedNum);
+    setProperty("subscribedNum", e.subscribedNum);
+    setProperty("feedbackNum", e.feedbackNum);
     setProperty("aveScore", e.aveScore);
 }

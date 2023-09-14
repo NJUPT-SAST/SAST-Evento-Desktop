@@ -5,6 +5,7 @@
 
 struct DTO_Slide {
     int id;
+    EventoID eventId;
     QString title;
     QString link;
     Image url;

@@ -48,12 +48,9 @@ DTO_Permission repositoryImpl::getEventPermission(EventoID event, EventoExceptio
         if(!permission_data_list.at(i).user_id.compare("B22041234") &&
             !permission_data_list.at(i).event_id.compare(QString::number(event))){
             permission_data unit = permission_data_list.at(i);
-            return DTO_Permission{
-                unit.id.toInt(),
+            return DTO_Permission {
                 unit.all_method_name.split(" "),
-                unit.user_id,
                 unit.event_id.toInt(),
-                QDateTime::fromString(unit.gmt_update, "yyyy-MM-dd hh:mm:ss")
             };
         }
     }
@@ -97,10 +94,11 @@ std::vector<DTO_Slide> repositoryImpl::getHomeSlideList(const int &size, EventoE
     else{
         countNum = size;
     }
-    for(int i = 0; i<countNum; i++){
+    for(int i = 0; i < countNum; i++){
         slide_data unit = slide_data_list.at(i);
         res.push_back(DTO_Slide{
             unit.id.toInt(),
+            unit.event_id.toInt(),
             unit.title,
             unit.link,
             unit.url
@@ -137,8 +135,7 @@ DTO_Feedback repositoryImpl::getFeedbackInfo(const EventoID &eventoId, EventoExc
                 i,
                 eventoId,
                 feedback_unit.score.toInt(),
-                feedback_unit.content,
-                true
+                feedback_unit.content
             };
         }
     }
@@ -258,8 +255,7 @@ std::vector<DTO_Feedback> repositoryImpl::getFeedbackList(EventoID eventoId, Eve
                 i,
                 participationList.at(0).event_id,
                 unit.score.toInt(),
-                unit.content,
-                true
+                unit.content
             });
         }
     }
@@ -272,8 +268,9 @@ std::vector<DTO_Slide> repositoryImpl::getSlideList(EventoException &err)
 
     for(int i = 0; i<slide_data_list.size(); i++) {
         slide_data unit = slide_data_list.at(i);
-        res.push_back(DTO_Slide{
+        res.push_back(DTO_Slide {
             unit.id.toInt(),
+            unit.event_id.toInt(),
             unit.title,
             unit.link,
             unit.url
@@ -291,6 +288,7 @@ std::vector<DTO_Slide> repositoryImpl::getEventSlideList(EventoID id, EventoExce
         if(!unit.event_id.compare(QString::number(id))){
             res.push_back(DTO_Slide{
                 unit.id.toInt(),
+                unit.event_id.toInt(),
                 unit.title,
                 unit.link,
                 unit.url
@@ -501,7 +499,7 @@ std::vector<DTO_UserBrief> repositoryImpl::getAdminUserList(EventoException &err
     QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
     if(jsonError.error == QJsonParseError::NoError && jsonDoc.isArray()){
         QJsonArray jsonArr = jsonDoc.array();
-        for(int i = 0; i<jsonArr.count(); i++){
+        for(int i = 0; i < jsonArr.count(); i++){
             res.push_back(readUserBrief(jsonArr.at(i).toString()));
         }
     }
@@ -510,7 +508,7 @@ std::vector<DTO_UserBrief> repositoryImpl::getAdminUserList(EventoException &err
 
 QString repositoryImpl::getAdminPermissionTreeData(EventoException &err)
 {
-   return QString(QJsonDocument::fromJson(admin_permission_data).toJson(QJsonDocument::Compact).toStdString().c_str());
+    return QString(QJsonDocument::fromJson(admin_permission_data).toJson(QJsonDocument::Compact).toStdString().c_str());
 }
 
 QString repositoryImpl::getManagerPermissionTreeData(EventoException &err)

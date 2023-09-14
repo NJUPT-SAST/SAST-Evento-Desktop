@@ -2,12 +2,13 @@
 #include "repository.h"
 #include "convertor.h"
 #include "evento_brief_model.h"
+#include "evento_service.h"
 
 QString DepartmentEventsController::loadDepartmentsInfo()
 {
     EventoException err;
     auto departmentList = getRepo()->getDepartmentList(err);
-    if ((int)err.code()){
+    if (err) {
         emit loadDepartmentsErrorEvent(err.message());
         return QString();
     }
