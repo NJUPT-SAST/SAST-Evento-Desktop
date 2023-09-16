@@ -3,10 +3,12 @@
 
 #include <QString>
 
-enum class EventoExceptionCode : int {
-    UnexpectedError = -2,
+enum class EventoExceptionCode {
     Uninitialised = -1,
+    UnexpectedError = -2,
     Ok = 0,
+    NetworkError = 1,
+    JsonError = 2,
 };
 
 template <EventoExceptionCode code = EventoExceptionCode::UnexpectedError>

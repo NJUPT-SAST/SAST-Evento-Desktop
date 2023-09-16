@@ -20,10 +20,8 @@ QVariant UserBriefModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case Role::UserId:
         return element.userId;
-    case Role::StudentId:
-        return element.studentId;
-    case Role::OpenId:
-        return element.openId;
+    case Role::EMail:
+        return element.email;
     default:
         break;
     }
@@ -36,8 +34,7 @@ QHash<int, QByteArray> UserBriefModel::roleNames() const
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {
         roles.insert(UserId, "userId");
-        roles.insert(StudentId, "studentId");
-        roles.insert(OpenId, "openId");
+        roles.insert(EMail, "email");
     }
     return roles;
 }

@@ -15,8 +15,7 @@ class UserBriefModel : public QAbstractListModel
 public:
     enum Role {
         UserId = Qt::UserRole + 1,
-        StudentId,
-        OpenId
+        EMail,
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
