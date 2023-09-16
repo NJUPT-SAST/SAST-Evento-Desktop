@@ -215,7 +215,7 @@ FluScrollablePage {
             }
 
             onClicked: {
-                EventoEditHelper.isEdited = false
+                EventoEditController.isEditMode = false
                 MainWindow.window.pushPage("qrc:/qml/page/T_EventoEdit.qml")
             }
         }
@@ -396,7 +396,7 @@ FluScrollablePage {
                 hoverEnabled: true
                 onClicked: {
                     EventoHelper.id = model.id
-                    EventoEditHelper.isEdited = model.editable
+                    EventoInfoController.editable = model.editable
                     blockWindowRegister.launch()
                 }
             }

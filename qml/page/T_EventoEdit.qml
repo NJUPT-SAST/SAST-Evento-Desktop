@@ -15,10 +15,6 @@ FluScrollablePage {
     property var typeArr: []
     property int typeId: 0
 
-    onErrorClicked: {
-        loadEditInfo()
-    }
-
     function parseJSON(data) {
         var result = []
         if (Array.isArray(data)) {
@@ -51,16 +47,16 @@ FluScrollablePage {
         EventoEditController.loadEditInfo(EventoHelper.id)
         departmentArr = []
         typeArr = []
-        var json = JSON.parse(EventoEditHelper.departmentJson)
+        var json = JSON.parse(EventoEditController.departmentJson)
         for (var ii = 0; ii < json.length; ++ii) {
             departmentArr.push(tree_view_department.createItem(json[ii].name,
                                                                true, [], {
                                                                    "id": json[ii].id
                                                                }))
         }
-        json = JSON.parse(EventoEditHelper.locationJson)
+        json = JSON.parse(EventoEditController.locationJson)
         locationArr = parseJSON(json)
-        json = JSON.parse(EventoEditHelper.typeJson)
+        json = JSON.parse(EventoEditController.typeJson)
         for (var j = 0; j < json.length; ++j) {
             typeArr.push(json[j].name)
         }
@@ -68,7 +64,7 @@ FluScrollablePage {
     }
 
     function findTypeId(text) {
-        var json = JSON.parse(EventoEditHelper.typeJson)
+        var json = JSON.parse(EventoEditController.typeJson)
         for (var j = 0; j < json.length; ++j) {
             if (text === json[j].name)
                 return json[j].id
@@ -141,7 +137,7 @@ FluScrollablePage {
 
         FluText {
             id: item_title
-            text: "标题"
+            text: EventoEditController.title
             font.pixelSize: 20
             font.bold: true
             anchors {
@@ -154,7 +150,7 @@ FluScrollablePage {
         FluTextBox {
             id: textbox_title
             implicitWidth: 600
-            text: EventoEditHelper.isEdited ? EventoHelper.title : ""
+            text: EventoEditController.isEditMode ? EventoHelper.title : ""
             anchors {
                 left: item_title.right
                 leftMargin: 60
@@ -169,21 +165,20 @@ FluScrollablePage {
                 top: item_title.bottom
                 topMargin: 15
             }
-            text: "标签"
+            text: EventoEditController.tag
             font.pixelSize: 20
             font.bold: true
         }
         FluTextBox {
             id: textbox_tag
             implicitWidth: 600
-            text: EventoEditHelper.isEdited ? EventoHelper.tag : ""
+            text: EventoEditController.isEditMode ? EventoHelper.tag : ""
             anchors {
                 left: textbox_title.left
                 verticalCenter: item_tag.verticalCenter
             }
         }
 
-        ////////////////
         FluText {
             id: item_event_time
             text: "活动时间"
@@ -207,8 +202,8 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_event_start
             width: 220
-            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
-                                                     EventoEditHelper.eventStart) : new Date
+            current: EventoEditController.isEditMode ? Date.fromLocaleString(
+                                                     EventoEditController.eventStart) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: item_event_time.top
@@ -217,8 +212,8 @@ FluScrollablePage {
         FluTimePicker {
             id: time_picker_event_start
             hourFormat: FluTimePickerType.HH
-            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
-                                                     EventoEditHelper.eventStart) : new Date
+            current: EventoEditController.isEditMode ? Date.fromLocaleString(
+                                                     EventoEditController.eventStart) : new Date
 
             anchors {
                 left: time_picker_register_start.left
@@ -238,8 +233,8 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_event_end
             width: 220
-            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
-                                                     EventoEditHelper.eventEnd) : new Date
+            current: EventoEditController.isEditMode ? Date.fromLocaleString(
+                                                     EventoEditController.eventEnd) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: text_end2.top
@@ -248,15 +243,14 @@ FluScrollablePage {
         FluTimePicker {
             id: time_picker_event_end
             hourFormat: FluTimePickerType.HH
-            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
-                                                     EventoEditHelper.eventEnd) : new Date
+            current: EventoEditController.isEditMode ? Date.fromLocaleString(
+                                                     EventoEditController.eventEnd) : new Date
             anchors {
                 left: time_picker_register_start.left
                 top: text_end2.top
             }
         }
 
-        ////////////////
         FluText {
             id: item_register_time
             text: "报名时间"
@@ -280,8 +274,8 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_register_start
             width: 220
-            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
-                                                     EventoEditHelper.registerStart) : new Date
+            current: EventoEditController.isEditMode ? Date.fromLocaleString(
+                                                     EventoEditController.registerStart) : new Date
             anchors {
                 left: text_start1.right
                 leftMargin: 18
@@ -291,8 +285,8 @@ FluScrollablePage {
         FluTimePicker {
             id: time_picker_register_start
             hourFormat: FluTimePickerType.HH
-            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
-                                                     EventoEditHelper.registerStart) : new Date
+            current: EventoEditController.isEditMode ? Date.fromLocaleString(
+                                                     EventoEditController.registerStart) : new Date
             anchors {
                 left: clender_picker_register_start.right
                 leftMargin: 15
@@ -312,8 +306,8 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_register_end
             width: 220
-            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
-                                                     EventoEditHelper.registerEnd) : new Date
+            current: EventoEditController.isEditMode ? Date.fromLocaleString(
+                                                     EventoEditController.registerEnd) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: text_end1.top
@@ -322,15 +316,14 @@ FluScrollablePage {
         FluTimePicker {
             id: time_picker_register_end
             hourFormat: FluTimePickerType.HH
-            current: EventoEditHelper.isEdited ? Date.fromLocaleString(
-                                                     EventoEditHelper.registerEnd) : (new Date)
+            current: EventoEditController.isEditMode ? Date.fromLocaleString(
+                                                     EventoEditController.registerEnd) : (new Date)
             anchors {
                 left: time_picker_register_start.left
                 top: text_end1.top
             }
         }
 
-        ///////////////
         FluText {
             id: item_location
             text: "地点"
@@ -442,7 +435,7 @@ FluScrollablePage {
         }
         FluCheckBox {
             id: check_box_allow
-            checked: EventoEditHelper.isEdited ? EventoEditHelper.allowConflict : false
+            checked: EventoEditController.isEditMode ? EventoEditController.allowConflict : false
             anchors {
                 left: rect_department.left
                 bottom: item_allow_comflict.bottom
@@ -464,7 +457,7 @@ FluScrollablePage {
             id: textbox_description
             width: 600
             placeholderText: "Ctrl+Enter换行"
-            text: EventoEditHelper.isEdited ? EventoHelper.description : ""
+            text: EventoEditController.isEditMode ? EventoHelper.description : ""
             anchors {
                 left: textbox_title.left
                 top: item_description.top
@@ -559,7 +552,7 @@ FluScrollablePage {
         }
 
         FluFilledButton {
-            text: EventoEditHelper.isEdited ? "完成修改" : "创建"
+            text: EventoEditController.isEditMode ? "完成修改" : "创建"
             implicitWidth: 100
             implicitHeight: 35
             anchors {

@@ -11,10 +11,6 @@ FluScrollablePage {
     property int score_value: 0
     property string feedback_content
 
-    onErrorClicked: {
-        loadEventoInfo()
-    }
-
     function loadEventoInfo() {
         statusMode = FluStatusViewType.Loading
         EventoInfoController.loadEventoInfo(EventoHelper.id)
@@ -225,21 +221,21 @@ FluScrollablePage {
                 id: btn_register
                 Layout.topMargin: 15
                 implicitWidth: 250
-                text: EventoHelper.isRegistrated ? "取消报名" : "报名活动"
-                checked: EventoHelper.isRegistrated
+                text: EventoInfoController.isRegistrated ? "取消报名" : "报名活动"
+                checked: EventoInfoController.isRegistrated
                 disabled: EventoHelper.state !== 2
                 onClicked: {
                     statusMode = FluStatusViewType.Loading
-                    EventoHelper.isRegistrated = !EventoHelper.isRegistrated
+                    EventoInfoController.isRegistrated = !EventoInfoController.isRegistrated
                     EventoInfoController.registerEvento(
-                                EventoHelper.id, EventoHelper.isRegistrated)
+                                EventoHelper.id, EventoInfoController.isRegistrated)
                 }
             }
             Connections {
                 target: EventoInfoController
                 function onRegisterSuccessEvent() {
                     statusMode = FluStatusViewType.Success
-                    showSuccess((EventoHelper.isRegistrated ? "报名成功" : "已取消"))
+                    showSuccess((EventoInfoController.isRegistrated ? "报名成功" : "已取消"))
                     loadEventoInfo()
                 }
             }
@@ -255,21 +251,21 @@ FluScrollablePage {
                 id: btn_subscribe
                 implicitWidth: 250
                 Layout.topMargin: 15
-                text: EventoHelper.isSubscribed ? "取消订阅" : "订阅活动"
-                checked: EventoHelper.isSubscribed
+                text: EventoInfoController.isSubscribed ? "取消订阅" : "订阅活动"
+                checked: EventoInfoController.isSubscribed
                 disabled: EventoHelper.state !== 2
                 onClicked: {
                     statusMode = FluStatusViewType.Loading
-                    EventoHelper.isSubscribed = !EventoHelper.isSubscribed
+                    EventoInfoController.isSubscribed = !EventoInfoController.isSubscribed
                     EventoInfoController.subscribeEvento(
-                                EventoHelper.id, EventoHelper.isSubscribed)
+                                EventoHelper.id, EventoInfoController.isSubscribed)
                 }
             }
             Connections {
                 target: EventoInfoController
                 function onSubscribeSuccessEvent() {
                     statusMode = FluStatusViewType.Success
-                    showSuccess((EventoHelper.isSubscribed ? "订阅成功" : "已取消"))
+                    showSuccess((EventoInfoController.isSubscribed ? "订阅成功" : "已取消"))
                     loadEventoInfo()
                 }
             }
@@ -364,7 +360,7 @@ FluScrollablePage {
         id: loader
         Layout.topMargin: 15
         Layout.fillWidth: true
-        sourceComponent: (EventoHelper.isParticipated
+        sourceComponent: (EventoInfoController.isParticipated
                           && EventoHelper.state === 5) ? com_comment : undefined
     }
 

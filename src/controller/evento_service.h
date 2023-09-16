@@ -3,6 +3,7 @@
 
 #include <dto/evento.h>
 
+#include <QFuture>
 #include <shared_mutex>
 
 class EventoService {
@@ -21,6 +22,8 @@ public:
     }
 
     void load_Plaza();
+    void load(EventoID id);
+    DTO_Evento edit(EventoID id);
     void update(const DTO_Evento& event);
     void update(const std::vector<DTO_Evento>& events);
 };
