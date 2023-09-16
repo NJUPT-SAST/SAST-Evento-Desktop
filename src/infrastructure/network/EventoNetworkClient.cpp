@@ -284,9 +284,7 @@ QFuture<EventoResult<DTO_Feedback>> EventoNetworkClient::getFeedbackInfo(const E
     return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<DTO_Feedback> {
         if (auto rootValue = std::get_if<QJsonValue>(&result)) {
             DTO_Feedback result{};
-            result.isFeedback = false;
             if (rootValue->isObject()) {
-                result.isFeedback = true;
                 declare_top_deserialiser(result, deserialiser_holder);
                 JsonDeserialise::JsonDeserialiser deserialiser(deserialiser_holder);
                 deserialiser.deserialise(rootValue->toObject());
