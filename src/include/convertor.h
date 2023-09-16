@@ -212,8 +212,7 @@ struct Convertor <DTO_UserBrief, UserBrief> {
     UserBrief operator()(const DTO_UserBrief& src) {
         return {
             src.userId,
-            src.studentId,
-            src.openId,
+            src.email,
         };
     };
 };

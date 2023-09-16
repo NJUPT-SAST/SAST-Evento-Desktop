@@ -5,8 +5,7 @@
 
 struct DTO_UserBrief {
     QString userId;
-    QString studentId;
-    QString openId;
+    QString email;
 };
 
 #endif  // DTO_USER_BRIEF_H
