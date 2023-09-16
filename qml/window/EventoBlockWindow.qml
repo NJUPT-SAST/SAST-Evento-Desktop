@@ -43,8 +43,7 @@ CustomWindow {
 
                 function loadQRcode() {
                     page.statusMode = FluStatusViewType.Loading
-                    page.code = CalendarController.loadCheckCode(
-                                EventoHelper.id)
+                    page.code = CalendarController.loadCheckCode(EventoHelper.id)
                 }
 
                 Component.onCompleted: {
@@ -161,11 +160,20 @@ CustomWindow {
                 }
 
                 Connections {
-                    target: CalendarController
+                    target: EventoInfoController
                     function onLoadEventoSuccessEvent() {
                         page.arr = []
                         loader.sourceComponent = slide_com
                         page.statusMode = FluStatusViewType.Success
+                    }
+                }
+
+                Connections {
+                    target: EventoInfoController
+                    function onLoadEventoErrorEvent(message) {
+                        page.statusMode = FluStatusViewType.Success
+                        MainWindow.window.showError(message)
+                        window.close()
                     }
                 }
 
@@ -179,15 +187,6 @@ CustomWindow {
                     }
                 }
 
-                Connections {
-                    target: CalendarController
-                    function onLoadEventoErrorEvent(message) {
-                        page.statusMode = FluStatusViewType.Success
-                        MainWindow.window.showError(message)
-                        window.close()
-                    }
-                }
-
                 Loader {
                     id: loader
                     sourceComponent: undefined
@@ -197,7 +196,7 @@ CustomWindow {
                     z: 999
                     height: btn_delete.height
                     width: 270
-                    visible: EventoEditHelper.isEdited
+                    visible: EventoInfoController.editable
 
                     FluIconButton {
                         iconSource: FluentIcons.QRCode
@@ -230,7 +229,7 @@ CustomWindow {
                         iconSource: FluentIcons.Edit
                         iconSize: 15
                         onClicked: {
-                            EventoEditHelper.isEdited = true
+                            EventoEditController.isEditMode = true
                             onResult({
                                          "enterPage": true
                                      })

@@ -2,7 +2,6 @@
 #define CONVERTOR_H
 
 #include "repository.h"
-#include "evento.h"
 #include "undertaking_evento.h"
 #include "slide.h"
 #include "latest_evento.h"
@@ -59,19 +58,6 @@ struct Convertor<std::vector<DTO>, std::vector<Entity>> {
             result.emplace_back(Convertor<DTO, Entity>()(e));
         }
         return result;
-    }
-};
-
-template<>
-struct Convertor<DTO_Evento, Evento> {
-    Evento operator()(const DTO_Evento& src) {
-        return {
-            src.id, src.title, src.state, src.description,
-            periodConvertor(src.gmtEventStart, src.gmtEventEnd),
-            periodConvertor(src.gmtRegistrationStart, src.gmtRegistrationEnd),
-            departmentConvertor(src.departments),
-            src.location, src.type, src.tag
-        };
     }
 };
 

@@ -3,17 +3,23 @@
 
 #include "types.h"
 
+class DTO_Evento;
+
 struct Evento {
     EventoID id;
     QString title;
-    EventState state;
     QString description;
-    QString eventTime;
-    QString registerTime;
-    QString department;
-    QString location;
+    QString eventStart, eventEnd;
+    QString registrationStart, registrationEnd;
     EventType type;
+    QString location;
     Tag tag;
+    EventState state;
+    QString department;
+    Image image;
+
+    Evento() = default;
+    Evento(const DTO_Evento&);
 };
 
 #endif // EVENTO_H
