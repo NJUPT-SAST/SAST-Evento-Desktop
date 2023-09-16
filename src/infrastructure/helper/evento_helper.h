@@ -3,8 +3,6 @@
 
 #include <QtQml>
 
-#include "types.h"
-
 struct Evento;
 
 class EventoHelper : public QObject {
@@ -22,21 +20,17 @@ class EventoHelper : public QObject {
     Q_PROPERTY(QString type MEMBER m_type NOTIFY typeChanged)
     Q_PROPERTY(QString tag MEMBER m_tag NOTIFY tagChanged)
     Q_PROPERTY(QString description MEMBER m_description NOTIFY descriptionChanged)
-    Q_PROPERTY(bool isRegistrated MEMBER m_isRegistrated NOTIFY isRegistratedChanged)
-    Q_PROPERTY(bool isParticipated MEMBER m_isParticipated NOTIFY isParticipatedChanged)
-    Q_PROPERTY(bool isSubscribed MEMBER m_isSubscribed NOTIFY isSubscribedChanged)
 
 public:
     static EventoHelper *getInstance();
-
     static EventoHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
-    void updateEvento(const Evento &evento, const ParticipationStatus &participationStatus);
+    bool update(const Evento &evento);
 
 private:
     EventoHelper() = default;
 
-    int m_id;
+    std::atomic<int> m_id;
     QString m_title;
     int m_state;
     QString m_eventTime;
@@ -46,9 +40,6 @@ private:
     QString m_type;
     QString m_tag;
     QString m_description;
-    bool m_isRegistrated;
-    bool m_isParticipated;
-    bool m_isSubscribed;
 
 signals:
     void idChanged();
@@ -61,9 +52,6 @@ signals:
     void typeChanged();
     void tagChanged();
     void descriptionChanged();
-    void isRegistratedChanged();
-    void isParticipatedChanged();
-    void isSubscribedChanged();
 };
 
 #endif  // EVENTOHELPER_H

@@ -20,9 +20,6 @@ signals:
     void loadAllEventoSuccessEvent();
     void loadAllEventoErrorEvent(const QString message);
 
-    void loadEventoSuccessEvent();
-    void loadEventoErrorEvent(const QString message);
-
     void deleteSuccessEvent();
     void deleteErrorEvent(const QString message);
 

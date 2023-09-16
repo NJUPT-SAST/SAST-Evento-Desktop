@@ -3,8 +3,16 @@
 
 #include <dto/evento.h>
 
+#include <QFuture>
+#include <shared_mutex>
+
 class EventoService {
-    std::vector<int> undertaking;
+    static constexpr int buffer_szie = 100;
+    std::shared_mutex mutex;
+
+    std::vector<EventoID> undertaking;
+    std::vector<EventoID> latest;
+    std::map<EventoID, DTO_Evento> stored;
 private:
     EventoService() = default;
 public:
@@ -12,6 +20,12 @@ public:
         static EventoService singleton;
         return singleton;
     }
+
+    void load_Plaza();
+    void load(EventoID id);
+    DTO_Evento edit(EventoID id);
+    void update(const DTO_Evento& event);
+    void update(const std::vector<DTO_Evento>& events);
 };
 
 #endif //EVENTO_SERVICE_H

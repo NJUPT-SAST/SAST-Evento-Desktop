@@ -111,8 +111,7 @@ ParticipationStatus repositoryImpl::getUserParticipate(const EventoID &eventoId,
 {
     for(int i = 0; i<participate_data_list.size(); i++){
         participate_data unit = participate_data_list.at(i);
-        if(!unit.event_id.compare(QString::number(eventoId)) &&
-            !unit.user_id.compare("B22041234")){
+        if(!unit.event_id.compare(QString::number(eventoId))){
             return ParticipationStatus{
                 unit.is_registration.compare("false")?true:false,
                 unit.is_participate.compare("false")?true:false,
@@ -120,8 +119,9 @@ ParticipationStatus repositoryImpl::getUserParticipate(const EventoID &eventoId,
             };
         }
     }
-    err = EventoException(EventoExceptionCode::UnexpectedError, "get_user_participate json error");
-    return ParticipationStatus();
+    return ParticipationStatus {
+        false, false, false
+    };
 }
 
 DTO_Feedback repositoryImpl::getFeedbackInfo(const EventoID &eventoId, EventoException& err)
