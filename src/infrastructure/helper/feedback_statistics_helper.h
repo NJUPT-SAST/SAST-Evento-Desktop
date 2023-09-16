@@ -3,7 +3,7 @@
 
 #include <QtQml>
 
-struct DTO_FeedbackSummary;
+struct FeedbackSummary;
 
 class FeedbackStatisticsHelper : public QObject
 {
@@ -13,6 +13,8 @@ class FeedbackStatisticsHelper : public QObject
 
     Q_PROPERTY(int registerNum MEMBER m_registerNum NOTIFY registerNumChanged)
     Q_PROPERTY(int checkedNum MEMBER m_checkedNum NOTIFY checkedNumChanged)
+    Q_PROPERTY(int subscribedNum MEMBER m_subscribedNum NOTIFY subscribedNumChanged)
+    Q_PROPERTY(int feedbackNum MEMBER m_feedbackNum NOTIFY feedbackNumChanged)
     Q_PROPERTY(QString aveScore MEMBER m_aveScore NOTIFY aveScoreChanged)
 
 public:
@@ -20,18 +22,22 @@ public:
 
     static FeedbackStatisticsHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
-    void updateFeedbackStatistics(const DTO_FeedbackSummary &e);
+    void updateFeedbackStatistics(const FeedbackSummary &e);
 
 private:
     FeedbackStatisticsHelper() = default;
 
     int m_registerNum;
     int m_checkedNum;
+    int m_subscribedNum;
+    int m_feedbackNum;
     QString m_aveScore;
 
 signals:
     void registerNumChanged();
     void checkedNumChanged();
+    void subscribedNumChanged();
+    void feedbackNumChanged();
     void aveScoreChanged();
 };
 

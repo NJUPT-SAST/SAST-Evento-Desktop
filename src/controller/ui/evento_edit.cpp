@@ -1,45 +1,55 @@
 #include "evento_edit.h"
-#include "evento_edit_helper.h"
-#include "evento_exception.h"
+#include "evento_service.h"
 #include "repository.h"
 
-void EventoEditController::loadEditInfo(int eventId)
+EventoEditController *EventoEditController::getInstance()
 {
-    EventoException err;
-
-    auto departmentList = getRepo()->getDepartmentList(err);
-    if ((int)err.code())
-        return emit loadEditErrorEvent(err.message());
-    auto locationList = getRepo()->getLocationList(err);
-    if ((int)err.code())
-        return emit loadEditErrorEvent(err.message());
-    auto typeList = getRepo()->getTypeList(err);
-    if ((int)err.code())
-        return emit loadEditErrorEvent(err.message());
-
-    EventoEditHelper::getInstance()->updateEventoEdit(departmentList,
-                                                      locationList,
-                                                      typeList,
-                                                      DTO_Evento{});
-    emit loadEditSuccessEvent();
-}
-
-void EventoEditController::createEvento(QString title,
-                                        QString description,
-                                        QString eventStart,
-                                        QString eventEnd,
-                                        QString registerStart,
-                                        QString registerEnd,
-                                        int typeId,
-                                        int loactionId,
-                                        QVariantList departmentId,
-                                        QString tag,
-                                        QVariantList urlList)
-{
-    emit createSuccessEvent();
+    static EventoEditController instance;
+    return &instance;
 }
 
 EventoEditController *EventoEditController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return new EventoEditController();
+    auto instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
+    return instance;
+}
+
+void EventoEditController::preload() {
+    EventoException err;
+    auto departmentList = getRepo()->getDepartmentList(err);
+    if (err)
+        return emit loadEditErrorEvent(err.message());
+    auto locationList = getRepo()->getLocationList(err);
+    if (err)
+        return emit loadEditErrorEvent(err.message());
+    auto typeList = getRepo()->getTypeList(err);
+    if (err)
+        return emit loadEditErrorEvent(err.message());
+
+    setProperty("departmentJson", departmentList);
+    setProperty("locationJson", locationList);
+    setProperty("typeJson", typeList);
+}
+
+void EventoEditController::editEvento(EventoID id) {
+    preload();
+    setProperty("isEditMode", true);
+    update(EventoService::getInstance().edit(id));
+    emit loadEditSuccessEvent();
+}
+
+void EventoEditController::update(const DTO_Evento& event) {
+    setProperty("allowConflict", event.type.allowConflict);
+    setProperty("eventStart", event.gmtEventStart);
+    setProperty("eventEnd", event.gmtEventEnd);
+    setProperty("registerStart", event.gmtRegistrationStart);
+    setProperty("registerEnd", event.gmtRegistrationEnd);
+}
+
+void EventoEditController::createEvento()
+{
+    preload();
+    setProperty("isEditMode", false);
+    emit createSuccessEvent();
 }

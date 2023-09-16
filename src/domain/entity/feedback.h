@@ -9,7 +9,7 @@ struct Feedback
     EventoID eventId;
     int score;
     QString content;
-    bool isFeedback;
+    bool submitted = false;
 };
 
 #endif // FEEDBACK_H

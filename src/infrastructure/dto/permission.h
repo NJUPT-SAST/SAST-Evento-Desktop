@@ -5,11 +5,8 @@
 
 struct DTO_Permission
 {
-    int id;
     QStringList allMethodName;
-    UserID userId;
     EventoID eventId;
-    QDateTime gmtUpdate;
 };
 
 #endif // DTO_PERMISSION_H

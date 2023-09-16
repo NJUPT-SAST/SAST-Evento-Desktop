@@ -1,7 +1,7 @@
 #include "evento_info.h"
 #include "convertor.h"
+#include "evento_service.h"
 #include "evento_exception.h"
-#include "evento_helper.h"
 #include "feedback_helper.h"
 #include "slide_model.h"
 
@@ -12,29 +12,25 @@ void EventoInfoController::loadEventoInfo(const EventoID eventId)
         Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
             getRepo()->getEventSlideList(eventId, err)
     ));
-    if ((int)err.code())
+    if (err)
         return emit loadEventoErrorEvent(err.message());
 
-    auto event = getRepo()->getEvent(eventId, err);
-    if ((int)err.code())
-        return emit loadEventoErrorEvent(err.message());
     auto participate = getRepo()->getUserParticipate(eventId, err);
-    if ((int)err.code())
+    if (err)
         return emit loadEventoErrorEvent(err.message());
 
-    EventoHelper::getInstance()->updateEvento(
-        Convertor<DTO_Evento, Evento>()(event),
-        participate
-    );
+    setProperty("isRegistrated", participate.isRegistrated);
+    setProperty("isParticipated", participate.isParticipated);
+    setProperty("isSubscribed", participate.isSubscribed);
 
     FeedbackHelper::getInstance()->updateFeedback(
         Convertor<DTO_Feedback, Feedback>()(
             getRepo()->getFeedbackInfo(eventId, err)
     ));
-    if ((int)err.code())
+    if (err)
         return emit loadEventoErrorEvent(err.message());
 
-    emit loadEventoSuccessEvent();
+    EventoService::getInstance().load(eventId);
 }
 
 void EventoInfoController::registerEvento(const EventoID id, bool isParticipated)
@@ -52,7 +48,15 @@ void EventoInfoController::subscribeEvento(const EventoID id, bool isParticipate
     emit subscribeSuccessEvent();
 }
 
+EventoInfoController *EventoInfoController::getInstance()
+{
+    static EventoInfoController instance;
+    return &instance;
+}
+
 EventoInfoController *EventoInfoController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return new EventoInfoController();
+    auto instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
+    return instance;
 }

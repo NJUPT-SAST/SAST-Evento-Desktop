@@ -2,7 +2,6 @@
 #define CONVERTOR_H
 
 #include "repository.h"
-#include "evento.h"
 #include "undertaking_evento.h"
 #include "slide.h"
 #include "latest_evento.h"
@@ -63,19 +62,6 @@ struct Convertor<std::vector<DTO>, std::vector<Entity>> {
 };
 
 template<>
-struct Convertor<DTO_Evento, Evento> {
-    Evento operator()(const DTO_Evento& src) {
-        return {
-            src.id, src.title, src.state, src.description,
-            periodConvertor(src.gmtEventStart, src.gmtEventEnd),
-            periodConvertor(src.gmtRegistrationStart, src.gmtRegistrationEnd),
-            departmentConvertor(src.departments),
-            src.location, src.type, src.tag
-        };
-    }
-};
-
-template<>
 struct Convertor<DTO_Evento, UndertakingEvento> {
     UndertakingEvento operator()(const DTO_Evento& e) {
         return {
@@ -130,13 +116,9 @@ static void appendToScheduleVector(std::vector<Schedule>& result, const DTO_Even
 
     bool isFeedback = false;
     {
-        // use the default `Ok` for the repo won't touch this flag when successful.
-        // needed at least for local impl.
-        EventoException err = EventoExceptionCode::Ok;
-        auto is_feedback = getRepo()->isFeedbacked(e.id, err);
-        if (err.code() == EventoExceptionCode::Ok) {
-            isFeedback = is_feedback;
-        }
+        auto future = getRepo()->hasFeedbacked(e.id);
+        future.waitForFinished();
+        isFeedback = future.takeResult();
     }
 
     QDateTime periodStart = e.gmtEventStart;
@@ -209,7 +191,7 @@ struct Convertor<DTO_Feedback, Feedback>{
             e.eventId,
             e.score,
             e.content,
-            e.isFeedback
+            true
         };
     }
 };
@@ -218,7 +200,7 @@ template<>
 struct Convertor <DTO_Permission, PermissionEntry> {
 PermissionEntry operator()(const DTO_Permission& src) {
 		return {
-            src.id,
+            1,
             src.eventId,
             src.allMethodName
 		};

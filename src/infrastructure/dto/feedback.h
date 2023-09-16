@@ -8,7 +8,6 @@ struct DTO_Feedback {
     EventoID eventId;
     int score;
     QString content;
-    bool isFeedback;
 };
 
 #endif // DTO_FEEDBACK_H

@@ -3,24 +3,45 @@
 
 #include <QtQml>
 
+#include "types.h"
+
+class DTO_Evento;
+
 class EventoEditController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(EventoEditController)
     QML_SINGLETON
 
+    Q_PROPERTY(QString departmentJson MEMBER m_departmentJson NOTIFY departmentJsonChanged)
+    Q_PROPERTY(QString locationJson MEMBER m_locationJson NOTIFY locationJsonChanged)
+    Q_PROPERTY(QString typeJson MEMBER m_typeJson NOTIFY typeJsonChanged)
+    Q_PROPERTY(int typeId MEMBER m_typeId NOTIFY typeIdChanged)
+    Q_PROPERTY(bool allowConflict MEMBER m_allowConflict NOTIFY allowConflictChanged)
+    Q_PROPERTY(bool isEditMode MEMBER m_isEdited NOTIFY isEditedChanged)
+    Q_PROPERTY(QString eventStart MEMBER m_eventStart NOTIFY eventStartChanged)
+    Q_PROPERTY(QString eventEnd MEMBER m_eventEnd NOTIFY eventEndChanged)
+    Q_PROPERTY(QString registerStart MEMBER m_registerStart NOTIFY registerStartChanged)
+    Q_PROPERTY(QString registerEnd MEMBER m_registerEnd NOTIFY registerEndChanged)
+
 public:
-    Q_INVOKABLE void loadEditInfo(int eventId = 0);
-    Q_INVOKABLE void createEvento(QString title,
-                                  QString description,
-                                  QString eventStart,
-                                  QString eventEnd,
-                                  QString registerStart,
-                                  QString registerEnd,
-                                  int typeId,
-                                  int loactionId,
-                                  QVariantList departmentId,
-                                  QString tag,
-                                  QVariantList urlList);
+    Q_INVOKABLE void createEvento();
+    void editEvento(EventoID id);
+
+private:
+    QString m_departmentJson;
+    QString m_locationJson;
+    QString m_typeJson;
+    bool m_isEdited; // true: 编辑模式 false: 创建模式
+    // 编辑模式属性
+    int m_typeId;
+    bool m_allowConflict;
+    QString m_eventStart;
+    QString m_eventEnd;
+    QString m_registerStart;
+    QString m_registerEnd;
+
+private:
+    void preload();
 
 signals:
     void loadEditSuccessEvent();
@@ -29,9 +50,23 @@ signals:
     void createSuccessEvent();
     void createErrorEvent(const QString message);
 
-public:
-    static EventoEditController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    void departmentJsonChanged();
+    void locationJsonChanged();
+    void typeJsonChanged();
+    void typeIdChanged();
+    void allowConflictChanged();
+    void isEditedChanged();
+    void eventStartChanged();
+    void eventEndChanged();
+    void registerStartChanged();
+    void registerEndChanged();
+private:
     EventoEditController() = default;
+public:
+    void update(const DTO_Evento& event);
+public:
+    static EventoEditController *getInstance();
+    static EventoEditController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 
 #endif // EVENTO_EDIT_CONTROLLER_H
