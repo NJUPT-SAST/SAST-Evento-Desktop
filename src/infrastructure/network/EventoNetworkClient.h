@@ -1,11 +1,10 @@
 #ifndef EVENTO_NETWORK_CLIENT_H
 #define EVENTO_NETWORK_CLIENT_H
+
 #include <QByteArray>
 #include <QFuture>
-#include <QJsonArray>
 #include <QJsonDocument>
-#include <QJsonObject>
-#include <QNetworkAccessManager>
+#include <QJsonValue>
 #include <QNetworkReply>
 #include <QString>
 #include <QUrlQuery>
@@ -16,21 +15,20 @@
 #include <dto/user.h>
 #include <dto/user_brief.h>
 #include <evento_exception.h>
+#include <result.h>
 
-template <typename TActualResult>
-using EventoResult = std::variant<TActualResult, EventoException>;
+#include <QNetworkAccessManager>
 
-class EventoNetworkClient
-{
+class EventoNetworkClient {
 private:
-    QNetworkAccessManager manager;
     QByteArray tokenBytes;
+    QNetworkAccessManager manager;
 
 protected:
     QUrl endpoint(const QString &endpoint);
     QUrl endpoint(const QString &endpoint, const QUrlQuery &params);
 
-    template <typename TParamsBuilder, std::enable_if_t<std::is_invocable_v<TParamsBuilder, QUrlQuery &>, int> = 0>
+    template <typename TParamsBuilder, typename = std::enable_if_t<std::is_invocable_v<TParamsBuilder, QUrlQuery &>>>
     QUrl endpoint(const QString &endpoint, TParamsBuilder paramsBuilder)
     {
         QUrlQuery query;
@@ -97,6 +95,7 @@ public:
     QFuture<EventoResult<QString>> getAdminPermissionTreeData();
     QFuture<EventoResult<QString>> getManagerPermissionTreeData();
 
-    EventoNetworkClient();
+    EventoNetworkClient() = default;
+    ~EventoNetworkClient() = default;
 };
 #endif // EVENTO_NETWORK_CLIENT_H

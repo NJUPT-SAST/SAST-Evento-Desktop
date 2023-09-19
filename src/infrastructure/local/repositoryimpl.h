@@ -355,7 +355,7 @@ private:
     QByteArray admin_permission_data;
     QByteArray admin_user_data;
     QByteArray manager_permission_data;
-
+protected:
     repositoryImpl(){
         declare_deserialiser("department_data_list", department_data_list, department_data_list_holder);
         JsonDeserialise::JsonDeserialiser department_data_list_deserialiser(department_data_list_holder);
@@ -405,7 +405,7 @@ private:
         admin_user_data = readFile("localdata/admin_user.json");
         manager_permission_data = readFile("localdata/manager_permission.json");
     };
-
+private:
     QMutex mutex;
     struct Participation {
         int id;

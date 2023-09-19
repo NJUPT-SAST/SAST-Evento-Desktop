@@ -13,11 +13,12 @@ class EventoResult {
 
             Data() : err_code(EventoExceptionCode::Uninitialised), result() {}
             Data(T&& other) : result(std::move(other)) {}
+            Data(const T& other) : result(other) {}
             ~Data() = default;
         } data;
 
         Member() : data() {}
-        Member(EventoException&& other) : err(std::move(err)) {}
+        Member(EventoException&& other) : err(std::move(other)) {}
         Member(EventoExceptionCode code, const QString& msg) : err{code, msg} {}
         Member(T&& other) : data(std::move(other)) {}
         Member(Member&& other) : data() {
@@ -69,7 +70,7 @@ public:
     inline QString message() {
         return *this ? QStringLiteral("No Error!") : member.err.message();
     }
-    inline EventoExceptionCode code() { return member.err; }
+    inline EventoExceptionCode code() { return member.err.code(); }
 
     inline operator bool() { return member.err.code() == EventoExceptionCode::Ok; }
     inline operator const EventoException&() {

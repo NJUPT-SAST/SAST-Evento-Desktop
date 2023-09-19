@@ -7,7 +7,6 @@
 #include <shared_mutex>
 
 class EventoService {
-    static constexpr int buffer_szie = 100;
     std::shared_mutex mutex;
 
     std::vector<EventoID> undertaking;

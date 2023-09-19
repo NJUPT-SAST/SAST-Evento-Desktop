@@ -16,8 +16,9 @@ struct ParticipationStatus {
     bool isSubscribed;
 };
 
-enum class EventState {
-    Before = 1,
+enum class EventState : int {
+    Uninitialised = 0,
+    Before,
     Registration,
     Undertaking,
     Cancelled,
