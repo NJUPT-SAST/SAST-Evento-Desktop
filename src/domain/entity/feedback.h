@@ -2,6 +2,7 @@
 #define FEEDBACK_H
 
 #include "types.h"
+struct DTO_Feedback;
 
 struct Feedback
 {
@@ -10,6 +11,9 @@ struct Feedback
     int score;
     QString content;
     bool submitted = false;
+
+    Feedback() = default;
+    Feedback(const DTO_Feedback&);
 };
 
 #endif // FEEDBACK_H

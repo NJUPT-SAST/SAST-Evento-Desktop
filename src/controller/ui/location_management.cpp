@@ -1,6 +1,8 @@
 #include "location_management.h"
 #include "repository.h"
 
+// deprecated
+
 QString LocationManagementController::loadAllLocation()
 {
     EventoException err;

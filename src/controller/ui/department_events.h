@@ -10,24 +10,51 @@ class DepartmentEventsController : public QObject
     QML_SINGLETON
 
 public:
-    Q_INVOKABLE QString loadDepartmentsInfo();
-    Q_INVOKABLE QString loadSubscribedDepartment();
+    Q_INVOKABLE void loadDepartmentsInfo();
+    Q_INVOKABLE void loadSubscribedDepartment();
     Q_INVOKABLE void loadDepartmentEvents(int departmentId);
     Q_INVOKABLE void subscribeDepartment(bool isSubscribe, int departmentId);
 
 signals:
-    void loadSubscribedDepartmentsSuccessEvent();
-    void loadSubscribedDepartmentsErrorEvent(const QString message);
-    void loadDepartmentsSuccessEvent();
-    void loadDepartmentsErrorEvent(const QString message);
+    void loadSubscribedDepartmentsSuccessEvent(QString departmentJson);
+    void loadSubscribedDepartmentsErrorEvent(QString message);
+    void loadDepartmentsSuccessEvent(QString departmentJson);
+    void loadDepartmentsErrorEvent(QString message);
     void loadDepartmentEventSuccessEvent();
-    void loadDepartmentEventErrorEvent(const QString message);
-    void subscribeSuccessEvent(const bool isSubscribe, const int departmentId);
-    void subscribeEventEvent(const QString message);
+    void loadDepartmentEventErrorEvent(QString message);
+    void subscribeSuccessEvent();
+    void subscribeErrorEvent(QString message);
 
-public:
-    static DepartmentEventsController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+private:
     DepartmentEventsController() = default;
+public:
+    void onLoadDepartmentsInfoFinished(const QString& departmentJson) {
+        emit loadDepartmentsSuccessEvent(departmentJson);
+    }
+    void onLoadDepartmentsFailure(const QString& msg) {
+        emit loadDepartmentsErrorEvent(msg);
+    }
+    void onLoadSubscribedDepartmentsFinished(const QString& departmentJson) {
+        emit loadSubscribedDepartmentsSuccessEvent(departmentJson);
+    }
+    void onLoadSubscribedDepartmentsFailure(const QString& msg) {
+        emit loadSubscribedDepartmentsErrorEvent(msg);
+    }
+    void onLoadDepartmentEventFinished() {
+        emit loadDepartmentEventSuccessEvent();
+    }
+    void onLoadDepartmentEventFailure(const QString& msg) {
+        emit loadDepartmentEventErrorEvent(msg);
+    }
+    void onSubscribeFinished() {
+        emit subscribeSuccessEvent();
+    }
+    void onSubscribeFailure(const QString& msg) {
+        emit subscribeErrorEvent(msg);
+    }
+
+    static DepartmentEventsController *getInstance();
+    static DepartmentEventsController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 
 #endif // DEPARTMENT_EVENTS_H

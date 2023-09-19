@@ -30,16 +30,16 @@ private:
 
 signals:
     void loadEventoSuccessEvent();
-    void loadEventoErrorEvent(const QString message);
+    void loadEventoErrorEvent(QString message);
 
     void registerSuccessEvent();
-    void registerErrorEvent(const QString message);
+    void registerErrorEvent(QString message);
 
     void subscribeSuccessEvent();
-    void subscribeErrorEvent(const QString message);
+    void subscribeErrorEvent(QString message);
 
     void feedbackSuccessEvent();
-    void feedbackErrorEvent(const QString message);
+    void feedbackErrorEvent(QString message);
 
     void isRegistratedChanged();
     void isParticipatedChanged();
@@ -49,13 +49,31 @@ signals:
 private:
     EventoInfoController() = default;
 public:
-    void onLoadSuccess() {
+    void onLoadFinished() {
         emit loadEventoSuccessEvent();
     }
     void onLoadFailure(const QString& msg) {
         emit loadEventoErrorEvent(msg);
     }
-public:
+    void onRegisterFinished() {
+        emit registerSuccessEvent();
+    }
+    void onRegisterFailure(const QString& msg) {
+        emit registerErrorEvent(msg);
+    }
+    void onSubscribeFinished() {
+        emit subscribeSuccessEvent();
+    }
+    void onSubscribeFailure(const QString& msg) {
+        emit subscribeErrorEvent(msg);
+    }
+    void onFeedbackFinished() {
+        emit feedbackSuccessEvent();
+    }
+    void onFeedbackFailure(const QString& msg) {
+        emit feedbackErrorEvent(msg);
+    }
+
     static EventoInfoController *getInstance();
     static EventoInfoController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };

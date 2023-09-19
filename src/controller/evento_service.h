@@ -11,6 +11,8 @@ class EventoService {
 
     std::vector<EventoID> undertaking;
     std::vector<EventoID> latest;
+    std::vector<EventoID> registered;
+    std::vector<EventoID> subscribed;
     std::map<EventoID, DTO_Evento> stored;
 private:
     EventoService() = default;
@@ -21,6 +23,8 @@ public:
     }
 
     void load_Plaza();
+    void load_RegisteredSchedule();
+    void load_SubscribedSchedule();
     void load(EventoID id);
     DTO_Evento edit(EventoID id);
     void update(const DTO_Evento& event);

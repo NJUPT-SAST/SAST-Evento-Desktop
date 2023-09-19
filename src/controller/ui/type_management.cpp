@@ -1,6 +1,8 @@
 #include "type_management.h"
 #include "repository.h"
 
+// deprecated
+
 QString TypeManagementController::loadAllType()
 {
     EventoException err;

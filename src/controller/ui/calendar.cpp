@@ -30,7 +30,15 @@ QString CalendarController::loadCheckCode(const EventoID eventId)
     return code;
 }
 
+CalendarController *CalendarController::getInstance()
+{
+    static CalendarController instance;
+    return &instance;
+}
+
 CalendarController *CalendarController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return new CalendarController();
+    auto instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
+    return instance;
 }

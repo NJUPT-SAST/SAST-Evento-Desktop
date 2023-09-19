@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+struct DTO_Evento;
+
 struct Schedule
 {
     EventoID id;
@@ -14,7 +16,10 @@ struct Schedule
     QString startTime;
     QString endTime;
     bool isChecked;
-    bool isFeedback;
+    bool hasFeedback;
+
+    Schedule() = default;
+    Schedule(const DTO_Evento&);
 };
 
 #endif // SCHEDULED_EVENTO_H

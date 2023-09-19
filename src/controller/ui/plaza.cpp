@@ -1,30 +1,35 @@
 #include <QDesktopServices>
 #include "plaza.h"
-#include "convertor.h"
+#include "repository.h"
 #include "slide_model.h"
 #include "evento_service.h"
+#include "slide_service.h"
+#include "slide.h"
 
 void PlazaController::loadPlazaInfo() {
     EventoException err;
-    auto slides = getRepo()->getHomeSlideList(3, err);
-    if (slides.empty()) {
-        slides.emplace_back(
-            DTO_Slide{0, 0, "SAST Evento", "", "qrc:/res/image/banner_1.png"});
-        slides.emplace_back(
-            DTO_Slide{0, 0, "SAST C++", "", "qrc:/res/image/banner_2.png"});
-        slides.emplace_back(
-            DTO_Slide{0, 0, "SAST", "", "qrc:/res/image/banner_3.png"});
-    } else if (slides.size() == 1) {
-        slides.emplace_back(
-            DTO_Slide{0, 0, "SAST C++", "", "qrc:/res/image/banner_2.png"});
-        slides.emplace_back(
-            DTO_Slide{0, 0, "SAST", "", "qrc:/res/image/banner_3.png"});
-    } else if (slides.size() == 2) {
-        slides.emplace_back(
-            DTO_Slide{0, 0, "SAST", "", "qrc:/res/image/banner_3.png"});
-    }
-    SlideModel::getInstance()->resetModel(
-        Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(slides));
+//    auto slides = getRepo()->getHomeSlideList(3, err);
+//    if (slides.empty()) {
+//        slides.emplace_back(
+//            DTO_Slide{0, 0, "SAST Evento", "", "qrc:/res/image/banner_1.png"});
+//        slides.emplace_back(
+//            DTO_Slide{0, 0, "SAST C++", "", "qrc:/res/image/banner_2.png"});
+//        slides.emplace_back(
+//            DTO_Slide{0, 0, "SAST", "", "qrc:/res/image/banner_3.png"});
+//    } else if (slides.size() == 1) {
+//        slides.emplace_back(
+//            DTO_Slide{0, 0, "SAST C++", "", "qrc:/res/image/banner_2.png"});
+//        slides.emplace_back(
+//            DTO_Slide{0, 0, "SAST", "", "qrc:/res/image/banner_3.png"});
+//    } else if (slides.size() == 2) {
+//        slides.emplace_back(
+//            DTO_Slide{0, 0, "SAST", "", "qrc:/res/image/banner_3.png"});
+//    }
+//    std::vector<Slide> model;
+//    for (const auto& i : slides) {
+//        model.push_back(Slide(i));
+//    }
+//    SlideModel::getInstance()->resetModel(model);
     EventoService::getInstance().load_Plaza();
     if (err)
         emit loadPlazaErrorEvent(err.message());

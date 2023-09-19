@@ -26,8 +26,10 @@ signals:
     void loadCheckCodeSuccessEvent();
     void loadCheckCodeErrorEvent(const QString message);
 
-public:
+private:
     CalendarController() = default;
+public:
+    static CalendarController *getInstance();
     static CalendarController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 

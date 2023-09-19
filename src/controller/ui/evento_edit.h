@@ -64,7 +64,14 @@ private:
     EventoEditController() = default;
 public:
     void update(const DTO_Evento& event);
-public:
+
+    void onLoadEditFinished() {
+        emit loadEditSuccessEvent();
+    }
+    void onLoadEditFailure(const QString& msg) {
+        emit loadEditErrorEvent(msg);
+    }
+
     static EventoEditController *getInstance();
     static EventoEditController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };

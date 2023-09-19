@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+struct DTO_Evento;
+
 struct LatestEvento {
     EventoID id;
     QString title;
@@ -10,6 +12,9 @@ struct LatestEvento {
     QString department;
     QString description;
     Image image;
+
+    LatestEvento() = default;
+    LatestEvento(const DTO_Evento&);
 };
 
 #endif // LATEST_EVENTO_H

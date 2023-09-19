@@ -35,13 +35,7 @@ public:
     EventoBlockModel &operator=(const EventoBlockModel &) = delete;
 
 private:
-    EventoBlockModel() //= default;
-    {
-        m_data.push_back({1, "title1", "10:00 - 11:00", 4, 5, 2, false});
-        m_data.push_back({2, "title2", "14:00 - 16:00", 7, 9, 4, true});
-        m_data.push_back({3, "title3", "14:30 - 15:30", 7.5, 8.5, 3, true});
-        m_data.push_back({4, "title4", "19:00 - 20:00", 12, 13, 6, true});
-    }
+    EventoBlockModel() = default;
 
     std::vector<EventoBlock> m_data;
 

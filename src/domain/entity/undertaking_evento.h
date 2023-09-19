@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+struct DTO_Evento;
+
 struct UndertakingEvento {
     EventoID id;
     QString title;
@@ -10,6 +12,9 @@ struct UndertakingEvento {
     QString location;
     QString department;
     Image image;
+
+    UndertakingEvento() = default;
+    UndertakingEvento(const DTO_Evento&);
 };
 
 #endif // UNDERTAKING_EVENTO_H

@@ -1,48 +1,51 @@
 #include "department_events.h"
 #include "repository.h"
-#include "convertor.h"
 #include "evento_brief_model.h"
 #include "evento_service.h"
 
-QString DepartmentEventsController::loadDepartmentsInfo()
+void DepartmentEventsController::loadDepartmentsInfo()
 {
     EventoException err;
     auto departmentList = getRepo()->getDepartmentList(err);
-    if (err) {
-        emit loadDepartmentsErrorEvent(err.message());
-        return QString();
-    }
-    emit loadDepartmentsSuccessEvent();
-    return departmentList;
+    if (err)
+        return emit loadDepartmentsErrorEvent(err.message());
+    emit loadDepartmentsSuccessEvent(departmentList);
 }
 
-QString DepartmentEventsController::loadSubscribedDepartment()
+void DepartmentEventsController::loadSubscribedDepartment()
 {
-    emit loadSubscribedDepartmentsSuccessEvent();
-    return "[1]";
+    emit loadSubscribedDepartmentsSuccessEvent("[1]");
 }
 
 void DepartmentEventsController::loadDepartmentEvents(int departmentId)
 {
-    auto future = getRepo()->getDepartmentEventList(departmentId);
-    future.waitForFinished();
-    auto result = future.takeResult();
-    if (!result) {
-        emit loadDepartmentEventErrorEvent(result.message());
-        return;
-    }
-    EventoBriefModel::getInstance()->resetModel(
-        Convertor<std::vector<DTO_Evento>, std::vector<EventoBrief>>()(result.take()));
+//    auto future = getRepo()->getDepartmentEventList(departmentId);
+//    future.waitForFinished();
+//    auto result = future.takeResult();
+//    if (!result) {
+//        emit loadDepartmentEventErrorEvent(result.message());
+//        return;
+//    }
+//    EventoBriefModel::getInstance()->resetModel(
+//        Convertor<std::vector<DTO_Evento>, std::vector<EventoBrief>>()(result.take()));
 
     emit loadDepartmentEventSuccessEvent();
 }
 
 void DepartmentEventsController::subscribeDepartment(bool check, int departmentId)
 {
-    emit subscribeSuccessEvent(check, departmentId);
+    emit subscribeSuccessEvent();
+}
+
+DepartmentEventsController *DepartmentEventsController::getInstance()
+{
+    static DepartmentEventsController instance;
+    return &instance;
 }
 
 DepartmentEventsController *DepartmentEventsController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return new DepartmentEventsController();
+    auto instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
+    return instance;
 }
