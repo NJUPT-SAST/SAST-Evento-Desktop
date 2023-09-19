@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+struct DTO_Evento;
+
 struct EventoBlock {
     EventoID id;
     QString title;
@@ -11,6 +13,9 @@ struct EventoBlock {
     double rowEnd;   // index: 23:00 -> 15
     int columnStart; // index: Monday -> 0
     bool editable;
+
+    EventoBlock() = default;
+    EventoBlock(const DTO_Evento&);
 };
 
 #endif // EVENTOBLOCK_H

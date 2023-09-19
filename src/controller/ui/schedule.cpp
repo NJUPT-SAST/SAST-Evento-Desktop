@@ -1,37 +1,15 @@
-#include "scheduled_evento.h"
 #include "schedule.h"
-#include "scheduled_evento_model.h"
-#include "convertor.h"
+#include "evento_service.h"
+#include "local/repositoryimpl.h"
 
 void ScheduleController::loadRegisteredSchedule()
 {
-    auto future = getRepo()->getRegisteredList();
-    future.waitForFinished();
-    auto result = future.takeResult();
-    if (!result)
-        return emit loadRegisteredScheduleErrorEvent(result.message());
-
-    ScheduledEventoModel::getInstance()->resetModel(
-        Convertor<std::vector<DTO_Evento>, std::vector<Schedule>>()(result.take()));
-
-    emit loadRegisteredScheduleSuccessEvent();
+    EventoService::getInstance().load_RegisteredSchedule();
 }
 
 void ScheduleController::loadSubscribedSchedule()
 {
-    auto future = getRepo()->getSubscribedList();
-    future.waitForFinished();
-    auto result = future.takeResult();
-    if (!result)
-    {
-        emit loadSubscribedScheduleErrorEvent(result.message());
-        return;
-    }
-    ScheduledEventoModel::getInstance()->resetModel(
-        Convertor<std::vector<DTO_Evento>,
-                    std::vector<Schedule>>()(result.take()));
-
-    emit loadSubscribedScheduleSuccessEvent();
+    EventoService::getInstance().load_SubscribedSchedule();
 }
 
 void ScheduleController::check(const int eventId, const QString &code)
@@ -45,7 +23,15 @@ void ScheduleController::check(const int eventId, const QString &code)
         emit checkErrorEvent(result.message());
 }
 
+ScheduleController *ScheduleController::getInstance()
+{
+    static ScheduleController instance;
+    return &instance;
+}
+
 ScheduleController *ScheduleController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
 {
-    return new ScheduleController();
+    auto instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
+    return instance;
 }

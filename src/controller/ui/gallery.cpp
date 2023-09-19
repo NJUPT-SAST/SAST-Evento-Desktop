@@ -1,6 +1,8 @@
 #include "gallery.h"
 #include "gallery_helper.h"
 
+// deprecated
+
 void GalleryController::loadGalleryDirJson()
 {
     /*--------------------------------------/

@@ -37,8 +37,8 @@ QVariant ScheduledEventoModel::data(const QModelIndex &index, int role) const
         return element.endTime;
     case Role::IsChecked:
         return element.isChecked;
-    case Role::IsFeedback:
-        return element.isFeedback;
+    case Role::HasFeedback:
+        return element.hasFeedback;
     default:
         break;
     }
@@ -60,7 +60,7 @@ QHash<int, QByteArray> ScheduledEventoModel::roleNames() const
         roles.insert(StartTime, "startTime");
         roles.insert(EndTime, "endTime");
         roles.insert(IsChecked, "isChecked");
-        roles.insert(IsFeedback, "isFeedback");
+        roles.insert(HasFeedback, "isFeedback");
     }
     return roles;
 }

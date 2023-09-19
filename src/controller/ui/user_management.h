@@ -3,6 +3,8 @@
 
 #include <QtQml>
 
+// deprecated
+
 class UserManagementController : public QObject
 {
     Q_OBJECT

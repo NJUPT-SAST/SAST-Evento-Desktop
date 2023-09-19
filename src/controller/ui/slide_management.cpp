@@ -1,17 +1,11 @@
 #include "slide_management.h"
-#include "convertor.h"
 #include "slide_model.h"
 #include "repository.h"
 
+// deprecated
+
 void SlideManagementController::loadAllSlide()
 {
-    EventoException err;
-    SlideModel::getInstance()->resetModel(
-        Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
-            getRepo()->getHomeSlideList(3, err)));
-    // TODO getHomeSlideList 参数更改为size和page（未来替换）
-    if((int)err.code())
-        return emit loadAllSlideError(err.message());
     return emit loadAllSlideSuccess();
 }
 

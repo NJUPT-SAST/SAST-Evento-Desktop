@@ -1,5 +1,5 @@
 #include "evento_info.h"
-#include "convertor.h"
+#include "repository.h"
 #include "evento_service.h"
 #include "evento_exception.h"
 #include "feedback_helper.h"
@@ -8,12 +8,12 @@
 void EventoInfoController::loadEventoInfo(const EventoID eventId)
 {
     EventoException err;
-    SlideModel::getInstance()->resetModel(
-        Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
-            getRepo()->getEventSlideList(eventId, err)
-    ));
-    if (err)
-        return emit loadEventoErrorEvent(err.message());
+//    SlideModel::getInstance()->resetModel(
+//        Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
+//            getRepo()->getEventSlideList(eventId, err)
+//    ));
+//    if (err)
+//        return emit loadEventoErrorEvent(err.message());
 
     auto participate = getRepo()->getUserParticipate(eventId, err);
     if (err)
@@ -23,12 +23,12 @@ void EventoInfoController::loadEventoInfo(const EventoID eventId)
     setProperty("isParticipated", participate.isParticipated);
     setProperty("isSubscribed", participate.isSubscribed);
 
-    FeedbackHelper::getInstance()->updateFeedback(
-        Convertor<DTO_Feedback, Feedback>()(
-            getRepo()->getFeedbackInfo(eventId, err)
-    ));
-    if (err)
-        return emit loadEventoErrorEvent(err.message());
+//    FeedbackHelper::getInstance()->updateFeedback(
+//        Convertor<DTO_Feedback, Feedback>()(
+//            getRepo()->getFeedbackInfo(eventId, err)
+//    ));
+//    if (err)
+//        return emit loadEventoErrorEvent(err.message());
 
     EventoService::getInstance().load(eventId);
 }

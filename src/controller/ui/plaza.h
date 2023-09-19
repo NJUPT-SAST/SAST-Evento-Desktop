@@ -18,16 +18,17 @@ public:
 signals:
     void loadPlazaSuccessEvent();
     void loadPlazaErrorEvent(const QString message);
-public:
-    inline void onPlazaLoadFailure(const EventoException& err) {
-        emit loadPlazaErrorEvent(err.message());
-    }
-    inline void onPlazaLoadFinished() {
-        emit loadPlazaSuccessEvent();
-    }
+
 private:
     PlazaController() = default;
 public:
+    void onPlazaLoadFailure(const EventoException& err) {
+        emit loadPlazaErrorEvent(err.message());
+    }
+    void onPlazaLoadFinished() {
+        emit loadPlazaSuccessEvent();
+    }
+
     static PlazaController *getInstance();
     static PlazaController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };

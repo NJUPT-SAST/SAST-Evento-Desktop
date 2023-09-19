@@ -1,17 +1,14 @@
 #include "feedback_statistics.h"
-#include "convertor.h"
 #include "evento_exception.h"
 
-int FeedbackStatisticsController::loadSummaryInfo(int page)
+void FeedbackStatisticsController::loadSummaryInfo(int page)
 {
     EventoException err;
     // TODO
     if ((int) err.code()) {
-        emit loadSummaryErrorEvent(err.message());
-        return 0;
+        return emit loadSummaryErrorEvent(err.message());
     }
-    emit loadSummarySuccessEvent();
-    return 30;
+    emit loadSummarySuccessEvent(30);
 }
 
 void FeedbackStatisticsController::loadFeedbackInfo()
@@ -22,8 +19,16 @@ void FeedbackStatisticsController::loadFeedbackInfo()
     emit loadFeedbackSuccessEvent();
 }
 
+FeedbackStatisticsController *FeedbackStatisticsController::getInstance()
+{
+    static FeedbackStatisticsController instance;
+    return &instance;
+}
+
 FeedbackStatisticsController *FeedbackStatisticsController::create(QQmlEngine *qmlEngine,
                                                                    QJSEngine *jsEngine)
 {
-    return new FeedbackStatisticsController();
+    auto instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
+    return instance;
 }

@@ -1,6 +1,8 @@
 #ifndef SCHEDULE_CONTROLLER_H
 #define SCHEDULE_CONTROLLER_H
 
+#include "evento_exception.h"
+
 #include <QtQml>
 
 class ScheduleController : public QObject
@@ -16,16 +18,37 @@ public:
 
 signals:
     void loadRegisteredScheduleSuccessEvent();
-    void loadRegisteredScheduleErrorEvent(const QString message);
+    void loadRegisteredScheduleErrorEvent(QString message);
 
     void loadSubscribedScheduleSuccessEvent();
-    void loadSubscribedScheduleErrorEvent(const QString message);
+    void loadSubscribedScheduleErrorEvent(QString message);
 
     void checkSuccessEvent();
-    void checkErrorEvent(const QString &message);
+    void checkErrorEvent(QString message);
 
-public:
+private:
     ScheduleController() = default;
+public:
+    void onLoadRegisteredFinished() {
+        emit loadRegisteredScheduleSuccessEvent();
+    }
+    void onLoadRegisteredFailure(const QString& msg) {
+        emit loadRegisteredScheduleErrorEvent(msg);
+    }
+    void onLoadSubscribedFinished() {
+        emit loadSubscribedScheduleSuccessEvent();
+    }
+    void onLoadSubscribedFailure(const QString& msg) {
+        emit loadSubscribedScheduleErrorEvent(msg);
+    }
+    void checkFinished() {
+        emit checkSuccessEvent();
+    }
+    void checkFailure(const QString& msg) {
+        emit checkErrorEvent(msg);
+    }
+public:
+    static ScheduleController *getInstance();
     static ScheduleController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 

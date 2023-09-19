@@ -1,33 +1,16 @@
 #include "user_management.h"
-#include "convertor.h"
 #include "user_brief_model.h"
+
+// deprecated
 
 void UserManagementController::loadAllUserInfo()
 {
-    EventoException err;
-    // 获取DTO_User_Brief并交由对应Convertor转换为Model赋值给实例
-    //    UserBriefModel::getInstance()->resetModel(
-    //        Convertor<std::vector<DTO_UserBrief>,
-    //                  std::vector<UserBrief>>()(
-    //            getRepo()->get_user_brief_list(err)
-    //    ));
-    if ((int)err.code())
-        return emit loadAllUserError(err.message());
-
     emit loadAllUserSuccess();
 }
 
 QString UserManagementController::loadPermissionInfo()
 {
-    EventoException err;
-    auto result = getRepo()->getAdminPermissionTreeData(err);
-
-    if ((int)err.code()){
-        emit loadPermissionErrorEvent(err.message());
-        return {};
-    }
-    emit loadPermissionSuccessEvent();
-    return result;
+    return {};
 }
 
 void UserManagementController::createUser(const QVariantList& list)

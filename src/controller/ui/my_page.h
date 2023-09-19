@@ -16,8 +16,10 @@ signals:
     void loadMyPageSuccessEvent();
     void loadMyPageErrorEvent(const QString message);
 
-public:
+private:
     MyPageController() = default;
+public:
+    static MyPageController* getInstance();
     static MyPageController* create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
 

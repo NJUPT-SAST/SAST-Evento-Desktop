@@ -1,6 +1,8 @@
 #include "slide_management_edit.h"
 #include "slide_helper.h"
 
+// deprecated
+
 void SlideManagementEditController::loadEditInfo(const int &slideId, const bool &isEdit)
 {
     if(isEdit) {
