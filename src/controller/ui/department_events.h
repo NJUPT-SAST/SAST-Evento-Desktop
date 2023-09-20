@@ -18,7 +18,7 @@ public:
 signals:
     void loadSubscribedDepartmentsSuccessEvent(QString departmentJson);
     void loadSubscribedDepartmentsErrorEvent(QString message);
-    void loadDepartmentsSuccessEvent(QString departmentJson);
+    void loadDepartmentsSuccessEvent(QString departmentsJson);
     void loadDepartmentsErrorEvent(QString message);
     void loadDepartmentEventSuccessEvent();
     void loadDepartmentEventErrorEvent(QString message);

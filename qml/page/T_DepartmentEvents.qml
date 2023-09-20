@@ -18,8 +18,7 @@ FluScrollablePage {
 
     function loadDepartmentEventsPage() {
         statusMode = FluStatusViewType.Loading
-        departmentJson = DepartmentEventsController.loadDepartmentsInfo()
-        tree_view.updateData(createOrg())
+        DepartmentEventsController.loadDepartmentsInfo()
     }
 
     function loadDepartmentEvents(departmentId) {
@@ -36,8 +35,9 @@ FluScrollablePage {
 
     Connections {
         target: DepartmentEventsController
-        function onLoadDepartmentsSuccessEvent() {
-            subscribeArr = JSON.parse(DepartmentEventsController.loadSubscribedDepartment())
+        function onLoadDepartmentsSuccessEvent(departmentsJson) {
+            departmentJson = departmentsJson
+            DepartmentEventsController.loadSubscribedDepartment()
         }
     }
 
@@ -66,7 +66,9 @@ FluScrollablePage {
 
     Connections {
         target: DepartmentEventsController
-        function onLoadSubscribedDepartmentsSuccessEvent() {
+        function onLoadSubscribedDepartmentsSuccessEvent(departmentJson) {
+            subscribeArr = JSON.parse(departmentJson)
+            tree_view.updateData(createOrg())
             statusMode = FluStatusViewType.Success
         }
     }
