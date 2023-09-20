@@ -17,21 +17,21 @@ class EventoEditController : public QObject {
     Q_PROPERTY(QString typeJson MEMBER m_typeJson NOTIFY typeJsonChanged)
     Q_PROPERTY(int typeId MEMBER m_typeId NOTIFY typeIdChanged)
     Q_PROPERTY(bool allowConflict MEMBER m_allowConflict NOTIFY allowConflictChanged)
-    Q_PROPERTY(bool isEditMode MEMBER m_isEdited NOTIFY isEditedChanged)
+    Q_PROPERTY(bool isEditMode MEMBER m_isEditMode NOTIFY isEditModeChanged)
     Q_PROPERTY(QString eventStart MEMBER m_eventStart NOTIFY eventStartChanged)
     Q_PROPERTY(QString eventEnd MEMBER m_eventEnd NOTIFY eventEndChanged)
     Q_PROPERTY(QString registerStart MEMBER m_registerStart NOTIFY registerStartChanged)
     Q_PROPERTY(QString registerEnd MEMBER m_registerEnd NOTIFY registerEndChanged)
 
 public:
-    Q_INVOKABLE void createEvento();
-    void editEvento(EventoID id);
+    Q_INVOKABLE void loadEditInfo();
+    Q_INVOKABLE void editEvento(EventoID id);
 
 private:
     QString m_departmentJson;
     QString m_locationJson;
     QString m_typeJson;
-    bool m_isEdited; // true: 编辑模式 false: 创建模式
+    bool m_isEditMode; // true: 编辑模式 false: 创建模式
     // 编辑模式属性
     int m_typeId;
     bool m_allowConflict;
@@ -40,22 +40,21 @@ private:
     QString m_registerStart;
     QString m_registerEnd;
 
-private:
     void preload();
 
 signals:
     void loadEditSuccessEvent();
-    void loadEditErrorEvent(const QString messge);
+    void loadEditErrorEvent(QString messge);
 
     void createSuccessEvent();
-    void createErrorEvent(const QString message);
+    void createErrorEvent(QString message);
 
     void departmentJsonChanged();
     void locationJsonChanged();
     void typeJsonChanged();
     void typeIdChanged();
     void allowConflictChanged();
-    void isEditedChanged();
+    void isEditModeChanged();
     void eventStartChanged();
     void eventEndChanged();
     void registerStartChanged();

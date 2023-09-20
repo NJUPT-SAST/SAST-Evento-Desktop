@@ -1,16 +1,9 @@
 #include "department_management.h"
-#include "repository.h"
 
 QString DepartmentManagementController::loadAllDepartment()
 {
-    EventoException err;
-    QString res = getRepo()->getDepartmentList(err);
-    if((int)err.code()) {
-        emit loadAllDepartmentError(err.message());
-        return QString();
-    }
     emit loadAllDepartmentSuccess();
-    return res;
+    return {};
 }
 
 void DepartmentManagementController::deleteDepartment(const int departmentId)

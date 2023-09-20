@@ -9,6 +9,11 @@
 #include "evento_helper.h"
 #include "schedule.h"
 #include "scheduled_evento_model.h"
+#include "department_events.h"
+#include "evento_block_model.h"
+#include "calendar.h"
+#include "my_page.h"
+#include "evento_brief_model.h"
 
 #include <QtConcurrent>
 #include <array>
@@ -54,7 +59,7 @@ void EventoService::load_Plaza() {
 			return true;
 		})
 	};
-    QtConcurrent::run([=] {
+    auto t = QtConcurrent::run([=] {
 		for (const auto& i : tasks)
 			if (!i.result())
 				return;
@@ -62,13 +67,10 @@ void EventoService::load_Plaza() {
     });
 }
 
-void EventoService::load_RegisteredSchedule()
-{
+void EventoService::load_RegisteredSchedule() {
     getRepo()->getRegisteredList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
-        if (!result) {
+        if (!result)
             ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
-            return false;
-        }
         auto data = result.take();
         std::vector<Schedule> model;
         {
@@ -81,20 +83,14 @@ void EventoService::load_RegisteredSchedule()
             }
         }
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
-        return true;
-    });
-    QtConcurrent::run([] {
         ScheduleController::getInstance()->onLoadRegisteredFinished();
     });
 }
 
-void EventoService::load_SubscribedSchedule()
-{
+void EventoService::load_SubscribedSchedule() {
     getRepo()->getSubscribedList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
-        if (!result) {
+        if (!result)
             ScheduleController::getInstance()->onLoadSubscribedFailure(result.message());
-            return false;
-        }
         auto data = result.take();
         std::vector<Schedule> model;
         {
@@ -107,10 +103,67 @@ void EventoService::load_SubscribedSchedule()
             }
         }
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
-        return true;
-    });
-    QtConcurrent::run([] {
         ScheduleController::getInstance()->onLoadSubscribedFinished();
+    });
+}
+
+void EventoService::load_DepartmentEvents(int departmentId) {
+    getRepo()->getDepartmentEventList(departmentId).then([=](EventoResult<std::vector<DTO_Evento>> result) {
+        if (!result)
+            DepartmentEventsController::getInstance()->onLoadDepartmentEventFailure(result.message());
+        auto data = result.take();
+        std::vector<EventoBrief> model;
+        {
+            std::lock_guard lock(mutex);
+            departmentEvento.clear();
+            for (auto& i : data) {
+                departmentEvento.push_back(i.id);
+                model.push_back(EventoBrief(i));
+                stored[i.id] = std::move(i);
+            }
+        }
+        EventoBriefModel::getInstance()->resetModel(std::move(model));
+        DepartmentEventsController::getInstance()->onLoadDepartmentEventFinished();
+    });
+}
+
+void EventoService::load_History() {
+    getRepo()->getHistoryList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
+        if (!result)
+            MyPageController::getInstance()->onLoadFailure(result.message());
+        auto data = result.take();
+        std::vector<EventoBrief> model;
+        {
+            std::lock_guard lock(mutex);
+            history.clear();
+            for (auto& i : data) {
+                history.push_back(i.id);
+                model.push_back(EventoBrief(i));
+                stored[i.id] = std::move(i);
+            }
+        }
+        EventoBriefModel::getInstance()->resetModel(std::move(model));
+        MyPageController::getInstance()->onLoadFinished();
+    });
+}
+
+void EventoService::load_Block(const QString& time) {
+    getRepo()->getEventListByTime(time).then([=](EventoResult<std::vector<DTO_Evento>> result) {
+        if (!result)
+            CalendarController::getInstance()->onLoadAllFailure(result.message());
+        auto data = result.take();
+        std::vector<EventoBlock> model;
+        {
+            std::lock_guard lock(mutex);
+            blocks.clear();
+            for (auto& i : data) {
+                blocks.push_back(i.id);
+                model.push_back(EventoBlock(i));
+                stored[i.id] = std::move(i);
+            }
+        }
+        EventoBlockModel::getInstance()->resetModel(std::move(model));
+        CalendarController::getInstance()->onLoadAllFinished();
     });
 }
 
@@ -127,8 +180,18 @@ void EventoService::load(EventoID id) {
 }
 
 DTO_Evento EventoService::edit(EventoID id) {
-	std::shared_lock guard(mutex);
-	return stored[id];
+    std::shared_lock guard(mutex);
+    return stored[id];
+}
+
+void EventoService::getQRCode(EventoID id)
+{
+    getRepo()->getQRCode(id).then([](EventoResult<QString> result) {
+        if (!result)
+            CalendarController::getInstance()->onLoadCheckCodeFailure(result.message());
+        auto code = result.take();
+        CalendarController::getInstance()->onLoadCheckCodeFinished(code);
+    });
 }
 
 Evento::Evento(const DTO_Evento& src) : id(src.id), title(src.title), description(src.description), type(src.type), location(src.location), tag(src.tag), state(src.state) {
@@ -154,4 +217,19 @@ UndertakingEvento::UndertakingEvento(const DTO_Evento& src) : id(src.id), title(
 LatestEvento::LatestEvento(const DTO_Evento& src) : id(src.id), title(src.title), description(src.description) {
     this->time = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
     this->department = departmentConvertor(src.departments);
+}
+
+EventoBrief::EventoBrief(const DTO_Evento& src) : id(src.id), title(src.title), description(src.description), location(src.location) {
+    this->time = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
+    this->department = departmentConvertor(src.departments);
+}
+
+EventoBlock::EventoBlock(const DTO_Evento& src) : id(src.id), title(src.title) {
+    this->time = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
+    this->rowStart = src.gmtEventStart.time().hour() - 8;
+    if (this->rowStart < 0) this->rowStart = 0;
+    this->rowStart += src.gmtEventStart.time().minute() / 60.0;
+    this->rowEnd = src.gmtEventEnd.time().hour() - 8;
+    if (this->rowEnd > 15) this->rowEnd = 15;
+    this->columnStart = src.gmtEventEnd.date().dayOfWeek() - 1;
 }

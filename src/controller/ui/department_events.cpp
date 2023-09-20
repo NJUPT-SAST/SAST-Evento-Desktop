@@ -1,39 +1,20 @@
 #include "department_events.h"
-#include "repository.h"
-#include "evento_brief_model.h"
 #include "evento_service.h"
+#include "information_service.h"
 
-void DepartmentEventsController::loadDepartmentsInfo()
-{
-    EventoException err;
-    auto departmentList = getRepo()->getDepartmentList(err);
-    if (err)
-        return emit loadDepartmentsErrorEvent(err.message());
-    emit loadDepartmentsSuccessEvent(departmentList);
+void DepartmentEventsController::loadDepartmentsInfo() {
+    InformationService::getInstance().load_DepartmentInfo();
 }
 
-void DepartmentEventsController::loadSubscribedDepartment()
-{
-    emit loadSubscribedDepartmentsSuccessEvent("[1]");
+void DepartmentEventsController::loadSubscribedDepartment() {
+    InformationService::getInstance().load_SubscribedDepartmentInfo();
 }
 
-void DepartmentEventsController::loadDepartmentEvents(int departmentId)
-{
-//    auto future = getRepo()->getDepartmentEventList(departmentId);
-//    future.waitForFinished();
-//    auto result = future.takeResult();
-//    if (!result) {
-//        emit loadDepartmentEventErrorEvent(result.message());
-//        return;
-//    }
-//    EventoBriefModel::getInstance()->resetModel(
-//        Convertor<std::vector<DTO_Evento>, std::vector<EventoBrief>>()(result.take()));
-
-    emit loadDepartmentEventSuccessEvent();
+void DepartmentEventsController::loadDepartmentEvents(int departmentId) {
+    EventoService::getInstance().load_DepartmentEvents(departmentId);
 }
 
-void DepartmentEventsController::subscribeDepartment(bool check, int departmentId)
-{
+void DepartmentEventsController::subscribeDepartment(bool check, int departmentId) {
     emit subscribeSuccessEvent();
 }
 

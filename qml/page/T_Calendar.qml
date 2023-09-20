@@ -160,51 +160,58 @@ FluScrollablePage {
             }
         }
 
-        FluButton {
-            id: btn_type
-            text: "类型管理"
-            anchors {
-                top: parent.top
-                topMargin: 10
-                right: btn_location.left
-                rightMargin: 5
+        // deprecated
+
+        /*
+        Item {
+            visible: false
+            FluButton {
+                id: btn_type
+                text: "类型管理"
+                anchors {
+                    top: parent.top
+                    topMargin: 10
+                    right: btn_location.left
+                    rightMargin: 5
+                }
+
+                onClicked: {
+                    MainWindow.window.pushPage(
+                                "qrc:/qml/page/T_TypeManagement.qml")
+                }
             }
 
-            onClicked: {
-                MainWindow.window.pushPage("qrc:/qml/page/T_TypeManagement.qml")
+            FluButton {
+                id: btn_location
+                text: "地点管理"
+                anchors {
+                    top: parent.top
+                    topMargin: 10
+                    right: btn_department.left
+                    rightMargin: 5
+                }
+                onClicked: {
+                    MainWindow.window.pushPage(
+                                "qrc:/qml/page/T_LocationManagement.qml")
+                }
+            }
+
+            FluButton {
+                id: btn_department
+                text: "部门管理"
+                anchors {
+                    top: parent.top
+                    topMargin: 10
+                    right: btn_create.left
+                    rightMargin: 10
+                }
+                onClicked: {
+                    MainWindow.window.pushPage(
+                                "qrc:/qml/page/T_DepartmentManagement.qml")
+                }
             }
         }
-
-        FluButton {
-            id: btn_location
-            text: "地点管理"
-            anchors {
-                top: parent.top
-                topMargin: 10
-                right: btn_department.left
-                rightMargin: 5
-            }
-            onClicked: {
-                MainWindow.window.pushPage(
-                            "qrc:/qml/page/T_LocationManagement.qml")
-            }
-        }
-
-        FluButton {
-            id: btn_department
-            text: "部门管理"
-            anchors {
-                top: parent.top
-                topMargin: 10
-                right: btn_create.left
-                rightMargin: 10
-            }
-            onClicked: {
-                MainWindow.window.pushPage(
-                            "qrc:/qml/page/T_DepartmentManagement.qml")
-            }
-        }
-
+        */
         FluFilledButton {
             id: btn_create
             text: "创建活动"

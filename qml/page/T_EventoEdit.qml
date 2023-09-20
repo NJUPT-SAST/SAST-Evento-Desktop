@@ -44,23 +44,7 @@ FluScrollablePage {
 
     function loadEditInfo() {
         statusMode = FluStatusViewType.Loading
-        EventoEditController.loadEditInfo(EventoHelper.id)
-        departmentArr = []
-        typeArr = []
-        var json = JSON.parse(EventoEditController.departmentJson)
-        for (var ii = 0; ii < json.length; ++ii) {
-            departmentArr.push(tree_view_department.createItem(json[ii].name,
-                                                               true, [], {
-                                                                   "id": json[ii].id
-                                                               }))
-        }
-        json = JSON.parse(EventoEditController.locationJson)
-        locationArr = parseJSON(json)
-        json = JSON.parse(EventoEditController.typeJson)
-        for (var j = 0; j < json.length; ++j) {
-            typeArr.push(json[j].name)
-        }
-        listReady()
+        EventoEditController.loadEditInfo()
     }
 
     function findTypeId(text) {
@@ -82,6 +66,22 @@ FluScrollablePage {
     Connections {
         target: EventoEditController
         function onLoadEditSuccessEvent() {
+            departmentArr = []
+            typeArr = []
+            var json = JSON.parse(EventoEditController.departmentJson)
+            for (var ii = 0; ii < json.length; ++ii) {
+                departmentArr.push(tree_view_department.createItem(
+                                       json[ii].name, true, [], {
+                                           "id": json[ii].id
+                                       }))
+            }
+            json = JSON.parse(EventoEditController.locationJson)
+            locationArr = parseJSON(json)
+            json = JSON.parse(EventoEditController.typeJson)
+            for (var j = 0; j < json.length; ++j) {
+                typeArr.push(json[j].name)
+            }
+            listReady()
             statusMode = FluStatusViewType.Success
         }
     }
@@ -97,7 +97,7 @@ FluScrollablePage {
     Item {
         id: item_all
         Layout.fillWidth: true
-        implicitHeight: 900 + textbox_description.implicitHeight
+        implicitHeight: 650 + textbox_description.implicitHeight
         FluArea {
             id: area1
             width: parent.width
@@ -118,26 +118,33 @@ FluScrollablePage {
         FluArea {
             id: area3
             width: parent.width
+            height: 65 + textbox_description.implicitHeight
             anchors {
                 top: area2.bottom
-                topMargin: 10
-                bottom: item_slide.top
-                bottomMargin: 20
-            }
-        }
-        FluArea {
-            id: area4
-            width: parent.width
-            height: 230
-            anchors {
-                top: area3.bottom
                 topMargin: 10
             }
         }
 
+        // deprecated
+
+
+        /*
+        Item {
+            visible: false
+            FluArea {
+                id: area4
+                width: parent.width
+                height: 230
+                anchors {
+                    top: area3.bottom
+                    topMargin: 10
+                }
+            }
+        }
+        */
         FluText {
             id: item_title
-            text: EventoEditController.title
+            text: "标题"
             font.pixelSize: 20
             font.bold: true
             anchors {
@@ -165,7 +172,7 @@ FluScrollablePage {
                 top: item_title.bottom
                 topMargin: 15
             }
-            text: EventoEditController.tag
+            text: "标签"
             font.pixelSize: 20
             font.bold: true
         }
@@ -203,7 +210,7 @@ FluScrollablePage {
             id: clender_picker_event_start
             width: 220
             current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                     EventoEditController.eventStart) : new Date
+                                                           EventoEditController.eventStart) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: item_event_time.top
@@ -213,7 +220,7 @@ FluScrollablePage {
             id: time_picker_event_start
             hourFormat: FluTimePickerType.HH
             current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                     EventoEditController.eventStart) : new Date
+                                                           EventoEditController.eventStart) : new Date
 
             anchors {
                 left: time_picker_register_start.left
@@ -234,7 +241,7 @@ FluScrollablePage {
             id: clender_picker_event_end
             width: 220
             current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                     EventoEditController.eventEnd) : new Date
+                                                           EventoEditController.eventEnd) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: text_end2.top
@@ -244,7 +251,7 @@ FluScrollablePage {
             id: time_picker_event_end
             hourFormat: FluTimePickerType.HH
             current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                     EventoEditController.eventEnd) : new Date
+                                                           EventoEditController.eventEnd) : new Date
             anchors {
                 left: time_picker_register_start.left
                 top: text_end2.top
@@ -275,7 +282,7 @@ FluScrollablePage {
             id: clender_picker_register_start
             width: 220
             current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                     EventoEditController.registerStart) : new Date
+                                                           EventoEditController.registerStart) : new Date
             anchors {
                 left: text_start1.right
                 leftMargin: 18
@@ -286,7 +293,7 @@ FluScrollablePage {
             id: time_picker_register_start
             hourFormat: FluTimePickerType.HH
             current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                     EventoEditController.registerStart) : new Date
+                                                           EventoEditController.registerStart) : new Date
             anchors {
                 left: clender_picker_register_start.right
                 leftMargin: 15
@@ -307,7 +314,7 @@ FluScrollablePage {
             id: clender_picker_register_end
             width: 220
             current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                     EventoEditController.registerEnd) : new Date
+                                                           EventoEditController.registerEnd) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: text_end1.top
@@ -317,7 +324,7 @@ FluScrollablePage {
             id: time_picker_register_end
             hourFormat: FluTimePickerType.HH
             current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                     EventoEditController.registerEnd) : (new Date)
+                                                           EventoEditController.registerEnd) : (new Date)
             anchors {
                 left: time_picker_register_start.left
                 top: text_end1.top
@@ -464,86 +471,94 @@ FluScrollablePage {
             }
         }
 
-        FluText {
-            id: item_slide
-            text: "图片"
-            font.pixelSize: 20
-            font.bold: true
-            anchors {
-                left: item_title.left
-                top: textbox_description.bottom
-                topMargin: 40
-            }
-        }
-        FluFilledButton {
-            id: btn_open_gallery
-            text: "打开图库"
-            implicitWidth: 200
-            anchors {
-                left: textbox_title.left
-                top: item_slide.top
-            }
-            onClicked: {
-                GalleryHelper.maxNum = 3
-                MainWindow.window.pushPage(
-                            "qrc:/qml/page/T_PictureSelection.qml")
-            }
-        }
+        // deprecated
 
-        FluText {
-            text: "请选择1~3张\n右键图片可删除"
-            font: FluTextStyle.Caption
-            color: FluColors.Grey110
-            anchors {
-                left: item_title.left
-                top: list_view_slide.top
-            }
-        }
 
-        ListView {
-            id: list_view_slide
-            width: 600
-            height: 150
-            orientation: ListView.Horizontal
-            spacing: 5
-            anchors {
-                left: textbox_title.left
-                top: item_slide.bottom
-                topMargin: 15
+        /*
+        Item {
+            visible: false
+
+            FluText {
+                id: item_slide
+                text: "图片"
+                font.pixelSize: 20
+                font.bold: true
+                anchors {
+                    left: item_title.left
+                    top: textbox_description.bottom
+                    topMargin: 40
+                }
             }
-            model: GalleryHelper.urlList
-            delegate: Component {
-                FluImage {
-                    width: 200
-                    height: 150
-                    source: model.modelData
-                    fillMode: Image.PreserveAspectCrop
-                    MouseArea {
-                        anchors.fill: parent
-                        acceptedButtons: Qt.RightButton
-                        onClicked: menu.popup()
-                    }
-                    FluMenu {
-                        id: menu
-                        FluMenuItem {
-                            text: "删除"
-                            onClicked: {
-                                GalleryHelper.removeByIndex(model.index)
+            FluFilledButton {
+                id: btn_open_gallery
+                text: "打开图库"
+                implicitWidth: 200
+                anchors {
+                    left: textbox_title.left
+                    top: item_slide.top
+                }
+                onClicked: {
+                    GalleryHelper.maxNum = 3
+                    MainWindow.window.pushPage(
+                                "qrc:/qml/page/T_PictureSelection.qml")
+                }
+            }
+
+            FluText {
+                text: "请选择1~3张\n右键图片可删除"
+                font: FluTextStyle.Caption
+                color: FluColors.Grey110
+                anchors {
+                    left: item_title.left
+                    top: list_view_slide.top
+                }
+            }
+
+            ListView {
+                id: list_view_slide
+                width: 600
+                height: 150
+                orientation: ListView.Horizontal
+                spacing: 5
+                anchors {
+                    left: textbox_title.left
+                    top: item_slide.bottom
+                    topMargin: 15
+                }
+                model: GalleryHelper.urlList
+                delegate: Component {
+                    FluImage {
+                        width: 200
+                        height: 150
+                        source: model.modelData
+                        fillMode: Image.PreserveAspectCrop
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.RightButton
+                            onClicked: menu.popup()
+                        }
+                        FluMenu {
+                            id: menu
+                            FluMenuItem {
+                                text: "删除"
+                                onClicked: {
+                                    GalleryHelper.removeByIndex(model.index)
+                                }
                             }
                         }
                     }
                 }
             }
         }
-
+        */
         FluButton {
             text: "取消"
             implicitWidth: 100
             implicitHeight: 35
             anchors {
-                top: area4.bottom
+                top: area3.bottom
                 topMargin: 10
-                right: area4.right
+                right: area3.right
                 rightMargin: 110
             }
             onClicked: {
@@ -556,9 +571,9 @@ FluScrollablePage {
             implicitWidth: 100
             implicitHeight: 35
             anchors {
-                top: area4.bottom
+                top: area3.bottom
                 topMargin: 10
-                right: area4.right
+                right: area3.right
             }
             onClicked: {
                 var ids = []

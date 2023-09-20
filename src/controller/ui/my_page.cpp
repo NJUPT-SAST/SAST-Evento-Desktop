@@ -1,25 +1,16 @@
 #include "my_page.h"
-#include "repository.h"
+#include "evento_service.h"
 
-void MyPageController::loadMyPageInfo()
-{
-    auto future = getRepo()->getHistoryList();
-    future.waitForFinished();
-    auto result = future.takeResult();
-    if (!result)
-        return emit loadMyPageErrorEvent(result.message());
-
-    emit loadMyPageSuccessEvent();
+void MyPageController::loadMyPageInfo() {
+    EventoService::getInstance().load_History();
 }
 
-MyPageController *MyPageController::getInstance()
-{
+MyPageController *MyPageController::getInstance() {
     static MyPageController instance;
     return &instance;
 }
 
-MyPageController *MyPageController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+MyPageController *MyPageController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
     auto instance = getInstance();
     QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
     return instance;

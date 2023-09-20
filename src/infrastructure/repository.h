@@ -32,15 +32,17 @@ struct Repository {
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getHistoryList() = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListInPage(int page, int size) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId) = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time) = 0;
     virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) = 0;
-    virtual std::vector<DTO_Feedback> getFeedbackList(EventoID eventoId, EventoException& err) = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) = 0;
     virtual std::vector<DTO_Slide> getSlideList(EventoException& err) = 0;
     virtual std::vector<DTO_Slide> getEventSlideList(EventoID id, EventoException& err) = 0;
-    virtual std::vector<DTO_Slide> getHomeSlideList(const int& size, EventoException& err) = 0;
-    virtual QString getTypeList(EventoException& err) = 0;
-    virtual QString getLocationList(EventoException& err) = 0;
-    virtual QString getDepartmentList(EventoException& err) = 0;
-    virtual QString getQRCode(const int& eventId, EventoException& err) = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) = 0;
+    virtual QFuture<EventoResult<QString>> getTypeList() = 0;
+    virtual QFuture<EventoResult<QString>> getLocationList() = 0;
+    virtual QFuture<EventoResult<QString>> getDepartmentList() = 0;
+    virtual QFuture<EventoResult<QString>> getSubscribedDepartmentList() = 0;
+    virtual QFuture<EventoResult<QString>> getQRCode(const int& eventId) = 0;
 
     // event-upload
     virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) = 0;
@@ -56,6 +58,8 @@ struct Repository {
     virtual std::vector<DTO_UserBrief> getAdminUserList(EventoException& err) = 0;
     virtual QString getAdminPermissionTreeData(EventoException& err) = 0;
     virtual QString getManagerPermissionTreeData(EventoException& err) = 0;
+
+    virtual ~Repository() = default;
 };
 
 Repository* getRepo();

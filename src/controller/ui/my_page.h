@@ -14,11 +14,18 @@ public:
 
 signals:
     void loadMyPageSuccessEvent();
-    void loadMyPageErrorEvent(const QString message);
+    void loadMyPageErrorEvent(QString message);
 
 private:
     MyPageController() = default;
 public:
+    void onLoadFinished() {
+        emit loadMyPageSuccessEvent();
+    }
+    void onLoadFailure(const QString& message) {
+        emit loadMyPageErrorEvent(message);
+    }
+
     static MyPageController* getInstance();
     static MyPageController* create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 };
