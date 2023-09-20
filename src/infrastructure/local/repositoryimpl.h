@@ -252,15 +252,17 @@ public:
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getHistoryList() override;
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListInPage(int page, int size) override;
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId) override;
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time) override;
     virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) override;
-    virtual std::vector<DTO_Feedback> getFeedbackList(EventoID eventoId, EventoException& err) override;
+    virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) override;
     virtual std::vector<DTO_Slide> getSlideList(EventoException& err) override;
     virtual std::vector<DTO_Slide> getEventSlideList(EventoID id, EventoException& err) override;
-    virtual std::vector<DTO_Slide> getHomeSlideList(const int& size, EventoException& err) override;
-    virtual QString getTypeList(EventoException& err) override;
-    virtual QString getLocationList(EventoException& err) override;
-    virtual QString getDepartmentList(EventoException& err) override;
-    virtual QString getQRCode(const int& eventId, EventoException& err) override;
+    virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) override;
+    virtual QFuture<EventoResult<QString>> getTypeList() override;
+    virtual QFuture<EventoResult<QString>> getLocationList() override;
+    virtual QFuture<EventoResult<QString>> getDepartmentList() override;
+    virtual QFuture<EventoResult<QString>> getSubscribedDepartmentList() override;
+    virtual QFuture<EventoResult<QString>> getQRCode(const int& eventId) override;
 
     // event-upload
     virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) override;

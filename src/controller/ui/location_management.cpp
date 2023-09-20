@@ -1,18 +1,11 @@
 #include "location_management.h"
-#include "repository.h"
 
 // deprecated
 
 QString LocationManagementController::loadAllLocation()
 {
-    EventoException err;
-    QString res = getRepo()->getLocationList(err);
-    if((int)err.code()) {
-        emit loadAllLocationError(err.message());
-        return QString();
-    }
     emit loadAllLocationSuccess();
-    return res;
+    return {};
 }
 
 void LocationManagementController::deleteLocation(const int locationId)

@@ -13,6 +13,9 @@ class EventoService {
     std::vector<EventoID> latest;
     std::vector<EventoID> registered;
     std::vector<EventoID> subscribed;
+    std::vector<EventoID> departmentEvento;
+    std::vector<EventoID> history;
+    std::vector<EventoID> blocks;
     std::map<EventoID, DTO_Evento> stored;
 private:
     EventoService() = default;
@@ -25,10 +28,14 @@ public:
     void load_Plaza();
     void load_RegisteredSchedule();
     void load_SubscribedSchedule();
+    void load_DepartmentEvents(int departmentId);
+    void load_History();
+    void load_Block(const QString& time);
     void load(EventoID id);
     DTO_Evento edit(EventoID id);
     void update(const DTO_Evento& event);
     void update(const std::vector<DTO_Evento>& events);
+    void getQRCode(EventoID id);
 };
 
 #endif //EVENTO_SERVICE_H

@@ -1,18 +1,11 @@
 #include "type_management.h"
-#include "repository.h"
 
 // deprecated
 
 QString TypeManagementController::loadAllType()
 {
-    EventoException err;
-    QString res = getRepo()->getTypeList(err);
-    if((int)err.code()) {
-        emit loadAllTypeError(err.message());
-        return QString();
-    }
     emit loadAllTypeSuccess();
-    return res;
+    return {};
 }
 
 void TypeManagementController::deleteType(const int typeId)

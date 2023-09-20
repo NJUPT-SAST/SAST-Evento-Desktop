@@ -43,7 +43,7 @@ CustomWindow {
 
                 function loadQRcode() {
                     page.statusMode = FluStatusViewType.Loading
-                    page.code = CalendarController.loadCheckCode(EventoHelper.id)
+                    CalendarController.loadCheckCode(EventoHelper.id)
                 }
 
                 Component.onCompleted: {
@@ -52,7 +52,8 @@ CustomWindow {
 
                 Connections {
                     target: CalendarController
-                    function onLoadCheckCodeSuccessEvent() {
+                    function onLoadCheckCodeSuccessEvent(code) {
+                        page.code = code
                         page.statusMode = FluStatusViewType.Success
                     }
                 }

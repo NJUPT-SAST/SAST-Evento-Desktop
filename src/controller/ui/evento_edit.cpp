@@ -1,6 +1,6 @@
 #include "evento_edit.h"
 #include "evento_service.h"
-#include "repository.h"
+#include "information_service.h"
 
 EventoEditController *EventoEditController::getInstance()
 {
@@ -16,27 +16,13 @@ EventoEditController *EventoEditController::create(QQmlEngine *qmlEngine, QJSEng
 }
 
 void EventoEditController::preload() {
-    EventoException err;
-    auto departmentList = getRepo()->getDepartmentList(err);
-    if (err)
-        return emit loadEditErrorEvent(err.message());
-    auto locationList = getRepo()->getLocationList(err);
-    if (err)
-        return emit loadEditErrorEvent(err.message());
-    auto typeList = getRepo()->getTypeList(err);
-    if (err)
-        return emit loadEditErrorEvent(err.message());
-
-    setProperty("departmentJson", departmentList);
-    setProperty("locationJson", locationList);
-    setProperty("typeJson", typeList);
+    InformationService::getInstance().load_EditInfo();
 }
 
 void EventoEditController::editEvento(EventoID id) {
-    preload();
     setProperty("isEditMode", true);
     update(EventoService::getInstance().edit(id));
-    emit loadEditSuccessEvent();
+    preload();
 }
 
 void EventoEditController::update(const DTO_Evento& event) {
@@ -47,9 +33,8 @@ void EventoEditController::update(const DTO_Evento& event) {
     setProperty("registerEnd", event.gmtRegistrationEnd);
 }
 
-void EventoEditController::createEvento()
+void EventoEditController::loadEditInfo()
 {
-    preload();
     setProperty("isEditMode", false);
-    emit createSuccessEvent();
+    preload();
 }

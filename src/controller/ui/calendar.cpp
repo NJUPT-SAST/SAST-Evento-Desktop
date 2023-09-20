@@ -1,7 +1,6 @@
 #include "calendar.h"
-#include "evento_exception.h"
 #include "evento_info.h"
-#include "repository.h"
+#include "evento_service.h"
 
 void CalendarController::loadAllEventoInfo(const QString &date)
 {
@@ -18,16 +17,9 @@ void CalendarController::deleteEvento(const EventoID eventId)
     emit deleteSuccessEvent();
 }
 
-QString CalendarController::loadCheckCode(const EventoID eventId)
+void CalendarController::loadCheckCode(const EventoID eventId)
 {
-    EventoException err;
-    auto code = getRepo()->getQRCode(eventId, err);
-    if (err) {
-        emit loadCheckCodeErrorEvent(err.message());
-        return {};
-    }
-    emit loadCheckCodeSuccessEvent();
-    return code;
+    EventoService::getInstance().getQRCode(eventId);
 }
 
 CalendarController *CalendarController::getInstance()
