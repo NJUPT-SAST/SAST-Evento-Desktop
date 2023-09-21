@@ -13,15 +13,24 @@ class PlazaController : public QObject
 
 public:
     Q_INVOKABLE void loadPlazaInfo();
+    Q_INVOKABLE void loadHomeSlide();
     Q_INVOKABLE void openUrl(const QString& link);
 
 signals:
+    void loadHomeSlideSuccessEvent();
+    void loadHomeSlideErrorEvent(const QString message);
     void loadPlazaSuccessEvent();
     void loadPlazaErrorEvent(const QString message);
 
 private:
     PlazaController() = default;
 public:
+    void onHomeSlideLoadFailure(const QString& msg) {
+        emit loadHomeSlideErrorEvent(msg);
+    }
+    void onHomeSlideLoadFinished() {
+        emit loadHomeSlideSuccessEvent();
+    }
     void onPlazaLoadFailure(const EventoException& err) {
         emit loadPlazaErrorEvent(err.message());
     }

@@ -280,40 +280,26 @@ QFuture<EventoResult<std::vector<DTO_Feedback>>> repositoryImpl::getFeedbackList
     });
 }
 
-std::vector<DTO_Slide> repositoryImpl::getSlideList(EventoException &err)
+QFuture<EventoResult<std::vector<DTO_Slide>>> repositoryImpl::getEventSlideList(EventoID id)
 {
-    std::vector<DTO_Slide> res;
+    return QtConcurrent::run([=]{
+        std::vector<DTO_Slide> res;
 
-    for(int i = 0; i<slide_data_list.size(); i++) {
-        slide_data unit = slide_data_list.at(i);
-        res.push_back(DTO_Slide {
-            unit.id.toInt(),
-            unit.event_id.toInt(),
-            unit.title,
-            unit.link,
-            unit.url
-        });
-    }
-    return res;
-}
-
-std::vector<DTO_Slide> repositoryImpl::getEventSlideList(EventoID id, EventoException &err)
-{
-    std::vector<DTO_Slide> res;
-
-    for(int i = 0; i<slide_data_list.size(); i++) {
-        slide_data unit = slide_data_list.at(i);
-        if(!unit.event_id.compare(QString::number(id))){
-            res.push_back(DTO_Slide{
-                unit.id.toInt(),
-                unit.event_id.toInt(),
-                unit.title,
-                unit.link,
-                unit.url
-            });
+        for(int i = 0; i< slide_data_list.size(); i++) {
+            slide_data unit = slide_data_list.at(i);
+            if(!unit.event_id.compare(QString::number(id))){
+                res.push_back(DTO_Slide{
+                    unit.id.toInt(),
+                    unit.event_id.toInt(),
+                    unit.title,
+                    unit.link,
+                    unit.url
+                });
+            }
         }
-    }
-    return res;
+        return EventoResult(std::move(res));
+    });
+
 }
 
 QFuture<EventoResult<QString>> repositoryImpl::getTypeList()
@@ -369,7 +355,7 @@ QFuture<EventoResult<QString>> repositoryImpl::getSubscribedDepartmentList()
     return QtConcurrent::run([]{ return EventoResult(QStringLiteral("[1]")); });
 }
 
-QFuture<EventoResult<QString>> repositoryImpl::getQRCode(const int &eventId)
+QFuture<EventoResult<QString>> repositoryImpl::getQRCode(EventoID eventId)
 {
     return QtConcurrent::run([] {return EventoResult(QStringLiteral("qrcodeLink"));});
 }
@@ -394,33 +380,6 @@ QFuture<EventoResult<bool>> repositoryImpl::checkIn(EventoID event, const QStrin
         }
         return EventoResult<bool>(EventoExceptionCode::UnexpectedError, "not participation");
     });
-}
-
-bool repositoryImpl::feedbackEvent(const DTO_Feedback &code, EventoException &err)
-{
-    QString participationId;
-    for(int i = 0; i < participate_data_list.size(); i++){
-        if(!participate_data_list.at(i).event_id.compare(QString::number(code.eventId)) &&
-            !participate_data_list.at(i).user_id.compare("B22041234")) {
-            participationId = participate_data_list.at(i).id;
-            break;
-        }
-    }
-
-    for(int i = 0; i < feedback_data_list.size(); i++){
-        if(!feedback_data_list.at(i).participate_id.compare(participationId)){
-            err = EventoException(EventoExceptionCode::UnexpectedError, "has feedback");
-            return false;
-        }
-    }
-    feedback_data_list.push_back(feedback_data{
-        code.content,
-        QString::number(feedback_data_list.size() + 1),
-        participationId,
-        QString::number(code.score),
-        "B22041234"
-    });
-    return true;
 }
 
 QFuture<EventoResult<bool>> repositoryImpl::subscribe(EventoID event)
@@ -452,6 +411,34 @@ QFuture<EventoResult<bool>> repositoryImpl::hasFeedbacked(EventoID event)
         EventoException error(EventoExceptionCode::Ok, "null");
         DTO_Feedback feedbackList = getFeedbackInfo(event, error);
         return EventoResult(std::move(error));
+    });
+}
+
+QFuture<EventoResult<bool>> repositoryImpl::feedbackEvent(const DTO_Feedback &feedback)
+{
+    return QtConcurrent::run([=] {
+        QString participationId;
+        for(int i = 0; i < participate_data_list.size(); i++){
+            if(!participate_data_list.at(i).event_id.compare(QString::number(feedback.eventId)) &&
+                !participate_data_list.at(i).user_id.compare("B22041234")) {
+                participationId = participate_data_list.at(i).id;
+                break;
+            }
+        }
+
+        for(int i = 0; i < feedback_data_list.size(); i++){
+            if(!feedback_data_list.at(i).participate_id.compare(participationId)){
+                return EventoResult{ EventoExceptionCode::UnexpectedError, "has feedback" };
+            }
+        }
+        feedback_data_list.push_back(feedback_data{
+            feedback.content,
+            QString::number(feedback_data_list.size() + 1),
+            participationId,
+            QString::number(feedback.score),
+            "B22041234"
+        });
+        return EventoResult();
     });
 }
 

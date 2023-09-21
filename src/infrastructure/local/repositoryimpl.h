@@ -255,20 +255,19 @@ public:
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time) override;
     virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) override;
     virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) override;
-    virtual std::vector<DTO_Slide> getSlideList(EventoException& err) override;
-    virtual std::vector<DTO_Slide> getEventSlideList(EventoID id, EventoException& err) override;
+    virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id) override;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) override;
     virtual QFuture<EventoResult<QString>> getTypeList() override;
     virtual QFuture<EventoResult<QString>> getLocationList() override;
     virtual QFuture<EventoResult<QString>> getDepartmentList() override;
     virtual QFuture<EventoResult<QString>> getSubscribedDepartmentList() override;
-    virtual QFuture<EventoResult<QString>> getQRCode(const int& eventId) override;
+    virtual QFuture<EventoResult<QString>> getQRCode(EventoID eventId) override;
 
     // event-upload
     virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) override;
     virtual QFuture<EventoResult<bool>> subscribe(EventoID event) override;
     virtual QFuture<EventoResult<bool>> hasFeedbacked(EventoID event) override;
-    virtual bool feedbackEvent(const DTO_Feedback& code, EventoException& err) override;
+    virtual QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback) override;
 
     // admin-fetch
     virtual std::vector<DTO_Evento> getQualifiedEvent(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) override;
@@ -280,10 +279,6 @@ public:
     virtual QString getManagerPermissionTreeData(EventoException& err) override;
 
 public:
-    static repositoryImpl * getInstance(){
-        static repositoryImpl instance;
-        return &instance;
-    }
 /*
     void test() {
         EventoException error(EventoExceptionCode::UnexpectedError, "null");
