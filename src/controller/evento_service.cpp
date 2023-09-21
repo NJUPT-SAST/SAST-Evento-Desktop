@@ -59,7 +59,7 @@ void EventoService::load_Plaza() {
 			return true;
 		})
 	};
-    auto t = QtConcurrent::run([=] {
+    QtConcurrent::run([=] {
 		for (const auto& i : tasks)
 			if (!i.result())
 				return;
@@ -68,9 +68,11 @@ void EventoService::load_Plaza() {
 }
 
 void EventoService::load_RegisteredSchedule() {
-    getRepo()->getRegisteredList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
-        if (!result)
+    auto future = getRepo()->getRegisteredList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
+        if (!result) {
             ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
+            return;
+        }
         auto data = result.take();
         std::vector<Schedule> model;
         {
@@ -83,14 +85,21 @@ void EventoService::load_RegisteredSchedule() {
             }
         }
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
+    });
+
+    QtConcurrent::run([=] {
+        auto f(future);
+        f.waitForFinished();
         ScheduleController::getInstance()->onLoadRegisteredFinished();
     });
 }
 
 void EventoService::load_SubscribedSchedule() {
-    getRepo()->getSubscribedList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
-        if (!result)
+    auto future = getRepo()->getSubscribedList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
+        if (!result) {
             ScheduleController::getInstance()->onLoadSubscribedFailure(result.message());
+            return;
+        }
         auto data = result.take();
         std::vector<Schedule> model;
         {
@@ -103,14 +112,21 @@ void EventoService::load_SubscribedSchedule() {
             }
         }
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
+    });
+
+    QtConcurrent::run([=] {
+        auto f(future);
+        f.waitForFinished();
         ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
 }
 
 void EventoService::load_DepartmentEvents(int departmentId) {
-    getRepo()->getDepartmentEventList(departmentId).then([=](EventoResult<std::vector<DTO_Evento>> result) {
-        if (!result)
+    auto future = getRepo()->getDepartmentEventList(departmentId).then([=](EventoResult<std::vector<DTO_Evento>> result) {
+        if (!result) {
             DepartmentEventsController::getInstance()->onLoadDepartmentEventFailure(result.message());
+            return;
+        }
         auto data = result.take();
         std::vector<EventoBrief> model;
         {
@@ -123,14 +139,21 @@ void EventoService::load_DepartmentEvents(int departmentId) {
             }
         }
         EventoBriefModel::getInstance()->resetModel(std::move(model));
+    });
+
+    QtConcurrent::run([=] {
+        auto f(future);
+        f.waitForFinished();
         DepartmentEventsController::getInstance()->onLoadDepartmentEventFinished();
     });
 }
 
 void EventoService::load_History() {
-    getRepo()->getHistoryList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
-        if (!result)
+    auto future = getRepo()->getHistoryList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
+        if (!result) {
             MyPageController::getInstance()->onLoadFailure(result.message());
+            return;
+        }
         auto data = result.take();
         std::vector<EventoBrief> model;
         {
@@ -143,14 +166,21 @@ void EventoService::load_History() {
             }
         }
         EventoBriefModel::getInstance()->resetModel(std::move(model));
+    });
+
+    QtConcurrent::run([=] {
+        auto f(future);
+        f.waitForFinished();
         MyPageController::getInstance()->onLoadFinished();
     });
 }
 
 void EventoService::load_Block(const QString& time) {
-    getRepo()->getEventListByTime(time).then([=](EventoResult<std::vector<DTO_Evento>> result) {
-        if (!result)
+    auto future = getRepo()->getEventListByTime(time).then([=](EventoResult<std::vector<DTO_Evento>> result) {
+        if (!result) {
             CalendarController::getInstance()->onLoadAllFailure(result.message());
+            return;
+        }
         auto data = result.take();
         std::vector<EventoBlock> model;
         {
@@ -163,14 +193,21 @@ void EventoService::load_Block(const QString& time) {
             }
         }
         EventoBlockModel::getInstance()->resetModel(std::move(model));
+    });
+
+    QtConcurrent::run([=] {
+        auto f(future);
+        f.waitForFinished();
         CalendarController::getInstance()->onLoadAllFinished();
     });
 }
 
 void EventoService::load(EventoID id) {
 	getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
-		if (!result)
+        if (!result) {
             EventoInfoController::getInstance()->onLoadFailure(result.message());
+            return;
+        }
         mutex.lock();
         Evento event = (stored[id] = std::move(result.take()));
         mutex.unlock();
@@ -187,10 +224,34 @@ DTO_Evento EventoService::edit(EventoID id) {
 void EventoService::getQRCode(EventoID id)
 {
     getRepo()->getQRCode(id).then([](EventoResult<QString> result) {
-        if (!result)
+        if (!result) {
             CalendarController::getInstance()->onLoadCheckCodeFailure(result.message());
+            return;
+        }
         auto code = result.take();
         CalendarController::getInstance()->onLoadCheckCodeFinished(code);
+    });
+}
+
+void EventoService::del(EventoID id)
+{
+    getRepo()->deleteEvent(id).then([](EventoResult<bool> result) {
+        if (!result) {
+            CalendarController::getInstance()->onDeleteFailure(result.message());
+            return;
+        }
+        CalendarController::getInstance()->onDeleteFinished();
+    });
+}
+
+void EventoService::cancel(EventoID id)
+{
+    getRepo()->cancelEvent(id).then([](EventoResult<bool> result) {
+        if (!result) {
+            CalendarController::getInstance()->onCancelFailure(result.message());
+            return;
+        }
+        CalendarController::getInstance()->onCancelFinished();
     });
 }
 

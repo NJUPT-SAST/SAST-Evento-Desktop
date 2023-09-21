@@ -237,6 +237,18 @@ CustomWindow {
                             window.close()
                         }
                         anchors {
+                            right: btn_cancel.left
+                        }
+                    }
+                    FluIconButton {
+                        id: btn_cancel
+                        iconSource: FluentIcons.Cancel
+                        iconSize: 15
+                        onClicked: {
+                            cancel_btn_dialog.open()
+                            window.close()
+                        }
+                        anchors {
                             right: btn_delete.left
                         }
                     }
@@ -256,7 +268,7 @@ CustomWindow {
                 FluContentDialog {
                     id: delete_btn_dialog
                     title: "删除活动"
-                    message: "是否确定删除活动？"
+                    message: "是否删除活动？"
                     buttonFlags: FluContentDialogType.NegativeButton
                                  | FluContentDialogType.PositiveButton
                     negativeText: "取消"
@@ -264,6 +276,20 @@ CustomWindow {
                     onPositiveClicked: {
                         page.statusMode = FluStatusViewType.Loading
                         CalendarController.deleteEvento(EventoHelper.id)
+                    }
+                }
+
+                FluContentDialog {
+                    id: cancel_btn_dialog
+                    title: "取消活动"
+                    message: "是否取消活动？"
+                    buttonFlags: FluContentDialogType.NegativeButton
+                                 | FluContentDialogType.PositiveButton
+                    negativeText: "取消"
+                    positiveText: "确定"
+                    onPositiveClicked: {
+                        page.statusMode = FluStatusViewType.Loading
+                        CalendarController.cancelEvento(EventoHelper.id)
                     }
                 }
 

@@ -70,6 +70,7 @@ public:
     QFuture<EventoResult<std::vector<DTO_Evento>>> getHistoryList();
     QFuture<EventoResult<std::vector<DTO_Evento>>> getEventList(int page, int size);
     QFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId);
+    QFuture<EventoResult<std::vector<DTO_Evento>>> getEventByTime(const QString& time);
     QFuture<EventoResult<DTO_Evento>> getEvent(EventoID event);
     QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId);
     QFuture<EventoResult<std::vector<DTO_Slide>>> getSlideList();
@@ -78,13 +79,15 @@ public:
     QFuture<EventoResult<std::vector<EventType>>> getTypeList();
     QFuture<EventoResult<QString>> getLocationList();
     QFuture<EventoResult<QString>> getDepartmentList();
-    QFuture<EventoResult<QString>> getQRCode(int eventId);
+    QFuture<EventoResult<QString>> getQRCode(EventoID eventId);
 
     // eventUpload
     QFuture<EventoResult<bool>> checkInEvent(EventoID event, const QString &code);
     QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback &feedback);
     QFuture<EventoResult<bool>> subscribEvent(EventoID event, bool targetState);
     QFuture<EventoResult<bool>> isFeedbacked(EventoID event);
+    QFuture<EventoResult<bool>> cancelEvent(EventoID event);
+    QFuture<EventoResult<bool>> deleteEvent(EventoID event);
 
     // adminFetch
     QFuture<EventoResult<std::vector<DTO_Evento>>> getQualifiedEvent(int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate());

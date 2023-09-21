@@ -36,6 +36,8 @@ public:
     void update(const DTO_Evento& event);
     void update(const std::vector<DTO_Evento>& events);
     void getQRCode(EventoID id);
+    void del(EventoID id);
+    void cancel(EventoID id);
 };
 
 #endif //EVENTO_SERVICE_H

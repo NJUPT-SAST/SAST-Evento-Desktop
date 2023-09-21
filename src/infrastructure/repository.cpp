@@ -3,5 +3,5 @@
 #include "local/repositoryimpl.h"
 
 Repository* getRepo() {
-    return repositoryImpl::getInstance();
+    return NetworkRepository::getInstance();
 }

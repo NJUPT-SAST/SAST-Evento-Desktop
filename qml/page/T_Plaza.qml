@@ -20,6 +20,10 @@ FluScrollablePage {
         PlazaController.loadPlazaInfo()
     }
 
+    function loadHomeSlide() {
+        PlazaController.loadHomeSlide()
+    }
+
     Component.onCompleted: {
         loadPlazaInfo()
     }
@@ -46,7 +50,7 @@ FluScrollablePage {
         Item {
             Connections {
                 target: PlazaController
-                function onLoadPlazaSuccessEvent() {
+                function onLoadHomeSlideSuccessEvent() {
                     arr.push({
                                  "url": model.url,
                                  "link": model.link,
@@ -332,6 +336,7 @@ FluScrollablePage {
                         anchors.fill: parent
                         source: model.url
                         fillMode: Image.PreserveAspectCrop
+                        clickErrorListener: loadHomeSlide()
                     }
                 }
 
