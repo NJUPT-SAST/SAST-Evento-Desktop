@@ -1,5 +1,6 @@
 #include "schedule.h"
 #include "evento_service.h"
+#include "user_service.h"
 #include "local/repositoryimpl.h"
 
 void ScheduleController::loadRegisteredSchedule()
@@ -14,13 +15,7 @@ void ScheduleController::loadSubscribedSchedule()
 
 void ScheduleController::check(const int eventId, const QString &code)
 {
-    auto future = getRepo()->checkIn(eventId, code);
-    future.waitForFinished();
-    auto result = future.takeResult();
-    if (result)
-        emit checkSuccessEvent();
-    else
-        emit checkErrorEvent(result.message());
+    UserService::getInstance().checkIn(eventId, code);
 }
 
 ScheduleController *ScheduleController::getInstance()
