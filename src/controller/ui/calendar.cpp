@@ -17,6 +17,11 @@ void CalendarController::deleteEvento(const EventoID eventId)
     emit deleteSuccessEvent();
 }
 
+void CalendarController::cancelEvento(const EventoID eventId)
+{
+
+}
+
 void CalendarController::loadCheckCode(const EventoID eventId)
 {
     EventoService::getInstance().getQRCode(eventId);

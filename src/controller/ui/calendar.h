@@ -14,6 +14,7 @@ public:
     Q_INVOKABLE void loadAllEventoInfo(const QString &date);
     Q_INVOKABLE void loadEventoInfo(const EventoID eventId);
     Q_INVOKABLE void deleteEvento(const EventoID eventId);
+    Q_INVOKABLE void cancelEvento(const EventoID eventId);
     Q_INVOKABLE void loadCheckCode(const EventoID eventId);
 
 signals:

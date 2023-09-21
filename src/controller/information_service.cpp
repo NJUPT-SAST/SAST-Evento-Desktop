@@ -57,8 +57,10 @@ void InformationService::load_EditInfo() {
 void InformationService::load_DepartmentInfo()
 {
     getRepo()->getDepartmentList().then([=](EventoResult<QString> result) {
-        if (!result)
+        if (!result) {
             DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(result.message());
+            return;
+        }
         auto departmentList = result.take();
         {
             std::lock_guard lock(mutex);
@@ -71,8 +73,10 @@ void InformationService::load_DepartmentInfo()
 void InformationService::load_SubscribedDepartmentInfo()
 {
     getRepo()->getSubscribedDepartmentList().then([=](EventoResult<QString> result) {
-        if (!result)
+        if (!result) {
             DepartmentEventsController::getInstance()->onLoadSubscribedDepartmentsFailure(result.message());
+            return;
+        }
         auto departmentList = result.take();
         {
             std::lock_guard lock(mutex);

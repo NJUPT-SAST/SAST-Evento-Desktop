@@ -13,6 +13,7 @@ class PlazaController : public QObject
 
 public:
     Q_INVOKABLE void loadPlazaInfo();
+    Q_INVOKABLE void loadHomeSlide();
     Q_INVOKABLE void openUrl(const QString& link);
 
 signals:

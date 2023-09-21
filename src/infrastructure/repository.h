@@ -35,20 +35,21 @@ struct Repository {
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time) = 0;
     virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) = 0;
-    virtual std::vector<DTO_Slide> getSlideList(EventoException& err) = 0;
-    virtual std::vector<DTO_Slide> getEventSlideList(EventoID id, EventoException& err) = 0;
+    virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) = 0;
     virtual QFuture<EventoResult<QString>> getTypeList() = 0;
     virtual QFuture<EventoResult<QString>> getLocationList() = 0;
     virtual QFuture<EventoResult<QString>> getDepartmentList() = 0;
     virtual QFuture<EventoResult<QString>> getSubscribedDepartmentList() = 0;
-    virtual QFuture<EventoResult<QString>> getQRCode(const int& eventId) = 0;
+    virtual QFuture<EventoResult<QString>> getQRCode(EventoID eventId) = 0;
 
     // event-upload
     virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) = 0;
     virtual QFuture<EventoResult<bool>> subscribe(EventoID event) = 0;
     virtual QFuture<EventoResult<bool>> hasFeedbacked(EventoID event) = 0;
-    virtual bool feedbackEvent(const DTO_Feedback& code, EventoException& err) = 0;
+    virtual QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback) = 0;
+    virtual QFuture<EventoResult<bool>> cancelEvent(EventoID event) = 0;
+    virtual QFuture<EventoResult<bool>> deleteEvent(EventoID event) = 0;
 
     // admin-fetch
     virtual std::vector<DTO_Evento> getQualifiedEvent(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) = 0;

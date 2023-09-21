@@ -37,6 +37,12 @@ public:
     virtual QFuture<EventoResult<bool>> hasFeedbacked(EventoID event) override {
         return client.isFeedbacked(event);
     }
+    virtual QFuture<EventoResult<bool>> deleteEvent(EventoID event) override {
+        return client.deleteEvent(event);
+    }
+    virtual QFuture<EventoResult<bool>> cancelEvent(EventoID event) override {
+        return client.cancelEvent(event);
+    }
 private:
     NetworkRepository() = default;
 public:
