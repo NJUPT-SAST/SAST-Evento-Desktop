@@ -3,6 +3,7 @@
 
 #include <QFuture>
 #include <shared_mutex>
+#include "types.h"
 
 class UserService
 {
@@ -15,6 +16,9 @@ public:
     }
 
     void checkIn(const int eventId, const QString &code);
+    void subscribeEvento(EventoID id, bool selection);
+    void registerEvento(const EventoID id, bool selection);
+    void load_EventoInfo(const EventoID eventId);
 
 };
 
