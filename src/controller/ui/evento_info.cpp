@@ -2,40 +2,18 @@
 #include "repository.h"
 #include "evento_service.h"
 #include "evento_exception.h"
+#include "user_service.h"
 #include "feedback_helper.h"
 #include "slide_model.h"
 
 void EventoInfoController::loadEventoInfo(const EventoID eventId)
 {
-    EventoException err;
-//    SlideModel::getInstance()->resetModel(
-//        Convertor<std::vector<DTO_Slide>, std::vector<Slide>>()(
-//            getRepo()->getEventSlideList(eventId, err)
-//    ));
-//    if (err)
-//        return emit loadEventoErrorEvent(err.message());
-
-    auto participate = getRepo()->getUserParticipate(eventId, err);
-    if (err)
-        return emit loadEventoErrorEvent(err.message());
-
-    setProperty("isRegistrated", participate.isRegistrated);
-    setProperty("isParticipated", participate.isParticipated);
-    setProperty("isSubscribed", participate.isSubscribed);
-
-//    FeedbackHelper::getInstance()->updateFeedback(
-//        Convertor<DTO_Feedback, Feedback>()(
-//            getRepo()->getFeedbackInfo(eventId, err)
-//    ));
-//    if (err)
-//        return emit loadEventoErrorEvent(err.message());
-
-    EventoService::getInstance().load(eventId);
+    UserService::getInstance().load_EventoInfo(eventId);
 }
 
-void EventoInfoController::registerEvento(const EventoID id, bool isParticipated)
+void EventoInfoController::registerEvento(const EventoID id, bool selection)
 {
-    emit registerSuccessEvent();
+    UserService::getInstance().registerEvento(id, selection);
 }
 
 void EventoInfoController::feedbackEvento(const QString &content, const int score, const EventoID id)
@@ -43,9 +21,9 @@ void EventoInfoController::feedbackEvento(const QString &content, const int scor
     emit feedbackSuccessEvent();
 }
 
-void EventoInfoController::subscribeEvento(const EventoID id, bool isParticipated)
+void EventoInfoController::subscribeEvento(const EventoID id, bool selection)
 {
-    emit subscribeSuccessEvent();
+    UserService::getInstance().subscribeEvento(id, selection);
 }
 
 EventoInfoController *EventoInfoController::getInstance()
