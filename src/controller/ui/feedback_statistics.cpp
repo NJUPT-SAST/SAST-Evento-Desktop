@@ -1,22 +1,16 @@
 #include "feedback_statistics.h"
 #include "evento_exception.h"
 
+#include "feedback_service.h"
+
 void FeedbackStatisticsController::loadSummaryInfo(int page)
 {
-    EventoException err;
-    // TODO
-    if ((int) err.code()) {
-        return emit loadSummaryErrorEvent(err.message());
-    }
-    emit loadSummarySuccessEvent(30);
+    FeedbackService::getInstance().load_SummaryInfo(page);
 }
 
-void FeedbackStatisticsController::loadFeedbackInfo()
+void FeedbackStatisticsController::loadFeedbackInfo(EventoID id)
 {
-    EventoException err;
-    if ((int) err.code())
-        return emit loadFeedbackErrorEvent(err.message());
-    emit loadFeedbackSuccessEvent();
+    FeedbackService::getInstance().load_FeedbackInfo(id);
 }
 
 FeedbackStatisticsController *FeedbackStatisticsController::getInstance()

@@ -17,8 +17,7 @@ FluScrollablePage {
 
     function loadFeedbackInfo() {
         statusMode = FluStatusViewType.Loading
-        pagination.itemCount = FeedbackStatisticsController.loadSummaryInfo(
-                    page)
+        FeedbackStatisticsController.loadSummaryInfo(page)
     }
 
     Component.onCompleted: {
@@ -28,7 +27,8 @@ FluScrollablePage {
 
     Connections {
         target: FeedbackStatisticsController
-        function onLoadSummarySuccessEvent() {
+        function onLoadSummarySuccessEvent(sum) {
+            pagination.itemCount = sum
             statusMode = FluStatusViewType.Success
         }
     }
@@ -122,6 +122,7 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
+                        EventoHelper.id = model.eventId
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_FeedbackInfo.qml")
                     }

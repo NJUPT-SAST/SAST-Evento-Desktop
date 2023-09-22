@@ -2,6 +2,7 @@
 #define FEEDBACK_SUMMARY_H
 
 #include "types.h"
+struct DTO_FeedbackSummary;
 
 struct FeedbackSummary
 {
@@ -12,6 +13,11 @@ struct FeedbackSummary
     int checkedNum;
     int feedbackNum;
     QString aveScore;
+
+    FeedbackSummary() = default;
+    FeedbackSummary(const DTO_FeedbackSummary&);
+    FeedbackSummary(const std::pair<int,int>&);
+    //first data is eventoId,second data is feedbackCount
 };
 
 #endif // FEEDBACK_SUMMARY_H

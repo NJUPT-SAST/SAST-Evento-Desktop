@@ -3,6 +3,7 @@
 
 #include <dto/evento.h>
 #include <dto/feedback.h>
+#include <dto/feedback_summary.h>
 #include <dto/permission.h>
 #include <dto/slide.h>
 #include <dto/user.h>
@@ -22,7 +23,7 @@ struct Repository {
     virtual DTO_Permission getEventPermission(EventoID event, EventoException& err) = 0;
     virtual DTO_User getUserInfo(const UserID& id, EventoException& err) = 0;
     virtual ParticipationStatus getUserParticipate(const EventoID &eventoId, EventoException& err) = 0;
-    virtual DTO_Feedback getFeedbackInfo(const EventoID &eventoId, EventoException& err) = 0;
+    virtual QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(const EventoID &eventoId, EventoException& err) = 0;
 
     // event-fetch
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList() = 0;
@@ -35,6 +36,8 @@ struct Repository {
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time) = 0;
     virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) = 0;
+    virtual QFuture<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId) = 0;
+    virtual QFuture<EventoResult<std::pair<int,std::vector<std::pair<int,int>>>>> getFeedbackSummaryListInPage(EventoID eventoId) = 0;
     virtual std::vector<DTO_Slide> getSlideList(EventoException& err) = 0;
     virtual std::vector<DTO_Slide> getEventSlideList(EventoID id, EventoException& err) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) = 0;

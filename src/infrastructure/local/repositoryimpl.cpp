@@ -126,23 +126,25 @@ ParticipationStatus repositoryImpl::getUserParticipate(const EventoID &eventoId,
     };
 }
 
-DTO_Feedback repositoryImpl::getFeedbackInfo(const EventoID &eventoId, EventoException& err)
+QFuture<EventoResult<DTO_Feedback>> repositoryImpl::getFeedbackInfo(const EventoID &eventoId, EventoException& err)
 {
-    for(int i = 0; i<feedback_data_list.size(); i++){
-        Participation unit = readParticipation(std::pair("id", feedback_data_list.at(i).participate_id)).at(0);
-        if((!feedback_data_list.at(i).user_id.compare("B22041234")) &&
-            (unit.event_id == eventoId)){
-            feedback_data feedback_unit = feedback_data_list.at(i);
-            return DTO_Feedback{
-                i,
-                eventoId,
-                feedback_unit.score.toInt(),
-                feedback_unit.content
-            };
-        }
-    }
     err = EventoException(EventoExceptionCode::Ok);
-    return DTO_Feedback();
+    return QtConcurrent::run([=]{
+        for(int i = 0; i<feedback_data_list.size(); i++){
+            Participation unit = readParticipation(std::pair("id", feedback_data_list.at(i).participate_id)).at(0);
+            if((!feedback_data_list.at(i).user_id.compare("B22041234")) &&
+                (unit.event_id == eventoId)){
+                feedback_data feedback_unit = feedback_data_list.at(i);
+                return EventoResult(DTO_Feedback{
+                    i,
+                    eventoId,
+                    feedback_unit.score.toInt(),
+                    feedback_unit.content
+                });
+            }
+        }
+        return EventoResult(DTO_Feedback());
+    });
 }
 
 QFuture<EventoResult<std::vector<DTO_Evento>>> repositoryImpl::getUndertakingList()
@@ -277,6 +279,27 @@ QFuture<EventoResult<std::vector<DTO_Feedback>>> repositoryImpl::getFeedbackList
             }
         }
         return EventoResult(std::move(res));
+    });
+}
+
+/*
+    virtual QFuture<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId) override;
+    virtual QFuture<EventoResult<std::pair<int,std::vector<std::pair<int,int>>>>> getFeedbackSummaryListInPage(int page) override;
+*/
+
+QFuture<EventoResult<DTO_FeedbackSummary>> repositoryImpl::getFeedbackSummary(EventoID eventoId){
+    return QtConcurrent::run([=] {
+        std::vector<DTO_Feedback> feedbacks;
+        feedbacks.push_back(DTO_Feedback{1,1,1,QString("so cool")});
+        return EventoResult(DTO_FeedbackSummary{1,1,1,1,QString("so cool"),feedbacks});
+    });
+}
+
+QFuture<EventoResult<std::pair<int,std::vector<std::pair<int,int>>>>> repositoryImpl::getFeedbackSummaryListInPage(EventoID eventoId){
+    return QtConcurrent::run([=] {
+        std::vector<std::pair<int,int>> a;
+        a.push_back(std::make_pair(1,1));
+        return EventoResult(std::make_pair(1,a));
     });
 }
 
@@ -450,7 +473,8 @@ QFuture<EventoResult<bool>> repositoryImpl::hasFeedbacked(EventoID event)
 {
     return QtConcurrent::run([=]{
         EventoException error(EventoExceptionCode::Ok, "null");
-        DTO_Feedback feedbackList = getFeedbackInfo(event, error);
+        //DTO_Feedback feedbackList = getFeedbackInfo(event, error);
+        getFeedbackInfo(event, error);
         return EventoResult(std::move(error));
     });
 }

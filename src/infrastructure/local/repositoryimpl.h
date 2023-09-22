@@ -242,7 +242,7 @@ public:
     virtual DTO_Permission getEventPermission(EventoID event, EventoException& err) override;
     virtual DTO_User getUserInfo(const UserID& id, EventoException& err) override;
     virtual ParticipationStatus getUserParticipate(const EventoID &eventoId, EventoException& err) override;
-    virtual DTO_Feedback getFeedbackInfo(const EventoID &eventoId, EventoException& err) override;
+    virtual QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(const EventoID &eventoId, EventoException& err) override;
 
     // event-fetch
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList() override;
@@ -255,6 +255,8 @@ public:
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time) override;
     virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) override;
     virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) override;
+    virtual QFuture<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId) override;
+    virtual QFuture<EventoResult<std::pair<int,std::vector<std::pair<int,int>>>>> getFeedbackSummaryListInPage(EventoID eventoId) override;
     virtual std::vector<DTO_Slide> getSlideList(EventoException& err) override;
     virtual std::vector<DTO_Slide> getEventSlideList(EventoID id, EventoException& err) override;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) override;

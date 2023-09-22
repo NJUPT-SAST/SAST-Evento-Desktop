@@ -14,6 +14,7 @@
 #include "calendar.h"
 #include "my_page.h"
 #include "evento_brief_model.h"
+#include "feedback_service.h"
 
 #include <QtConcurrent>
 #include <array>
@@ -168,6 +169,7 @@ void EventoService::load_Block(const QString& time) {
 }
 
 void EventoService::load(EventoID id) {
+    FeedbackService::getInstance().load_UserFeedback(id);
 	getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
 		if (!result)
             EventoInfoController::getInstance()->onLoadFailure(result.message());

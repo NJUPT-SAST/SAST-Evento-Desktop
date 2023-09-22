@@ -403,7 +403,7 @@ FluScrollablePage {
                     score_value = rating.value
                     feedback_content = textbox_content.text
                     statusMode = FluStatusViewType.Loading
-                    EventoHelper.feedbackEvento(score_value, content,
+                    EventoInfoController.feedbackEvento(score_value, content,
                                                 EventoHelper.id)
                 }
             }
