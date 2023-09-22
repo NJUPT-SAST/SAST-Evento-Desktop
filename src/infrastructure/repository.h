@@ -50,6 +50,25 @@ struct Repository {
     virtual QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback) = 0;
     virtual QFuture<EventoResult<bool>> cancelEvent(EventoID event) = 0;
     virtual QFuture<EventoResult<bool>> deleteEvent(EventoID event) = 0;
+    virtual QFuture<EventoResult<bool>> createEvent(const QString& title,
+                                                    const QString& description,
+                                                    const QString& eventStart,
+                                                    const QString& eventEnd,
+                                                    const QString& registerStart,
+                                                    const QString& registerEnd,
+                                                    int typeId, int locationId,
+                                                    const QVariantList& departmentIds,
+                                                    const QString& tag) = 0;
+    virtual QFuture<EventoResult<bool>> editEvent(EventoID event,
+                                                    const QString& title,
+                                                    const QString& description,
+                                                    const QString& eventStart,
+                                                    const QString& eventEnd,
+                                                    const QString& registerStart,
+                                                    const QString& registerEnd,
+                                                    int typeId, int locationId,
+                                                    const QVariantList& departmentIds,
+                                                    const QString& tag) = 0;
 
     // admin-fetch
     virtual std::vector<DTO_Evento> getQualifiedEvent(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) = 0;

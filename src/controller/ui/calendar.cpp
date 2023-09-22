@@ -14,12 +14,12 @@ void CalendarController::loadEventoInfo(const EventoID eventId)
 
 void CalendarController::deleteEvento(const EventoID eventId)
 {
-    emit deleteSuccessEvent();
+    EventoService::getInstance().del(eventId);
 }
 
 void CalendarController::cancelEvento(const EventoID eventId)
 {
-
+    EventoService::getInstance().cancel(eventId);
 }
 
 void CalendarController::loadCheckCode(const EventoID eventId)

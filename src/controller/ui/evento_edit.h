@@ -25,7 +25,16 @@ class EventoEditController : public QObject {
 
 public:
     Q_INVOKABLE void loadEditInfo();
-    Q_INVOKABLE void editEvento(EventoID id);
+    void editEvento(EventoID id);
+    Q_INVOKABLE void createEvento(const QString& title,
+                                  const QString& description,
+                                  const QString& eventStart,
+                                  const QString& eventEnd,
+                                  const QString& registerStart,
+                                  const QString& registerEnd,
+                                  int typeId, int locationId,
+                                  const QVariantList& departmentIds,
+                                  const QString& tag);
 
 private:
     QString m_departmentJson;
@@ -69,6 +78,13 @@ public:
     }
     void onLoadEditFailure(const QString& msg) {
         emit loadEditErrorEvent(msg);
+    }
+
+    void onCreateFinished() {
+        emit createSuccessEvent();
+    }
+    void onCreateFailure(const QString& msg) {
+        emit createErrorEvent(msg);
     }
 
     static EventoEditController *getInstance();

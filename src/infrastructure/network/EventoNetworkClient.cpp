@@ -13,6 +13,7 @@ static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply)
 {
     auto networkError = reply->error();
     if (networkError != QNetworkReply::NoError) {
+        qDebug() << reply->readAll();
         return EventoException(EventoExceptionCode::NetworkError, "network error");
     }
     QJsonParseError jsonError;
@@ -89,7 +90,10 @@ QFuture<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl &url, con
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
     auto reply = manager.post(request, requestData);
-    return QtFuture::connect(reply, &QNetworkReply::finished).then(std::bind(handleNetworkReply, reply));
+    return QtConcurrent::run([=]() {
+        QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
+        return handleNetworkReply(reply);
+    });
 }
 
 QFuture<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl &url, const QUrlQuery &requestData)
@@ -749,6 +753,92 @@ QFuture<EventoResult<bool>> EventoNetworkClient::deleteEvent(EventoID event)
         params.addQueryItem("eventId", QString::number(event));
     });
     auto future = this->deleteResource(url);
+    return QtConcurrent::run([=]() -> EventoResult<bool> {
+        auto f(future);
+        auto result = f.takeResult();
+        if (result) {
+            return {};
+        } else {
+            return {result.code(), result.message()};
+        }
+    });
+}
+
+struct Request_Evento {
+    QString title;
+    QString description;
+    QString eventStart;
+    QString eventEnd;
+    QString registerStart;
+    QString registerEnd;
+    int typeId;
+    int locationId;
+    QVariantList departmentIds;
+    QString tag;
+
+    QJsonValue serialise() {
+        declare_serialiser("title", title, title_);
+        declare_serialiser("description", description, description_);
+        declare_serialiser("gmtEventStart", eventStart, eventStart_);
+        declare_serialiser("gmtEventEnd", eventEnd, eventEnd_);
+        declare_serialiser("gmtRegistrationStart", registerStart, registerStart_);
+        declare_serialiser("gmtRegistrationEnd", registerEnd, registerEnd_);
+        declare_serialiser("typeId", typeId, typeId_);
+        declare_serialiser("locationId", locationId, locationId_);
+        declare_serialiser("tag", tag, tag_);
+        auto convertor = [](const QVariantList& src) -> QJsonValue {
+            QJsonArray arr;
+            for (const auto& i : src) {
+                QJsonObject obj;
+                obj.insert("id", QString::number(i.toInt()));
+                arr.append(obj);
+            }
+            return arr;
+        };
+        declare_one_direction_extension_serialiser("departments", departmentIds, departmentIds_, convertor);
+        JsonDeserialise::JsonSerialiser serialiser(title_,
+                                                   description_,
+                                                   eventStart_,
+                                                   eventEnd_,
+                                                   registerStart_,
+                                                   registerEnd_,
+                                                   typeId_,
+                                                   locationId_,
+                                                   tag_,
+                                                   departmentIds_);
+        return serialiser.serialise_to_json();
+    }
+};
+
+QFuture<EventoResult<bool>> EventoNetworkClient::createEvent(const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag)
+{
+    auto url = endpoint(QStringLiteral("event/info"));
+    auto future = this->post(url, QJsonDocument(Request_Evento{title, description, eventStart, eventEnd, registerStart, registerEnd, typeId, locationId, departmentIds, tag}.serialise().toObject()));
+    return QtConcurrent::run([=]() -> EventoResult<bool> {
+        auto f(future);
+        auto result = f.takeResult();
+        if (result) {
+            return {};
+        } else {
+            return {result.code(), result.message()};
+        }
+    });
+}
+
+struct Request_EventoPatch : public Request_Evento {
+    EventoID id;
+
+    QJsonValue serialise() {
+        auto obj = Request_Evento::serialise().toObject();
+        obj.insert("id", id);
+        return obj;
+    }
+};
+
+QFuture<EventoResult<bool>> EventoNetworkClient::editEvent(EventoID event, const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag)
+{
+    auto url = endpoint(QStringLiteral("event/info"));
+    auto future = this->put(url, QJsonDocument(Request_Evento{title, description, eventStart, eventEnd, registerStart, registerEnd, typeId, locationId, departmentIds, tag}.serialise().toObject()));
     return QtConcurrent::run([=]() -> EventoResult<bool> {
         auto f(future);
         auto result = f.takeResult();

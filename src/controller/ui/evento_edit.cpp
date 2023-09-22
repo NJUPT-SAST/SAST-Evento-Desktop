@@ -1,6 +1,7 @@
 #include "evento_edit.h"
 #include "evento_service.h"
 #include "information_service.h"
+#include "evento_helper.h"
 
 EventoEditController *EventoEditController::getInstance()
 {
@@ -23,6 +24,15 @@ void EventoEditController::editEvento(EventoID id) {
     setProperty("isEditMode", true);
     update(EventoService::getInstance().edit(id));
     preload();
+}
+
+void EventoEditController::createEvento(const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag)
+{
+    if (property("isEditMode").toBool()) {
+        EventoService::getInstance().edit(EventoHelper::getInstance()->property("id").toInt(), title, description, eventStart, eventEnd, registerStart, registerEnd, typeId, locationId, departmentIds, tag);
+    } else {
+        EventoService::getInstance().create(title, description, eventStart, eventEnd, registerStart, registerEnd, typeId, locationId, departmentIds, tag);
+    }
 }
 
 void EventoEditController::update(const DTO_Evento& event) {

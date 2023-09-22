@@ -43,6 +43,30 @@ public:
     virtual QFuture<EventoResult<bool>> cancelEvent(EventoID event) override {
         return client.cancelEvent(event);
     }
+    virtual QFuture<EventoResult<bool>> createEvent(const QString& title,
+                                                    const QString& description,
+                                                    const QString& eventStart,
+                                                    const QString& eventEnd,
+                                                    const QString& registerStart,
+                                                    const QString& registerEnd,
+                                                    int typeId, int locationId,
+                                                    const QVariantList& departmentIds,
+                                                    const QString& tag) override {
+        return client.createEvent(title, description, eventStart, eventEnd, registerStart, registerEnd, typeId, locationId, departmentIds, tag);
+    }
+    virtual QFuture<EventoResult<bool>> editEvent(EventoID event,
+                                                  const QString& title,
+                                                  const QString& description,
+                                                  const QString& eventStart,
+                                                  const QString& eventEnd,
+                                                  const QString& registerStart,
+                                                  const QString& registerEnd,
+                                                  int typeId, int locationId,
+                                                  const QVariantList& departmentIds,
+                                                  const QString& tag) override {
+        return client.editEvent(event, title, description, eventStart, eventEnd, registerStart, registerEnd, typeId, locationId, departmentIds, tag);
+    }
+
 private:
     NetworkRepository() = default;
 public:

@@ -591,14 +591,12 @@ FluScrollablePage {
 
                 EventoEditController.createEvento(
                             textbox_title.text, textbox_description.text, clender_picker_event_start.text + " " + time_picker_event_start.current.getHours() + ":" + time_picker_event_start.current.getMinutes(
-                                ) + ":00", clender_picker_event_end.text + " "
-                            + time_picker_event_end.current.getHours() + ":" + time_picker_event_end.current.getMinutes(
-                                ) + ":00", clender_picker_register_start.text + " "
-                            + time_picker_register_start.current.getHours() + ":" + time_picker_register_start.current.getMinutes(
-                                ) + ":00", clender_picker_register_end.text + " "
-                            + time_picker_register_end.current.getHours() + ":" + time_picker_register_end.current.getMinutes(
-                                ) + ":00", typeId, tree_view_location.locationId,
-                            ids, textbox_tag.text, GalleryHelper.urlList)
+                                ), clender_picker_event_end.text + " " + time_picker_event_end.current.getHours(
+                                ) + ":" + time_picker_event_end.current.getMinutes(),
+                            clender_picker_register_start.text + " " + time_picker_register_start.current.getHours() + ":" + time_picker_register_start.current.getMinutes(), clender_picker_register_end.text
+                            + " " + time_picker_register_end.current.getHours() + ":"
+                            + time_picker_register_end.current.getMinutes(), typeId, tree_view_location.locationId,
+                            ids, textbox_tag.text)
             }
         }
     }

@@ -21,7 +21,7 @@
 
 class EventoNetworkClient {
 private:
-    QByteArray tokenBytes;
+    QByteArray tokenBytes = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYjIyMDcwMTIzIiwiZXhwIjoxNzMwMzUzODYxfQ.68v28NTtmNGORXlDf2zJO-jlSGV96ZgI6lBUNNsV__A";
     QNetworkAccessManager manager;
 
 protected:
@@ -88,6 +88,25 @@ public:
     QFuture<EventoResult<bool>> isFeedbacked(EventoID event);
     QFuture<EventoResult<bool>> cancelEvent(EventoID event);
     QFuture<EventoResult<bool>> deleteEvent(EventoID event);
+    QFuture<EventoResult<bool>> createEvent(const QString& title,
+                                             const QString& description,
+                                             const QString& eventStart,
+                                             const QString& eventEnd,
+                                             const QString& registerStart,
+                                             const QString& registerEnd,
+                                             int typeId, int locationId,
+                                             const QVariantList& departmentIds,
+                                             const QString& tag);
+    QFuture<EventoResult<bool>> editEvent(EventoID event,
+                                           const QString& title,
+                                           const QString& description,
+                                           const QString& eventStart,
+                                           const QString& eventEnd,
+                                           const QString& registerStart,
+                                           const QString& registerEnd,
+                                           int typeId, int locationId,
+                                           const QVariantList& departmentIds,
+                                           const QString& tag);
 
     // adminFetch
     QFuture<EventoResult<std::vector<DTO_Evento>>> getQualifiedEvent(int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate());

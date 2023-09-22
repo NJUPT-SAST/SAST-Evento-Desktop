@@ -14,6 +14,7 @@
 #include "calendar.h"
 #include "my_page.h"
 #include "evento_brief_model.h"
+#include "evento_edit.h"
 
 #include <QtConcurrent>
 #include <array>
@@ -219,6 +220,29 @@ void EventoService::load(EventoID id) {
 DTO_Evento EventoService::edit(EventoID id) {
     std::shared_lock guard(mutex);
     return stored[id];
+}
+
+void EventoService::create(const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag) {
+    getRepo()->createEvent(title, description, timeConvertor(eventStart), timeConvertor(eventEnd), timeConvertor(registerStart), timeConvertor(registerEnd), typeId, locationId, departmentIds, tag)
+        .then([=](EventoResult<bool> result) {
+        if (!result) {
+            EventoEditController::getInstance()->onCreateFailure(result.message());
+            return;
+        }
+        EventoEditController::getInstance()->onCreateFinished();
+    });
+}
+
+void EventoService::edit(EventoID id, const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag)
+{
+    getRepo()->editEvent(id, title, description, timeConvertor(eventStart), timeConvertor(eventEnd), timeConvertor(registerStart), timeConvertor(registerEnd), typeId, locationId, departmentIds, tag)
+        .then([=](EventoResult<bool> result) {
+        if (!result) {
+            EventoEditController::getInstance()->onCreateFailure(result.message());
+            return;
+        }
+        EventoEditController::getInstance()->onCreateFinished();
+    });
 }
 
 void EventoService::getQRCode(EventoID id)
