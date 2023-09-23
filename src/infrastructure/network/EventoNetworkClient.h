@@ -57,7 +57,6 @@ public:
     // userFetch
     QFuture<EventoResult<QStringList>> getAdminPermission();
     QFuture<EventoResult<QStringList>> getManagerPermission(EventoID event);
-    QFuture<EventoResult<QStringList>> getManagerPermission(EventoID event);
     QFuture<EventoResult<QStringList>> getPermittedEvent();
     QFuture<EventoResult<DTO_Permission>> getEventPermission(EventoID event);
     QFuture<EventoResult<DTO_User>> getUserInfo(const UserID &id);
