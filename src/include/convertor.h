@@ -29,4 +29,8 @@ inline QString departmentConvertor(const std::vector<Department>& departments) {
     return result;
 }
 
+inline QString timeConvertor(const QString& time) {
+    return QDateTime::fromString(time).toString("yyyy-MM-dd hh:mm:ss");
+}
+
 #endif // CONVERTOR_H

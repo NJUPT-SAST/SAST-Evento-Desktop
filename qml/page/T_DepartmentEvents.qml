@@ -15,7 +15,6 @@ FluScrollablePage {
     property int departmentId: -1
     property var subscribeArr
 
-
     function loadDepartmentEventsPage() {
         statusMode = FluStatusViewType.Loading
         DepartmentEventsController.loadDepartmentsInfo()
@@ -84,13 +83,12 @@ FluScrollablePage {
     Connections {
         target: DepartmentEventsController
         function onSubscribeSuccessEvent(isSubscribe, departmentId) {
-            if(isSubscribe) {
+            if (isSubscribe) {
                 subscribeArr.push(departmentId)
                 subscribeButton.checked = false
                 subscribeButton.state = "hasSub"
                 showInfo("已订阅")
-            }
-            else {
+            } else {
                 subscribeArr.splice(subscribeArr.indexOf(departmentId), 1)
                 subscribeButton.checked = true
                 subscribeButton.state = "noSub"
@@ -103,7 +101,8 @@ FluScrollablePage {
         var departmentArr = []
         var json = JSON.parse(departmentJson)
         for (var i = 0; i < json.length; ++i) {
-            departmentArr.push(tree_view.createItem(json[i].name, true, [], {
+            departmentArr.push(tree_view.createItem(json[i].departmentName,
+                                                    true, [], {
                                                         "id": json[i].id
                                                     }))
         }
@@ -120,7 +119,7 @@ FluScrollablePage {
         checked: true
         Layout.alignment: Qt.AlignRight
         state: "noSub"
-        opacity: (departmentId > 0)?1:0
+        opacity: (departmentId > 0) ? 1 : 0
         states: [
             State {
                 name: "hasSub"
@@ -143,10 +142,11 @@ FluScrollablePage {
         onClicked: {
             checked = !checked
             if (!checked) {
-                DepartmentEventsController.subscribeDepartment(!checked, departmentId)
-
+                DepartmentEventsController.subscribeDepartment(!checked,
+                                                               departmentId)
             } else {
-                DepartmentEventsController.subscribeDepartment(!checked, departmentId)
+                DepartmentEventsController.subscribeDepartment(!checked,
+                                                               departmentId)
             }
         }
     }
@@ -169,11 +169,11 @@ FluScrollablePage {
                 anchors.fill: parent
                 onItemClicked: item => {
                                    departmentId = item.data.id
-                                   if(subscribeArr.indexOf(departmentId) !== -1) {
+                                   if (subscribeArr.indexOf(
+                                           departmentId) !== -1) {
                                        subscribeButton.checked = false
                                        subscribeButton.state = "hasSub"
-                                   }
-                                   else{
+                                   } else {
                                        subscribeButton.checked = true
                                        subscribeButton.state = "noSub"
                                    }

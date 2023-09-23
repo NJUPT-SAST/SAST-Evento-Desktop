@@ -1,0 +1,41 @@
+#ifndef TYPEMODEL_H
+#define TYPEMODEL_H
+
+#include <QAbstractListModel>
+#include <QtQml>
+#include "types.h"
+
+class TypeModel : public QAbstractListModel
+{
+    Q_OBJECT
+    QML_SINGLETON
+    QML_NAMED_ELEMENT(TypeModel)
+
+public:
+    enum Role {
+        Id = Qt::DisplayRole + 1,
+        Name,
+        AllowConflict
+    };
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    QHash<int, QByteArray> roleNames() const override;
+
+    void resetModel(std::vector<EventType> model);
+
+private:
+    explicit TypeModel() = default;
+
+    std::vector<EventType> m_data;
+
+    std::mutex m_mutex;
+
+public:
+    static TypeModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static TypeModel *getInstance();
+};
+
+#endif // TYPEMODEL_H

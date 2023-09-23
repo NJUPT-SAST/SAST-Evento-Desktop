@@ -3,13 +3,14 @@
 
 #include <QString>
 #include <shared_mutex>
+#include "types.h"
 
 class InformationService
 {
     std::shared_mutex mutex;
 
     QString departmentJson;
-    QString typeJson;
+    std::vector<EventType> types;
     QString locationJson;
     QString subscribedDepartmentJson;
 

@@ -10,12 +10,12 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
 
     onErrorClicked: {
-        loadFeedbackInfo(page)
+        loadFeedbackInfo()
     }
 
     function loadFeedbackInfo() {
         statusMode = FluStatusViewType.Loading
-        FeedbackStatisticsController.loadFeedbackInfo()
+        FeedbackStatisticsController.loadFeedbackInfo(EventoHelper.id)
     }
 
     Component.onCompleted: {
@@ -43,7 +43,7 @@ FluScrollablePage {
 
         FluText {
             id: text_title
-            text: "活动标题"
+            text: FeedbackStatisticsHelper.title
             font: FluTextStyle.Title
             anchors {
                 top: parent.top

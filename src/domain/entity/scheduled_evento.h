@@ -19,7 +19,7 @@ struct Schedule
     bool hasFeedback;
 
     Schedule() = default;
-    Schedule(const DTO_Evento&);
+    Schedule(const DTO_Evento&, const ParticipationStatus& participate, bool hasFeedback);
 };
 
 #endif // SCHEDULED_EVENTO_H

@@ -21,20 +21,21 @@ class EventoResult {
         Member(EventoException&& other) : err(std::move(other)) {}
         Member(EventoExceptionCode code, const QString& msg) : err{code, msg} {}
         Member(T&& other) : data(std::move(other)) {}
-        Member(Member&& other) : data() {
+        Member(Member&& other) {
             if (other.err)
-                err = std::move(other.err);
+                new (this) EventoException(std::move(other.err));
             else
-                data = std::move(other.data.result);
+                new (this) Data(std::move(other.data.result));
             other.reset();
         }
         Member(const Member&) = delete;
 
         Member& operator=(Member&& other) {
+            reset();
             if (other.err)
-                err = std::move(other.err);
+                new (this) EventoException(std::move(other.err));
             else
-                data = std::move(other.data.result);
+                new (this) Data(std::move(other.data.result));
             other.reset();
             return *this;
         }

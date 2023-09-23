@@ -2,6 +2,7 @@
 #define FEEDBACK_STATISTICS_CONTROLLER_H
 
 #include <QtQml>
+#include "types.h"
 
 class FeedbackStatisticsController : public QObject {
     Q_OBJECT
@@ -10,7 +11,7 @@ class FeedbackStatisticsController : public QObject {
 
 public:
     Q_INVOKABLE void loadSummaryInfo(int page);
-    Q_INVOKABLE void loadFeedbackInfo();
+    Q_INVOKABLE void loadFeedbackInfo(EventoID id);
 
 signals:
     void loadSummarySuccessEvent(int sum);

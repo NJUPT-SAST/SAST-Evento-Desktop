@@ -12,8 +12,6 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
     property var locationArr: []
     property var departmentArr: []
-    property var typeArr: []
-    property int typeId: 0
 
     function parseJSON(data) {
         var result = []
@@ -47,15 +45,6 @@ FluScrollablePage {
         EventoEditController.loadEditInfo()
     }
 
-    function findTypeId(text) {
-        var json = JSON.parse(EventoEditController.typeJson)
-        for (var j = 0; j < json.length; ++j) {
-            if (text === json[j].name)
-                return json[j].id
-        }
-        return 0
-    }
-
     signal listReady
 
     Component.onCompleted: {
@@ -67,20 +56,15 @@ FluScrollablePage {
         target: EventoEditController
         function onLoadEditSuccessEvent() {
             departmentArr = []
-            typeArr = []
             var json = JSON.parse(EventoEditController.departmentJson)
             for (var ii = 0; ii < json.length; ++ii) {
                 departmentArr.push(tree_view_department.createItem(
-                                       json[ii].name, true, [], {
+                                       json[ii].departmentName, true, [], {
                                            "id": json[ii].id
                                        }))
             }
             json = JSON.parse(EventoEditController.locationJson)
             locationArr = parseJSON(json)
-            json = JSON.parse(EventoEditController.typeJson)
-            for (var j = 0; j < json.length; ++j) {
-                typeArr.push(json[j].name)
-            }
             listReady()
             statusMode = FluStatusViewType.Success
         }
@@ -416,37 +400,19 @@ FluScrollablePage {
         }
         FluComboBox {
             id: combo_box_type
+            property int typeId: {
+                var idx = find(displayText)
+                return idx === -1 ? 0 : model[idx][id]
+            }
             width: 200
             anchors {
                 left: textbox_tag.left
                 top: item_type.top
             }
-
-            Connections {
-                target: page
-                function onListReady() {
-                    combo_box_type.model = typeArr
-                }
-            }
-        }
-
-        FluText {
-            id: item_allow_comflict
-            text: "允许冲突"
-            font.pixelSize: 20
-            font.bold: true
-            anchors {
-                left: item_department.left
-                top: item_type.top
-            }
-        }
-        FluCheckBox {
-            id: check_box_allow
-            checked: EventoEditController.isEditMode ? EventoEditController.allowConflict : false
-            anchors {
-                left: rect_department.left
-                bottom: item_allow_comflict.bottom
-            }
+            model: TypeModel
+            textRole: "name"
+            displayText: EventoEditController.isEditMode ? textAt(
+                                                               EventoEditController.typeId - 1) : ""
         }
 
         FluText {
@@ -577,9 +543,9 @@ FluScrollablePage {
             }
             onClicked: {
                 var ids = []
-                typeId = findTypeId(combo_box_type.editText)
-                tree_view_department.multipData().map(value => ids.push(
-                                                          value.data.id))
+                var typeId = combo_box_type.typeId
+                ree_view_department.multipData().map(value => ids.push(
+                                                         value.data.id))
                 if (ids.length === 0 || textbox_title.text === ""
                         || textbox_description.text === "" || typeId === 0
                         || tree_view_location.locationId === 0
@@ -591,14 +557,12 @@ FluScrollablePage {
 
                 EventoEditController.createEvento(
                             textbox_title.text, textbox_description.text, clender_picker_event_start.text + " " + time_picker_event_start.current.getHours() + ":" + time_picker_event_start.current.getMinutes(
-                                ) + ":00", clender_picker_event_end.text + " "
-                            + time_picker_event_end.current.getHours() + ":" + time_picker_event_end.current.getMinutes(
-                                ) + ":00", clender_picker_register_start.text + " "
-                            + time_picker_register_start.current.getHours() + ":" + time_picker_register_start.current.getMinutes(
-                                ) + ":00", clender_picker_register_end.text + " "
-                            + time_picker_register_end.current.getHours() + ":" + time_picker_register_end.current.getMinutes(
-                                ) + ":00", typeId, tree_view_location.locationId,
-                            ids, textbox_tag.text, GalleryHelper.urlList)
+                                ), clender_picker_event_end.text + " " + time_picker_event_end.current.getHours(
+                                ) + ":" + time_picker_event_end.current.getMinutes(),
+                            clender_picker_register_start.text + " " + time_picker_register_start.current.getHours() + ":" + time_picker_register_start.current.getMinutes(), clender_picker_register_end.text
+                            + " " + time_picker_register_end.current.getHours() + ":"
+                            + time_picker_register_end.current.getMinutes(), typeId, tree_view_location.locationId,
+                            ids, textbox_tag.text)
             }
         }
     }
