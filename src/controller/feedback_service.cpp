@@ -37,22 +37,9 @@ void FeedbackService::load_SummaryInfo(int page) {
         std::vector<FeedbackNum> model;
         {
             std::lock_guard lock(mutex);
-            for (const auto& i : data.second) {
-                auto eventoFuture = getRepo()->getEventById(i.eventId).then([=](EventoResult<DTO_Evento> result) ->EventoResult<QString>{
-                    if (!result) {
-                        FeedbackStatisticsController::getInstance()->onLoadSummaryFailure(result.message());
-                        return {result.code(), result.message()};
-                    }
-                    return result.take().title;
-                });
-                auto evento = eventoFuture.takeResult();
-                if (!evento) {
-                    FeedbackStatisticsController::getInstance()->onLoadSummaryFailure(result.message());
-                    return -1;
-                }
-                FeedbackNum obj(i);
-                obj.title = evento.take();
-                model.push_back(obj);
+            for (auto& i : data.second) {
+                model.push_back(i);
+                feedbacks[i.eventId] = std::move(i);
             }
         }
         FeedbackNumModel::getInstance()->resetModel(std::move(model));
@@ -77,23 +64,10 @@ void FeedbackService::load_FeedbackInfo(EventoID id) {
             std::lock_guard lock(mutex);
             for (auto& i : feedbackSummary.feedbacks) {
                 model.push_back(Feedback(i));
-                feedbacks[i.id] = Feedback(i);
             }
         }
-        auto eventoFuture = getRepo()->getEventById(feedbackSummary.eventId).then([=](EventoResult<DTO_Evento> result) -> EventoResult<QString>{
-            if (!result) {
-                FeedbackStatisticsController::getInstance()->onLoadFeedbackFailure(result.message());
-                return {result.code(), result.message()};
-            }
-            return result.take().title;
-        });
         FeedbackModel::getInstance()->resetModel(std::move(model));
-        auto evento = eventoFuture.takeResult();
-        if (!evento) {
-            FeedbackStatisticsController::getInstance()->onLoadFeedbackFailure(evento.message());
-            return false;
-        }
-        FeedbackStatisticsHelper::getInstance()->updateFeedbackStatistics(FeedbackSummary(feedbackSummary, evento.take()));
+        FeedbackStatisticsHelper::getInstance()->updateFeedbackStatistics(FeedbackSummary(feedbackSummary, feedbacks[id].title));
         return true;
     });
     QtConcurrent::run([=] {
