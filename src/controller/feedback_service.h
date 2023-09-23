@@ -11,7 +11,7 @@ class FeedbackService
 {
     std::shared_mutex mutex;
     Feedback userfeedback;
-    std::map<int, Feedback> feedbacks;
+    std::map<int, FeedbackNum> feedbacks;
 
 private:
     FeedbackService() = default;

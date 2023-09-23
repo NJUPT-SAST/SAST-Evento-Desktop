@@ -597,9 +597,11 @@ QFuture<EventoResult<DTO_FeedbackSummary>> EventoNetworkClient::getFeedbackSumma
 }
 
 register_object_member(FeedbackNum, "eventId", eventId);
+register_object_member(FeedbackNum, "title", title);
 register_object_member(FeedbackNum, "feedbackCount", feedbackCount);
 declare_object(FeedbackNum,
                object_member(FeedbackNum, eventId),
+               object_member(FeedbackNum, title),
                object_member(FeedbackNum, feedbackCount));
 
 QFuture<EventoResult<std::pair<int, std::vector<FeedbackNum>>>> EventoNetworkClient::getFeedbackSummaryListInPage(int page)
