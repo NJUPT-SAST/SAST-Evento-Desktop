@@ -70,7 +70,7 @@ public:
     QFuture<EventoResult<std::vector<DTO_Evento>>> getHistoryList();
     QFuture<EventoResult<std::vector<DTO_Evento>>> getEventList(int page, int size);
     QFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId);
-    QFuture<EventoResult<std::vector<DTO_Evento>>> getEventByTime(const QString& time);
+    QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time);
     QFuture<EventoResult<DTO_Evento>> getEvent(EventoID event);
     QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId);
     QFuture<EventoResult<std::vector<DTO_Slide>>> getSlideList();
@@ -79,6 +79,7 @@ public:
     QFuture<EventoResult<std::vector<EventType>>> getTypeList();
     QFuture<EventoResult<QString>> getLocationList();
     QFuture<EventoResult<QString>> getDepartmentList();
+    QFuture<EventoResult<QString>> getSubscribedDepartmentList();
     QFuture<EventoResult<QString>> getQRCode(EventoID eventId);
 
     // eventUpload

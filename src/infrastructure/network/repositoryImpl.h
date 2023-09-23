@@ -28,8 +28,26 @@ public:
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId) override {
         return client.getDepartmentEventList(departmentId);
     }
+    virtual QFuture<EventoResult<std::vector<EventType>>> getTypeList() override {
+        return client.getTypeList();
+    }
+    virtual QFuture<EventoResult<QString>> getDepartmentList() override {
+        return client.getDepartmentList();
+    }
+    virtual QFuture<EventoResult<QString>> getSubscribedDepartmentList() override {
+        return client.getSubscribedDepartmentList();
+    }
+    virtual QFuture<EventoResult<QString>> getQRCode(EventoID eventId) override {
+        return client.getQRCode(eventId);
+    }
+    virtual QFuture<EventoResult<QString>> getLocationList() override {
+        return client.getLocationList();
+    }
     virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) override {
         return client.getEvent(event);
+    }
+    virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time) override {
+        return client.getEventListByTime(time);
     }
     virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) override {
         return client.checkInEvent(event, code);

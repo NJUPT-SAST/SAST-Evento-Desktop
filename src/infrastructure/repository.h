@@ -37,7 +37,7 @@ struct Repository {
     virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) = 0;
-    virtual QFuture<EventoResult<QString>> getTypeList() = 0;
+    virtual QFuture<EventoResult<std::vector<EventType>>> getTypeList() = 0;
     virtual QFuture<EventoResult<QString>> getLocationList() = 0;
     virtual QFuture<EventoResult<QString>> getDepartmentList() = 0;
     virtual QFuture<EventoResult<QString>> getSubscribedDepartmentList() = 0;

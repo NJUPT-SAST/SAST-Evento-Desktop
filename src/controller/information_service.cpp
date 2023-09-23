@@ -3,10 +3,11 @@
 #include "repository.h"
 #include "evento_edit.h"
 #include "department_events.h"
+#include "type_model.h"
 
 void InformationService::load_EditInfo() {
     std::array<QFuture<bool>, 3> tasks {
-        getRepo()->getTypeList().then([=](EventoResult<QString> result) {
+        getRepo()->getTypeList().then([=](EventoResult<std::vector<EventType>> result) {
             if (!result) {
                 EventoEditController::getInstance()->onLoadEditFailure(result.message());
                 return false;
@@ -14,8 +15,8 @@ void InformationService::load_EditInfo() {
             auto typeList = result.take();
             {
                 std::lock_guard lock(mutex);
-                EventoEditController::getInstance()->setProperty("typeJson", typeList);
-                typeJson = std::move(typeList);
+                TypeModel::getInstance()->resetModel(typeList);
+                types = std::move(typeList);
             }
             return true;
         }),

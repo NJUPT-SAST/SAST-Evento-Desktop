@@ -20,12 +20,6 @@ void EventoEditController::preload() {
     InformationService::getInstance().load_EditInfo();
 }
 
-void EventoEditController::editEvento(EventoID id) {
-    setProperty("isEditMode", true);
-    update(EventoService::getInstance().edit(id));
-    preload();
-}
-
 void EventoEditController::createEvento(const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag)
 {
     if (property("isEditMode").toBool()) {
@@ -36,7 +30,6 @@ void EventoEditController::createEvento(const QString &title, const QString &des
 }
 
 void EventoEditController::update(const DTO_Evento& event) {
-    setProperty("allowConflict", event.type.allowConflict);
     setProperty("eventStart", event.gmtEventStart);
     setProperty("eventEnd", event.gmtEventEnd);
     setProperty("registerStart", event.gmtRegistrationStart);
@@ -45,6 +38,7 @@ void EventoEditController::update(const DTO_Evento& event) {
 
 void EventoEditController::loadEditInfo()
 {
-    setProperty("isEditMode", false);
+    if (property("isEditMode").toBool())
+        update(EventoService::getInstance().edit(EventoHelper::getInstance()->property("id").toInt()));
     preload();
 }

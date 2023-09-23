@@ -4,7 +4,7 @@
 
 void CalendarController::loadAllEventoInfo(const QString &date)
 {
-    emit loadAllEventoSuccessEvent();
+    EventoService::getInstance().load_Block(date);
 }
 
 void CalendarController::loadEventoInfo(const EventoID eventId)

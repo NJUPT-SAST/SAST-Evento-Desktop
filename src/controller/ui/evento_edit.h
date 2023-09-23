@@ -3,8 +3,6 @@
 
 #include <QtQml>
 
-#include "types.h"
-
 class DTO_Evento;
 
 class EventoEditController : public QObject {
@@ -14,9 +12,7 @@ class EventoEditController : public QObject {
 
     Q_PROPERTY(QString departmentJson MEMBER m_departmentJson NOTIFY departmentJsonChanged)
     Q_PROPERTY(QString locationJson MEMBER m_locationJson NOTIFY locationJsonChanged)
-    Q_PROPERTY(QString typeJson MEMBER m_typeJson NOTIFY typeJsonChanged)
     Q_PROPERTY(int typeId MEMBER m_typeId NOTIFY typeIdChanged)
-    Q_PROPERTY(bool allowConflict MEMBER m_allowConflict NOTIFY allowConflictChanged)
     Q_PROPERTY(bool isEditMode MEMBER m_isEditMode NOTIFY isEditModeChanged)
     Q_PROPERTY(QString eventStart MEMBER m_eventStart NOTIFY eventStartChanged)
     Q_PROPERTY(QString eventEnd MEMBER m_eventEnd NOTIFY eventEndChanged)
@@ -25,7 +21,6 @@ class EventoEditController : public QObject {
 
 public:
     Q_INVOKABLE void loadEditInfo();
-    void editEvento(EventoID id);
     Q_INVOKABLE void createEvento(const QString& title,
                                   const QString& description,
                                   const QString& eventStart,
@@ -39,11 +34,9 @@ public:
 private:
     QString m_departmentJson;
     QString m_locationJson;
-    QString m_typeJson;
     bool m_isEditMode; // true: 编辑模式 false: 创建模式
     // 编辑模式属性
     int m_typeId;
-    bool m_allowConflict;
     QString m_eventStart;
     QString m_eventEnd;
     QString m_registerStart;
@@ -60,9 +53,7 @@ signals:
 
     void departmentJsonChanged();
     void locationJsonChanged();
-    void typeJsonChanged();
     void typeIdChanged();
-    void allowConflictChanged();
     void isEditModeChanged();
     void eventStartChanged();
     void eventEndChanged();

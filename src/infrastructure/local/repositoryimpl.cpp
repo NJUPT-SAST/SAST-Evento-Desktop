@@ -222,36 +222,6 @@ QFuture<EventoResult<std::vector<DTO_Evento>>> repositoryImpl::getEventListInPag
     });
 }
 
-QFuture<EventoResult<std::vector<DTO_Evento>>> repositoryImpl::getDepartmentEventList(int departmentId)
-{
-    return QtConcurrent::run([=]{
-        std::vector<DTO_Evento> res;
-
-        for(int i = 0; i < event_data_list.size(); i++) {
-            if (eventDepartmentMatch(event_data_list.at(i).id.toInt(), departmentId)) {
-                res.push_back(readEvento(event_data_list.at(i).id.toInt()));
-            }
-        }
-
-        return EventoResult(std::move(res));
-    });
-}
-
-QFuture<EventoResult<std::vector<DTO_Evento> > > repositoryImpl::getEventListByTime(const QString &time)
-{
-    return QtConcurrent::run([this]{
-        std::vector<DTO_Evento> res;
-
-        for (int i = 0; i < participate_data_list.size(); i++) {
-            if (!participate_data_list.at(i).user_id.compare("B22041234") && !participate_data_list.at(i).is_registration.compare("true")) {
-                res.push_back(readEvento(participate_data_list.at(i).event_id.toInt()));
-            }
-        }
-
-        return EventoResult(std::move(res));
-    });
-}
-
 QFuture<EventoResult<DTO_Evento>> repositoryImpl::getEventById(EventoID event)
 {
     return QtConcurrent::run([=]{
@@ -299,65 +269,6 @@ QFuture<EventoResult<std::vector<DTO_Slide>>> repositoryImpl::getEventSlideList(
         }
         return EventoResult(std::move(res));
     });
-
-}
-
-QFuture<EventoResult<QString>> repositoryImpl::getTypeList()
-{
-    return QtConcurrent::run([this]{
-        QJsonArray res;
-        for(int i = 0; i< type_data_list.size(); i++) {
-            type_data unit = type_data_list.at(i);
-            QJsonObject item;
-            item.insert("id", unit.id.toInt());
-            item.insert("name", unit.type_name);
-            res.push_back(item);
-        }
-        return EventoResult(QString(QJsonDocument(res).toJson(QJsonDocument::Compact).toStdString().c_str()));
-    });
-}
-
-QFuture<EventoResult<QString>> repositoryImpl::getLocationList()
-{
-    return QtConcurrent::run([this]{
-        QJsonArray res;
-
-        for(int i = 0; i<location_data_list.size(); i++) {
-            if(!location_data_list.at(i).parent_id.compare("0")){
-                res.push_back(formatToTree(location_data_list,
-                                           location_data_list.at(i).id,
-                                           location_data_list.at(i).location_name));
-            }
-        }
-        return EventoResult(QString(QJsonDocument(res).toJson(QJsonDocument::Compact).toStdString().c_str()));
-    });
-
-}
-
-QFuture<EventoResult<QString>> repositoryImpl::getDepartmentList()
-{
-    return QtConcurrent::run([this]{
-        QJsonArray res;
-
-        for(int i = 0; i< department_data_list.size(); i++){
-            department_data unit = department_data_list.at(i);
-            QJsonObject item;
-            item.insert("id", unit.id.toInt());
-            item.insert("name", unit.department_name);
-            res.push_back(item);
-        }
-        return EventoResult(QString(QJsonDocument(res).toJson(QJsonDocument::Compact).toStdString().c_str()));
-    });
-}
-
-QFuture<EventoResult<QString>> repositoryImpl::getSubscribedDepartmentList()
-{
-    return QtConcurrent::run([]{ return EventoResult(QStringLiteral("[1]")); });
-}
-
-QFuture<EventoResult<QString>> repositoryImpl::getQRCode(EventoID eventId)
-{
-    return QtConcurrent::run([] {return EventoResult(QStringLiteral("qrcodeLink"));});
 }
 
 QFuture<EventoResult<bool>> repositoryImpl::checkIn(EventoID event, const QString &code)

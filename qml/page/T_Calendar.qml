@@ -71,7 +71,7 @@ FluScrollablePage {
         target: CalendarController
         function onDeleteSuccessEvent() {
             showSuccess("删除成功")
-            loadAllInfo()
+            loadAllInfo(dateString)
         }
     }
 
@@ -161,6 +161,7 @@ FluScrollablePage {
         }
 
         // deprecated
+
 
         /*
         Item {

@@ -13,7 +13,6 @@ static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply)
 {
     auto networkError = reply->error();
     if (networkError != QNetworkReply::NoError) {
-        qDebug() << reply->readAll();
         return EventoException(EventoExceptionCode::NetworkError, "network error");
     }
     QJsonParseError jsonError;
@@ -493,7 +492,7 @@ QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getDepartmen
     });
 }
 
-QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getEventByTime(const QString &time)
+QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getEventListByTime(const QString &time)
 {
     QUrlQuery params;
     params.addQueryItem("time", time);
@@ -647,14 +646,53 @@ QFuture<EventoResult<std::vector<EventType>>> EventoNetworkClient::getTypeList()
 
 QFuture<EventoResult<QString>> EventoNetworkClient::getLocationList()
 {
-    // TODO: implement
-    return {};
+    auto url = endpoint(QStringLiteral("/admin/types"));
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<QString> {
+        auto f(future);
+        auto result = f.takeResult();
+        if (result) {
+            return result.take().toString();
+        } else {
+            return {result.code(), result.message()};
+        }
+    });
 }
 
 QFuture<EventoResult<QString>> EventoNetworkClient::getDepartmentList()
 {
-    // TODO: implement
-    return {};
+    auto url = endpoint(QStringLiteral("/admin/departments"));
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<QString> {
+        auto f(future);
+        auto result = f.takeResult();
+        if (result) {
+            return result.take().toString();
+        } else {
+            return {result.code(), result.message()};
+        }
+    });
+}
+
+QFuture<EventoResult<QString> > EventoNetworkClient::getSubscribedDepartmentList()
+{
+    auto url = endpoint("/user/subscribe/departments");
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<QString> {
+        auto f(future);
+        auto result = f.takeResult();
+        if (result) {
+            auto arr = result.take().toArray();
+            QString str = "[";
+            for (const auto& i : arr) {
+                str += (i.toObject()["id"].toString() + ", ");
+            }
+            str += "]";
+            return str;
+        } else {
+            return {result.code(), result.message()};
+        }
+    });
 }
 
 QFuture<EventoResult<QString>> EventoNetworkClient::getQRCode(EventoID eventId)
@@ -812,7 +850,7 @@ struct Request_Evento {
 
 QFuture<EventoResult<bool>> EventoNetworkClient::createEvent(const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag)
 {
-    auto url = endpoint(QStringLiteral("event/info"));
+    auto url = endpoint(QStringLiteral("/event/info"));
     auto future = this->post(url, QJsonDocument(Request_Evento{title, description, eventStart, eventEnd, registerStart, registerEnd, typeId, locationId, departmentIds, tag}.serialise().toObject()));
     return QtConcurrent::run([=]() -> EventoResult<bool> {
         auto f(future);
@@ -837,7 +875,7 @@ struct Request_EventoPatch : public Request_Evento {
 
 QFuture<EventoResult<bool>> EventoNetworkClient::editEvent(EventoID event, const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag)
 {
-    auto url = endpoint(QStringLiteral("event/info"));
+    auto url = endpoint(QStringLiteral("/event/info"));
     auto future = this->put(url, QJsonDocument(Request_Evento{title, description, eventStart, eventEnd, registerStart, registerEnd, typeId, locationId, departmentIds, tag}.serialise().toObject()));
     return QtConcurrent::run([=]() -> EventoResult<bool> {
         auto f(future);
