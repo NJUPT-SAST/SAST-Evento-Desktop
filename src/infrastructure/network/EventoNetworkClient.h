@@ -87,7 +87,7 @@ public:
     QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback &feedback);
     QFuture<EventoResult<bool>> subscribeEvent(EventoID event, bool selection);
     QFuture<EventoResult<bool>> registerEvent(EventoID event, bool selection);
-    QFuture<EventoResult<bool>> hasFeedbacked(EventoID event);
+    QFuture<EventoResult<int>> hasFeedbacked(EventoID event);
     QFuture<EventoResult<bool>> cancelEvent(EventoID event);
     QFuture<EventoResult<bool>> deleteEvent(EventoID event);
     QFuture<EventoResult<bool>> createEvent(const QString& title,

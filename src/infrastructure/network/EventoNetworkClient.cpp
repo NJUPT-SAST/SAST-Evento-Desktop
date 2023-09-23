@@ -786,17 +786,17 @@ QFuture<EventoResult<bool>> EventoNetworkClient::subscribeEvent(EventoID event, 
     });
 }
 
-QFuture<EventoResult<bool>> EventoNetworkClient::hasFeedbacked(EventoID event)
+QFuture<EventoResult<int>> EventoNetworkClient::hasFeedbacked(EventoID event)
 {
     auto url = endpoint(QStringLiteral("/feedback/user/info"), [&](QUrlQuery params) {
         params.addQueryItem("eventId", QString::number(event));
     });
     auto future = this->get(url);
-    return QtConcurrent::run([=]() -> EventoResult<bool> {
+    return QtConcurrent::run([=]() -> EventoResult<int> {
         auto f(future);
         auto result = f.takeResult();
         if (result) {
-            return {};
+            return result.take()["data"].isNull();
         } else {
             return {result.code(), result.message()};
         }

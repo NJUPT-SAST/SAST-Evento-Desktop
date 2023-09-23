@@ -14,7 +14,7 @@
 #include "calendar.h"
 #include "my_page.h"
 #include "evento_brief_model.h"
-#include "evento_edit.h"
+#include "feedback_service.h"
 
 #include <QtConcurrent>
 #include <array>
@@ -79,7 +79,7 @@ void EventoService::load_RegisteredSchedule() {
         {
             std::lock_guard lock(mutex);
             registered.clear();
-            for(auto& evento : data) {
+            for (auto& evento : data) {
                 registered.push_back(evento.id);
                 auto participateFuture = getRepo()->getUserParticipate(evento.id).then([=](EventoResult<ParticipationStatus> result) {
                     if (!result) {
@@ -89,13 +89,13 @@ void EventoService::load_RegisteredSchedule() {
                     auto participate = result.take();
                     return participate;
                 });
-                auto hasFeedbackedFuture = getRepo()->hasFeedbacked(evento.id).then([=](EventoResult<bool> result) {
+                auto hasFeedbackedFuture = getRepo()->hasFeedbacked(evento.id).then([=](EventoResult<int> result) {
                     if (!result) {
                         ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
                         return false;
                     }
-                    auto hasFeedbacked = result.take();
-                    return hasFeedbacked;
+                    bool hasFeedbackedFuture = result.take();
+                    return hasFeedbackedFuture;
                 });
                 model.push_back(Schedule(evento, participateFuture.result(), hasFeedbackedFuture.result()));
                 stored[evento.id] = std::move(evento);
@@ -122,7 +122,7 @@ void EventoService::load_SubscribedSchedule() {
         {
             std::lock_guard lock(mutex);
             subscribed.clear();
-            for(auto& evento : data) {
+            for (auto& evento : data) {
                 registered.push_back(evento.id);
                 auto participateFuture = getRepo()->getUserParticipate(evento.id).then([=](EventoResult<ParticipationStatus> result) {
                     if (!result) {
@@ -132,13 +132,13 @@ void EventoService::load_SubscribedSchedule() {
                     auto participate = result.take();
                     return participate;
                 });
-                auto hasFeedbackedFuture = getRepo()->hasFeedbacked(evento.id).then([=](EventoResult<bool> result) {
+                auto hasFeedbackedFuture = getRepo()->hasFeedbacked(evento.id).then([=](EventoResult<int> result) {
                     if (!result) {
                         ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
                         return false;
                     }
-                    auto hasFeedbacked = result.take();
-                    return hasFeedbacked;
+                    bool hasFeedbackedFuture = result.take();
+                    return hasFeedbackedFuture;
                 });
                 model.push_back(Schedule(evento, participateFuture.result(), hasFeedbackedFuture.result()));
                 stored[evento.id] = std::move(evento);
@@ -236,6 +236,7 @@ void EventoService::load_Block(const QString& time) {
 }
 
 void EventoService::load(EventoID id) {
+    FeedbackService::getInstance().load_UserFeedback(id);
     std::array<QFuture<bool>, 2> tasks {
         getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
             if (!result) {

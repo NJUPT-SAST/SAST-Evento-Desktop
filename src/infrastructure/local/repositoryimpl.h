@@ -235,9 +235,6 @@ declare_object(user_data,
 
 struct repositoryImpl : public Repository {
 public:
-    // user-fetch
-    virtual DTO_Feedback getFeedbackInfo(EventoID eventoId, EventoException& err) override;
-
     // event-fetch
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList() override;
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getLatestList() override;
@@ -247,11 +244,12 @@ public:
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListInPage(int page, int size) override;
     virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) override;
     virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) override;
+    virtual QFuture<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId) override;
+    virtual QFuture<EventoResult<std::pair<int,std::vector<std::pair<int,int>>>>> getFeedbackSummaryListInPage(EventoID eventoId) override;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id) override;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) override;
 
     // event-upload
-    virtual QFuture<EventoResult<bool>> hasFeedbacked(EventoID event) override;
     virtual QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback) override;
 
     // admin-fetch

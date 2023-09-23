@@ -76,8 +76,11 @@ public:
     virtual QFuture<EventoResult<bool>> registerEvent(EventoID event, bool selection) override {
         return client.registerEvent(event, selection);
     }
-    virtual QFuture<EventoResult<bool>> hasFeedbacked(EventoID event) override {
+    virtual QFuture<EventoResult<int>> hasFeedbacked(EventoID event) override {
         return client.hasFeedbacked(event);
+    }
+    virtual QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event) override {
+        return client.getFeedbackInfo(event);
     }
     virtual QFuture<EventoResult<bool>> deleteEvent(EventoID event) override {
         return client.deleteEvent(event);

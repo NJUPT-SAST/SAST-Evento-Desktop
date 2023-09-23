@@ -10,12 +10,12 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
 
     onErrorClicked: {
-        loadFeedbackInfo(page)
+        loadFeedbackInfo()
     }
 
     function loadFeedbackInfo() {
         statusMode = FluStatusViewType.Loading
-        FeedbackStatisticsController.loadFeedbackInfo()
+        FeedbackStatisticsController.loadFeedbackInfo(EventoHelper.id)
     }
 
     Component.onCompleted: {
