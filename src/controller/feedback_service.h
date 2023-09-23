@@ -1,7 +1,7 @@
 #ifndef FEEDBACKSERVICE_H
 #define FEEDBACKSERVICE_H
 
-#include <dto/feedback.h>
+#include "feedback.h"
 #include <dto/feedback_summary.h>
 
 #include <QFuture>
@@ -10,7 +10,8 @@
 class FeedbackService
 {
     std::shared_mutex mutex;
-
+    Feedback userfeedback;
+    std::map<int, Feedback> feedbacks;
 
 private:
     FeedbackService() = default;

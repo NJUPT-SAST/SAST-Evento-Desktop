@@ -14,6 +14,7 @@
 #include <dto/slide.h>
 #include <dto/user.h>
 #include <dto/user_brief.h>
+#include <dto/feedback_summary.h>
 #include <evento_exception.h>
 #include <result.h>
 
@@ -60,7 +61,6 @@ public:
     QFuture<EventoResult<DTO_Permission>> getEventPermission(EventoID event);
     QFuture<EventoResult<DTO_User>> getUserInfo(const UserID &id);
     QFuture<EventoResult<ParticipationStatus>> getUserParticipate(EventoID event);
-    QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event);
 
     // eventFetch
     QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList();
@@ -72,7 +72,7 @@ public:
     QFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId);
     QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time);
     QFuture<EventoResult<DTO_Evento>> getEvent(EventoID event);
-    QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId);
+
     QFuture<EventoResult<std::vector<DTO_Slide>>> getSlideList();
     QFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id);
     QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(int size);
@@ -84,10 +84,8 @@ public:
 
     // eventUpload
     QFuture<EventoResult<bool>> checkInEvent(EventoID event, const QString &code);
-    QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback &feedback);
     QFuture<EventoResult<bool>> subscribeEvent(EventoID event, bool selection);
     QFuture<EventoResult<bool>> registerEvent(EventoID event, bool selection);
-    QFuture<EventoResult<int>> hasFeedbacked(EventoID event);
     QFuture<EventoResult<bool>> cancelEvent(EventoID event);
     QFuture<EventoResult<bool>> deleteEvent(EventoID event);
     QFuture<EventoResult<bool>> createEvent(const QString& title,
@@ -109,6 +107,14 @@ public:
                                            int typeId, int locationId,
                                            const QVariantList& departmentIds,
                                            const QString& tag);
+
+    // feedback
+    QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId);
+    QFuture<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId);
+    QFuture<EventoResult<std::pair<int, std::vector<FeedbackNum>>>> getFeedbackSummaryListInPage(int page);
+    QFuture<EventoResult<int>> hasFeedbacked(EventoID event);
+    QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback &feedback);
+    QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event);
 
     // adminFetch
     QFuture<EventoResult<std::vector<DTO_Evento>>> getQualifiedEvent(int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate());

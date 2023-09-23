@@ -58,6 +58,12 @@ public:
     virtual QFuture<EventoResult<QString>> getQRCode(EventoID eventId) override {
         return client.getQRCode(eventId);
     }
+    virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id) override {
+        return client.getEventSlideList(id);
+    }
+    virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) override {
+        return client.getHomeSlideList(size);
+    }
     virtual QFuture<EventoResult<QString>> getLocationList() override {
         return client.getLocationList();
     }
@@ -75,12 +81,6 @@ public:
     }
     virtual QFuture<EventoResult<bool>> registerEvent(EventoID event, bool selection) override {
         return client.registerEvent(event, selection);
-    }
-    virtual QFuture<EventoResult<int>> hasFeedbacked(EventoID event) override {
-        return client.hasFeedbacked(event);
-    }
-    virtual QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event) override {
-        return client.getFeedbackInfo(event);
     }
     virtual QFuture<EventoResult<bool>> deleteEvent(EventoID event) override {
         return client.deleteEvent(event);
@@ -110,6 +110,24 @@ public:
                                                   const QVariantList& departmentIds,
                                                   const QString& tag) override {
         return client.editEvent(event, title, description, eventStart, eventEnd, registerStart, registerEnd, typeId, locationId, departmentIds, tag);
+    }
+    virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) override {
+        return client.getFeedbackList(eventoId);
+    }
+    virtual QFuture<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId) override {
+        return client.getFeedbackSummary(eventoId);
+    }
+    virtual QFuture<EventoResult<std::pair<int,std::vector<FeedbackNum>>>> getFeedbackSummaryListInPage(int page) override {
+        return client.getFeedbackSummaryListInPage(page);
+    }
+    virtual QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback) override {
+        return client.feedbackEvent(feedback);
+    }
+    virtual QFuture<EventoResult<int>> hasFeedbacked(EventoID event) override {
+        return client.hasFeedbacked(event);
+    }
+    virtual QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event) override {
+        return client.getFeedbackInfo(event);
     }
 
 private:

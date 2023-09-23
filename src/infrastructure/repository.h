@@ -23,7 +23,6 @@ struct Repository {
     virtual QFuture<EventoResult<DTO_Permission>> getEventPermission(EventoID event) = 0;
     virtual QFuture<EventoResult<DTO_User>> getUserInfo(const UserID& id) = 0;
     virtual QFuture<EventoResult<ParticipationStatus>> getUserParticipate(EventoID event) = 0;
-    virtual QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event) = 0;
 
     // event-fetch
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList() = 0;
@@ -35,9 +34,6 @@ struct Repository {
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time) = 0;
     virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) = 0;
-    virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) = 0;
-    virtual QFuture<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId) = 0;
-    virtual QFuture<EventoResult<std::pair<int,std::vector<std::pair<int,int>>>>> getFeedbackSummaryListInPage(EventoID eventoId) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) = 0;
     virtual QFuture<EventoResult<std::vector<EventType>>> getTypeList() = 0;
@@ -50,8 +46,6 @@ struct Repository {
     virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) = 0;
     virtual QFuture<EventoResult<bool>> subscribeEvent(EventoID event, bool unsubscribe) = 0;
     virtual QFuture<EventoResult<bool>> registerEvent(EventoID event, bool unsubscribe) = 0;
-    virtual QFuture<EventoResult<int>> hasFeedbacked(EventoID event) = 0;
-    virtual QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback) = 0;
     virtual QFuture<EventoResult<bool>> cancelEvent(EventoID event) = 0;
     virtual QFuture<EventoResult<bool>> deleteEvent(EventoID event) = 0;
     virtual QFuture<EventoResult<bool>> createEvent(const QString& title,
@@ -73,6 +67,14 @@ struct Repository {
                                                     int typeId, int locationId,
                                                     const QVariantList& departmentIds,
                                                     const QString& tag) = 0;
+
+    // feedback
+    virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) = 0;
+    virtual QFuture<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId) = 0;
+    virtual QFuture<EventoResult<std::pair<int,std::vector<FeedbackNum>>>> getFeedbackSummaryListInPage(int page) = 0;
+    virtual QFuture<EventoResult<int>> hasFeedbacked(EventoID event) = 0;
+    virtual QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback) = 0;
+    virtual QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event) = 0;
 
     // admin-fetch
     virtual std::vector<DTO_Evento> getQualifiedEvent(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) = 0;

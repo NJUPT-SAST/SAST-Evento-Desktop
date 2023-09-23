@@ -11,13 +11,10 @@ struct FeedbackSummary
     int subscribedNum;
     int registeredNum;
     int checkedNum;
-    int feedbackNum;
     QString aveScore;
 
     FeedbackSummary() = default;
-    FeedbackSummary(const DTO_FeedbackSummary&);
-    FeedbackSummary(const std::pair<int,int>&);
-    //first data is eventoId,second data is feedbackCount
+    FeedbackSummary(const DTO_FeedbackSummary&, const QString& title);
 };
 
 #endif // FEEDBACK_SUMMARY_H

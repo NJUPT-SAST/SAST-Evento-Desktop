@@ -48,7 +48,7 @@ FluScrollablePage {
         implicitHeight: contentHeight
         interactive: false
         delegate: com_item
-        model: FeedbackSummaryModel
+        model: FeedbackNumModel
     }
 
     FluPagination {
@@ -111,7 +111,7 @@ FluScrollablePage {
                         top: item_title.bottom
                         topMargin: 5
                     }
-                    text: "反馈数量：" + model.feedbackNum
+                    text: "反馈数量：" + model.feedbackCount
                     color: FluColors.Grey120
                     wrapMode: Text.WordWrap
                     font: FluTextStyle.Caption

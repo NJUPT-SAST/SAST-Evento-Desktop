@@ -242,15 +242,7 @@ public:
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getSubscribedList() override;
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getHistoryList() override;
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListInPage(int page, int size) override;
-    virtual QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event) override;
-    virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) override;
-    virtual QFuture<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId) override;
-    virtual QFuture<EventoResult<std::pair<int,std::vector<std::pair<int,int>>>>> getFeedbackSummaryListInPage(EventoID eventoId) override;
-    virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id) override;
     virtual QFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(const int size) override;
-
-    // event-upload
-    virtual QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback) override;
 
     // admin-fetch
     virtual std::vector<DTO_Evento> getQualifiedEvent(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) override;

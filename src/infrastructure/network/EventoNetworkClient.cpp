@@ -557,6 +557,76 @@ QFuture<EventoResult<std::vector<DTO_Feedback>>> EventoNetworkClient::getFeedbac
     });
 }
 
+register_object_member(DTO_FeedbackSummary, "eventId", eventId);
+register_object_member(DTO_FeedbackSummary, "average", aveScore);
+register_object_member(DTO_FeedbackSummary, "subscribeNum", subscribedNum);
+register_object_member(DTO_FeedbackSummary, "registrationNum", registeredNum);
+register_object_member(DTO_FeedbackSummary, "participantNum", checkedNum);
+register_object_member(DTO_FeedbackSummary, "feedbacks", feedbacks);
+declare_object(DTO_FeedbackSummary,
+               object_member(DTO_FeedbackSummary, eventId),
+               object_member(DTO_FeedbackSummary, aveScore),
+               object_member(DTO_FeedbackSummary, subscribedNum),
+               object_member(DTO_FeedbackSummary, checkedNum),
+               object_member(DTO_FeedbackSummary, feedbacks)
+               );
+
+QFuture<EventoResult<DTO_FeedbackSummary>> EventoNetworkClient::getFeedbackSummary(EventoID eventoId)
+{
+    auto url = endpoint(QStringLiteral("/feedback/event"), [&](QUrlQuery params) {
+        params.addQueryItem("eventId", QString::number(eventoId));
+    });
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<DTO_FeedbackSummary> {
+        auto f(future);
+        auto result = f.takeResult();
+        if (result) {
+            auto rootValue = result.take();
+            if (rootValue.isObject()) {
+                DTO_FeedbackSummary dto;
+                declare_top_deserialiser(dto, deserialiser);
+                deserialiser.assign(rootValue);
+                return dto;
+            }
+            return EventoException(EventoExceptionCode::JsonError, "Format Error!");
+        } else {
+            return {result.code(), result.message()};
+        }
+    });
+}
+
+register_object_member(FeedbackNum, "eventId", eventId);
+register_object_member(FeedbackNum, "feedbackCount", feedbackCount);
+declare_object(FeedbackNum,
+               object_member(FeedbackNum, eventId),
+               object_member(FeedbackNum, feedbackCount));
+
+QFuture<EventoResult<std::pair<int, std::vector<FeedbackNum>>>> EventoNetworkClient::getFeedbackSummaryListInPage(int page)
+{
+    auto url = endpoint(QStringLiteral("/feedback/num"), [&](QUrlQuery params) {
+        params.addQueryItem("page", QString::number(page));
+        params.addQueryItem("size", QStringLiteral("10"));
+    });
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<std::pair<int, std::vector<FeedbackNum>>> {
+        auto f(future);
+        auto result = f.takeResult();
+        if (result) {
+            auto rootValue = result.take();
+            auto res = rootValue["result"];
+            if (rootValue.isObject()) {
+                std::vector<FeedbackNum> dto;
+                declare_top_deserialiser(dto, deserialiser);
+                deserialiser.assign(res);
+                return std::make_pair(rootValue["total"].toInt(), dto);
+            }
+            return EventoException(EventoExceptionCode::JsonError, "Format Error!");
+        } else {
+            return {result.code(), result.message()};
+        }
+    });
+}
+
 register_object_member(DTO_Slide, "id", id);
 register_object_member(DTO_Slide, "title", title);
 register_object_member(DTO_Slide, "link", link);

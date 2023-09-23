@@ -412,7 +412,7 @@ FluScrollablePage {
             model: TypeModel
             textRole: "name"
             displayText: EventoEditController.isEditMode ? textAt(
-                                                               EventoEditController.typeId) : ""
+                                                               EventoEditController.typeId - 1) : ""
         }
 
         FluText {

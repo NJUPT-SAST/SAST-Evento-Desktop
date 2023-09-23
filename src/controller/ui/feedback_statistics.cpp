@@ -1,6 +1,4 @@
 #include "feedback_statistics.h"
-#include "evento_exception.h"
-
 #include "feedback_service.h"
 
 void FeedbackStatisticsController::loadSummaryInfo(int page)

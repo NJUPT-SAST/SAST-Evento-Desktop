@@ -43,7 +43,7 @@ FluScrollablePage {
 
         FluText {
             id: text_title
-            text: "活动标题"
+            text: FeedbackStatisticsHelper.title
             font: FluTextStyle.Title
             anchors {
                 top: parent.top

@@ -15,6 +15,7 @@
 #include "my_page.h"
 #include "evento_brief_model.h"
 #include "feedback_service.h"
+#include "evento_edit.h"
 
 #include <QtConcurrent>
 #include <array>
@@ -105,10 +106,7 @@ void EventoService::load_RegisteredSchedule() {
         return true;
     });
 
-    QtConcurrent::run([=] {
-        if (future.result())
-            ScheduleController::getInstance()->onLoadRegisteredFinished();
-    });
+
 }
 
 void EventoService::load_SubscribedSchedule() {
