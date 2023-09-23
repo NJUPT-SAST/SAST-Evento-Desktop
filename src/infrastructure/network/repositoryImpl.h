@@ -25,6 +25,24 @@ public:
     virtual QFuture<EventoResult<ParticipationStatus>> getUserParticipate(EventoID event) override {
         return client.getUserParticipate(event);
     }
+    virtual QFuture<EventoResult<QStringList>> getAdminPermission() override {
+        return client.getAdminPermission();
+    }
+    virtual QFuture<EventoResult<QStringList>> getManagerPermission(EventoID event) override {
+        return client.getManagerPermission(event);
+    }
+    virtual QFuture<EventoResult<QStringList>> getPermittedEvent() override {
+        return client.getPermittedEvent();
+    }
+    virtual QFuture<EventoResult<DTO_Permission>> getEventPermission(EventoID event) override {
+        return client.getEventPermission(event);
+    }
+    virtual QFuture<EventoResult<DTO_User>> getUserInfo(const UserID &id) override {
+        return client.getUserInfo(id);
+    }
+    virtual QFuture<EventoResult<ParticipationStatus>> getUserParticipate(EventoID event) override {
+        return client.getUserParticipate(event);
+    }
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList() override {
         return client.getUndertakingList();
     }
