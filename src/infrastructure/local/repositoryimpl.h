@@ -236,13 +236,7 @@ declare_object(user_data,
 struct repositoryImpl : public Repository {
 public:
     // user-fetch
-    virtual QStringList getAdminPermission(EventoException& err) override;
-    virtual QStringList getManagerPermission(const EventoID &eventoId, EventoException& err) override;
-    virtual QStringList getPermittedEvent(EventoException& err) override;
-    virtual DTO_Permission getEventPermission(EventoID event, EventoException& err) override;
-    virtual DTO_User getUserInfo(const UserID& id, EventoException& err) override;
-    virtual ParticipationStatus getUserParticipate(const EventoID &eventoId, EventoException& err) override;
-    virtual DTO_Feedback getFeedbackInfo(const EventoID &eventoId, EventoException& err) override;
+    virtual DTO_Feedback getFeedbackInfo(EventoID eventoId, EventoException& err) override;
 
     // event-fetch
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList() override;
@@ -264,8 +258,6 @@ public:
     virtual QFuture<EventoResult<QString>> getQRCode(EventoID eventId) override;
 
     // event-upload
-    virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) override;
-    virtual QFuture<EventoResult<bool>> subscribe(EventoID event) override;
     virtual QFuture<EventoResult<bool>> hasFeedbacked(EventoID event) override;
     virtual QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback) override;
 

@@ -1,14 +1,10 @@
 #include "evento_info.h"
-#include "repository.h"
 #include "evento_service.h"
-#include "evento_exception.h"
 #include "user_service.h"
-#include "feedback_helper.h"
-#include "slide_model.h"
 
 void EventoInfoController::loadEventoInfo(const EventoID eventId)
 {
-    UserService::getInstance().load_EventoInfo(eventId);
+    EventoService::getInstance().load(eventId);
 }
 
 void EventoInfoController::registerEvento(const EventoID id, bool selection)

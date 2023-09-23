@@ -203,17 +203,44 @@ void EventoService::load_Block(const QString& time) {
 }
 
 void EventoService::load(EventoID id) {
-	getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
-        if (!result) {
-            EventoInfoController::getInstance()->onLoadFailure(result.message());
-            return;
-        }
-        mutex.lock();
-        Evento event = (stored[id] = std::move(result.take()));
-        mutex.unlock();
-		if (EventoHelper::getInstance()->update(event))
-            EventoInfoController::getInstance()->onLoadFinished();
-        });
+    std::array<QFuture<bool>, 2> tasks {
+        getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
+            if (!result) {
+                EventoInfoController::getInstance()->onLoadFailure(result.message());
+                return false;
+            }
+            Evento event;
+            {
+                std::lock_guard lock(mutex);
+                event = (stored[id] = std::move(result.take()));
+            }
+            if (EventoHelper::getInstance()->update(event)) {
+                EventoInfoController::getInstance()->onLoadFailure("data error");
+                return false;
+            }
+            return true;
+        }),
+        getRepo()->getUserParticipate(id).then([=](EventoResult<ParticipationStatus> result) {
+            if (!result) {
+                EventoInfoController::getInstance()->onLoadFailure(result.message());
+                return false;
+            }
+            auto participate = result.take();
+            {
+                std::lock_guard lock(mutex);
+                EventoInfoController::getInstance()->setProperty("isRegistrated", participate.isRegistrated);
+                EventoInfoController::getInstance()->setProperty("isParticipated", participate.isParticipated);
+                EventoInfoController::getInstance()->setProperty("isSubscribed", participate.isSubscribed);
+            }
+            return true;
+        })
+    };
+    QtConcurrent::run([=] {
+        for (const auto& i : tasks)
+            if (!i.result())
+                return;
+        EventoInfoController::getInstance()->onLoadFinished();
+    });
 }
 
 DTO_Evento EventoService::edit(EventoID id) {

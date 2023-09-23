@@ -187,7 +187,7 @@ QFuture<EventoResult<QStringList>> EventoNetworkClient::getAdminPermission()
     });
 }
 
-QFuture<EventoResult<QStringList>> EventoNetworkClient::getManagerPermission(const EventoID &eventoId)
+QFuture<EventoResult<QStringList>> EventoNetworkClient::getManagerPermission(EventoID eventId)
 {
     auto url = endpoint(QStringLiteral("/permission/event/manager/self"));
     return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<QStringList> {
@@ -240,10 +240,10 @@ declare_object(ParticipationStatus,
                object_member(ParticipationStatus, isParticipated),
                object_member(ParticipationStatus, isSubscribed));
 
-QFuture<EventoResult<ParticipationStatus>> EventoNetworkClient::getUserParticipate(const EventoID &eventoId)
+QFuture<EventoResult<ParticipationStatus>> EventoNetworkClient::getUserParticipate(EventoID event)
 {
     auto url = endpoint(QStringLiteral("/user/participate"), [&](QUrlQuery params) {
-        params.addQueryItem("eventId", QString::number(eventoId));
+        params.addQueryItem("eventId", QString::number(event));
     });
     return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<ParticipationStatus> {
         if (result) {
@@ -275,7 +275,7 @@ declare_object(DTO_Feedback,
                object_member(DTO_Feedback, score),
                object_member(DTO_Feedback, eventId));
 
-QFuture<EventoResult<DTO_Feedback>> EventoNetworkClient::getFeedbackInfo(const EventoID &eventoId)
+QFuture<EventoResult<DTO_Feedback>> EventoNetworkClient::getFeedbackInfo(EventoID eventoId)
 {
     auto url = endpoint(QStringLiteral("/feedback/user/info"), [&](QUrlQuery params) {
         params.addQueryItem("eventId", QString::number(eventoId));
@@ -708,11 +708,11 @@ QFuture<EventoResult<bool>> EventoNetworkClient::feedbackEvent(const DTO_Feedbac
     });
 }
 
-QFuture<EventoResult<bool>> EventoNetworkClient::subscribEvent(EventoID event, bool targetState)
+QFuture<EventoResult<bool>> EventoNetworkClient::registerEvent(EventoID event, bool selection)
 {
-    auto url = endpoint(QStringLiteral("/user/subscribe"), [&](QUrlQuery params) {
+    auto url = endpoint(QStringLiteral("/user/register"), [&](QUrlQuery params) {
         params.addQueryItem("eventId", QString::number(event));
-        params.addQueryItem("isSubscribe", targetState ? QStringLiteral("true") : QStringLiteral("false"));
+        params.addQueryItem("isRegister", selection ? QStringLiteral("true") : QStringLiteral("false"));
     });
     auto future = this->get(url);
     return QtConcurrent::run([=]() -> EventoResult<bool> {
@@ -726,7 +726,25 @@ QFuture<EventoResult<bool>> EventoNetworkClient::subscribEvent(EventoID event, b
     });
 }
 
-QFuture<EventoResult<bool>> EventoNetworkClient::isFeedbacked(EventoID event)
+QFuture<EventoResult<bool>> EventoNetworkClient::subscribeEvent(EventoID event, bool selection)
+{
+    auto url = endpoint(QStringLiteral("/user/subscribe"), [&](QUrlQuery params) {
+        params.addQueryItem("eventId", QString::number(event));
+        params.addQueryItem("isSubscribe", selection ? QStringLiteral("true") : QStringLiteral("false"));
+    });
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<bool> {
+        auto f(future);
+        auto result = f.takeResult();
+        if (result) {
+            return {};
+        } else {
+            return {result.code(), result.message()};
+        }
+    });
+}
+
+QFuture<EventoResult<bool>> EventoNetworkClient::hasFeedbacked(EventoID event)
 {
     auto url = endpoint(QStringLiteral("/feedback/user/info"), [&](QUrlQuery params) {
         params.addQueryItem("eventId", QString::number(event));
