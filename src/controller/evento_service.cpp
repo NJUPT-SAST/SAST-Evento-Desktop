@@ -79,10 +79,26 @@ void EventoService::load_RegisteredSchedule() {
         {
             std::lock_guard lock(mutex);
             registered.clear();
-            for(auto& i : data) {
-                registered.push_back(i.id);
-                model.push_back(Schedule(i));
-                stored[i.id] = std::move(i);
+            for(auto& evento : data) {
+                registered.push_back(evento.id);
+                auto participateFuture = getRepo()->getUserParticipate(evento.id).then([=](EventoResult<ParticipationStatus> result) {
+                    if (!result) {
+                        ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
+                        return ParticipationStatus{};
+                    }
+                    auto participate = result.take();
+                    return participate;
+                });
+                auto hasFeedbackedFuture = getRepo()->hasFeedbacked(evento.id).then([=](EventoResult<bool> result) {
+                    if (!result) {
+                        ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
+                        return false;
+                    }
+                    auto hasFeedbacked = result.take();
+                    return hasFeedbacked;
+                });
+                model.push_back(Schedule(evento, participateFuture.result(), hasFeedbackedFuture.result()));
+                stored[evento.id] = std::move(evento);
             }
         }
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
@@ -106,10 +122,26 @@ void EventoService::load_SubscribedSchedule() {
         {
             std::lock_guard lock(mutex);
             subscribed.clear();
-            for(auto& i : data) {
-                subscribed.push_back(i.id);
-                model.push_back(Schedule(i));
-                stored[i.id] = std::move(i);
+            for(auto& evento : data) {
+                registered.push_back(evento.id);
+                auto participateFuture = getRepo()->getUserParticipate(evento.id).then([=](EventoResult<ParticipationStatus> result) {
+                    if (!result) {
+                        ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
+                        return ParticipationStatus{};
+                    }
+                    auto participate = result.take();
+                    return participate;
+                });
+                auto hasFeedbackedFuture = getRepo()->hasFeedbacked(evento.id).then([=](EventoResult<bool> result) {
+                    if (!result) {
+                        ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
+                        return false;
+                    }
+                    auto hasFeedbacked = result.take();
+                    return hasFeedbacked;
+                });
+                model.push_back(Schedule(evento, participateFuture.result(), hasFeedbackedFuture.result()));
+                stored[evento.id] = std::move(evento);
             }
         }
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
@@ -204,17 +236,44 @@ void EventoService::load_Block(const QString& time) {
 }
 
 void EventoService::load(EventoID id) {
-	getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
-        if (!result) {
-            EventoInfoController::getInstance()->onLoadFailure(result.message());
-            return;
-        }
-        mutex.lock();
-        Evento event = (stored[id] = std::move(result.take()));
-        mutex.unlock();
-		if (EventoHelper::getInstance()->update(event))
-            EventoInfoController::getInstance()->onLoadFinished();
-        });
+    std::array<QFuture<bool>, 2> tasks {
+        getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
+            if (!result) {
+                EventoInfoController::getInstance()->onLoadFailure(result.message());
+                return false;
+            }
+            Evento event;
+            {
+                std::lock_guard lock(mutex);
+                event = (stored[id] = std::move(result.take()));
+            }
+            if (EventoHelper::getInstance()->update(event)) {
+                EventoInfoController::getInstance()->onLoadFailure("data error");
+                return false;
+            }
+            return true;
+        }),
+        getRepo()->getUserParticipate(id).then([=](EventoResult<ParticipationStatus> result) {
+            if (!result) {
+                EventoInfoController::getInstance()->onLoadFailure(result.message());
+                return false;
+            }
+            auto participate = result.take();
+            {
+                std::lock_guard lock(mutex);
+                EventoInfoController::getInstance()->setProperty("isRegistrated", participate.isRegistrated);
+                EventoInfoController::getInstance()->setProperty("isParticipated", participate.isParticipated);
+                EventoInfoController::getInstance()->setProperty("isSubscribed", participate.isSubscribed);
+            }
+            return true;
+        })
+    };
+    QtConcurrent::run([=] {
+        for (const auto& i : tasks)
+            if (!i.result())
+                return;
+        EventoInfoController::getInstance()->onLoadFinished();
+    });
 }
 
 DTO_Evento EventoService::edit(EventoID id) {
@@ -287,7 +346,7 @@ Evento::Evento(const DTO_Evento& src) : id(src.id), title(src.title), descriptio
     this->registrationEnd = src.gmtRegistrationEnd.toString("yyyy年MM月dd日 HH:mm:ss");
 }
 
-Schedule::Schedule(const DTO_Evento& src) : id(src.id), title(src.title), state(src.state), location(src.location) {
+Schedule::Schedule(const DTO_Evento& src, const ParticipationStatus& participate, bool hasFeedback) : id(src.id), title(src.title), state(src.state), location(src.location), isChecked(participate.isParticipated), hasFeedback(hasFeedback) {
     this->department = departmentConvertor(src.departments);
     this->date = src.gmtEventStart.toString(QStringLiteral("MM月dd日"));
     this->startTime = src.gmtEventStart.toString(QStringLiteral("hh:mm"));

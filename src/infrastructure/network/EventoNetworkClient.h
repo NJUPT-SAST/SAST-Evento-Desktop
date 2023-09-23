@@ -55,12 +55,12 @@ protected:
 public:
     // userFetch
     QFuture<EventoResult<QStringList>> getAdminPermission();
-    QFuture<EventoResult<QStringList>> getManagerPermission(const EventoID &eventoId);
+    QFuture<EventoResult<QStringList>> getManagerPermission(EventoID event);
     QFuture<EventoResult<QStringList>> getPermittedEvent();
     QFuture<EventoResult<DTO_Permission>> getEventPermission(EventoID event);
     QFuture<EventoResult<DTO_User>> getUserInfo(const UserID &id);
-    QFuture<EventoResult<ParticipationStatus>> getUserParticipate(const EventoID &eventoId);
-    QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(const EventoID &eventoId);
+    QFuture<EventoResult<ParticipationStatus>> getUserParticipate(EventoID event);
+    QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event);
 
     // eventFetch
     QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList();
@@ -85,8 +85,9 @@ public:
     // eventUpload
     QFuture<EventoResult<bool>> checkInEvent(EventoID event, const QString &code);
     QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback &feedback);
-    QFuture<EventoResult<bool>> subscribEvent(EventoID event, bool targetState);
-    QFuture<EventoResult<bool>> isFeedbacked(EventoID event);
+    QFuture<EventoResult<bool>> subscribeEvent(EventoID event, bool selection);
+    QFuture<EventoResult<bool>> registerEvent(EventoID event, bool selection);
+    QFuture<EventoResult<bool>> hasFeedbacked(EventoID event);
     QFuture<EventoResult<bool>> cancelEvent(EventoID event);
     QFuture<EventoResult<bool>> deleteEvent(EventoID event);
     QFuture<EventoResult<bool>> createEvent(const QString& title,

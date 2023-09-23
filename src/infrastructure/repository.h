@@ -16,13 +16,13 @@
 
 struct Repository {
     // user-fetch
-    virtual QStringList getAdminPermission(EventoException& err) = 0;
-    virtual QStringList getManagerPermission(const EventoID &eventoId, EventoException& err) = 0;
-    virtual QStringList getPermittedEvent(EventoException& err) = 0;
-    virtual DTO_Permission getEventPermission(EventoID event, EventoException& err) = 0;
-    virtual DTO_User getUserInfo(const UserID& id, EventoException& err) = 0;
-    virtual ParticipationStatus getUserParticipate(const EventoID &eventoId, EventoException& err) = 0;
-    virtual DTO_Feedback getFeedbackInfo(const EventoID &eventoId, EventoException& err) = 0;
+    virtual QFuture<EventoResult<QStringList>> getAdminPermission() = 0;
+    virtual QFuture<EventoResult<QStringList>> getManagerPermission(EventoID event) = 0;
+    virtual QFuture<EventoResult<QStringList>> getPermittedEvent() = 0;
+    virtual QFuture<EventoResult<DTO_Permission>> getEventPermission(EventoID event) = 0;
+    virtual QFuture<EventoResult<DTO_User>> getUserInfo(const UserID& id) = 0;
+    virtual QFuture<EventoResult<ParticipationStatus>> getUserParticipate(EventoID event) = 0;
+    virtual DTO_Feedback getFeedbackInfo(EventoID event, EventoException& err) = 0;
 
     // event-fetch
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList() = 0;
@@ -45,7 +45,8 @@ struct Repository {
 
     // event-upload
     virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) = 0;
-    virtual QFuture<EventoResult<bool>> subscribe(EventoID event) = 0;
+    virtual QFuture<EventoResult<bool>> subscribeEvent(EventoID event, bool unsubscribe) = 0;
+    virtual QFuture<EventoResult<bool>> registerEvent(EventoID event, bool unsubscribe) = 0;
     virtual QFuture<EventoResult<bool>> hasFeedbacked(EventoID event) = 0;
     virtual QFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback) = 0;
     virtual QFuture<EventoResult<bool>> cancelEvent(EventoID event) = 0;
