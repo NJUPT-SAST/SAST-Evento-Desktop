@@ -7,6 +7,24 @@
 class NetworkRepository : public repositoryImpl {
     EventoNetworkClient client;
 public:
+    virtual QFuture<EventoResult<QStringList>> getAdminPermission() override {
+        return client.getAdminPermission();
+    }
+    virtual QFuture<EventoResult<QStringList>> getManagerPermission(EventoID event) override {
+        return client.getManagerPermission(event);
+    }
+    virtual QFuture<EventoResult<QStringList>> getPermittedEvent() override {
+        return client.getPermittedEvent();
+    }
+    virtual QFuture<EventoResult<DTO_Permission>> getEventPermission(EventoID event) override {
+        return client.getEventPermission(event);
+    }
+    virtual QFuture<EventoResult<DTO_User>> getUserInfo(const UserID &id) override {
+        return client.getUserInfo(id);
+    }
+    virtual QFuture<EventoResult<ParticipationStatus>> getUserParticipate(EventoID event) override {
+        return client.getUserParticipate(event);
+    }
     virtual QFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList() override {
         return client.getUndertakingList();
     }
@@ -34,8 +52,14 @@ public:
     virtual QFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code) override {
         return client.checkInEvent(event, code);
     }
+    virtual QFuture<EventoResult<bool>> subscribeEvent(EventoID event, bool selection) override {
+        return client.subscribeEvent(event, selection);
+    }
+    virtual QFuture<EventoResult<bool>> registerEvent(EventoID event, bool selection) override {
+        return client.registerEvent(event, selection);
+    }
     virtual QFuture<EventoResult<bool>> hasFeedbacked(EventoID event) override {
-        return client.isFeedbacked(event);
+        return client.hasFeedbacked(event);
     }
     virtual QFuture<EventoResult<bool>> deleteEvent(EventoID event) override {
         return client.deleteEvent(event);

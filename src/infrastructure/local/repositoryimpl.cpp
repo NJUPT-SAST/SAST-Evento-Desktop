@@ -1,88 +1,5 @@
 #include "repositoryimpl.h"
 
-QStringList repositoryImpl::getAdminPermission(EventoException &err)
-{
-    QByteArray file_str = admin_user_data;
-
-    QJsonParseError jsonError;
-    QJsonDocument jsonDoc(QJsonDocument::fromJson(file_str, &jsonError));
-    if(jsonError.error == QJsonParseError::NoError && jsonDoc.isArray()){
-        QJsonArray jsonArr = jsonDoc.array();
-        for(int i = 0; i<jsonArr.count(); i++){
-            if(!jsonArr.at(i).toString().compare("B22041234")){
-                return adminPerission;
-            }
-        }
-        return QStringList();
-    }
-    err = EventoException(EventoExceptionCode::UnexpectedError, "get_admin_permission json error");
-    return QStringList();
-}
-
-QStringList repositoryImpl::getManagerPermission(const EventoID &eventoId, EventoException &err)
-{
-    for(int i = 0; i<manager_user_data_list.size(); i++){
-        if(!manager_user_data_list.at(i).event_id.compare(QString::number(eventoId)) &&
-            manager_user_data_list.at(i).manager_id.split(" ").contains("B22041234")){
-            return managerPerission;
-        }
-    }
-    err = EventoException(EventoExceptionCode::UnexpectedError, "get_manager_permission json error");
-    return QStringList();
-}
-
-QStringList repositoryImpl::getPermittedEvent(EventoException &err)
-{
-    QStringList res;
-    for(int i = 0; i<permission_data_list.size(); i++){
-        if(!permission_data_list.at(i).user_id.compare("B22041234")){
-            res.append(permission_data_list.at(i).event_id.split(" "));
-        }
-    }
-    return res;
-}
-
-DTO_Permission repositoryImpl::getEventPermission(EventoID event, EventoException &err)
-{
-    for(int i = 0; i<permission_data_list.size(); i++){
-        if(!permission_data_list.at(i).user_id.compare("B22041234") &&
-            !permission_data_list.at(i).event_id.compare(QString::number(event))){
-            permission_data unit = permission_data_list.at(i);
-            return DTO_Permission {
-                unit.all_method_name.split(" "),
-                unit.event_id.toInt(),
-            };
-        }
-    }
-    err = EventoException(EventoExceptionCode::UnexpectedError, "get_event_permission json error");
-    return DTO_Permission();
-}
-
-DTO_User repositoryImpl::getUserInfo(const UserID &id, EventoException &err)
-{
-    for(int i = 0; i<user_data_list.size(); i++){
-        if(!user_data_list.at(i).id.compare("B22041234")){
-            std::vector<Department> departmentList;
-            QStringList departmentList_str = user_data_list.at(i).department.split(" ");
-            for(int j = 0; j<departmentList_str.count(); j++){
-                departmentList.push_back(readDepartment(departmentList_str.at(j)));
-            }
-
-            return DTO_User{
-                id,
-                user_data_list.at(i).name,
-                user_data_list.at(i).avatar,
-                user_data_list.at(i).email,
-                user_data_list.at(i).description,
-                readPermission(id),
-                departmentList
-            };
-        }
-    }
-    err = EventoException(EventoExceptionCode::UnexpectedError, "get_user_info json error");
-    return DTO_User();
-}
-
 QFuture<EventoResult<std::vector<DTO_Slide>>> repositoryImpl::getHomeSlideList(const int size)
 {
     return QtConcurrent::run([this, size]{
@@ -109,24 +26,7 @@ QFuture<EventoResult<std::vector<DTO_Slide>>> repositoryImpl::getHomeSlideList(c
     });
 }
 
-ParticipationStatus repositoryImpl::getUserParticipate(const EventoID &eventoId, EventoException& err)
-{
-    for(int i = 0; i<participate_data_list.size(); i++){
-        participate_data unit = participate_data_list.at(i);
-        if(!unit.event_id.compare(QString::number(eventoId))){
-            return ParticipationStatus{
-                unit.is_registration.compare("false")?true:false,
-                unit.is_participate.compare("false")?true:false,
-                unit.is_subscribe.compare("false")?true:false,
-            };
-        }
-    }
-    return ParticipationStatus {
-        false, false, false
-    };
-}
-
-DTO_Feedback repositoryImpl::getFeedbackInfo(const EventoID &eventoId, EventoException& err)
+DTO_Feedback repositoryImpl::getFeedbackInfo(EventoID eventoId, EventoException& err)
 {
     for(int i = 0; i<feedback_data_list.size(); i++){
         Participation unit = readParticipation(std::pair("id", feedback_data_list.at(i).participate_id)).at(0);
@@ -358,51 +258,6 @@ QFuture<EventoResult<QString>> repositoryImpl::getSubscribedDepartmentList()
 QFuture<EventoResult<QString>> repositoryImpl::getQRCode(EventoID eventId)
 {
     return QtConcurrent::run([] {return EventoResult(QStringLiteral("qrcodeLink"));});
-}
-
-QFuture<EventoResult<bool>> repositoryImpl::checkIn(EventoID event, const QString &code)
-{
-    return QtConcurrent::run([=]{
-        std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("event_id", QString::number(event)));
-
-        for(int i = 0; i<participationList.size(); i++) {
-            if(participationList.at(i).user_id.compare("B22041234"))
-                break;
-            if (participationList.at(i).participationStatus.isParticipated) {
-                return EventoResult<bool>(EventoExceptionCode::UnexpectedError, "has checkin");
-            }
-            else {
-                if (writeParticipation("is_participate", "true", event)) {
-                    return EventoResult();
-                }
-            }
-
-        }
-        return EventoResult<bool>(EventoExceptionCode::UnexpectedError, "not participation");
-    });
-}
-
-QFuture<EventoResult<bool>> repositoryImpl::subscribe(EventoID event)
-{
-    return QtConcurrent::run([=]{
-        std::vector<Participation> participationList = readParticipation(std::pair<QString, QString>("event_id", QString::number(event)));
-
-        for(int i = 0; i<participationList.size(); i++) {
-            if (participationList.at(i).user_id.compare("B22041234"))
-                break;
-            if (participationList.at(i).participationStatus.isSubscribed) {
-                return EventoResult<bool>(EventoExceptionCode::UnexpectedError, "has Subscribed");
-            }
-            else {
-                if(writeParticipation("is_subscribe", "true", event)){
-                    return EventoResult();
-                }
-            }
-
-        }
-
-        return EventoResult<bool>(EventoExceptionCode::UnexpectedError, "no user or file error");
-    });
 }
 
 QFuture<EventoResult<bool>> repositoryImpl::hasFeedbacked(EventoID event)
