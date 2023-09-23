@@ -33,6 +33,25 @@ public:
     void load_Block(const QString& time);
     void load(EventoID id);
     DTO_Evento edit(EventoID id);
+    void create(const QString& title,
+                 const QString& description,
+                 const QString& eventStart,
+                 const QString& eventEnd,
+                 const QString& registerStart,
+                 const QString& registerEnd,
+                 int typeId, int locationId,
+                 const QVariantList& departmentIds,
+                 const QString& tag);
+    void edit(EventoID id,
+                const QString& title,
+                const QString& description,
+                const QString& eventStart,
+                const QString& eventEnd,
+                const QString& registerStart,
+                const QString& registerEnd,
+                int typeId, int locationId,
+                const QVariantList& departmentIds,
+                const QString& tag);
     void update(const DTO_Evento& event);
     void update(const std::vector<DTO_Evento>& events);
     void getQRCode(EventoID id);

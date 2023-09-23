@@ -17,9 +17,9 @@ FeedbackStatisticsHelper *FeedbackStatisticsHelper::create(QQmlEngine *qmlEngine
 
 void FeedbackStatisticsHelper::updateFeedbackStatistics(const FeedbackSummary &e)
 {
+    setProperty("title", e.title);
     setProperty("registerNum", e.registeredNum);
     setProperty("checkedNum", e.checkedNum);
     setProperty("subscribedNum", e.subscribedNum);
-    setProperty("feedbackNum", e.feedbackNum);
     setProperty("aveScore", e.aveScore);
 }

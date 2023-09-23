@@ -17,8 +17,7 @@ FluScrollablePage {
 
     function loadFeedbackInfo() {
         statusMode = FluStatusViewType.Loading
-        pagination.itemCount = FeedbackStatisticsController.loadSummaryInfo(
-                    page)
+        FeedbackStatisticsController.loadSummaryInfo(page)
     }
 
     Component.onCompleted: {
@@ -28,7 +27,8 @@ FluScrollablePage {
 
     Connections {
         target: FeedbackStatisticsController
-        function onLoadSummarySuccessEvent() {
+        function onLoadSummarySuccessEvent(sum) {
+            pagination.itemCount = sum
             statusMode = FluStatusViewType.Success
         }
     }
@@ -48,7 +48,7 @@ FluScrollablePage {
         implicitHeight: contentHeight
         interactive: false
         delegate: com_item
-        model: FeedbackSummaryModel
+        model: FeedbackNumModel
     }
 
     FluPagination {
@@ -111,7 +111,7 @@ FluScrollablePage {
                         top: item_title.bottom
                         topMargin: 5
                     }
-                    text: "反馈数量：" + model.feedbackNum
+                    text: "反馈数量：" + model.feedbackCount
                     color: FluColors.Grey120
                     wrapMode: Text.WordWrap
                     font: FluTextStyle.Caption
@@ -122,6 +122,7 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
+                        EventoHelper.id = model.eventId
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_FeedbackInfo.qml")
                     }

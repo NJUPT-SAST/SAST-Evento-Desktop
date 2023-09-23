@@ -11,10 +11,10 @@ class FeedbackStatisticsHelper : public QObject
     QML_NAMED_ELEMENT(FeedbackStatisticsHelper)
     QML_SINGLETON
 
+    Q_PROPERTY(QString title MEMBER m_title NOTIFY titleChanged)
     Q_PROPERTY(int registerNum MEMBER m_registerNum NOTIFY registerNumChanged)
     Q_PROPERTY(int checkedNum MEMBER m_checkedNum NOTIFY checkedNumChanged)
     Q_PROPERTY(int subscribedNum MEMBER m_subscribedNum NOTIFY subscribedNumChanged)
-    Q_PROPERTY(int feedbackNum MEMBER m_feedbackNum NOTIFY feedbackNumChanged)
     Q_PROPERTY(QString aveScore MEMBER m_aveScore NOTIFY aveScoreChanged)
 
 public:
@@ -27,17 +27,17 @@ public:
 private:
     FeedbackStatisticsHelper() = default;
 
+    QString m_title;
     int m_registerNum;
     int m_checkedNum;
     int m_subscribedNum;
-    int m_feedbackNum;
     QString m_aveScore;
 
 signals:
+    void titleChanged();
     void registerNumChanged();
     void checkedNumChanged();
     void subscribedNumChanged();
-    void feedbackNumChanged();
     void aveScoreChanged();
 };
 

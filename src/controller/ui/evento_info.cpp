@@ -5,6 +5,7 @@
 void EventoInfoController::loadEventoInfo(const EventoID eventId)
 {
     EventoService::getInstance().load(eventId);
+    //此处不能删去上一行，feedbackservice在其中被调用
 }
 
 void EventoInfoController::registerEvento(const EventoID id, bool selection)

@@ -14,6 +14,8 @@
 #include "calendar.h"
 #include "my_page.h"
 #include "evento_brief_model.h"
+#include "feedback_service.h"
+#include "evento_edit.h"
 
 #include <QtConcurrent>
 #include <array>
@@ -71,53 +73,82 @@ void EventoService::load_RegisteredSchedule() {
     auto future = getRepo()->getRegisteredList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
             ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
-            return;
+            return false;
         }
         auto data = result.take();
         std::vector<Schedule> model;
         {
             std::lock_guard lock(mutex);
             registered.clear();
-            for(auto& i : data) {
-                registered.push_back(i.id);
-                model.push_back(Schedule(i));
-                stored[i.id] = std::move(i);
+            for (auto& evento : data) {
+                registered.push_back(evento.id);
+                auto participateFuture = getRepo()->getUserParticipate(evento.id).then([=](EventoResult<ParticipationStatus> result) {
+                    if (!result) {
+                        ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
+                        return ParticipationStatus{};
+                    }
+                    auto participate = result.take();
+                    return participate;
+                });
+                auto hasFeedbackedFuture = getRepo()->hasFeedbacked(evento.id).then([=](EventoResult<int> result) {
+                    if (!result) {
+                        ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
+                        return false;
+                    }
+                    bool hasFeedbackedFuture = result.take();
+                    return hasFeedbackedFuture;
+                });
+                model.push_back(Schedule(evento, participateFuture.result(), hasFeedbackedFuture.result()));
+                stored[evento.id] = std::move(evento);
             }
         }
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
+        return true;
     });
 
-    QtConcurrent::run([=] {
-        auto f(future);
-        f.waitForFinished();
-        ScheduleController::getInstance()->onLoadRegisteredFinished();
-    });
+
 }
 
 void EventoService::load_SubscribedSchedule() {
     auto future = getRepo()->getSubscribedList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
             ScheduleController::getInstance()->onLoadSubscribedFailure(result.message());
-            return;
+            return false;
         }
         auto data = result.take();
         std::vector<Schedule> model;
         {
             std::lock_guard lock(mutex);
             subscribed.clear();
-            for(auto& i : data) {
-                subscribed.push_back(i.id);
-                model.push_back(Schedule(i));
-                stored[i.id] = std::move(i);
+            for (auto& evento : data) {
+                registered.push_back(evento.id);
+                auto participateFuture = getRepo()->getUserParticipate(evento.id).then([=](EventoResult<ParticipationStatus> result) {
+                    if (!result) {
+                        ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
+                        return ParticipationStatus{};
+                    }
+                    auto participate = result.take();
+                    return participate;
+                });
+                auto hasFeedbackedFuture = getRepo()->hasFeedbacked(evento.id).then([=](EventoResult<int> result) {
+                    if (!result) {
+                        ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
+                        return false;
+                    }
+                    bool hasFeedbackedFuture = result.take();
+                    return hasFeedbackedFuture;
+                });
+                model.push_back(Schedule(evento, participateFuture.result(), hasFeedbackedFuture.result()));
+                stored[evento.id] = std::move(evento);
             }
         }
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
+        return true;
     });
 
     QtConcurrent::run([=] {
-        auto f(future);
-        f.waitForFinished();
-        ScheduleController::getInstance()->onLoadSubscribedFinished();
+        if (future.result())
+            ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
 }
 
@@ -125,7 +156,7 @@ void EventoService::load_DepartmentEvents(int departmentId) {
     auto future = getRepo()->getDepartmentEventList(departmentId).then([=](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
             DepartmentEventsController::getInstance()->onLoadDepartmentEventFailure(result.message());
-            return;
+            return false;
         }
         auto data = result.take();
         std::vector<EventoBrief> model;
@@ -139,12 +170,12 @@ void EventoService::load_DepartmentEvents(int departmentId) {
             }
         }
         EventoBriefModel::getInstance()->resetModel(std::move(model));
+        return true;
     });
 
     QtConcurrent::run([=] {
-        auto f(future);
-        f.waitForFinished();
-        DepartmentEventsController::getInstance()->onLoadDepartmentEventFinished();
+        if (future.result())
+            DepartmentEventsController::getInstance()->onLoadDepartmentEventFinished();
     });
 }
 
@@ -152,7 +183,7 @@ void EventoService::load_History() {
     auto future = getRepo()->getHistoryList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
             MyPageController::getInstance()->onLoadFailure(result.message());
-            return;
+            return false;
         }
         auto data = result.take();
         std::vector<EventoBrief> model;
@@ -166,12 +197,12 @@ void EventoService::load_History() {
             }
         }
         EventoBriefModel::getInstance()->resetModel(std::move(model));
+        return true;
     });
 
     QtConcurrent::run([=] {
-        auto f(future);
-        f.waitForFinished();
-        MyPageController::getInstance()->onLoadFinished();
+        if (future.result())
+            MyPageController::getInstance()->onLoadFinished();
     });
 }
 
@@ -179,7 +210,7 @@ void EventoService::load_Block(const QString& time) {
     auto future = getRepo()->getEventListByTime(time).then([=](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
             CalendarController::getInstance()->onLoadAllFailure(result.message());
-            return;
+            return false;
         }
         auto data = result.take();
         std::vector<EventoBlock> model;
@@ -193,16 +224,17 @@ void EventoService::load_Block(const QString& time) {
             }
         }
         EventoBlockModel::getInstance()->resetModel(std::move(model));
+        return true;
     });
 
     QtConcurrent::run([=] {
-        auto f(future);
-        f.waitForFinished();
-        CalendarController::getInstance()->onLoadAllFinished();
+        if (future.result())
+            CalendarController::getInstance()->onLoadAllFinished();
     });
 }
 
 void EventoService::load(EventoID id) {
+    FeedbackService::getInstance().load_UserFeedback(id);
     std::array<QFuture<bool>, 2> tasks {
         getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
             if (!result) {
@@ -248,6 +280,29 @@ DTO_Evento EventoService::edit(EventoID id) {
     return stored[id];
 }
 
+void EventoService::create(const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag) {
+    getRepo()->createEvent(title, description, timeConvertor(eventStart), timeConvertor(eventEnd), timeConvertor(registerStart), timeConvertor(registerEnd), typeId, locationId, departmentIds, tag)
+        .then([=](EventoResult<bool> result) {
+        if (!result) {
+            EventoEditController::getInstance()->onCreateFailure(result.message());
+            return;
+        }
+        EventoEditController::getInstance()->onCreateFinished();
+    });
+}
+
+void EventoService::edit(EventoID id, const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag)
+{
+    getRepo()->editEvent(id, title, description, timeConvertor(eventStart), timeConvertor(eventEnd), timeConvertor(registerStart), timeConvertor(registerEnd), typeId, locationId, departmentIds, tag)
+        .then([=](EventoResult<bool> result) {
+        if (!result) {
+            EventoEditController::getInstance()->onCreateFailure(result.message());
+            return;
+        }
+        EventoEditController::getInstance()->onCreateFinished();
+    });
+}
+
 void EventoService::getQRCode(EventoID id)
 {
     getRepo()->getQRCode(id).then([](EventoResult<QString> result) {
@@ -290,7 +345,7 @@ Evento::Evento(const DTO_Evento& src) : id(src.id), title(src.title), descriptio
     this->registrationEnd = src.gmtRegistrationEnd.toString("yyyy年MM月dd日 HH:mm:ss");
 }
 
-Schedule::Schedule(const DTO_Evento& src) : id(src.id), title(src.title), state(src.state), location(src.location) {
+Schedule::Schedule(const DTO_Evento& src, const ParticipationStatus& participate, bool hasFeedback) : id(src.id), title(src.title), state(src.state), location(src.location), isChecked(participate.isParticipated), hasFeedback(hasFeedback) {
     this->department = departmentConvertor(src.departments);
     this->date = src.gmtEventStart.toString(QStringLiteral("MM月dd日"));
     this->startTime = src.gmtEventStart.toString(QStringLiteral("hh:mm"));

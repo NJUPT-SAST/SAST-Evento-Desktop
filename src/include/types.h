@@ -43,4 +43,10 @@ struct Location
     int parentId;
 };
 
+struct FeedbackNum {
+    EventoID eventId;
+    QString title;
+    int feedbackCount;
+};
+
 #endif // EVENTO_TYPES_H
