@@ -91,7 +91,7 @@ CustomWindow {
     }
 
     FluText {
-        text: "SAST-C++组开发\nV0.2.9.4 alpha"
+        text: "SAST-C++组开发\nV0.3.9.24 alpha"
         color: FluColors.Grey100
         font: FluTextStyle.Caption
         horizontalAlignment: Text.AlignHCenter
