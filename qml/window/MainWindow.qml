@@ -28,6 +28,7 @@ CustomWindow {
     }
 
     Component.onCompleted: {
+        window.requestActivate()
         //        if (!UserHelper.isLogin()) {
         //            window.autoShow = false
         //            FluApp.navigate("/login")
@@ -224,45 +225,46 @@ CustomWindow {
         property var displayMode
     }
 
-    FluHttp{
-        id:http
+    FluHttp {
+        id: http
     }
 
-    FluContentDialog{
+    FluContentDialog {
         property string newVersion
         property string body
-        id:dialog_update
-        title:"更新提示"
-        message:"SAST Evento目前最新版本 "+ newVersion +" -- 当前应用版本 "+appInfo.version+" \n现在是否去下载新版本？\n\n更新内容：\n"+body
+        id: dialog_update
+        title: "更新提示"
+        message: "SAST Evento目前最新版本 " + newVersion + " -- 当前应用版本 "
+                 + appInfo.version + " \n现在是否去下载新版本？\n\n更新内容：\n" + body
         buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
         negativeText: "取消"
-        positiveText:"确定"
-        onPositiveClicked:{
+        positiveText: "确定"
+        onPositiveClicked: {
             Qt.openUrlExternally("https://sast.fun")
         }
     }
 
-    function checkUpdate(){
+    function checkUpdate() {
         var callable = {}
-        callable.onStart = function(){
+        callable.onStart = function () {
             console.debug("start check update...")
         }
-        callable.onFinish = function(){
+        callable.onFinish = function () {
             console.debug("check update finish")
         }
-        callable.onSuccess = function(result){
+        callable.onSuccess = function (result) {
             var data = JSON.parse(result)
-            console.debug("current version "+appInfo.version)
-            console.debug("new version "+data.tag_name)
-            if(data.tag_name !== appInfo.version){
-                dialog_update.newVersion =  data.tag_name
+            console.debug("current version " + appInfo.version)
+            console.debug("new version " + data.tag_name)
+            if (data.tag_name !== appInfo.version) {
+                dialog_update.newVersion = data.tag_name
                 dialog_update.body = data.body
                 dialog_update.open()
             }
         }
-        callable.onError = function(status,errorString){
-            console.debug(status+";"+errorString)
+        callable.onError = function (status, errorString) {
+            console.debug(status + ";" + errorString)
         }
-        http.get("/*FIX ME: api*/",callable)
+        http.get("/*FIX ME: api*/", callable)
     }
 }

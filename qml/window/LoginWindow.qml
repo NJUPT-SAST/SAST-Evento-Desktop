@@ -1,4 +1,5 @@
 import QtQuick
+import Qt.labs.platform
 import QtQuick.Layouts
 import QtQuick.Controls
 import FluentUI
@@ -34,8 +35,10 @@ CustomWindow {
     Connections {
         target: LoginController
         function onLoginFailed(reason) {
-            hideLoading(reason)
-            showError(reason)
+            hideLoading()
+            system_tray.showMessage("登录失败", "错误：" + reason)
+            window.requestActivate()
+            showError("登录失败！", 4000)
         }
     }
 
@@ -56,6 +59,29 @@ CustomWindow {
             topMargin: 25
             horizontalCenter: parent.horizontalCenter
         }
+    }
+
+    SystemTrayIcon {
+        id: system_tray
+        visible: true
+        icon.source: "qrc:/app.ico"
+        tooltip: "SAST Evento"
+        menu: Menu {
+            MenuItem {
+                text: "退出"
+                onTriggered: {
+                    window.deleteWindow()
+                    FluApp.closeApp()
+                }
+            }
+        }
+        onActivated: reason => {
+                         if (reason === SystemTrayIcon.Trigger) {
+                             window.show()
+                             window.raise()
+                             window.requestActivate()
+                         }
+                     }
     }
 
     FluButton {
