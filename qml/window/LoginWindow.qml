@@ -36,9 +36,10 @@ CustomWindow {
         target: LoginController
         function onLoginFailed(reason) {
             hideLoading()
-            system_tray.showMessage("登录失败", "错误：" + reason)
+            system_tray.showMessage(lang.lang_login_failed,
+                                    lang.lang_error + reason)
             window.requestActivate()
-            showError("登录失败！", 4000)
+            showError(lang.lang_login_failed, 4000)
         }
     }
 
@@ -68,7 +69,7 @@ CustomWindow {
         tooltip: "SAST Evento"
         menu: Menu {
             MenuItem {
-                text: "退出"
+                text: lang.lang_exit
                 onTriggered: {
                     window.deleteWindow()
                     FluApp.closeApp()
@@ -86,7 +87,7 @@ CustomWindow {
 
     FluButton {
         id: btn_login
-        text: "       使用 Link 登入"
+        text: lang.lang_use_link
         font.pixelSize: 16
         font.bold: true
         textColor: Qt.rgba(250 / 255, 250 / 255, 250 / 255, 1)
@@ -117,7 +118,7 @@ CustomWindow {
     }
 
     FluText {
-        text: "SAST-C++组开发\nV0.3.9.24 alpha"
+        text: lang.lang_by_cpp + appInfo.version
         color: FluColors.Grey100
         font: FluTextStyle.Caption
         horizontalAlignment: Text.AlignHCenter

@@ -10,7 +10,7 @@
 AppInfo::AppInfo(QObject *parent)
     : QObject{parent}
 {
-    version("0.1");
+    version("0.3.9.25 alpha");
     lang(new Zh());
 }
 

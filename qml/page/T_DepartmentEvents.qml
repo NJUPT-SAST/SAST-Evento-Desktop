@@ -87,12 +87,12 @@ FluScrollablePage {
                 subscribeArr.push(departmentId)
                 subscribeButton.checked = false
                 subscribeButton.state = "hasSub"
-                showInfo("已订阅")
+                showInfo(lang.lang_subscribe_success)
             } else {
                 subscribeArr.splice(subscribeArr.indexOf(departmentId), 1)
                 subscribeButton.checked = true
                 subscribeButton.state = "noSub"
-                showInfo("已取消订阅")
+                showInfo(lang.lang_cancelled)
             }
         }
     }
@@ -242,7 +242,7 @@ FluScrollablePage {
                     }
                     FluImage {
                         anchors.fill: parent
-                        source: "qrc:/res/image/banner_3.png"
+                        source: model.url
                         fillMode: Image.PreserveAspectCrop
                     }
                 }

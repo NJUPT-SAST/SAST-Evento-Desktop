@@ -91,14 +91,10 @@ FluScrollablePage {
                     width: 50
                     height: 50
                     scale: 1.8
-                    iconSource: FluentIcons.Trackers
-                    onClicked: {
-                        MainWindow.window.pushPage(
-                                    "qrc:/qml/page/T_DepartmentEvento.qml")
-                    }
+                    iconSource: FluentIcons.More
                 }
                 FluText {
-                    text: "订阅部门"
+                    text: "敬请期待"
                     width: 50
                     horizontalAlignment: Text.AlignHCenter
                 }
@@ -116,7 +112,6 @@ FluScrollablePage {
                     height: 50
                     scale: 1.8
                     iconSource: FluentIcons.Smartcard
-
                     onClicked: {
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_SouvenirCard.qml")
