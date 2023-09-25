@@ -134,4 +134,77 @@ FluScrollablePage {
             }
         }
     }
+
+    FluArea {
+        Layout.fillWidth: true
+        Layout.topMargin: 20
+        height: 80
+        paddings: 10
+
+        ColumnLayout {
+            spacing: 10
+            anchors {
+                top: parent.top
+                left: parent.left
+            }
+
+            FluText {
+                text: lang.lang_locale
+                font: FluTextStyle.BodyStrong
+                Layout.bottomMargin: 4
+            }
+
+            FluFilledButton {
+                text: "检查更新"
+                onClicked: {
+                    checkUpdate()
+                }
+            }
+        }
+    }
+
+    FluHttp {
+        id: http
+    }
+
+    FluContentDialog {
+        property string newVersion
+        property string body
+        id: dialog_update
+        title: "更新提示"
+        message: "SAST Evento目前最新版本 " + newVersion + " -- 当前应用版本 "
+                 + appInfo.version + " \n现在是否去下载新版本？\n\n更新内容：\n" + body
+        buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
+        negativeText: "取消"
+        positiveText: "确定"
+        onPositiveClicked: {
+            Qt.openUrlExternally("https://sast.fun")
+        }
+    }
+
+    function checkUpdate() {
+        var callable = {}
+        callable.onStart = function () {
+            console.debug("start check update...")
+        }
+        callable.onFinish = function () {
+            console.debug("check update finish")
+        }
+        callable.onSuccess = function (result) {
+            var data = JSON.parse(result)
+            console.debug("current version " + appInfo.version)
+            console.debug("new version " + data.tag_name)
+            if (data.tag_name !== appInfo.version) {
+                dialog_update.newVersion = data.tag_name
+                dialog_update.body = data.body
+                dialog_update.open()
+            } else {
+                showMessage("当前已是最新版本")
+            }
+        }
+        callable.onError = function (status, errorString) {
+            console.debug(status + ";" + errorString)
+        }
+        http.get("/*FIX ME: api*/", callable)
+    }
 }
