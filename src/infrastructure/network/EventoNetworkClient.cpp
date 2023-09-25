@@ -11,17 +11,17 @@ constexpr const char *MIME_JSON = "application/json";
 
 static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply)
 {
+    auto content = reply->readAll();
+    qDebug() << content;
     auto networkError = reply->error();
     if (networkError != QNetworkReply::NoError) {
         return EventoException(EventoExceptionCode::NetworkError, "network error");
     }
     QJsonParseError jsonError;
-    auto content = reply->readAll();
     auto result = QJsonDocument::fromJson(content, &jsonError);
     if (jsonError.error != QJsonParseError::NoError) {
         return EventoException(EventoExceptionCode::JsonError, QString("json error: %1 (offest = %2)").arg(jsonError.errorString()).arg(jsonError.offset));
     }
-    qDebug() << content;
     reply->deleteLater();
     if (!result.isObject()) {
         return EventoException(EventoExceptionCode::JsonError, QStringLiteral("expect object but got other"));
@@ -481,6 +481,8 @@ QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getDepartmen
 {
     QUrlQuery params;
     params.addQueryItem("departmentId", QString::number(departmentId));
+    params.addQueryItem("typeId", "");
+    params.addQueryItem("time", "");
     auto url = endpoint(QStringLiteral("/event/list"));
     auto future = this->post(url, params);
     return QtConcurrent::run([=]() -> EventoResult<std::vector<DTO_Evento>> {
@@ -498,6 +500,8 @@ QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getEventList
 {
     QUrlQuery params;
     params.addQueryItem("time", time);
+    params.addQueryItem("typeId", "");
+    params.addQueryItem("departmentId", "");
     auto url = endpoint(QStringLiteral("/event/list"));
     auto future = this->post(url, params);
     return QtConcurrent::run([=]() -> EventoResult<std::vector<DTO_Evento>> {
@@ -726,7 +730,7 @@ QFuture<EventoResult<QString>> EventoNetworkClient::getLocationList()
         auto f(future);
         auto result = f.takeResult();
         if (result) {
-            return result.take().toString();
+            return QString(QJsonDocument(result.take().toArray()).toJson(QJsonDocument::Compact).toStdString().c_str());
         } else {
             return {result.code(), result.message()};
         }
@@ -741,8 +745,9 @@ QFuture<EventoResult<QString>> EventoNetworkClient::getDepartmentList()
         auto f(future);
         auto result = f.takeResult();
         if (result) {
-            return result.take().toString();
-        } else {
+            return QString(QJsonDocument(result.take().toArray()).toJson(QJsonDocument::Compact).toStdString().c_str());
+        }
+        else {
             return {result.code(), result.message()};
         }
     });
@@ -759,8 +764,9 @@ QFuture<EventoResult<QString> > EventoNetworkClient::getSubscribedDepartmentList
             auto arr = result.take().toArray();
             QString str = "[";
             for (const auto& i : arr) {
-                str += (i.toObject()["id"].toString() + ", ");
+                str += (QString::number(i.toObject()["id"].toInt()) + ", ");
             }
+            if (!arr.isEmpty()) str.remove(str.size() - 2, 2);
             str += "]";
             return str;
         } else {
