@@ -265,6 +265,7 @@ CustomWindow {
         callable.onError = function (status, errorString) {
             console.debug(status + ";" + errorString)
         }
-        http.get("/*FIX ME: api*/", callable)
+        http.get("https://api.github.com/repos/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest",
+                 callable)
     }
 }
