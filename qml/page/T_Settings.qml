@@ -155,16 +155,12 @@ FluScrollablePage {
             }
 
             FluFilledButton {
-                text: "检查更新"
+                text: lang.lang_check_update
                 onClicked: {
                     checkUpdate()
                 }
             }
         }
-    }
-
-    FluHttp {
-        id: http
     }
 
     FluContentDialog {
@@ -175,36 +171,20 @@ FluScrollablePage {
         message: "SAST Evento目前最新版本 " + newVersion + " -- 当前应用版本 "
                  + appInfo.version + " \n现在是否去下载新版本？\n\n更新内容：\n" + body
         buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
-        negativeText: "取消"
-        positiveText: "确定"
+        negativeText: lang.lang_cancel
+        positiveText: lang.lang_ok
         onPositiveClicked: {
             Qt.openUrlExternally("https://sast.fun")
         }
     }
 
-    function checkUpdate() {
-        var callable = {}
-        callable.onStart = function () {
-            console.debug("start check update...")
-        }
-        callable.onFinish = function () {
-            console.debug("check update finish")
-        }
-        callable.onSuccess = function (result) {
-            var data = JSON.parse(result)
-            console.debug("current version " + appInfo.version)
-            console.debug("new version " + data.tag_name)
-            if (data.tag_name !== appInfo.version) {
-                dialog_update.newVersion = data.tag_name
-                dialog_update.body = data.body
-                dialog_update.open()
-            } else {
-                showMessage("当前已是最新版本")
-            }
-        }
-        callable.onError = function (status, errorString) {
-            console.debug(status + ";" + errorString)
-        }
-        http.get("/*FIX ME: api*/", callable)
+    function checkUpdate() {// TODO
+        //            if (version !== appInfo.version) {
+        //                dialog_update.newVersion = "" // TODO
+        //                dialog_update.body = "" // TODO
+        //                dialog_update.open()
+        //            } else {
+        //                showMessage("当前已是最新版本")
+        //            }
     }
 }

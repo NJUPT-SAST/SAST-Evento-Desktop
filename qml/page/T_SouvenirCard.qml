@@ -8,4 +8,5 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
     title: lang.lang_souvenir_card
     statusMode: FluStatusViewType.Empty
+    emptyText: "敬请期待"
 }
