@@ -11,16 +11,17 @@ constexpr const char *MIME_JSON = "application/json";
 
 static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply)
 {
-    qDebug() << reply->readAll();
     auto networkError = reply->error();
     if (networkError != QNetworkReply::NoError) {
         return EventoException(EventoExceptionCode::NetworkError, "network error");
     }
     QJsonParseError jsonError;
-    auto result = QJsonDocument::fromJson(reply->readAll(), &jsonError);
+    auto content = reply->readAll();
+    auto result = QJsonDocument::fromJson(content, &jsonError);
     if (jsonError.error != QJsonParseError::NoError) {
         return EventoException(EventoExceptionCode::JsonError, QString("json error: %1 (offest = %2)").arg(jsonError.errorString()).arg(jsonError.offset));
     }
+    qDebug() << content;
     reply->deleteLater();
     if (!result.isObject()) {
         return EventoException(EventoExceptionCode::JsonError, QStringLiteral("expect object but got other"));
