@@ -19,6 +19,7 @@ public:
     void subscribeEvento(EventoID id, bool selection);
     void registerEvento(EventoID id, bool selection);
 
+    void getSelfPermission();
 };
 
 #endif // USER_SERVICE_H

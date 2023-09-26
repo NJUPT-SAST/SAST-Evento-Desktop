@@ -17,10 +17,11 @@
 #include <dto/feedback_summary.h>
 #include <evento_exception.h>
 #include <result.h>
+#include <repository.h>
 
 #include <QNetworkAccessManager>
 
-class EventoNetworkClient {
+class EventoNetworkClient : public Repository {
 private:
     QByteArray tokenBytes = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYjIyMDcwMTIzIiwiZXhwIjoxNzMwMzUzODYxfQ.68v28NTtmNGORXlDf2zJO-jlSGV96ZgI6lBUNNsV__A";
     QNetworkAccessManager manager;
@@ -68,10 +69,10 @@ public:
     QFuture<EventoResult<std::vector<DTO_Evento>>> getRegisteredList();
     QFuture<EventoResult<std::vector<DTO_Evento>>> getSubscribedList();
     QFuture<EventoResult<std::vector<DTO_Evento>>> getHistoryList();
-    QFuture<EventoResult<std::vector<DTO_Evento>>> getEventList(int page, int size);
+    QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListInPage(int page, int size);
     QFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId);
     QFuture<EventoResult<std::vector<DTO_Evento>>> getEventListByTime(const QString& time);
-    QFuture<EventoResult<DTO_Evento>> getEvent(EventoID event);
+    QFuture<EventoResult<DTO_Evento>> getEventById(EventoID event);
 
     QFuture<EventoResult<std::vector<DTO_Slide>>> getSlideList();
     QFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id);
@@ -83,7 +84,7 @@ public:
     QFuture<EventoResult<QString>> getQRCode(EventoID eventId);
 
     // eventUpload
-    QFuture<EventoResult<bool>> checkInEvent(EventoID event, const QString &code);
+    QFuture<EventoResult<bool>> checkIn(EventoID event, const QString &code);
     QFuture<EventoResult<bool>> subscribeEvent(EventoID event, bool selection);
     QFuture<EventoResult<bool>> registerEvent(EventoID event, bool selection);
     QFuture<EventoResult<bool>> cancelEvent(EventoID event);
@@ -124,8 +125,12 @@ public:
     QFuture<EventoResult<std::vector<DTO_UserBrief>>> getAdminUserList();
     QFuture<EventoResult<QString>> getAdminPermissionTreeData();
     QFuture<EventoResult<QString>> getManagerPermissionTreeData();
-
+private:
     EventoNetworkClient() = default;
-    ~EventoNetworkClient() = default;
+public:
+    static EventoNetworkClient* getInstance() {
+        static EventoNetworkClient singleton;
+        return &singleton;
+    }
 };
 #endif // EVENTO_NETWORK_CLIENT_H

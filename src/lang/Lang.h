@@ -25,6 +25,7 @@ class Lang : public QObject
     Q_PROPERTY_AUTO(QString, lang_use_link);
     Q_PROPERTY_AUTO(QString, lang_login_failed);
     Q_PROPERTY_AUTO(QString, lang_by_cpp);
+    Q_PROPERTY_AUTO(QString, lang_visitor_login);
 
     // plaza
     Q_PROPERTY_AUTO(QString, lang_undertaking_evento);

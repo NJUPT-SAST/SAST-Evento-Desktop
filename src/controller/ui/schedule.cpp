@@ -1,7 +1,6 @@
 #include "schedule.h"
 #include "evento_service.h"
 #include "user_service.h"
-#include "local/repositoryimpl.h"
 
 void ScheduleController::loadRegisteredSchedule()
 {

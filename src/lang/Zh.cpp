@@ -23,6 +23,7 @@ Zh::Zh(QObject *parent)
     lang_use_link("       使用 Link 登入");
     lang_login_failed("登录失败");
     lang_by_cpp("SAST-C++组开发\nV");
+    lang_visitor_login("访客登录");
 
     // Plaza
     lang_undertaking_evento("正在进行的活动");

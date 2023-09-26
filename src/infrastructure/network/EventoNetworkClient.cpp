@@ -351,10 +351,10 @@ declare_global_extension(EventState, QString, str2eventstate, eventstate2str);
 register_object_member(DTO_Evento, "id", id);
 register_object_member(DTO_Evento, "title", title);
 register_object_member(DTO_Evento, "description", description);
-register_object_member(DTO_Evento, "gmt_event_start", gmtEventStart);
-register_object_member(DTO_Evento, "gmt_event_end", gmtEventEnd);
-register_object_member(DTO_Evento, "gmt_registration_start", gmtRegistrationStart);
-register_object_member(DTO_Evento, "gmt_registration_end", gmtRegistrationEnd);
+register_object_member(DTO_Evento, "gmtEventStart", gmtEventStart);
+register_object_member(DTO_Evento, "gmtEventEnd", gmtEventEnd);
+register_object_member(DTO_Evento, "gmtRegistrationStart", gmtRegistrationStart);
+register_object_member(DTO_Evento, "gmtRegistrationEnd", gmtRegistrationEnd);
 register_object_member(DTO_Evento, "eventType", type);
 register_object_member(DTO_Evento, "location", location);
 register_object_member(DTO_Evento, "tag", tag);
@@ -463,7 +463,7 @@ QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getHistoryLi
     });
 }
 
-QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getEventList(int page, int size)
+QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getEventListInPage(int page, int size)
 {
     auto url = endpoint(QStringLiteral("/event/list"), [&](QUrlQuery& params) {
         params.addQueryItem("page", QString::number(page));
@@ -521,7 +521,7 @@ QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getEventList
     });
 }
 
-QFuture<EventoResult<DTO_Evento>> EventoNetworkClient::getEvent(EventoID event)
+QFuture<EventoResult<DTO_Evento>> EventoNetworkClient::getEventById(EventoID event)
 {
     auto url = endpoint(QStringLiteral("/event/info"), [=](QUrlQuery& params) {
         params.addQueryItem("eventId", QString::number(event));
@@ -804,7 +804,7 @@ QFuture<EventoResult<QString>> EventoNetworkClient::getQRCode(EventoID eventId)
 }
 
 // eventUpload
-QFuture<EventoResult<bool>> EventoNetworkClient::checkInEvent(EventoID event, const QString &code)
+QFuture<EventoResult<bool>> EventoNetworkClient::checkIn(EventoID event, const QString &code)
 {
     auto url = endpoint(QStringLiteral("/event/authcode"), [=, &code](QUrlQuery& params) {
         params.addQueryItem("eventId", QString::number(event));

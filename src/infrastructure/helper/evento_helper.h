@@ -25,7 +25,7 @@ public:
     static EventoHelper *getInstance();
     static EventoHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
-    bool update(const Evento &evento);
+    void update(const Evento &evento);
 
 private:
     EventoHelper() = default;
