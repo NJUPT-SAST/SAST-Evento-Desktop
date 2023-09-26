@@ -126,8 +126,7 @@ CustomWindow {
             if (loginSuccess)
                 LoginController.loadPermissionList()
             else
-                FluApp.navigate("/")
-            //LoginController.beginLoginViaSastLink()
+                LoginController.beginLoginViaSastLink()
         }
     }
 
