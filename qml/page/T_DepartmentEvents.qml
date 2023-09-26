@@ -35,7 +35,6 @@ FluScrollablePage {
     Connections {
         target: DepartmentEventsController
         function onLoadDepartmentsSuccessEvent(json) {
-            console.log(json)
             departmentJson = JSON.parse(json)
             var departmentArr = []
             for (var i = 0; i < departmentJson.length; ++i) {

@@ -13,7 +13,7 @@
 #include "evento_info.h"
 
 void FeedbackService::load_UserFeedback(EventoID id) {
-    getRepo()->getFeedbackInfo(id).then([=](EventoResult<DTO_Feedback> result) {
+    auto future = getRepo()->getFeedbackInfo(id).then([=](EventoResult<DTO_Feedback> result) {
         if (!result) {
             EventoInfoController::getInstance()->onLoadFailure(result.message());
             return;
@@ -24,6 +24,10 @@ void FeedbackService::load_UserFeedback(EventoID id) {
             userfeedback = std::move(feedback);
         }
         FeedbackHelper::getInstance()->updateFeedback(userfeedback);
+    });
+    QtConcurrent::run([=] {
+        auto f(future);
+        f.waitForFinished();
     });
 }
 
@@ -46,7 +50,8 @@ void FeedbackService::load_SummaryInfo(int page) {
         return data.first;
     });
     QtConcurrent::run([=] {
-        auto total = future.result();
+        auto f(future);
+        auto total = f.takeResult();
         if (total != -1)
             FeedbackStatisticsController::getInstance()->onLoadSummaryFinished(total);
     });
@@ -71,7 +76,8 @@ void FeedbackService::load_FeedbackInfo(EventoID id) {
         return true;
     });
     QtConcurrent::run([=] {
-        if (future.result())
+        auto f(future);
+        if (f.takeResult())
             FeedbackStatisticsController::getInstance()->onLoadFeedbackFinished();
     });
 }

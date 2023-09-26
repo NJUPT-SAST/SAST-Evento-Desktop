@@ -106,7 +106,10 @@ void EventoService::load_RegisteredSchedule() {
         return true;
     });
 
-
+    QtConcurrent::run([=] {
+        if (future.result())
+            ScheduleController::getInstance()->onLoadSubscribedFinished();
+    });
 }
 
 void EventoService::load_SubscribedSchedule() {
@@ -234,7 +237,6 @@ void EventoService::load_Block(const QString& time) {
 }
 
 void EventoService::load(EventoID id) {
-    FeedbackService::getInstance().load_UserFeedback(id);
     std::array<QFuture<bool>, 2> tasks {
         getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
             if (!result) {
@@ -273,6 +275,7 @@ void EventoService::load(EventoID id) {
                 return;
         EventoInfoController::getInstance()->onLoadFinished();
     });
+    FeedbackService::getInstance().load_UserFeedback(id);
 }
 
 DTO_Evento EventoService::edit(EventoID id) {

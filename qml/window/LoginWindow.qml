@@ -102,7 +102,8 @@ CustomWindow {
         }
         focus: true
         onClicked: {
-            LoginController.beginLoginViaSastLink()
+            FluApp.navigate("/")
+            //LoginController.beginLoginViaSastLink()
         }
     }
 

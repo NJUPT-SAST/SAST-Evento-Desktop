@@ -2,13 +2,12 @@
 #include "evento_service.h"
 #include "user_service.h"
 
-void EventoInfoController::loadEventoInfo(const EventoID eventId)
+void EventoInfoController::loadEventoInfo(EventoID eventId)
 {
     EventoService::getInstance().load(eventId);
-    //此处不能删去上一行，feedbackservice在其中被调用
 }
 
-void EventoInfoController::registerEvento(const EventoID id, bool selection)
+void EventoInfoController::registerEvento(EventoID id, bool selection)
 {
     UserService::getInstance().registerEvento(id, selection);
 }
@@ -18,7 +17,7 @@ void EventoInfoController::feedbackEvento(const QString &content, const int scor
     emit feedbackSuccessEvent();
 }
 
-void EventoInfoController::subscribeEvento(const EventoID id, bool selection)
+void EventoInfoController::subscribeEvento(EventoID id, bool selection)
 {
     UserService::getInstance().subscribeEvento(id, selection);
 }

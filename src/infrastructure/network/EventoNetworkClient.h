@@ -120,7 +120,7 @@ public:
     QFuture<EventoResult<std::vector<DTO_Evento>>> getQualifiedEvent(int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate());
     QFuture<EventoResult<QStringList>> getActionStateList();
     QFuture<EventoResult<QStringList>> getActionList();
-    QFuture<EventoResult<std::vector<DTO_UserBrief>>> getEventManagerList(const EventoID &eventoId);
+    QFuture<EventoResult<std::vector<DTO_UserBrief>>> getEventManagerList(EventoID eventoId);
     QFuture<EventoResult<std::vector<DTO_UserBrief>>> getAdminUserList();
     QFuture<EventoResult<QString>> getAdminPermissionTreeData();
     QFuture<EventoResult<QString>> getManagerPermissionTreeData();

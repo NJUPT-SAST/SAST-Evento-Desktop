@@ -10,14 +10,14 @@ class EventoResult {
         struct alignas(32) Data {
             alignas(8) EventoExceptionCode err_code = EventoExceptionCode::Ok;
             T result;
-
-            Data() : err_code(EventoExceptionCode::Uninitialised), result() {}
+            
             Data(T&& other) : result(std::move(other)) {}
             Data(const T& other) : result(other) {}
+            Data() = delete;
             ~Data() = default;
         } data;
 
-        Member() : data() {}
+        Member() : err(EventoExceptionCode::Uninitialised, DefaultMessage<EventoExceptionCode::Uninitialised>::msg) {}
         Member(EventoException&& other) : err(std::move(other)) {}
         Member(EventoExceptionCode code, const QString& msg) : err{code, msg} {}
         Member(T&& other) : data(std::move(other)) {}
@@ -50,7 +50,7 @@ class EventoResult {
         void reset() {
             if (!err)
                 data.~Data();
-            new (this) Member(EventoExceptionCode::Uninitialised, "Moved!");
+            new (this) Member;
         }
     } member;
 public:

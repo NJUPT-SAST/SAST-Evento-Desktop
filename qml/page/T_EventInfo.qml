@@ -289,8 +289,8 @@ FluScrollablePage {
                 id: btn_check
                 implicitWidth: 250
                 Layout.topMargin: 9
-                text: EventoHelper.isParticipated ? lang.lang_checked_in : lang.lang_check_in
-                disabled: EventoHelper.isParticipated
+                text: EventoInfoController.isParticipated ? lang.lang_checked_in : lang.lang_check_in
+                disabled: EventoInfoController.isParticipated
                 onClicked: {
                     dialog.open()
                 }
