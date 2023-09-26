@@ -25,11 +25,11 @@ void SlideService::load_HomeSlide(const int size)
             }
         }
         SlideModel::getInstance()->resetModel(std::move(model));
+        PlazaController::getInstance()->onHomeSlideLoadFinished();
     });
 
     QtConcurrent::run([=] {
         auto f(future);
         f.waitForFinished();
-        PlazaController::getInstance()->onHomeSlideLoadFinished();
     });
 }

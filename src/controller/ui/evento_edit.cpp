@@ -2,6 +2,7 @@
 #include "evento_service.h"
 #include "information_service.h"
 #include "evento_helper.h"
+#include "type_model.h"
 
 EventoEditController *EventoEditController::getInstance()
 {
@@ -20,8 +21,9 @@ void EventoEditController::preload() {
     InformationService::getInstance().load_EditInfo();
 }
 
-void EventoEditController::createEvento(const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int typeId, int locationId, const QVariantList &departmentIds, const QString &tag)
+void EventoEditController::createEvento(const QString &title, const QString &description, const QString &eventStart, const QString &eventEnd, const QString &registerStart, const QString &registerEnd, int index, int locationId, const QVariantList &departmentIds, const QString &tag)
 {
+    auto typeId = TypeModel::getInstance()->getID(index);
     if (property("isEditMode").toBool()) {
         EventoService::getInstance().edit(EventoHelper::getInstance()->property("id").toInt(), title, description, eventStart, eventEnd, registerStart, registerEnd, typeId, locationId, departmentIds, tag);
     } else {

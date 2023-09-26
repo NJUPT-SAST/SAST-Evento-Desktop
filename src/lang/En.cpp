@@ -54,7 +54,7 @@ En::En(QObject *parent)
     lang_register("Register");
     lang_cancellation("Cancellation");
     lang_register_success("Register Succeed");
-    lang_subscribe_hint("After you subscribe, WeChat Mini Program will notify you before the event starts");
+    lang_subscribe_hint("After you subscribe, WeChat Mini Program\nwill notify you before the event starts");
 
     // my page
     lang_history("History");

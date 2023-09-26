@@ -18,7 +18,7 @@ FluScrollablePage {
         if (Array.isArray(data)) {
             for (var i = 0; i < data.length; i++) {
                 var item = data[i]
-                var name = item.name
+                var name = item.label
                 var isLeaf = false
                 var children = []
 
@@ -29,12 +29,12 @@ FluScrollablePage {
 
                 result.push(tree_view_location.createItem(name, isLeaf,
                                                           children, {
-                                                              "id": item.id
+                                                              "id": item.key
                                                           }))
             }
         } else {
             result.push(tree_view_location.createItem(data.name, true, [], {
-                                                          "id": data.id
+                                                          "id": data.key
                                                       }))
         }
         return result
@@ -48,7 +48,10 @@ FluScrollablePage {
     signal listReady
 
     Component.onCompleted: {
-        statusMode = FluStatusViewType.Loading
+        loadEditInfo()
+    }
+
+    onErrorClicked: {
         loadEditInfo()
     }
 
@@ -400,10 +403,6 @@ FluScrollablePage {
         }
         FluComboBox {
             id: combo_box_type
-            property int typeId: {
-                var idx = find(displayText)
-                return idx === -1 ? 0 : model[idx][id]
-            }
             width: 200
             anchors {
                 left: textbox_tag.left
@@ -411,8 +410,9 @@ FluScrollablePage {
             }
             model: TypeModel
             textRole: "name"
-            displayText: EventoEditController.isEditMode ? textAt(
-                                                               EventoEditController.typeId - 1) : ""
+            onCommit: text => {
+                          EventoEditController.index = find(text)
+                      }
         }
 
         FluText {
@@ -422,7 +422,7 @@ FluScrollablePage {
             font.bold: true
             anchors {
                 left: item_title.left
-                top: item_allow_comflict.bottom
+                top: combo_box_type.bottom
                 topMargin: 15
             }
         }
@@ -543,11 +543,10 @@ FluScrollablePage {
             }
             onClicked: {
                 var ids = []
-                var typeId = combo_box_type.typeId
-                ree_view_department.multipData().map(value => ids.push(
-                                                         value.data.id))
+                tree_view_department.multipData().map(value => ids.push(
+                                                          value.data.id))
                 if (ids.length === 0 || textbox_title.text === ""
-                        || textbox_description.text === "" || typeId === 0
+                        || textbox_description.text === ""
                         || tree_view_location.locationId === 0
                         || textbox_tag.text === "") {
                     showInfo("有信息未填写")
@@ -555,13 +554,22 @@ FluScrollablePage {
                 }
                 statusMode = FluStatusViewType.Loading
 
+                function format(date, time) {
+                    return date.getFullYear(
+                                ) + "-" + (date.getMonth() + 1) + "-"
+                            + date.getDate() + " " + time.getHours(
+                                ) + ":" + time.getMinutes()
+                }
+
                 EventoEditController.createEvento(
-                            textbox_title.text, textbox_description.text, clender_picker_event_start.text + " " + time_picker_event_start.current.getHours() + ":" + time_picker_event_start.current.getMinutes(
-                                ), clender_picker_event_end.text + " " + time_picker_event_end.current.getHours(
-                                ) + ":" + time_picker_event_end.current.getMinutes(),
-                            clender_picker_register_start.text + " " + time_picker_register_start.current.getHours() + ":" + time_picker_register_start.current.getMinutes(), clender_picker_register_end.text
-                            + " " + time_picker_register_end.current.getHours() + ":"
-                            + time_picker_register_end.current.getMinutes(), typeId, tree_view_location.locationId,
+                            textbox_title.text, textbox_description.text,
+                            format(clender_picker_event_start.current,
+                                   time_picker_event_start.current), format(
+                                clender_picker_event_end.current, time_picker_event_end.current),
+                            format(clender_picker_register_start.current,
+                                   time_picker_register_start.current), format(
+                                clender_picker_register_end.current, time_picker_register_end.current),
+                            EventoEditController.index, tree_view_location.locationId,
                             ids, textbox_tag.text)
             }
         }
@@ -584,7 +592,7 @@ FluScrollablePage {
         target: EventoEditController
         function onCreateErrorEvent(message) {
             statusMode = FluStatusViewType.Success
-            showError(message)
+            showError(message, 4000)
         }
     }
 }

@@ -59,7 +59,7 @@ void InformationService::load_EditInfo() {
 
 void InformationService::load_DepartmentInfo()
 {
-    getRepo()->getDepartmentList().then([=](EventoResult<QString> result) {
+    auto future = getRepo()->getDepartmentList().then([=](EventoResult<QString> result) {
         if (!result) {
             DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(result.message());
             return;
@@ -72,11 +72,15 @@ void InformationService::load_DepartmentInfo()
         }
         DepartmentEventsController::getInstance()->onLoadDepartmentsInfoFinished(departmentJson);
     });
+    QtConcurrent::run([=] {
+        auto f(future);
+        f.waitForFinished();
+    });
 }
 
 void InformationService::load_SubscribedDepartmentInfo()
 {
-    getRepo()->getSubscribedDepartmentList().then([=](EventoResult<QString> result) {
+    auto future = getRepo()->getSubscribedDepartmentList().then([=](EventoResult<QString> result) {
         if (!result) {
             DepartmentEventsController::getInstance()->onLoadSubscribedDepartmentsFailure(result.message());
             return;
@@ -87,5 +91,9 @@ void InformationService::load_SubscribedDepartmentInfo()
             subscribedDepartmentJson = std::move(departmentList);
         }
         DepartmentEventsController::getInstance()->onLoadSubscribedDepartmentsFinished(subscribedDepartmentJson);
+    });
+    QtConcurrent::run([=] {
+        auto f(future);
+        f.waitForFinished();
     });
 }

@@ -24,6 +24,7 @@ public:
     void load_UserFeedback(EventoID id);
     void load_FeedbackInfo(EventoID id);
     void load_SummaryInfo(int page);
+    void feedback(EventoID id, int score, const QString& content);
 };
 
 #endif // FEEDBACKSERVICE_H

@@ -35,7 +35,6 @@ FluScrollablePage {
     Connections {
         target: DepartmentEventsController
         function onLoadDepartmentsSuccessEvent(json) {
-            console.log(json)
             departmentJson = JSON.parse(json)
             var departmentArr = []
             for (var i = 0; i < departmentJson.length; ++i) {
@@ -111,35 +110,43 @@ FluScrollablePage {
         return (h ? h : h + 1) * eventCard.cellHeight
     }
 
-    FluTextButton {
-        id: subscribeButton
-        checked: true
+    Loader {
+        id: btn_loader
+        sourceComponent: UserHelper.permission === 1 ? undefined : com_btn
         Layout.alignment: Qt.AlignRight
-        state: "noSub"
-        opacity: (departmentId > 0) ? 1 : 0
-        states: [
-            State {
-                name: "hasSub"
-                PropertyChanges {
-                    target: subscribeButton
-                    text: lang.lang_unsubscribe
-                    textColor: disableColor
-                }
-            },
-            State {
-                name: "noSub"
-                PropertyChanges {
-                    target: subscribeButton
-                    text: lang.lang_subscribe
-                    textColor: pressedColor
-                }
-            }
-        ]
+    }
 
-        onClicked: {
-            checked = !checked
-            DepartmentEventsController.subscribeDepartment(!checked,
-                                                           departmentId)
+    Component {
+        id: com_btn
+        FluTextButton {
+            id: subscribeButton
+            checked: true
+            state: "noSub"
+            opacity: (departmentId > 0) ? 1 : 0
+            states: [
+                State {
+                    name: "hasSub"
+                    PropertyChanges {
+                        target: subscribeButton
+                        text: lang.lang_unsubscribe
+                        textColor: disableColor
+                    }
+                },
+                State {
+                    name: "noSub"
+                    PropertyChanges {
+                        target: subscribeButton
+                        text: lang.lang_subscribe
+                        textColor: pressedColor
+                    }
+                }
+            ]
+
+            onClicked: {
+                checked = !checked
+                DepartmentEventsController.subscribeDepartment(!checked,
+                                                               departmentId)
+            }
         }
     }
 
@@ -160,14 +167,16 @@ FluScrollablePage {
                 selectionMode: FluTreeViewType.Single
                 anchors.fill: parent
                 onItemClicked: item => {
-                                   departmentId = item.data.id
-                                   if (subscribeArr.indexOf(
-                                           departmentId) !== -1) {
-                                       subscribeButton.checked = false
-                                       subscribeButton.state = "hasSub"
-                                   } else {
-                                       subscribeButton.checked = true
-                                       subscribeButton.state = "noSub"
+                                   if (UserHelper.permission !== 1) {
+                                       departmentId = item.data.id
+                                       if (subscribeArr.indexOf(
+                                               departmentId) !== -1) {
+                                           subscribeButton.checked = false
+                                           subscribeButton.state = "hasSub"
+                                       } else {
+                                           subscribeButton.checked = true
+                                           subscribeButton.state = "noSub"
+                                       }
                                    }
                                    loadDepartmentEvents(item.data.id)
                                }
