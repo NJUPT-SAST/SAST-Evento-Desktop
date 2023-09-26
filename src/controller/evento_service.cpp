@@ -246,10 +246,7 @@ void EventoService::load(EventoID id) {
                 std::lock_guard lock(mutex);
                 event = (stored[id] = std::move(result.take()));
             }
-            if (EventoHelper::getInstance()->update(event)) {
-                EventoInfoController::getInstance()->onLoadFailure("data error");
-                return false;
-            }
+            EventoHelper::getInstance()->update(event);
             return true;
         }),
         getRepo()->getUserParticipate(id).then([=](EventoResult<ParticipationStatus> result) {
@@ -339,17 +336,15 @@ void EventoService::cancel(EventoID id)
 
 Evento::Evento(const DTO_Evento& src) : id(src.id), title(src.title), description(src.description), type(src.type), location(src.location), tag(src.tag), state(src.state) {
     this->department = departmentConvertor(src.departments);
-    this->eventStart = src.gmtEventStart.toString("yyyy年MM月dd日 HH:mm:ss");
-    this->eventEnd = src.gmtEventEnd.toString("yyyy年MM月dd日 HH:mm:ss");
-    this->registrationStart = src.gmtRegistrationStart.toString("yyyy年MM月dd日 HH:mm:ss");
-    this->registrationEnd = src.gmtRegistrationEnd.toString("yyyy年MM月dd日 HH:mm:ss");
+    this->eventTime = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
+    this->registrationTime = periodConvertor(src.gmtRegistrationStart, src.gmtRegistrationEnd);
 }
 
 Schedule::Schedule(const DTO_Evento& src, const ParticipationStatus& participate, bool hasFeedback) : id(src.id), title(src.title), state(src.state), location(src.location), isChecked(participate.isParticipated), hasFeedback(hasFeedback) {
     this->department = departmentConvertor(src.departments);
-    this->date = src.gmtEventStart.toString(QStringLiteral("MM月dd日"));
-    this->startTime = src.gmtEventStart.toString(QStringLiteral("hh:mm"));
-    this->endTime = src.gmtEventEnd.toString(QStringLiteral("hh:mm"));
+    this->date = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss").toString(QStringLiteral("MM月dd日"));
+    this->startTime = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss").toString(QStringLiteral("hh:mm"));
+    this->endTime = QDateTime::fromString(src.gmtEventEnd, "yyyy-MM-dd hh:mm:ss").toString(QStringLiteral("hh:mm"));
 }
 
 UndertakingEvento::UndertakingEvento(const DTO_Evento& src) : id(src.id), title(src.title), location(src.location) {
@@ -369,10 +364,12 @@ EventoBrief::EventoBrief(const DTO_Evento& src) : id(src.id), title(src.title), 
 
 EventoBlock::EventoBlock(const DTO_Evento& src) : id(src.id), title(src.title) {
     this->time = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
-    this->rowStart = src.gmtEventStart.time().hour() - 8;
+    auto gmtEventStart = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss");
+    auto gmtEventEnd = QDateTime::fromString(src.gmtEventEnd, "yyyy-MM-dd hh:mm:ss");
+    this->rowStart = gmtEventStart.time().hour() - 8;
     if (this->rowStart < 0) this->rowStart = 0;
-    this->rowStart += src.gmtEventStart.time().minute() / 60.0;
-    this->rowEnd = src.gmtEventEnd.time().hour() - 8;
+    this->rowStart += gmtEventStart.time().minute() / 60.0;
+    this->rowEnd = gmtEventEnd.time().hour() - 8;
     if (this->rowEnd > 15) this->rowEnd = 15;
-    this->columnStart = src.gmtEventEnd.date().dayOfWeek() - 1;
+    this->columnStart = gmtEventEnd.date().dayOfWeek() - 1;
 }

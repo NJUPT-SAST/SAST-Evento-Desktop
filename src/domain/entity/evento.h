@@ -9,8 +9,8 @@ struct Evento {
     EventoID id;
     QString title;
     QString description;
-    QString eventStart, eventEnd;
-    QString registrationStart, registrationEnd;
+    QString eventTime;
+    QString registrationTime;
     EventType type;
     QString location;
     Tag tag;

@@ -7,10 +7,10 @@ struct DTO_Evento {
     EventoID id;
     QString title;
     QString description;
-    QDateTime gmtEventStart;
-    QDateTime gmtEventEnd;
-    QDateTime gmtRegistrationStart;
-    QDateTime gmtRegistrationEnd;
+    QString gmtEventStart;
+    QString gmtEventEnd;
+    QString gmtRegistrationStart;
+    QString gmtRegistrationEnd;
     EventType type;
     QString location;
     Tag tag;
