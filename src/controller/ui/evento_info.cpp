@@ -1,24 +1,24 @@
 #include "evento_info.h"
 #include "evento_service.h"
 #include "user_service.h"
+#include "feedback_service.h"
 
-void EventoInfoController::loadEventoInfo(const EventoID eventId)
+void EventoInfoController::loadEventoInfo(EventoID eventId)
 {
     EventoService::getInstance().load(eventId);
-    //此处不能删去上一行，feedbackservice在其中被调用
 }
 
-void EventoInfoController::registerEvento(const EventoID id, bool selection)
+void EventoInfoController::registerEvento(EventoID id, bool selection)
 {
     UserService::getInstance().registerEvento(id, selection);
 }
 
-void EventoInfoController::feedbackEvento(const QString &content, const int score, const EventoID id)
+void EventoInfoController::feedbackEvento(QString content, int score, EventoID id)
 {
-    emit feedbackSuccessEvent();
+    FeedbackService::getInstance().feedback(id, score, content);
 }
 
-void EventoInfoController::subscribeEvento(const EventoID id, bool selection)
+void EventoInfoController::subscribeEvento(EventoID id, bool selection)
 {
     UserService::getInstance().subscribeEvento(id, selection);
 }

@@ -12,7 +12,7 @@ class EventoEditController : public QObject {
 
     Q_PROPERTY(QString departmentJson MEMBER m_departmentJson NOTIFY departmentJsonChanged)
     Q_PROPERTY(QString locationJson MEMBER m_locationJson NOTIFY locationJsonChanged)
-    Q_PROPERTY(int typeId MEMBER m_typeId NOTIFY typeIdChanged)
+    Q_PROPERTY(int index MEMBER m_index NOTIFY typeIdChanged)
     Q_PROPERTY(bool isEditMode MEMBER m_isEditMode NOTIFY isEditModeChanged)
     Q_PROPERTY(QString eventStart MEMBER m_eventStart NOTIFY eventStartChanged)
     Q_PROPERTY(QString eventEnd MEMBER m_eventEnd NOTIFY eventEndChanged)
@@ -27,7 +27,7 @@ public:
                                   const QString& eventEnd,
                                   const QString& registerStart,
                                   const QString& registerEnd,
-                                  int typeId, int locationId,
+                                  int index, int locationId,
                                   const QVariantList& departmentIds,
                                   const QString& tag);
 
@@ -36,7 +36,7 @@ private:
     QString m_locationJson;
     bool m_isEditMode; // true: 编辑模式 false: 创建模式
     // 编辑模式属性
-    int m_typeId;
+    int m_index;
     QString m_eventStart;
     QString m_eventEnd;
     QString m_registerStart;

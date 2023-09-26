@@ -149,7 +149,7 @@ FluScrollablePage {
             }
 
             FluText {
-                text: lang.lang_locale
+                text: lang.lang_check_update
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
