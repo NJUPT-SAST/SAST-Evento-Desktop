@@ -457,7 +457,7 @@ QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getHistoryLi
     });
 }
 
-QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getEventList(int page, int size)
+QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getEventListInPage(int page, int size)
 {
     auto url = endpoint(QStringLiteral("/event/list"), [&](QUrlQuery params) {
         params.addQueryItem("page", QString::number(page));
@@ -515,7 +515,7 @@ QFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getEventList
     });
 }
 
-QFuture<EventoResult<DTO_Evento>> EventoNetworkClient::getEvent(EventoID event)
+QFuture<EventoResult<DTO_Evento>> EventoNetworkClient::getEventById(EventoID event)
 {
     auto url = endpoint(QStringLiteral("/event/info"), [&](QUrlQuery params) {
         params.addQueryItem("eventId", QString::number(event));
@@ -793,7 +793,7 @@ QFuture<EventoResult<QString>> EventoNetworkClient::getQRCode(EventoID eventId)
 }
 
 // eventUpload
-QFuture<EventoResult<bool>> EventoNetworkClient::checkInEvent(EventoID event, const QString &code)
+QFuture<EventoResult<bool>> EventoNetworkClient::checkIn(EventoID event, const QString &code)
 {
     auto url = endpoint(QStringLiteral("/event/authcode"), [&](QUrlQuery params) {
         params.addQueryItem("eventId", QString::number(event));
@@ -1051,7 +1051,7 @@ declare_object(DTO_UserBrief,
                object_member(DTO_UserBrief, userId),
                object_member(DTO_UserBrief, email));
 
-QFuture<EventoResult<std::vector<DTO_UserBrief>>> EventoNetworkClient::getEventManagerList(const EventoID &eventoId)
+QFuture<EventoResult<std::vector<DTO_UserBrief>>> EventoNetworkClient::getEventManagerList(EventoID eventoId)
 {
     auto url = endpoint(QStringLiteral("/permission/event/managers"), [&](QUrlQuery params) {
         params.addQueryItem("eventId", QString::number(eventoId));
