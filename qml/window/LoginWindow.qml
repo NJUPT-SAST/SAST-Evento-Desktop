@@ -14,6 +14,11 @@ CustomWindow {
     launchMode: FluWindowType.SingleTask
     closeDestory: true
     title: lang.lang_login
+    property bool loginSuccess: false
+
+    Component.onCompleted: {
+        loginSuccess = false
+    }
 
     Connections {
         target: LoginController
@@ -25,10 +30,26 @@ CustomWindow {
     Connections {
         target: LoginController
         function onLoginSuccess() {
+            loginSuccess = true
+            LoginController.loadPermissionList()
+        }
+    }
+
+    Connections {
+        target: LoginController
+        function onLoadPermissionSuccessEvent() {
             window.requestActivate()
             hideLoading()
             FluApp.navigate("/")
             window.close()
+        }
+    }
+
+    Connections {
+        target: LoginController
+        function onLoadPermissionErrorEvent(message) {
+            hideLoading()
+            showError(lang.lang_error + message, 4000)
         }
     }
 
@@ -97,12 +118,15 @@ CustomWindow {
         hoverColor: Qt.rgba(38 / 255, 41 / 255, 46 / 255, 1)
         anchors {
             bottom: parent.bottom
-            bottomMargin: 100
+            bottomMargin: 110
             horizontalCenter: parent.horizontalCenter
         }
         focus: true
         onClicked: {
-            LoginController.beginLoginViaSastLink()
+            if (loginSuccess)
+                LoginController.loadPermissionList()
+            else
+                LoginController.beginLoginViaSastLink()
         }
     }
 
@@ -117,6 +141,23 @@ CustomWindow {
         }
     }
 
+    FluIconButton {
+        id: btn_visitor
+        text: lang.lang_visitor_login
+        iconSource: FluentIcons.GuestUser
+        display: Button.TextBesideIcon
+        anchors {
+            top: btn_login.bottom
+            topMargin: 8
+            horizontalCenter: parent.horizontalCenter
+        }
+        onClicked: {
+            UserHelper.permission = 1
+            FluApp.navigate("/")
+            window.close()
+        }
+    }
+
     FluText {
         text: lang.lang_by_cpp + appInfo.version
         color: FluColors.Grey100
@@ -125,7 +166,7 @@ CustomWindow {
         lineHeight: 1.5
         anchors {
             bottom: parent.bottom
-            bottomMargin: 15
+            bottomMargin: 10
             horizontalCenter: parent.horizontalCenter
         }
     }

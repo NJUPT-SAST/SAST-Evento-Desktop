@@ -1,4 +1,5 @@
 #include "login.h"
+#include "user_service.h"
 #include <QDesktopServices>
 #include <QHttpServerResponse>
 #include <QString>
@@ -93,7 +94,15 @@ LoginController::LoginController()
 
 LoginController *LoginController::create(QQmlEngine *, QJSEngine *)
 {
-    return new LoginController();
+    auto instance = getInstance();
+    QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
+    return instance;
+}
+
+LoginController *LoginController::getInstance()
+{
+    static LoginController instance;
+    return &instance;
 }
 
 void LoginController::beginLoginViaSastLink()
@@ -132,4 +141,9 @@ void LoginController::beginLoginViaSastLink()
     QDesktopServices::openUrl(url);
 
     emit loginProcessing();
+}
+
+void LoginController::loadPermissionList()
+{
+    UserService::getInstance().getSelfPermission();
 }
