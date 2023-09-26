@@ -5,7 +5,9 @@
 #include <QDateTime>
 #include "types.h"
 
-inline QString periodConvertor(const QDateTime& start, const QDateTime& end) {
+inline QString periodConvertor(const QString& startTime, const QString& endTime) {
+    auto start = QDateTime::fromString(startTime, "yyyy-MM-dd hh:mm:ss");
+    auto end = QDateTime::fromString(endTime, "yyyy-MM-dd hh:mm:ss");
     if (!start.isValid() || !end.isValid()) return {};
     if (start.date() == end.date())
         return start.toString("MM.dd hh:mm") + "-" + end.toString("hh:mm");
