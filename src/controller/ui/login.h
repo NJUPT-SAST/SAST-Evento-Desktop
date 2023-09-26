@@ -18,12 +18,23 @@ private:
 signals:
     void loginProcessing();
     void loginSuccess();
-    void loginFailed(const QString &reason);
+    void loginFailed(QString reason);
+    void loadPermissionSuccessEvent();
+    void loadPermissionErrorEvent(QString message);
 
 public:
     static LoginController *create(QQmlEngine *, QJSEngine *);
+    static LoginController* getInstance();
 
     Q_INVOKABLE void beginLoginViaSastLink();
+    Q_INVOKABLE void loadPermissionList();
+
+    void onLoadPermissionFinished() {
+        emit loadPermissionSuccessEvent();
+    }
+    void onLoadPermissionFailure(const QString& msg) {
+        emit loadPermissionErrorEvent(msg);
+    }
 
     LoginController();
 };
