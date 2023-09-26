@@ -19,22 +19,21 @@ class UserHelper : public QObject {
     Q_PROPERTY(QString description MEMBER m_description NOTIFY descriptionChanged)
     Q_PROPERTY(QString email MEMBER m_email NOTIFY emailChanged)
     Q_PROPERTY(QStringList link MEMBER m_link NOTIFY linkChanged)
+    Q_PROPERTY(int permission MEMBER m_permission NOTIFY permissionChanged)
 
 public:
+    enum Permission {
+        VisitorPermission = 1,
+        UserPermission,
+        AdminPermisson
+    };
+
     static UserHelper *getInstance();
 
     static UserHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
     void updateUser(const User &user);
 
-    /*--------------------------------------/
-    /                                       /
-    /                                       /
-    /    Waiting for the completed part     /
-    /  (Perhaps a get function is missing)  /
-    /                                       /
-    /                                       /
-    /--------------------------------------*/
 private:
     UserHelper() = default;
 
@@ -45,6 +44,7 @@ private:
     QString m_description;
     QString m_email;
     QStringList m_link;
+    int m_permission;
 
 signals:
     void idChanged();
@@ -54,6 +54,7 @@ signals:
     void descriptionChanged();
     void emailChanged();
     void linkChanged();
+    void permissionChanged();
 };
 
 #endif // USERHELPER_H

@@ -93,16 +93,6 @@ CustomWindow {
         }
 
         FluPaneItem {
-            id: item_schedule
-            count: 9
-            title: lang.lang_schedule
-            icon: FluentIcons.Calendar
-            onTap: {
-                nav_view.push("qrc:/qml/page/T_Schedule.qml")
-            }
-        }
-
-        FluPaneItem {
             id: item_departmentevents
             title: lang.lang_department_evento
             icon: FluentIcons.Calendar
@@ -111,67 +101,44 @@ CustomWindow {
             }
         }
 
-        FluPaneItemExpander {
-            title: lang.lang_manage
-            icon: FluentIcons.AllApps
-            FluPaneItem {
-                title: lang.lang_calendar
-                onTap: {
-                    nav_view.push("qrc:/qml/page/T_Calendar.qml")
-                }
-            }
-            FluPaneItem {
-                title: lang.lang_user_feedback
-                onTap: {
-                    nav_view.push("qrc:/qml/page/T_Feedback.qml")
-                }
-            }
+        function createUserItems() {
+            var adminItems = Qt.createQmlObject('import FluentUI;FluPaneItem {
+id: item_schedule
+count: 9
+title: lang.lang_schedule
+icon: FluentIcons.Calendar
+onTap: {
+nav_view.push("qrc:/qml/page/T_Schedule.qml")}}', items_original)
+            children.push(adminItems)
         }
 
-
-        /*
-          deprecated
-        FluPaneItemExpander {
-            title: lang.lang_others
-            icon: FluentIcons.ViewAll
-            FluPaneItem {
-                title: lang.lang_user_manage
-                onTap: {
-                    nav_view.push("qrc:/qml/page/T_UserManage.qml")
-                }
-            }
-            FluPaneItem {
-                title: lang.lang_upload_souvenir_card
-                onTap: {
-                    nav_view.push("qrc:/qml/page/T_SouvenirCard.qml")
-                }
-            }
-            FluPaneItem {
-                title: "图库"
-                onTap: {
-                    nav_view.push("qrc:/qml/page/T_Gallery.qml")
-                }
-            }
-            FluPaneItem {
-                title: lang.lang_slide
-                onTap: {
-                    nav_view.push("qrc:/qml/page/T_SlideManagement.qml")
-                }
-            }
+        function createAdminItems() {
+            var adminItems = Qt.createQmlObject(
+                        'import FluentUI;FluPaneItemExpander {
+title: lang.lang_manage
+icon: FluentIcons.AllApps
+FluPaneItem {
+title: lang.lang_calendar
+onTap: {
+nav_view.push("qrc:/qml/page/T_Calendar.qml")}}
+FluPaneItem {
+title: lang.lang_user_feedback
+onTap: {
+nav_view.push("qrc:/qml/page/T_Feedback.qml")}}}', items_original)
+            children.push(adminItems)
         }
-        */
+
+        Component.onCompleted: {
+            if (UserHelper.permission !== 1)
+                createUserItems()
+            if (UserHelper.permission === 3)
+                createAdminItems()
+        }
     }
 
     FluObject {
         id: items_footer
         FluPaneItemSeparator {}
-        FluPaneItem {
-            title: lang.lang_my
-            icon: FluentIcons.Contact
-            onTap: {
-                nav_view.push("qrc:/qml/page/T_My.qml")
-            }
-        }
 
         FluPaneItem {
             title: lang.lang_theming
@@ -187,6 +154,20 @@ CustomWindow {
             onTap: {
                 nav_view.push("qrc:/qml/page/T_Settings.qml")
             }
+        }
+
+        function createItems() {
+            var adminItems = Qt.createQmlObject('import FluentUI;FluPaneItem {
+title: lang.lang_my
+icon: FluentIcons.Contact
+onTap: {
+nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
+            children.push(adminItems)
+        }
+
+        Component.onCompleted: {
+            if (UserHelper.permission !== 1)
+                createItems()
         }
     }
 
