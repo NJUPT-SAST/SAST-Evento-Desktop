@@ -1,5 +1,6 @@
 #include "evento_helper.h"
 #include "evento.h"
+#include "convertor.h"
 
 EventoHelper *EventoHelper::getInstance()
 {
@@ -14,18 +15,15 @@ EventoHelper *EventoHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
     return pInstance;
 }
 
-bool EventoHelper::update(const Evento &evento)
+void EventoHelper::update(const Evento &evento)
 {
-    if (evento.id != m_id)
-        return false;
     setProperty("title", evento.title);
     setProperty("state", (int)evento.state);
-    setProperty("eventTime", evento.eventStart + " - " + evento.eventEnd);
-    setProperty("registerTime", evento.registrationStart + " - " + evento.registrationEnd);
+    setProperty("eventTime", evento.eventTime);
+    setProperty("registerTime", evento.registrationTime);
     setProperty("department", evento.department);
     setProperty("location", evento.location);
     setProperty("tag", evento.tag);
     setProperty("type", evento.type.name);
     setProperty("description", evento.description);
-    return true;
 }

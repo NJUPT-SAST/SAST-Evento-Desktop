@@ -77,7 +77,6 @@ struct Repository {
     virtual QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event) = 0;
 
     // admin-fetch
-    virtual std::vector<DTO_Evento> getQualifiedEvent(EventoException& err, int type = -1, const std::vector<int> &dep = std::vector<int>(), const QDate &day = QDate()) = 0;
     virtual QStringList getActionStateList(EventoException& err) = 0;
     virtual QStringList getActionList(EventoException& err) = 0;
     virtual std::vector<DTO_UserBrief> getEventManagerList(const EventoID &eventoId, EventoException& err) = 0;
