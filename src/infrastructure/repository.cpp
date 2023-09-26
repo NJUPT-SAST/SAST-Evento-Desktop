@@ -1,6 +1,6 @@
 #include "repository.h"
-#include "network/repositoryImpl.h"
+#include "network/EventoNetworkClient.h"
 
 Repository* getRepo() {
-    return NetworkRepository::getInstance();
+    return EventoNetworkClient::getInstance();
 }
