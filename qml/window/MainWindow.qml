@@ -46,7 +46,7 @@ CustomWindow {
         tooltip: "SAST Evento"
         menu: Menu {
             MenuItem {
-                text: "退出"
+                text: lang.lang_exit
                 onTriggered: {
                     window.deleteWindow()
                     FluApp.closeApp()
@@ -71,7 +71,7 @@ CustomWindow {
                      | FluContentDialogType.PositiveButton
         onNegativeClicked: {
             window.hide()
-            system_tray.showMessage("提示", "SAST Evento已隐藏至托盘，点击托盘可再次激活窗口")
+            system_tray.showMessage(lang.lang_hint, lang.lang_hint_info)
         }
         positiveText: lang.lang_exit
         neutralText: lang.lang_cancel
@@ -104,7 +104,7 @@ CustomWindow {
 
         FluPaneItem {
             id: item_departmentevents
-            title: "Department Event"
+            title: lang.lang_department_evento
             icon: FluentIcons.Calendar
             onTap: {
                 nav_view.push("qrc:/qml/page/T_DepartmentEvents.qml")
@@ -115,19 +115,22 @@ CustomWindow {
             title: lang.lang_manage
             icon: FluentIcons.AllApps
             FluPaneItem {
-                title: lang.lang_timesheet
+                title: lang.lang_calendar
                 onTap: {
                     nav_view.push("qrc:/qml/page/T_Calendar.qml")
                 }
             }
             FluPaneItem {
-                title: lang.lang_feedback
+                title: lang.lang_user_feedback
                 onTap: {
                     nav_view.push("qrc:/qml/page/T_Feedback.qml")
                 }
             }
         }
 
+
+        /*
+          deprecated
         FluPaneItemExpander {
             title: lang.lang_others
             icon: FluentIcons.ViewAll
@@ -156,6 +159,7 @@ CustomWindow {
                 }
             }
         }
+        */
     }
 
     FluObject {
@@ -225,10 +229,6 @@ CustomWindow {
         property var displayMode
     }
 
-    FluHttp {
-        id: http
-    }
-
     FluContentDialog {
         property string newVersion
         property string body
@@ -237,35 +237,20 @@ CustomWindow {
         message: "SAST Evento目前最新版本 " + newVersion + " -- 当前应用版本 "
                  + appInfo.version + " \n现在是否去下载新版本？\n\n更新内容：\n" + body
         buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
-        negativeText: "取消"
-        positiveText: "确定"
+        negativeText: lang.lang_cancel
+        positiveText: lang.lang_ok
         onPositiveClicked: {
             Qt.openUrlExternally("https://sast.fun")
         }
     }
 
-    function checkUpdate() {
-        var callable = {}
-        callable.onStart = function () {
-            console.debug("start check update...")
-        }
-        callable.onFinish = function () {
-            console.debug("check update finish")
-        }
-        callable.onSuccess = function (result) {
-            var data = JSON.parse(result)
-            console.debug("current version " + appInfo.version)
-            console.debug("new version " + data.tag_name)
-            if (data.tag_name !== appInfo.version) {
-                dialog_update.newVersion = data.tag_name
-                dialog_update.body = data.body
-                dialog_update.open()
-            }
-        }
-        callable.onError = function (status, errorString) {
-            console.debug(status + ";" + errorString)
-        }
-        http.get("https://api.github.com/repos/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest",
-                 callable)
+    function checkUpdate() {// TODO
+        //            if (version !== appInfo.version) {
+        //                dialog_update.newVersion = "" // TODO
+        //                dialog_update.body = "" // TODO
+        //                dialog_update.open()
+        //            } else {
+        //                showMessage("当前已是最新版本")
+        //            }
     }
 }

@@ -8,4 +8,6 @@ import FluentUI
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
     title: lang.lang_profile
+    statusMode: FluStatusViewType.Empty
+    emptyText: "敬请期待"
 }

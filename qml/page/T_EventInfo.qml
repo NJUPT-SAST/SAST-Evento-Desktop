@@ -221,28 +221,29 @@ FluScrollablePage {
                 id: btn_register
                 Layout.topMargin: 15
                 implicitWidth: 250
-                text: EventoInfoController.isRegistrated ? "取消报名" : "报名活动"
+                text: EventoInfoController.isRegistrated ? lang.lang_cancellation : lang.lang_register
                 checked: EventoInfoController.isRegistrated
                 disabled: EventoHelper.state !== 2
                 onClicked: {
                     statusMode = FluStatusViewType.Loading
                     EventoInfoController.isRegistrated = !EventoInfoController.isRegistrated
                     EventoInfoController.registerEvento(
-                                EventoHelper.id, EventoInfoController.isRegistrated)
+                                EventoHelper.id,
+                                EventoInfoController.isRegistrated)
                 }
             }
             Connections {
                 target: EventoInfoController
                 function onRegisterSuccessEvent() {
                     statusMode = FluStatusViewType.Success
-                    showSuccess((EventoInfoController.isRegistrated ? "报名成功" : "已取消"))
+                    showSuccess((EventoInfoController.isRegistrated ? lang.lang_register_success : lang.lang_cancelled))
                     loadEventoInfo()
                 }
             }
             Connections {
                 target: EventoInfoController
                 function onRegisterErrorEvent(message) {
-                    showError("错误：" + message)
+                    showError(lang.lang_error + message)
                     loadEventoInfo()
                 }
             }
@@ -251,35 +252,36 @@ FluScrollablePage {
                 id: btn_subscribe
                 implicitWidth: 250
                 Layout.topMargin: 15
-                text: EventoInfoController.isSubscribed ? "取消订阅" : "订阅活动"
+                text: EventoInfoController.isSubscribed ? lang.lang_subscribe : lang.lang_subscribe
                 checked: EventoInfoController.isSubscribed
                 disabled: EventoHelper.state !== 2
                 onClicked: {
                     statusMode = FluStatusViewType.Loading
                     EventoInfoController.isSubscribed = !EventoInfoController.isSubscribed
                     EventoInfoController.subscribeEvento(
-                                EventoHelper.id, EventoInfoController.isSubscribed)
+                                EventoHelper.id,
+                                EventoInfoController.isSubscribed)
                 }
             }
             Connections {
                 target: EventoInfoController
                 function onSubscribeSuccessEvent() {
                     statusMode = FluStatusViewType.Success
-                    showSuccess((EventoInfoController.isSubscribed ? "订阅成功" : "已取消"))
+                    showSuccess((EventoInfoController.isSubscribed ? lang.lang_subscribe_success : lang.lang_cancelled))
                     loadEventoInfo()
                 }
             }
             Connections {
                 target: EventoInfoController
                 function onSubscribeErrorEvent(message) {
-                    showError("错误：" + message)
+                    showError(lang.lang_error + message)
                     loadEventoInfo()
                 }
             }
 
             FluText {
                 id: text_subs_info
-                text: "订阅后小程序将在活动开始前通知您"
+                text: lang.lang_subscribe_hint
                 font: FluTextStyle.Caption
                 color: FluColors.Grey110
             }
@@ -287,7 +289,7 @@ FluScrollablePage {
                 id: btn_check
                 implicitWidth: 250
                 Layout.topMargin: 9
-                text: EventoHelper.isParticipated ? "已签到" : "签到"
+                text: EventoHelper.isParticipated ? lang.lang_checked_in : lang.lang_check_in
                 disabled: EventoHelper.isParticipated
                 onClicked: {
                     dialog.open()
@@ -308,8 +310,8 @@ FluScrollablePage {
     FluContentDialog {
         id: dialog
         title: ""
-        message: "使用小程序扫描二维码或输入密钥"
-        negativeText: "取消"
+        message: lang.lang_check_message
+        negativeText: lang.lang_cancel
 
         Item {
             anchors {
@@ -322,15 +324,15 @@ FluScrollablePage {
             FluTextBox {
                 id: textbox
                 width: 350
-                placeholderText: "密钥请向讲师获取哦"
+                placeholderText: lang.lang_check_hint
             }
         }
 
         buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
-        positiveText: "签到"
+        positiveText: lang.lang_check_in
         onPositiveClicked: {
             if (textbox.text === "") {
-                showError("输入为空")
+                showError(lang.lang_input_is_empty)
                 dialog.open()
             } else {
                 statusMode = FluStatusViewType.Loading
@@ -343,7 +345,7 @@ FluScrollablePage {
         target: ScheduleController
         function onCheckSuccessEvent() {
             statusMode = FluStatusViewType.Success
-            showSuccess("签到成功")
+            showSuccess(lang.lang_check_success)
             loadEventoInfo()
         }
     }
@@ -351,7 +353,7 @@ FluScrollablePage {
     Connections {
         target: ScheduleController
         function onCheckErrorEvent(message) {
-            showError("错误：" + message)
+            showError(lang.lang_error + message)
             loadEventoInfo()
         }
     }
@@ -371,12 +373,12 @@ FluScrollablePage {
             spacing: 15
 
             FluText {
-                text: "反馈"
+                text: lang.lang_feedback
                 font: FluTextStyle.Subtitle
             }
 
             FluText {
-                text: "为本次活动打个分吧，你的反馈会被匿名上传哦"
+                text: lang.lang_feedback_text
                 font: FluTextStyle.Caption
                 color: FluColors.Grey110
             }
@@ -388,7 +390,7 @@ FluScrollablePage {
 
             FluMultilineTextBox {
                 id: textbox_content
-                placeholderText: "输入你的留言（选填，Ctrl+Enter换行）"
+                placeholderText: lang.lang_feedback_hint
                 width: parent.width
                 text: FeedbackHelper.submitted ? FeedbackHelper.content : feedback_content
             }
@@ -398,13 +400,13 @@ FluScrollablePage {
                 implicitWidth: 200
                 disabled: rating.value === 0
                 anchors.right: parent.right
-                text: FeedbackHelper.submitted ? "修改并提交" : "提交反馈"
+                text: FeedbackHelper.submitted ? lang.lang_modify_and_submit : lang.lang_submit
                 onClicked: {
                     score_value = rating.value
                     feedback_content = textbox_content.text
                     statusMode = FluStatusViewType.Loading
                     EventoInfoController.feedbackEvento(score_value, content,
-                                                EventoHelper.id)
+                                                        EventoHelper.id)
                 }
             }
 
@@ -412,7 +414,7 @@ FluScrollablePage {
                 target: EventoInfoController
                 function onFeedbackSuccessEvent() {
                     statusMode = FluStatusViewType.Success
-                    showSuccess("已提交")
+                    showSuccess(lang.lang_submit_succcess)
                     loadEventoInfo()
                 }
             }
@@ -420,7 +422,7 @@ FluScrollablePage {
             Connections {
                 target: EventoInfoController
                 function onFeedbackErrorEvent(message) {
-                    showError("错误：" + message)
+                    showError(lang.lang_error + message)
                     loadEventoInfo()
                 }
             }
@@ -447,15 +449,15 @@ FluScrollablePage {
     function convert2Text(s) {
         switch (s) {
         case 1:
-            return "未开始"
+            return lang.lang_not_started
         case 2:
-            return "报名中"
+            return lang.lang_registering
         case 3:
-            return "进行中"
+            return lang.lang_undertaking
         case 4:
-            return "已取消"
+            return lang.lang_cancelled
         case 5:
-            return "已结束"
+            return lang.lang_over
         default:
             return ""
         }

@@ -11,7 +11,7 @@ FluScrollablePage {
     id: control
     launchMode: FluPageType.SingleTask
 
-    property string departmentJson
+    property var departmentJson
     property int departmentId: -1
     property var subscribeArr
 
@@ -34,8 +34,18 @@ FluScrollablePage {
 
     Connections {
         target: DepartmentEventsController
-        function onLoadDepartmentsSuccessEvent(departmentsJson) {
-            departmentJson = departmentsJson
+        function onLoadDepartmentsSuccessEvent(json) {
+            console.log(json)
+            departmentJson = JSON.parse(json)
+            var departmentArr = []
+            for (var i = 0; i < departmentJson.length; ++i) {
+                departmentArr.push(tree_view.createItem(
+                                       departmentJson[i].departmentName,
+                                       true, [], {
+                                           "id": departmentJson[i].id
+                                       }))
+            }
+            tree_view.updateData(departmentArr)
             DepartmentEventsController.loadSubscribedDepartment()
         }
     }
@@ -67,7 +77,6 @@ FluScrollablePage {
         target: DepartmentEventsController
         function onLoadSubscribedDepartmentsSuccessEvent(departmentJson) {
             subscribeArr = JSON.parse(departmentJson)
-            tree_view.updateData(createOrg())
             statusMode = FluStatusViewType.Success
         }
     }
@@ -87,26 +96,14 @@ FluScrollablePage {
                 subscribeArr.push(departmentId)
                 subscribeButton.checked = false
                 subscribeButton.state = "hasSub"
-                showInfo("已订阅")
+                showInfo(lang.lang_subscribe_success)
             } else {
                 subscribeArr.splice(subscribeArr.indexOf(departmentId), 1)
                 subscribeButton.checked = true
                 subscribeButton.state = "noSub"
-                showInfo("已取消订阅")
+                showInfo(lang.lang_cancelled)
             }
         }
-    }
-
-    function createOrg() {
-        var departmentArr = []
-        var json = JSON.parse(departmentJson)
-        for (var i = 0; i < json.length; ++i) {
-            departmentArr.push(tree_view.createItem(json[i].departmentName,
-                                                    true, [], {
-                                                        "id": json[i].id
-                                                    }))
-        }
-        return departmentArr
     }
 
     function gridHeight() {
@@ -141,13 +138,8 @@ FluScrollablePage {
 
         onClicked: {
             checked = !checked
-            if (!checked) {
-                DepartmentEventsController.subscribeDepartment(!checked,
-                                                               departmentId)
-            } else {
-                DepartmentEventsController.subscribeDepartment(!checked,
-                                                               departmentId)
-            }
+            DepartmentEventsController.subscribeDepartment(!checked,
+                                                           departmentId)
         }
     }
 
@@ -177,7 +169,6 @@ FluScrollablePage {
                                        subscribeButton.checked = true
                                        subscribeButton.state = "noSub"
                                    }
-
                                    loadDepartmentEvents(item.data.id)
                                }
 
@@ -242,7 +233,7 @@ FluScrollablePage {
                     }
                     FluImage {
                         anchors.fill: parent
-                        source: "qrc:/res/image/banner_3.png"
+                        source: model.url
                         fillMode: Image.PreserveAspectCrop
                     }
                 }

@@ -62,7 +62,7 @@ FluScrollablePage {
         target: ScheduleController
         function onCheckSuccessEvent() {
             statusMode = FluStatusViewType.Success
-            showSuccess("签到成功")
+            showSuccess(lang.lang_check_success)
             loadScheduleInfo()
         }
     }
@@ -70,7 +70,7 @@ FluScrollablePage {
     Connections {
         target: ScheduleController
         function onCheckErrorEvent(message) {
-            showError("错误：" + message)
+            showError(lang.lang_error + message)
             loadScheduleInfo()
         }
     }
@@ -85,7 +85,7 @@ FluScrollablePage {
         implicitHeight: listHeight
         FluPivotItem {
             id: pivot1
-            title: "已报名的活动"
+            title: lang.lang_registered_evento
             contentItem: ListView {
                 id: registered_events
                 width: parent.width
@@ -98,7 +98,7 @@ FluScrollablePage {
         }
         FluPivotItem {
             id: pivot2
-            title: "已订阅的活动"
+            title: lang.lang_subscribed_evento
             contentItem: ListView {
                 id: subscribed_events
                 width: parent.width
@@ -227,7 +227,7 @@ FluScrollablePage {
                         topMargin: 10
                         rightMargin: 10
                     }
-                    text: "未开始"
+                    text: lang.lang_not_started
                     color: FluColors.Blue.normal
                     font.pixelSize: 20
                 }
@@ -305,7 +305,6 @@ FluScrollablePage {
                 }
                 height: 80
                 width: 75
-                text: ""
                 font.pixelSize: 16
             }
 
@@ -314,12 +313,12 @@ FluScrollablePage {
                     name: 'BeforeAndNoChecked'
                     PropertyChanges {
                         target: event_state
-                        text: "未开始"
+                        text: lang.lang_not_started
                         color: FluColors.Blue.normal
                     }
                     PropertyChanges {
                         target: btn
-                        text: "签到"
+                        text: lang.lang_check_in
                         disabled: false
                         onClicked: {
                             dialog.open()
@@ -330,12 +329,12 @@ FluScrollablePage {
                     name: 'BeforeAndIsChecked'
                     PropertyChanges {
                         target: event_state
-                        text: "未开始"
+                        text: lang.lang_not_started
                         color: FluColors.Blue.normal
                     }
                     PropertyChanges {
                         target: btn
-                        text: "已签到"
+                        text: lang.lang_checked_in
                         disabled: true
                     }
                 },
@@ -343,12 +342,12 @@ FluScrollablePage {
                     name: 'UndertakingAndNoChecked'
                     PropertyChanges {
                         target: event_state
-                        text: "进行中"
+                        text: lang.lang_undertaking
                         color: FluColors.Orange.normal
                     }
                     PropertyChanges {
                         target: btn
-                        text: "签到"
+                        text: lang.lang_check_in
                         disabled: false
                         onClicked: {
                             dialog.open()
@@ -359,12 +358,12 @@ FluScrollablePage {
                     name: 'UndertakingAndIsChecked'
                     PropertyChanges {
                         target: event_state
-                        text: "进行中"
+                        text: lang.lang_undertaking
                         color: FluColors.Orange.normal
                     }
                     PropertyChanges {
                         target: btn
-                        text: "已签到"
+                        text: lang.lang_checked_in
                         disabled: true
                     }
                 },
@@ -372,7 +371,7 @@ FluScrollablePage {
                     name: 'Cancelled'
                     PropertyChanges {
                         target: event_state
-                        text: "已取消"
+                        text: lang.lang_cancelled
                         color: FluColors.Red.normal
                     }
                     PropertyChanges {
@@ -385,12 +384,12 @@ FluScrollablePage {
                     name: 'OverAndNoFeedback'
                     PropertyChanges {
                         target: event_state
-                        text: "已结束"
+                        text: lang.lang_over
                         color: FluColors.Grey110
                     }
                     PropertyChanges {
                         target: btn
-                        text: "评价"
+                        text: lang.lang_feedback
                         disabled: false
                         onClicked: {
                             EventoHelper.id = model.id
@@ -403,12 +402,12 @@ FluScrollablePage {
                     name: 'OverAndIsFeedback'
                     PropertyChanges {
                         target: event_state
-                        text: "已结束"
+                        text: lang.lang_over
                         color: FluColors.Grey110
                     }
                     PropertyChanges {
                         target: btn
-                        text: "修改评价"
+                        text: lang.lang_modify_feedback
                         disabled: false
                         onClicked: {
                             EventoHelper.id = model.id
@@ -422,8 +421,8 @@ FluScrollablePage {
             FluContentDialog {
                 id: dialog
                 title: ""
-                message: "使用小程序扫描二维码或输入密钥"
-                negativeText: "取消"
+                message: lang.lang_check_message
+                negativeText: lang.lang_cancel
 
                 Item {
                     anchors {
@@ -436,16 +435,16 @@ FluScrollablePage {
                     FluTextBox {
                         id: textbox
                         width: 350
-                        placeholderText: "密钥请向讲师获取哦"
+                        placeholderText: lang.lang_check_hint
                     }
                 }
 
                 buttonFlags: FluContentDialogType.NegativeButton
                              | FluContentDialogType.PositiveButton
-                positiveText: "签到"
+                positiveText: lang.lang_check_in
                 onPositiveClicked: {
                     if (textbox.text === "") {
-                        showError("输入为空")
+                        showError(lang.lang_input_is_empty)
                         dialog.open()
                     } else {
                         statusMode = FluStatusViewType.Loading
@@ -562,7 +561,7 @@ FluScrollablePage {
                         topMargin: 10
                         rightMargin: 10
                     }
-                    text: "未开始"
+                    text: lang.lang_not_started
                     color: FluColors.Blue.normal
                     font.pixelSize: 20
                 }
@@ -649,12 +648,12 @@ FluScrollablePage {
                     name: 'BeforeAndNoChecked'
                     PropertyChanges {
                         target: event_state
-                        text: "未开始"
+                        text: lang.lang_not_started
                         color: FluColors.Blue.normal
                     }
                     PropertyChanges {
                         target: btn
-                        text: "签到"
+                        text: lang.lang_check_in
                         disabled: false
                         onClicked: {
                             dialog.open()
@@ -665,12 +664,12 @@ FluScrollablePage {
                     name: 'BeforeAndIsChecked'
                     PropertyChanges {
                         target: event_state
-                        text: "未开始"
+                        text: lang.lang_not_started
                         color: FluColors.Blue.normal
                     }
                     PropertyChanges {
                         target: btn
-                        text: "已签到"
+                        text: lang.lang_checked_in
                         disabled: true
                     }
                 },
@@ -678,12 +677,12 @@ FluScrollablePage {
                     name: 'UndertakingAndNoChecked'
                     PropertyChanges {
                         target: event_state
-                        text: "进行中"
+                        text: lang.lang_undertaking
                         color: FluColors.Orange.normal
                     }
                     PropertyChanges {
                         target: btn
-                        text: "签到"
+                        text: lang.lang_check_in
                         disabled: false
                         onClicked: {
                             dialog.open()
@@ -694,12 +693,12 @@ FluScrollablePage {
                     name: 'UndertakingAndIsChecked'
                     PropertyChanges {
                         target: event_state
-                        text: "进行中"
+                        text: lang.lang_undertaking
                         color: FluColors.Orange.normal
                     }
                     PropertyChanges {
                         target: btn
-                        text: "已签到"
+                        text: lang.lang_checked_in
                         disabled: true
                     }
                 },
@@ -707,7 +706,7 @@ FluScrollablePage {
                     name: 'Cancelled'
                     PropertyChanges {
                         target: event_state
-                        text: "已取消"
+                        text: lang.lang_cancelled
                         color: FluColors.Red.normal
                     }
                     PropertyChanges {
@@ -720,12 +719,12 @@ FluScrollablePage {
                     name: 'OverAndNoFeedback'
                     PropertyChanges {
                         target: event_state
-                        text: "已结束"
+                        text: lang.lang_over
                         color: FluColors.Grey110
                     }
                     PropertyChanges {
                         target: btn
-                        text: "评价"
+                        text: lang.lang_feedback
                         disabled: false
                         onClicked: {
                             EventoHelper.id = model.id
@@ -738,12 +737,12 @@ FluScrollablePage {
                     name: 'OverAndIsFeedback'
                     PropertyChanges {
                         target: event_state
-                        text: "已结束"
+                        text: lang.lang_over
                         color: FluColors.Grey110
                     }
                     PropertyChanges {
                         target: btn
-                        text: "修改评价"
+                        text: lang.lang_modify_feedback
                         disabled: false
                         onClicked: {
                             EventoHelper.id = model.id
@@ -757,8 +756,8 @@ FluScrollablePage {
             FluContentDialog {
                 id: dialog
                 title: ""
-                message: "使用小程序扫描二维码或输入密钥"
-                negativeText: "取消"
+                message: lang.lang_check_message
+                negativeText: lang.lang_cancel
 
                 Item {
                     anchors {
@@ -771,16 +770,16 @@ FluScrollablePage {
                     FluTextBox {
                         id: textbox
                         width: 350
-                        placeholderText: "密钥请向讲师获取哦"
+                        placeholderText: lang_check_hint
                     }
                 }
 
                 buttonFlags: FluContentDialogType.NegativeButton
                              | FluContentDialogType.PositiveButton
-                positiveText: "签到"
+                positiveText: lang.lang_check_in
                 onPositiveClicked: {
                     if (textbox.text === "") {
-                        showError("输入为空")
+                        showError(lang.lang_input_is_empty)
                         dialog.open()
                     } else {
                         statusMode = FluStatusViewType.Loading
