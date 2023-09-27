@@ -1,28 +1,29 @@
 #include "calendar.h"
 #include "evento_info.h"
 #include "evento_service.h"
+#include <evento_block_model.h>
 
-void CalendarController::loadAllEventoInfo(const QString &date)
+void CalendarController::loadAllEventoInfo(QString date)
 {
     EventoService::getInstance().load_Block(date);
 }
 
-void CalendarController::loadEventoInfo(const EventoID eventId)
+void CalendarController::loadEventoInfo(EventoID eventId)
 {
     EventoInfoController::getInstance()->loadEventoInfo(eventId);
 }
 
-void CalendarController::deleteEvento(const EventoID eventId)
+void CalendarController::deleteEvento(EventoID eventId)
 {
     EventoService::getInstance().del(eventId);
 }
 
-void CalendarController::cancelEvento(const EventoID eventId)
+void CalendarController::cancelEvento(EventoID eventId)
 {
     EventoService::getInstance().cancel(eventId);
 }
 
-void CalendarController::loadCheckCode(const EventoID eventId)
+void CalendarController::loadCheckCode(EventoID eventId)
 {
     EventoService::getInstance().getQRCode(eventId);
 }

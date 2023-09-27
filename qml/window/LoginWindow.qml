@@ -38,7 +38,6 @@ CustomWindow {
     Connections {
         target: LoginController
         function onLoadPermissionSuccessEvent() {
-            window.requestActivate()
             hideLoading()
             FluApp.navigate("/")
             window.close()

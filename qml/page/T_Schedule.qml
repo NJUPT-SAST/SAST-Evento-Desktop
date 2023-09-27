@@ -7,7 +7,6 @@ import SAST_Evento
 import "../window"
 
 FluScrollablePage {
-    id: page
     launchMode: FluPageType.SingleTask
 
     onErrorClicked: {

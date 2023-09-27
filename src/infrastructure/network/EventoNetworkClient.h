@@ -108,6 +108,7 @@ public:
                                            int typeId, int locationId,
                                            const QVariantList& departmentIds,
                                            const QString& tag);
+    QFuture<EventoResult<bool>> subscribeDepartment(int departmentId, bool unsubscribe);
 
     // feedback
     QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId);

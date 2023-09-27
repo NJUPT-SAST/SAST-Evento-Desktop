@@ -118,7 +118,10 @@ QFuture<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl &url, cons
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
     auto reply = manager.put(request, requestData);
-    return QtFuture::connect(reply, &QNetworkReply::finished).then(std::bind(handleNetworkReply, reply));
+    return QtConcurrent::run([=]() {
+        QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
+        return handleNetworkReply(reply);
+    });
 }
 
 QFuture<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl &url, const QUrlQuery &requestData)
@@ -142,7 +145,10 @@ QFuture<EventoResult<QJsonValue>> EventoNetworkClient::patch(const QUrl &url, co
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
     auto reply = manager.sendCustomRequest(request, "PATCH", requestData);
-    return QtFuture::connect(reply, &QNetworkReply::finished).then(std::bind(handleNetworkReply, reply));
+    return QtConcurrent::run([=]() {
+        QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
+        return handleNetworkReply(reply);
+    });
 }
 
 QFuture<EventoResult<QJsonValue>> EventoNetworkClient::patch(const QUrl &url, const QUrlQuery &requestData)
@@ -165,7 +171,10 @@ QFuture<EventoResult<QJsonValue>> EventoNetworkClient::deleteResource(const QUrl
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
     auto reply = manager.deleteResource(request);
-    return QtFuture::connect(reply, &QNetworkReply::finished).then(std::bind(handleNetworkReply, reply));
+    return QtConcurrent::run([=]() {
+        QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
+        return handleNetworkReply(reply);
+    });
 }
 
 static QStringList asStringList(const QJsonValue &value)
@@ -316,6 +325,22 @@ QFuture<EventoResult<DTO_Feedback>> EventoNetworkClient::getFeedbackInfo(EventoI
         } else {
             return {result.code(), result.message()};
         }
+    });
+}
+
+QFuture<EventoResult<bool>> EventoNetworkClient::subscribeDepartment(int departmentId, bool unsubscribe)
+{
+    auto url = endpoint(QStringLiteral("/user/subscribe/department"), [=](QUrlQuery& params) {
+        params.addQueryItem("departmentId", QString::number(departmentId));
+        params.addQueryItem("isSubscribe", unsubscribe ? "true" : "false");
+    });
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<bool>{
+        auto f(future);
+        auto result = f.takeResult();
+        if (!result)
+            return { result.code(), result.message() };
+        return {};
     });
 }
 

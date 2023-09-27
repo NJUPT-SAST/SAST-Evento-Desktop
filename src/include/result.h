@@ -31,7 +31,7 @@ class EventoResult {
         Member(const Member&) = delete;
 
         Member& operator=(Member&& other) {
-            reset();
+            ~Member();
             if (other.err)
                 new (this) EventoException(std::move(other.err));
             else
@@ -48,8 +48,7 @@ class EventoResult {
         }
     private:
         void reset() {
-            if (!err)
-                data.~Data();
+            this->~Member();
             new (this) Member;
         }
     } member;

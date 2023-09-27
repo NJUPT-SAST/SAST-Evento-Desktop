@@ -7,7 +7,7 @@ import SAST_Evento
 import "../window"
 
 FluScrollablePage {
-    id: control
+
     launchMode: FluPageType.SingleTask
 
     property string dateString: date2String(new Date)
@@ -120,6 +120,7 @@ FluScrollablePage {
                 date.setDate(date_picker.current.getDate() - 7)
                 date_picker.current = date
                 dateString = date2String(date)
+                date_picker.text = dateString
             }
         }
         FluCalendarPicker {
@@ -130,7 +131,7 @@ FluScrollablePage {
             }
             current: new Date
             onAccepted: {
-                dateString = date_picker.text
+                dateString = date2String(date_picker.current)
                 loadAllInfo(dateString)
             }
         }
@@ -146,6 +147,7 @@ FluScrollablePage {
                 date.setDate(date_picker.current.getDate() + 7)
                 date_picker.current = date
                 dateString = date2String(date)
+                date_picker.text = dateString
             }
         }
 

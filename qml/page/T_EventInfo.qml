@@ -200,6 +200,7 @@ FluScrollablePage {
         }
 
         FluRectangle {
+            visible: UserHelper.permission !== 1
             width: 4
             height: parent.height
             radius: [2, 2, 2, 2]
@@ -208,6 +209,7 @@ FluScrollablePage {
         }
 
         ColumnLayout {
+            visible: UserHelper.permission !== 1
             width: parent.width / 2 - 135
             anchors.verticalCenter: parent.verticalCenter
             FluText {
@@ -363,7 +365,8 @@ FluScrollablePage {
         Layout.topMargin: 15
         Layout.fillWidth: true
         sourceComponent: (EventoInfoController.isParticipated
-                          && EventoHelper.state === 5) ? com_comment : undefined
+                          && EventoHelper.state === 5
+                          && UserHelper.permisson !== 1) ? com_comment : undefined
     }
 
     Component {

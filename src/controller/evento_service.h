@@ -57,6 +57,7 @@ public:
     void getQRCode(EventoID id);
     void del(EventoID id);
     void cancel(EventoID id);
+    void subscribeDepartment(int departmentId, bool unsubscribe);
 };
 
 #endif //EVENTO_SERVICE_H
