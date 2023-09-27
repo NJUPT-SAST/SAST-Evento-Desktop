@@ -106,26 +106,27 @@ CustomWindow {
 id: item_schedule
 count: 9
 title: lang.lang_schedule
-icon: FluentIcons.Calendar
+icon: FluentIcons.ReadingList
 onTap: {
 nav_view.push("qrc:/qml/page/T_Schedule.qml")}}', items_original)
             children.push(adminItems)
         }
 
         function createAdminItems() {
-            var adminItems = Qt.createQmlObject(
-                        'import FluentUI;FluPaneItemExpander {
-title: lang.lang_manage
-icon: FluentIcons.AllApps
+            var adminItems1 = Qt.createQmlObject('import FluentUI;
 FluPaneItem {
 title: lang.lang_calendar
+icon: FluentIcons.Calendar
 onTap: {
-nav_view.push("qrc:/qml/page/T_Calendar.qml")}}
+nav_view.push("qrc:/qml/page/T_Calendar.qml")}}', items_original)
+            var adminItems2 = Qt.createQmlObject('import FluentUI;
 FluPaneItem {
 title: lang.lang_user_feedback
+icon: FluentIcons.Feedback
 onTap: {
-nav_view.push("qrc:/qml/page/T_Feedback.qml")}}}', items_original)
-            children.push(adminItems)
+nav_view.push("qrc:/qml/page/T_Feedback.qml")}}', items_original)
+            children.push(adminItems1)
+            children.push(adminItems2)
         }
 
         Component.onCompleted: {

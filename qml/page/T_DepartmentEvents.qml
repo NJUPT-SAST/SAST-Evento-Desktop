@@ -110,43 +110,36 @@ FluScrollablePage {
         return (h ? h : h + 1) * eventCard.cellHeight
     }
 
-    Loader {
-        id: btn_loader
-        sourceComponent: UserHelper.permission === 1 ? undefined : com_btn
+    FluTextButton {
+        visible: UserHelper.permission !== 1
+        id: subscribeButton
         Layout.alignment: Qt.AlignRight
-    }
-
-    Component {
-        id: com_btn
-        FluTextButton {
-            id: subscribeButton
-            checked: true
-            state: "noSub"
-            opacity: (departmentId > 0) ? 1 : 0
-            states: [
-                State {
-                    name: "hasSub"
-                    PropertyChanges {
-                        target: subscribeButton
-                        text: lang.lang_unsubscribe
-                        textColor: disableColor
-                    }
-                },
-                State {
-                    name: "noSub"
-                    PropertyChanges {
-                        target: subscribeButton
-                        text: lang.lang_subscribe
-                        textColor: pressedColor
-                    }
+        checked: true
+        state: "noSub"
+        opacity: (departmentId > 0) ? 1 : 0
+        states: [
+            State {
+                name: "hasSub"
+                PropertyChanges {
+                    target: subscribeButton
+                    text: lang.lang_unsubscribe
+                    textColor: disableColor
                 }
-            ]
-
-            onClicked: {
-                checked = !checked
-                DepartmentEventsController.subscribeDepartment(!checked,
-                                                               departmentId)
+            },
+            State {
+                name: "noSub"
+                PropertyChanges {
+                    target: subscribeButton
+                    text: lang.lang_subscribe
+                    textColor: pressedColor
+                }
             }
+        ]
+
+        onClicked: {
+            checked = !checked
+            DepartmentEventsController.subscribeDepartment(!checked,
+                                                           departmentId)
         }
     }
 

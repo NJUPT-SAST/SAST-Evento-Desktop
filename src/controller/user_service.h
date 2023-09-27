@@ -18,8 +18,6 @@ public:
     void checkIn(EventoID eventId, const QString &code);
     void subscribeEvento(EventoID id, bool selection);
     void registerEvento(EventoID id, bool selection);
-
-    void getSelfPermission();
 };
 
 #endif // USER_SERVICE_H

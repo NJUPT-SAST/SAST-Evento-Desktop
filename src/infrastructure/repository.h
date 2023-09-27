@@ -66,6 +66,7 @@ struct Repository {
                                                     int typeId, int locationId,
                                                     const QVariantList& departmentIds,
                                                     const QString& tag) = 0;
+    virtual QFuture<EventoResult<bool>> subscribeDepartment(int departmentId, bool unsubscribe) = 0;
 
     // feedback
     virtual QFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId) = 0;

@@ -1,8 +1,10 @@
 #include "login.h"
-#include "user_service.h"
+#include "user_helper.h"
 #include <QDesktopServices>
 #include <QHttpServerResponse>
 #include <QString>
+#include <QtConcurrent>
+#include "repository.h"
 
 constexpr const char *AUTH_SERVER_URL = "https://link.sast.fun/auth";
 constexpr const char *AUTH_CLIENT_ID = "93f24f17-0423-4baf-9a98-b0ad418a68b8";
@@ -94,15 +96,7 @@ LoginController::LoginController()
 
 LoginController *LoginController::create(QQmlEngine *, QJSEngine *)
 {
-    auto instance = getInstance();
-    QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
-    return instance;
-}
-
-LoginController *LoginController::getInstance()
-{
-    static LoginController instance;
-    return &instance;
+    return new LoginController();
 }
 
 void LoginController::beginLoginViaSastLink()
@@ -145,5 +139,22 @@ void LoginController::beginLoginViaSastLink()
 
 void LoginController::loadPermissionList()
 {
-    UserService::getInstance().getSelfPermission();
+    auto future = getRepo()->getAdminPermission().then([this](EventoResult<QStringList> result) {
+        if (!result) {
+            loadPermissionErrorEvent(result.message());
+            return;
+        }
+        auto permissionList = result.take();
+        QMetaObject::invokeMethod(this, [=]{
+            if (permissionList.isEmpty())
+                UserHelper::getInstance()->setProperty("permission", UserHelper::Permission::UserPermission);
+            else
+                UserHelper::getInstance()->setProperty("permission", UserHelper::Permission::AdminPermisson);
+            loadPermissionSuccessEvent();
+        });
+    });
+    QtConcurrent::run([=] {
+        auto f(future);
+        f.waitForFinished();
+    });
 }

@@ -24,7 +24,6 @@ signals:
 
 public:
     static LoginController *create(QQmlEngine *, QJSEngine *);
-    static LoginController* getInstance();
 
     Q_INVOKABLE void beginLoginViaSastLink();
     Q_INVOKABLE void loadPermissionList();

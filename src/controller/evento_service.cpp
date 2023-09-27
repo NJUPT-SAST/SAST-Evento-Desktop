@@ -73,7 +73,7 @@ void EventoService::load_RegisteredSchedule() {
     auto future = getRepo()->getRegisteredList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
             ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
-            return false;
+            return;
         }
         auto data = result.take();
         std::vector<Schedule> model;
@@ -103,14 +103,12 @@ void EventoService::load_RegisteredSchedule() {
             }
         }
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
-        return true;
+        ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
 
     QtConcurrent::run([=] {
         auto f(future);
-        auto result = f.takeResult();
-        if (result)
-            ScheduleController::getInstance()->onLoadSubscribedFinished();
+        f.waitForFinished();
     });
 }
 
@@ -118,7 +116,7 @@ void EventoService::load_SubscribedSchedule() {
     auto future = getRepo()->getSubscribedList().then([=](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
             ScheduleController::getInstance()->onLoadSubscribedFailure(result.message());
-            return false;
+            return;
         }
         auto data = result.take();
         std::vector<Schedule> model;
@@ -148,14 +146,12 @@ void EventoService::load_SubscribedSchedule() {
             }
         }
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
-        return true;
+        ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
 
     QtConcurrent::run([=] {
         auto f(future);
-        auto result = f.takeResult();
-        if (result)
-            ScheduleController::getInstance()->onLoadSubscribedFinished();
+        f.waitForFinished();
     });
 }
 
@@ -359,6 +355,22 @@ void EventoService::cancel(EventoID id)
         auto f(future);
         f.waitForFinished();
     });
+}
+
+void EventoService::subscribeDepartment(int departmentId, bool unsubscribe)
+{
+    auto future = getRepo()->subscribeDepartment(departmentId, unsubscribe).then([](EventoResult<bool> result) {
+        if (!result) {
+            DepartmentEventsController::getInstance()->onSubscribeFailure(result.message());
+            return;
+        }
+        DepartmentEventsController::getInstance()->onSubscribeFinished();
+    });
+    QtConcurrent::run([=] {
+        auto f(future);
+        f.waitForFinished();
+    });
+
 }
 
 Evento::Evento(const DTO_Evento& src) : id(src.id), title(src.title), description(src.description), type(src.type), location(src.location), tag(src.tag), state(src.state) {

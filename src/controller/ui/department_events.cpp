@@ -15,7 +15,7 @@ void DepartmentEventsController::loadDepartmentEvents(int departmentId) {
 }
 
 void DepartmentEventsController::subscribeDepartment(bool check, int departmentId) {
-    emit subscribeSuccessEvent();
+    EventoService::getInstance().subscribeDepartment(departmentId, check);
 }
 
 DepartmentEventsController *DepartmentEventsController::getInstance()
