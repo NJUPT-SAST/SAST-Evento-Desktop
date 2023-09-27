@@ -183,7 +183,10 @@ static QStringList asStringList(const QJsonValue &value)
 QFuture<EventoResult<QStringList>> EventoNetworkClient::getAdminPermission()
 {
     auto url = endpoint(QStringLiteral("/permission/admin/self"));
-    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<QStringList> {
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<QStringList> {
+        auto f(future);
+        auto result = f.takeResult();
         if (result) {
             return asStringList(result.take());
         } else {
@@ -195,7 +198,10 @@ QFuture<EventoResult<QStringList>> EventoNetworkClient::getAdminPermission()
 QFuture<EventoResult<QStringList>> EventoNetworkClient::getManagerPermission(EventoID eventId)
 {
     auto url = endpoint(QStringLiteral("/permission/event/manager/self"));
-    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<QStringList> {
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<QStringList> {
+        auto f(future);
+        auto result = f.takeResult();
         if (result) {
             return asStringList(result.take());
         } else {
@@ -207,7 +213,10 @@ QFuture<EventoResult<QStringList>> EventoNetworkClient::getManagerPermission(Eve
 QFuture<EventoResult<QStringList>> EventoNetworkClient::getPermittedEvent()
 {
     auto url = endpoint(QStringLiteral("/permission/manager/events"));
-    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<QStringList> {
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<QStringList> {
+        auto f(future);
+        auto result = f.takeResult();
         if (result) {
             return asStringList(result.take());
         } else {
@@ -227,7 +236,10 @@ QFuture<EventoResult<DTO_User>> EventoNetworkClient::getUserInfo(const UserID &i
     auto url = endpoint(QStringLiteral("/user/info"), [&](QUrlQuery& params) {
         params.addQueryItem("userId", id);
     });
-    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<DTO_User> {
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<DTO_User> {
+        auto f(future);
+        auto result = f.takeResult();
         if (result) {
             // FIXME
             return DTO_User{};
