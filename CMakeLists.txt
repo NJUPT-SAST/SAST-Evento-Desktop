@@ -3,17 +3,19 @@ cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/.cmake/)
 include(GetGitRevisionDescription)
 
-project(SAST_Evento_Desktop VERSION 0.1 LANGUAGES CXX)
+project(SAST_Evento_Desktop VERSION 0.3 LANGUAGES CXX)
 
 set(FLUENTUI_BUILD_EXAMPLES OFF)
 
 add_subdirectory(libs)
 
 #配置通用编译
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
 endif()
+
 
 #设置可执行文件输出目录
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
