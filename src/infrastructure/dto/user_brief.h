@@ -8,4 +8,4 @@ struct DTO_UserBrief {
     QString email;
 };
 
-#endif  // DTO_USER_BRIEF_H
+#endif // DTO_USER_BRIEF_H

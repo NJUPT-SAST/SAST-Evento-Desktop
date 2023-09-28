@@ -1,7 +1,6 @@
 #include "evento_block_model.h"
 
-int EventoBlockModel::rowCount(const QModelIndex &parent) const
-{
+int EventoBlockModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
@@ -10,15 +9,13 @@ int EventoBlockModel::rowCount(const QModelIndex &parent) const
     return m_data.size();
 }
 
-QVariant EventoBlockModel::data(const QModelIndex &index, int role) const
-{
+QVariant EventoBlockModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
-    const auto &element = m_data.at(index.row());
+    const auto& element = m_data.at(index.row());
 
-    switch (role)
-    {
+    switch (role) {
     case Role::Id:
         return element.id;
     case Role::Title:
@@ -40,11 +37,9 @@ QVariant EventoBlockModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash<int, QByteArray> EventoBlockModel::roleNames() const
-{
+QHash<int, QByteArray> EventoBlockModel::roleNames() const {
     static QHash<int, QByteArray> roles;
-    if (roles.isEmpty())
-    {
+    if (roles.isEmpty()) {
         roles.insert(Id, "id");
         roles.insert(Title, "title");
         roles.insert(Time, "time");
@@ -56,24 +51,21 @@ QHash<int, QByteArray> EventoBlockModel::roleNames() const
     return roles;
 }
 
-void EventoBlockModel::resetModel(std::vector<EventoBlock> model)
-{
-    QMetaObject::invokeMethod(this, [=]{
+void EventoBlockModel::resetModel(std::vector<EventoBlock>&& model) {
+    QMetaObject::invokeMethod(this, [=]() {
         beginResetModel();
         m_data = std::move(model);
         endResetModel();
     });
 }
 
-EventoBlockModel *EventoBlockModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+EventoBlockModel* EventoBlockModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
     return pInstance;
 }
 
-EventoBlockModel *EventoBlockModel::getInstance()
-{
+EventoBlockModel* EventoBlockModel::getInstance() {
     static EventoBlockModel instance;
     return &instance;
 }

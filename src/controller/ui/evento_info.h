@@ -5,8 +5,7 @@
 
 #include "types.h"
 
-class EventoInfoController : public QObject
-{
+class EventoInfoController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(EventoInfoController)
     QML_SINGLETON
@@ -48,6 +47,7 @@ signals:
 
 private:
     EventoInfoController() = default;
+
 public:
     void onLoadFinished() {
         emit loadEventoSuccessEvent();
@@ -74,8 +74,8 @@ public:
         emit feedbackErrorEvent(msg);
     }
 
-    static EventoInfoController *getInstance();
-    static EventoInfoController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static EventoInfoController* getInstance();
+    static EventoInfoController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // EVENTO_INFO_H

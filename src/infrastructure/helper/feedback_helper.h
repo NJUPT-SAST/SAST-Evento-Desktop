@@ -17,11 +17,10 @@ class FeedbackHelper : public QObject {
     Q_PROPERTY(bool submitted MEMBER m_submitted NOTIFY isSubmittedChanged)
 
 public:
-    static FeedbackHelper *getInstance();
+    static FeedbackHelper* getInstance();
+    static FeedbackHelper* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 
-    static FeedbackHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
-
-    void updateFeedback(const Feedback &feedback);
+    void updateFeedback(const Feedback& feedback);
 
 private:
     FeedbackHelper() = default;

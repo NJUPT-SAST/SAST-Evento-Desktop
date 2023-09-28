@@ -1,11 +1,10 @@
 #ifndef LANG_H
 #define LANG_H
 
-#include <QObject>
 #include "stdafx.h"
+#include <QObject>
 
-class Lang : public QObject
-{
+class Lang : public QObject {
     Q_OBJECT
     // MainWiondow
     Q_PROPERTY_AUTO(QString, lang_hint);
@@ -91,7 +90,7 @@ class Lang : public QObject
     Q_PROPERTY_AUTO(QString, lang_input_is_empty);
 
 public:
-    explicit Lang(QObject *parent = nullptr) {}
+    explicit Lang(QObject* parent = nullptr) {}
 };
 
 #endif // LANG_H

@@ -2,15 +2,14 @@
 #include <FramelessHelper/Quick/framelessquickmodule.h>
 
 #include <QGuiApplication>
-#include <QQmlApplicationEngine>
 #include <QIcon>
+#include <QQmlApplicationEngine>
 
 #include "lang/AppInfo.h"
 
 FRAMELESSHELPER_USE_NAMESPACE
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
     qputenv("QT_QUICK_CONTROLS_STYLE", "Basic");
     FramelessHelper::Quick::initialize();
     QGuiApplication::setOrganizationName("NJUPT-SAST-C++");
@@ -27,7 +26,7 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_MACOS
     FramelessConfig::instance()->set(Global::Option::ForceNonNativeBackgroundBlur, false);
 #endif
-    AppInfo *appInfo = new AppInfo();
+    AppInfo* appInfo = new AppInfo();
     QQmlApplicationEngine engine;
     FramelessHelper::Quick::registerTypes(&engine);
 #ifdef FLUENTUI_BUILD_STATIC_LIB
@@ -37,11 +36,11 @@ int main(int argc, char *argv[])
 
     const QUrl url(QStringLiteral("qrc:/qml/App.qml"));
     QObject::connect(
-        &engine, &QQmlApplicationEngine::objectCreated,
-        &app, [url](QObject *obj, const QUrl &objUrl)
-        {
+        &engine, &QQmlApplicationEngine::objectCreated, &app,
+        [url](QObject* obj, const QUrl& objUrl) {
             if (!obj && url == objUrl)
-                QCoreApplication::exit(-1); },
+                QCoreApplication::exit(-1);
+        },
         Qt::QueuedConnection);
     engine.load(url);
 

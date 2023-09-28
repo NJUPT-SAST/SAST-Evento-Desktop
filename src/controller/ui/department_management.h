@@ -3,8 +3,7 @@
 
 #include <QtQml>
 
-class DepartmentManagementController : public QObject
-{
+class DepartmentManagementController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(DepartmentManagementController)
     QML_SINGLETON
@@ -17,20 +16,20 @@ public:
 
 signals:
     void loadAllDepartmentSuccess();
-    void loadAllDepartmentError(const QString &message);
+    void loadAllDepartmentError(const QString& message);
 
     void deleteDepartmentSuccess();
-    void deleteDepartmentError(const QString &message);
+    void deleteDepartmentError(const QString& message);
 
     void changeDepartmentNameSuccess();
-    void changeDepartmentNameError(const QString &message);
+    void changeDepartmentNameError(const QString& message);
 
     void addDepartmentSuccess();
-    void addDepartmentError(const QString &message);
+    void addDepartmentError(const QString& message);
 
 public:
     DepartmentManagementController() = default;
-    static DepartmentManagementController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static DepartmentManagementController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // DEPARTMENT_MANAGEMENT_H

@@ -1,0 +1,46 @@
+Language:	Cpp
+BasedOnStyle:   LLVM
+IndentWidth:	4
+# 访问说明符(public、private等)的偏移
+AccessModifierOffset:	-4
+# 允许短的函数放在同一行: None, InlineOnly(定义在类中), Empty(空函数), Inline(定义在类中，空函数), All
+AllowShortFunctionsOnASingleLine:	Empty
+# 在大括号前换行: 
+#   Attach(始终将大括号不换行), 
+#   Linux(除函数、命名空间和类定义，与Attach类似), 
+#   Mozilla(除枚举、函数、记录定义，与Attach类似), 
+#   Stroustrup(除函数定义、catch、else，与Attach类似), 
+#   Allman(总是在大括号前换行), 
+#   GNU(总是在大括号前换行，并对于控制语句的大括号增加额外的缩进), 
+#   WebKit(在函数前换行), 
+#   Custom(自定义于BraceWrapping)
+#   注：这里认为语句块也属于函数
+# BreakBeforeBraces:	Attach  //LLVM
+# 每行字符的限制，0表示没有限制
+ColumnLimit:	100
+# 构造函数的初始化列表的缩进宽度
+ConstructorInitializerIndentWidth:	4
+# 延续的行的缩进宽度
+ContinuationIndentWidth:	4
+# 指针和引用的对齐: Left, Right, Middle
+PointerAlignment:	Left
+# 总是在template声明后换行
+AlwaysBreakTemplateDeclarations:	true
+# 对字符串拆行
+BreakStringLiterals:    false
+# 缩进case标签
+IndentCaseLabels:	false
+# 函数返回类型换行时，缩进函数声明或函数定义的函数名
+IndentWrappedFunctionNames:	true
+# 连续空行的最大数量
+MaxEmptyLinesToKeep:	1
+# 命名空间的缩进: None, Inner(缩进嵌套的命名空间中的内容), All
+NamespaceIndentation:	Inner
+# 在赋值运算符之前添加空格
+SpaceBeforeAssignmentOperators:	true
+# 标准: Cpp03, Cpp11, Auto
+Standard:	Auto
+# tab宽度
+TabWidth:	4
+# 使用tab字符: Never, ForIndentation, ForContinuationAndIndentation, Always
+UseTab:	Never

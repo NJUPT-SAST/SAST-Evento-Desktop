@@ -22,10 +22,10 @@ class EventoHelper : public QObject {
     Q_PROPERTY(QString description MEMBER m_description NOTIFY descriptionChanged)
 
 public:
-    static EventoHelper *getInstance();
-    static EventoHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static EventoHelper* getInstance();
+    static EventoHelper* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 
-    void update(const Evento &evento);
+    void update(const Evento& evento);
 
 private:
     EventoHelper() = default;
@@ -54,5 +54,4 @@ signals:
     void descriptionChanged();
 };
 
-#endif  // EVENTOHELPER_H
-
+#endif // EVENTOHELPER_H

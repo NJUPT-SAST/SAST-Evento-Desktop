@@ -1,7 +1,6 @@
 #include "slide_model.h"
 
-int SlideModel::rowCount(const QModelIndex &parent) const
-{
+int SlideModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
@@ -10,8 +9,7 @@ int SlideModel::rowCount(const QModelIndex &parent) const
     return m_data.size();
 }
 
-QVariant SlideModel::data(const QModelIndex &index, int role) const
-{
+QVariant SlideModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
@@ -33,9 +31,9 @@ QVariant SlideModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash<int, QByteArray> SlideModel::roleNames() const
-{
+QHash<int, QByteArray> SlideModel::roleNames() const {
     static QHash<int, QByteArray> roles;
+
     if (roles.isEmpty()) {
         roles.insert(Id, "id");
         roles.insert(Title, "title");
@@ -45,33 +43,31 @@ QHash<int, QByteArray> SlideModel::roleNames() const
     return roles;
 }
 
-void SlideModel::resetModel(std::vector<Slide> model)
-{
+void SlideModel::resetModel(std::vector<Slide>&& model) {
     std::lock_guard<std::mutex> lock(m_mutex);
+
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
 }
 
-void SlideModel::removeById(const int id)
-{
+void SlideModel::removeById(const int id) {
     std::lock_guard<std::mutex> lock(m_mutex);
+
     beginResetModel();
-    m_data.erase(std::remove_if(m_data.begin(), m_data.end(),
-                 [id](const auto& e) {return e.id == id;}),
-                 m_data.end());
+    m_data.erase(
+        std::remove_if(m_data.begin(), m_data.end(), [id](const auto& e) { return e.id == id; }),
+        m_data.end());
     endResetModel();
 }
 
-SlideModel *SlideModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+SlideModel* SlideModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
     return pInstance;
 }
 
-SlideModel *SlideModel::getInstance()
-{
+SlideModel* SlideModel::getInstance() {
     static SlideModel singleton;
     return &singleton;
 }

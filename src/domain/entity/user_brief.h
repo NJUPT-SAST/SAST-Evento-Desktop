@@ -3,8 +3,7 @@
 
 #include <QString>
 
-struct UserBrief
-{
+struct UserBrief {
     QString userId;
     QString email;
 };

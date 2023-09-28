@@ -3,8 +3,7 @@
 
 #include <QtQml>
 
-class LocationManagementController : public QObject
-{
+class LocationManagementController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(LocationManagementController)
     QML_SINGLETON
@@ -17,20 +16,20 @@ public:
 
 signals:
     void loadAllLocationSuccess();
-    void loadAllLocationError(const QString &message);
+    void loadAllLocationError(const QString& message);
 
     void deleteTLocationSuccess();
-    void deleteLocationError(const QString &message);
+    void deleteLocationError(const QString& message);
 
     void changeLocationNameSuccess();
-    void changeLocationNameError(const QString &message);
+    void changeLocationNameError(const QString& message);
 
     void addLocationSuccess();
-    void addLocationError(const QString &message);
+    void addLocationError(const QString& message);
 
 public:
     LocationManagementController() = default;
-    static LocationManagementController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static LocationManagementController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // LOCATION_MANAGEMENT_H

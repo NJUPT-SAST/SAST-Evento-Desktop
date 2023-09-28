@@ -1,7 +1,6 @@
 #include "scheduled_evento_model.h"
 
-int ScheduledEventoModel::rowCount(const QModelIndex &parent) const
-{
+int ScheduledEventoModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
@@ -10,15 +9,13 @@ int ScheduledEventoModel::rowCount(const QModelIndex &parent) const
     return m_data.size();
 }
 
-QVariant ScheduledEventoModel::data(const QModelIndex &index, int role) const
-{
+QVariant ScheduledEventoModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
-    const auto &element = m_data.at(index.row());
+    const auto& element = m_data.at(index.row());
 
-    switch (role)
-    {
+    switch (role) {
     case Role::Id:
         return element.id;
     case Role::Title:
@@ -46,11 +43,10 @@ QVariant ScheduledEventoModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash<int, QByteArray> ScheduledEventoModel::roleNames() const
-{
+QHash<int, QByteArray> ScheduledEventoModel::roleNames() const {
     static QHash<int, QByteArray> roles;
-    if (roles.isEmpty())
-    {
+
+    if (roles.isEmpty()) {
         roles.insert(Id, "id");
         roles.insert(Title, "title");
         roles.insert(State, "state");
@@ -62,26 +58,25 @@ QHash<int, QByteArray> ScheduledEventoModel::roleNames() const
         roles.insert(IsChecked, "isChecked");
         roles.insert(HasFeedback, "isFeedback");
     }
+
     return roles;
 }
 
-void ScheduledEventoModel::resetModel(std::vector<Schedule> model)
-{
+void ScheduledEventoModel::resetModel(std::vector<Schedule>&& model) {
     std::lock_guard<std::mutex> lock(m_mutex);
+
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
 }
 
-ScheduledEventoModel *ScheduledEventoModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+ScheduledEventoModel* ScheduledEventoModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
     return pInstance;
 }
 
-ScheduledEventoModel *ScheduledEventoModel::getInstance()
-{
+ScheduledEventoModel* ScheduledEventoModel::getInstance() {
     static ScheduledEventoModel singleton;
     return &singleton;
 }

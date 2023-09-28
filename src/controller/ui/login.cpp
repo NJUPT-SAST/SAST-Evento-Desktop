@@ -1,22 +1,21 @@
 #include "login.h"
+#include "repository.h"
 #include "user_helper.h"
 #include <QDesktopServices>
 #include <QHttpServerResponse>
 #include <QString>
 #include <QtConcurrent>
-#include "repository.h"
 
-constexpr const char *AUTH_SERVER_URL = "https://link.sast.fun/auth";
-constexpr const char *AUTH_CLIENT_ID = "93f24f17-0423-4baf-9a98-b0ad418a68b8";
+constexpr const char* AUTH_SERVER_URL = "https://link.sast.fun/auth";
+constexpr const char* AUTH_CLIENT_ID = "93f24f17-0423-4baf-9a98-b0ad418a68b8";
 
-static QString genCodeChallengeS256(QStringView code_verifier)
-{
+static QString genCodeChallengeS256(QStringView code_verifier) {
     auto sha256 = QCryptographicHash::hash(code_verifier.toUtf8(), QCryptographicHash::Sha256);
-    return QString::fromLatin1(sha256.toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals));
+    return QString::fromLatin1(
+        sha256.toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals));
 }
 
-[[maybe_unused]] static QString generateCryptoRandomString(quint8 length)
-{
+[[maybe_unused]] static QString generateCryptoRandomString(quint8 length) {
     // FIXME
     // !!! SEVERE SECURITY WARNING !!!
     // 当前实现的熵池可能不满足密码学的要求
@@ -31,9 +30,8 @@ static QString genCodeChallengeS256(QStringView code_verifier)
     return data;
 }
 
-LoginController::LoginController()
-{
-    login_redirect_server.route("/", [this](const QHttpServerRequest &request) {
+LoginController::LoginController() {
+    login_redirect_server.route("/", [this](const QHttpServerRequest& request) {
         // OAuth 2.0 Redirect Uri
         auto status_code = QHttpServerResponder::StatusCode::Ok;
         switch (request.method()) {
@@ -45,7 +43,7 @@ LoginController::LoginController()
             status_code = QHttpServerResponder::StatusCode::BadRequest;
             goto finished;
         }
-        
+
         {
             auto query = request.query();
             if (!query.hasQueryItem("state")) {
@@ -67,20 +65,21 @@ LoginController::LoginController()
                 emit loginSuccess();
             } else if (query.hasQueryItem("error")) {
                 auto errorDescription = query.hasQueryItem("error_description")
-                    ? query.queryItemValue("error_description")
-                    : query.queryItemValue("error");
+                                            ? query.queryItemValue("error_description")
+                                            : query.queryItemValue("error");
                 emit loginFailed(errorDescription);
             } else {
                 status_code = QHttpServerResponder::StatusCode::BadRequest;
             }
         }
 
-        finished:
+    finished:
         QHttpServerResponse resp(QHttpServerResponder::StatusCode::InternalServerError);
         if (status_code == QHttpServerResponder::StatusCode::Ok) {
-            resp = QHttpServerResponse("text/html",
-                                       "<!DOCTYPE html><html><head><title>Completed</title></head><body><script>window.close();</script><p>Authentication completed. Please close this window. </p></body></html>",
-                                       status_code);
+            resp = QHttpServerResponse(
+                "text/html",
+                "<!DOCTYPE html><html><head><title>Completed</title></head><body><script>window.close();</script><p>Authentication completed. Please close this window. </p></body></html>",
+                status_code);
         } else {
             resp = QHttpServerResponse("text/plain",
                                        QStringLiteral("Error %1").arg((int)status_code).toUtf8(),
@@ -88,19 +87,18 @@ LoginController::LoginController()
         }
         resp.setHeader("Access-Control-Allow-Origin", "https://link.sast.fun");
         resp.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-        resp.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
+        resp.setHeader("Access-Control-Allow-Headers",
+                       "Origin, Content-Type, Accept, Authorization");
         return resp;
     });
     login_redirect_server.listen(QHostAddress::LocalHost, 1919);
 }
 
-LoginController *LoginController::create(QQmlEngine *, QJSEngine *)
-{
+LoginController* LoginController::create(QQmlEngine*, QJSEngine*) {
     return new LoginController();
 }
 
-void LoginController::beginLoginViaSastLink()
-{
+void LoginController::beginLoginViaSastLink() {
     // FIXME
     // !!! SEVERE SECURITY WARNING !!!
     // !!! THIS MUST BE FIXED BEFORE RELEASED !!!
@@ -137,19 +135,20 @@ void LoginController::beginLoginViaSastLink()
     emit loginProcessing();
 }
 
-void LoginController::loadPermissionList()
-{
+void LoginController::loadPermissionList() {
     auto future = getRepo()->getAdminPermission().then([this](EventoResult<QStringList> result) {
         if (!result) {
             loadPermissionErrorEvent(result.message());
             return;
         }
         auto permissionList = result.take();
-        QMetaObject::invokeMethod(this, [=]{
+        QMetaObject::invokeMethod(this, [=]() {
             if (permissionList.isEmpty())
-                UserHelper::getInstance()->setProperty("permission", UserHelper::Permission::UserPermission);
+                UserHelper::getInstance()->setProperty("permission",
+                                                       UserHelper::Permission::UserPermission);
             else
-                UserHelper::getInstance()->setProperty("permission", UserHelper::Permission::AdminPermisson);
+                UserHelper::getInstance()->setProperty("permission",
+                                                       UserHelper::Permission::AdminPermisson);
             loadPermissionSuccessEvent();
         });
     });

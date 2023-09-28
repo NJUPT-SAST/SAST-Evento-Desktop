@@ -3,8 +3,7 @@
 
 #include <QtQml>
 
-class MyPageController: public QObject
-{
+class MyPageController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(MyPageController)
     QML_SINGLETON
@@ -18,6 +17,7 @@ signals:
 
 private:
     MyPageController() = default;
+
 public:
     void onLoadFinished() {
         emit loadMyPageSuccessEvent();
@@ -27,7 +27,7 @@ public:
     }
 
     static MyPageController* getInstance();
-    static MyPageController* create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static MyPageController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // MYPAGECONTROLLER_H

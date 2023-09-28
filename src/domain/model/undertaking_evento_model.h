@@ -6,15 +6,14 @@
 
 #include "undertaking_evento.h"
 
-class UndertakingEventoModel : public QAbstractListModel
-{
+class UndertakingEventoModel : public QAbstractListModel {
     Q_OBJECT
     QML_SINGLETON
     QML_NAMED_ELEMENT(UndertakingEventoModel)
 
 public:
     enum Role {
-        Id = Qt::DisplayRole + 1,
+        Id = Qt::UserRole + 1,
         Title,
         Time,
         Location,
@@ -22,9 +21,9 @@ public:
         Image,
     };
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex& index, int role) const override;
 
     QHash<int, QByteArray> roleNames() const override;
 
@@ -36,8 +35,8 @@ private:
     std::vector<UndertakingEvento> m_data;
 
 public:
-    static UndertakingEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
-    static UndertakingEventoModel *getInstance();
+    static UndertakingEventoModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
+    static UndertakingEventoModel* getInstance();
 };
 
 #endif // UNDERTAKING_EVENTO_MODEL_H

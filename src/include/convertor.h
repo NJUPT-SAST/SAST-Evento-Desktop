@@ -1,14 +1,16 @@
 ﻿#ifndef CONVERTOR_H
 #define CONVERTOR_H
 
-#include <QString>
 #include <QDateTime>
+#include <QString>
+
 #include "types.h"
 
 inline QString periodConvertor(const QString& startTime, const QString& endTime) {
     auto start = QDateTime::fromString(startTime, "yyyy-MM-dd hh:mm:ss");
     auto end = QDateTime::fromString(endTime, "yyyy-MM-dd hh:mm:ss");
-    if (!start.isValid() || !end.isValid()) return {};
+    if (!start.isValid() || !end.isValid())
+        return {};
     if (start.date() == end.date())
         return start.toString("MM.dd hh:mm") + "-" + end.toString("hh:mm");
     else if (start.date().year() == end.date().year())

@@ -3,21 +3,23 @@
 
 #include "evento_exception.h"
 
-template<typename T = bool>
+template <typename T = bool>
 class EventoResult {
     union alignas(32) Member {
         alignas(32) EventoException err;
         struct alignas(32) Data {
             alignas(8) EventoExceptionCode err_code = EventoExceptionCode::Ok;
             T result;
-            
+
             Data(T&& other) : result(std::move(other)) {}
             Data(const T& other) : result(other) {}
             Data() = delete;
             ~Data() = default;
         } data;
 
-        Member() : err(EventoExceptionCode::Uninitialised, DefaultMessage<EventoExceptionCode::Uninitialised>::msg) {}
+        Member()
+            : err(EventoExceptionCode::Uninitialised,
+                  DefaultMessage<EventoExceptionCode::Uninitialised>::msg) {}
         Member(EventoException&& other) : err(std::move(other)) {}
         Member(EventoExceptionCode code, const QString& msg) : err{code, msg} {}
         Member(T&& other) : data(std::move(other)) {}
@@ -31,12 +33,13 @@ class EventoResult {
         Member(const Member&) = delete;
 
         Member& operator=(Member&& other) {
-            ~Member();
+            this->~Member();
             if (other.err)
                 new (this) EventoException(std::move(other.err));
             else
                 new (this) Data(std::move(other.data.result));
             other.reset();
+
             return *this;
         }
 
@@ -46,12 +49,14 @@ class EventoResult {
             else
                 data.~Data();
         }
+
     private:
         void reset() {
             this->~Member();
             new (this) Member;
         }
     } member;
+
 public:
     EventoResult() = default;
     EventoResult(EventoException&& other) : member(std::move(other)) {}
@@ -70,9 +75,13 @@ public:
     inline QString message() {
         return *this ? QStringLiteral("No Error!") : member.err.message();
     }
-    inline EventoExceptionCode code() { return member.err.code(); }
+    inline EventoExceptionCode code() {
+        return member.err.code();
+    }
 
-    inline operator bool() { return member.err.code() == EventoExceptionCode::Ok; }
+    inline operator bool() {
+        return member.err.code() == EventoExceptionCode::Ok;
+    }
     inline operator const EventoException&() {
         return reinterpret_cast<const EventoException&>(*this);
     }
@@ -83,7 +92,7 @@ public:
     }
 };
 
-template<>
+template <>
 struct EventoResult<bool> : public EventoException {
     EventoResult() = default;
     EventoResult(EventoException&& other) : EventoException(std::move(other)) {}
@@ -91,7 +100,9 @@ struct EventoResult<bool> : public EventoException {
     EventoResult(EventoResult&& other) : EventoException(std::move(other)) {}
     EventoResult(const EventoResult&) = delete;
 
-    inline operator bool() { return !EventoException::operator bool(); }
+    inline operator bool() {
+        return !EventoException::operator bool();
+    }
 };
 
 #endif // EVENTO_RESULT_H

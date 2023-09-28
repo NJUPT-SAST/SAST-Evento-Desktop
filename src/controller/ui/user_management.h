@@ -5,8 +5,7 @@
 
 // deprecated
 
-class UserManagementController : public QObject
-{
+class UserManagementController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(UserManagementController)
     QML_SINGLETON
@@ -34,7 +33,7 @@ signals:
 
 public:
     UserManagementController() = default;
-    static UserManagementController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static UserManagementController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 
     QString userId = "null";
     bool m_isEdit = false;

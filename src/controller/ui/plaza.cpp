@@ -1,7 +1,8 @@
-#include <QDesktopServices>
 #include "plaza.h"
 #include "evento_service.h"
 #include "slide_service.h"
+
+#include <QDesktopServices>
 
 void PlazaController::loadPlazaInfo()
 {

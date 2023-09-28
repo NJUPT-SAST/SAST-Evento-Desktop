@@ -6,15 +6,14 @@
 
 #include "latest_evento.h"
 
-class LatestEventoModel : public QAbstractListModel
-{
+class LatestEventoModel : public QAbstractListModel {
     Q_OBJECT
     QML_SINGLETON
     QML_NAMED_ELEMENT(LatestEventoModel)
 
 public:
     enum Role {
-        Id = Qt::DisplayRole + 1,
+        Id = Qt::UserRole + 1,
         Title,
         Time,
         Description,
@@ -22,13 +21,13 @@ public:
         Url,
     };
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex& index, int role) const override;
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(std::vector<LatestEvento> model);
+    void resetModel(std::vector<LatestEvento>&& model);
 
 private:
     LatestEventoModel() = default;
@@ -38,8 +37,8 @@ private:
     std::mutex m_mutex;
 
 public:
-    static LatestEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
-    static LatestEventoModel *getInstance();
+    static LatestEventoModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
+    static LatestEventoModel* getInstance();
 };
 
 #endif // LATEST_EVENTO_MODEL_H

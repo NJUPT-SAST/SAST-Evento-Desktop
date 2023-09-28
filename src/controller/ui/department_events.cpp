@@ -18,14 +18,12 @@ void DepartmentEventsController::subscribeDepartment(bool check, int departmentI
     EventoService::getInstance().subscribeDepartment(departmentId, check);
 }
 
-DepartmentEventsController *DepartmentEventsController::getInstance()
-{
+DepartmentEventsController* DepartmentEventsController::getInstance() {
     static DepartmentEventsController instance;
     return &instance;
 }
 
-DepartmentEventsController *DepartmentEventsController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+DepartmentEventsController* DepartmentEventsController::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto instance = getInstance();
     QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
     return instance;

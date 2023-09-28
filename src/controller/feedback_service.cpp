@@ -1,16 +1,15 @@
-#include <QtConcurrent>
-
 #include "feedback_service.h"
+
+#include "evento_info.h"
+#include "feedback_helper.h"
+#include "feedback_model.h"
+#include "feedback_num_model.h"
+#include "feedback_statistics.h"
+#include "feedback_statistics_helper.h"
+#include "feedback_summary.h"
 #include "repository.h"
 
-#include "feedback_statistics.h"
-#include "feedback_summary.h"
-
-#include "feedback_num_model.h"
-#include "feedback_model.h"
-#include "feedback_helper.h"
-#include "feedback_statistics_helper.h"
-#include "evento_info.h"
+#include <QtConcurrent>
 
 void FeedbackService::load_UserFeedback(EventoID id) {
     auto future = getRepo()->getFeedbackInfo(id).then([=](EventoResult<DTO_Feedback> result) {
@@ -19,89 +18,91 @@ void FeedbackService::load_UserFeedback(EventoID id) {
             return;
         }
         auto feedback = result.take();
-        {
-            std::lock_guard lock(mutex);
-            userfeedback = std::move(feedback);
-        }
-        FeedbackHelper::getInstance()->updateFeedback(userfeedback);
+        FeedbackHelper::getInstance()->updateFeedback(feedback);
     });
-    QtConcurrent::run([=] {
+    QtConcurrent::run([=]() {
         auto f(future);
         f.waitForFinished();
     });
 }
 
 void FeedbackService::load_SummaryInfo(int page) {
-    auto future = getRepo()->getFeedbackSummaryListInPage(page).then([=](EventoResult<std::pair<int, std::vector<FeedbackNum>>> result) {
-        if (!result) {
-            FeedbackStatisticsController::getInstance()->onLoadSummaryFailure(result.message());
-            return;
-        }
-        auto data = result.take();
-        std::vector<FeedbackNum> model;
-        {
-            std::lock_guard lock(mutex);
-            for (auto& i : data.second) {
-                model.push_back(i);
-                feedbacks[i.eventId] = std::move(i);
+    auto future = getRepo()->getFeedbackSummaryListInPage(page).then(
+        [=](EventoResult<std::pair<int, std::vector<FeedbackNum>>> result) {
+            if (!result) {
+                FeedbackStatisticsController::getInstance()->onLoadSummaryFailure(result.message());
+                return;
             }
-        }
-        FeedbackNumModel::getInstance()->resetModel(std::move(model));
-        FeedbackStatisticsController::getInstance()->onLoadSummaryFinished(data.first);
-    });
-    QtConcurrent::run([=] {
+            auto data = result.take();
+            std::vector<FeedbackNum> model;
+            {
+                std::lock_guard lock(mutex);
+                for (auto& i : data.second) {
+                    model.push_back(i);
+                    feedbacks[i.eventId] = std::move(i);
+                }
+            }
+            FeedbackNumModel::getInstance()->resetModel(std::move(model));
+            FeedbackStatisticsController::getInstance()->onLoadSummaryFinished(data.first);
+        });
+
+    QtConcurrent::run([=]() {
         auto f(future);
         f.waitForFinished();
     });
 }
 
-void FeedbackService::feedback(EventoID id, int score, const QString &content)
-{
-    auto future = getRepo()->feedbackEvent(DTO_Feedback{0, id, score, content}).then([=](EventoResult<bool> result) {
-        if (!result) {
-            EventoInfoController::getInstance()->onFeedbackFailure(result.message());
-            return;
-        }
-        EventoInfoController::getInstance()->onFeedbackFinished();
-    });
-    QtConcurrent::run([=] {
+void FeedbackService::feedback(EventoID id, int score, const QString& content) {
+    auto future =
+        getRepo()
+            ->feedbackEvent(DTO_Feedback{0, id, score, content})
+            .then([=](EventoResult<bool> result) {
+                if (!result) {
+                    EventoInfoController::getInstance()->onFeedbackFailure(result.message());
+                    return;
+                }
+                EventoInfoController::getInstance()->onFeedbackFinished();
+            });
+
+    QtConcurrent::run([=]() {
         auto f(future);
         f.waitForFinished();
     });
 }
 
 void FeedbackService::load_FeedbackInfo(EventoID id) {
-    auto future = getRepo()->getFeedbackSummary(id).then([=](EventoResult<DTO_FeedbackSummary> result) {
-        if (!result) {
-            FeedbackStatisticsController::getInstance()->onLoadFeedbackFailure(result.message());
-            return;
-        }
-        auto feedbackSummary = result.take();
-        std::vector<Feedback> model;
-        {
-            std::lock_guard lock(mutex);
-            for (auto& i : feedbackSummary.feedbacks) {
-                model.push_back(Feedback(i));
+    auto future =
+        getRepo()->getFeedbackSummary(id).then([=](EventoResult<DTO_FeedbackSummary> result) {
+            if (!result) {
+                FeedbackStatisticsController::getInstance()->onLoadFeedbackFailure(
+                    result.message());
+                return;
             }
-        }
-        FeedbackModel::getInstance()->resetModel(std::move(model));
-        FeedbackStatisticsHelper::getInstance()->updateFeedbackStatistics(FeedbackSummary(feedbackSummary, feedbacks[id].title));
-        FeedbackStatisticsController::getInstance()->onLoadFeedbackFinished();
-    });
-    QtConcurrent::run([=] {
+            auto feedbackSummary = result.take();
+            std::vector<Feedback> model;
+            {
+                std::lock_guard lock(mutex);
+                for (auto& i : feedbackSummary.feedbacks) {
+                    model.push_back(Feedback(i));
+                }
+            }
+            FeedbackModel::getInstance()->resetModel(std::move(model));
+            FeedbackStatisticsHelper::getInstance()->updateFeedbackStatistics(
+                FeedbackSummary(feedbackSummary, feedbacks[id].title));
+            FeedbackStatisticsController::getInstance()->onLoadFeedbackFinished();
+        });
+
+    QtConcurrent::run([=]() {
         auto f(future);
         f.waitForFinished();
     });
 }
 
-FeedbackSummary::FeedbackSummary(const DTO_FeedbackSummary& feedbackSummary, const QString& title):
-    eventId(feedbackSummary.eventId),
-    subscribedNum(feedbackSummary.subscribedNum),
-    registeredNum(feedbackSummary.registeredNum),
-    checkedNum(feedbackSummary.checkedNum),
-    aveScore(feedbackSummary.aveScore),
-    title(title)
-{}
+FeedbackSummary::FeedbackSummary(const DTO_FeedbackSummary& feedbackSummary, const QString& title)
+    : eventId(feedbackSummary.eventId), subscribedNum(feedbackSummary.subscribedNum),
+      registeredNum(feedbackSummary.registeredNum), checkedNum(feedbackSummary.checkedNum),
+      aveScore(feedbackSummary.aveScore), title(title) {}
 
-Feedback::Feedback(const DTO_Feedback& feedback):id(feedback.id),eventId(feedback.eventId),score(feedback.score),content(feedback.content){}
-
+Feedback::Feedback(const DTO_Feedback& feedback)
+    : id(feedback.id), eventId(feedback.eventId), score(feedback.score), content(feedback.content) {
+}

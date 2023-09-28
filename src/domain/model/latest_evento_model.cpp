@@ -1,7 +1,6 @@
 #include "latest_evento_model.h"
 
-int LatestEventoModel::rowCount(const QModelIndex &parent) const
-{
+int LatestEventoModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
@@ -10,14 +9,13 @@ int LatestEventoModel::rowCount(const QModelIndex &parent) const
     return m_data.size();
 }
 
-QVariant LatestEventoModel::data(const QModelIndex &index, int role) const
-{
+QVariant LatestEventoModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
     const auto& element = m_data.at(index.row());
 
-    switch(role) {
+    switch (role) {
     case Role::Id:
         return element.id;
     case Role::Title:
@@ -37,9 +35,9 @@ QVariant LatestEventoModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash<int, QByteArray> LatestEventoModel::roleNames() const
-{
+QHash<int, QByteArray> LatestEventoModel::roleNames() const {
     static QHash<int, QByteArray> roles;
+
     if (roles.isEmpty()) {
         roles.insert(Id, "id");
         roles.insert(Title, "title");
@@ -51,23 +49,21 @@ QHash<int, QByteArray> LatestEventoModel::roleNames() const
     return roles;
 }
 
-void LatestEventoModel::resetModel(std::vector<LatestEvento> model)
-{
+void LatestEventoModel::resetModel(std::vector<LatestEvento>&& model) {
     std::lock_guard<std::mutex> lock(m_mutex);
+
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
 }
 
-LatestEventoModel *LatestEventoModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+LatestEventoModel* LatestEventoModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
     return pInstance;
 }
 
-LatestEventoModel *LatestEventoModel::getInstance()
-{
+LatestEventoModel* LatestEventoModel::getInstance() {
     static LatestEventoModel singleton;
     return &singleton;
 }

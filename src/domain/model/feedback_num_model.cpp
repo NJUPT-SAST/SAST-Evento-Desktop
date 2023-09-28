@@ -1,20 +1,17 @@
 #include "feedback_num_model.h"
 
-FeedbackNumModel *FeedbackNumModel::getInstance()
-{
+FeedbackNumModel* FeedbackNumModel::getInstance() {
     static FeedbackNumModel instance;
     return &instance;
 }
 
-FeedbackNumModel *FeedbackNumModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+FeedbackNumModel* FeedbackNumModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
     return pInstance;
 }
 
-int FeedbackNumModel::rowCount(const QModelIndex &parent) const
-{
+int FeedbackNumModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
@@ -23,14 +20,13 @@ int FeedbackNumModel::rowCount(const QModelIndex &parent) const
     return m_data.size();
 }
 
-QVariant FeedbackNumModel::data(const QModelIndex &index, int role) const
-{
+QVariant FeedbackNumModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
     const auto& element = m_data.at(index.row());
 
-    switch(role) {
+    switch (role) {
     case Role::EventId:
         return element.eventId;
     case Role::Title:
@@ -44,9 +40,9 @@ QVariant FeedbackNumModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash<int, QByteArray> FeedbackNumModel::roleNames() const
-{
+QHash<int, QByteArray> FeedbackNumModel::roleNames() const {
     static QHash<int, QByteArray> roles;
+
     if (roles.isEmpty()) {
         roles.insert(EventId, "eventId");
         roles.insert(Title, "title");
@@ -55,9 +51,9 @@ QHash<int, QByteArray> FeedbackNumModel::roleNames() const
     return roles;
 }
 
-void FeedbackNumModel::resetModel(std::vector<FeedbackNum> model)
-{
+void FeedbackNumModel::resetModel(std::vector<FeedbackNum>&& model) {
     std::lock_guard<std::mutex> lock(m_mutex);
+
     beginResetModel();
     m_data = std::move(model);
     endResetModel();

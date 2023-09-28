@@ -1,13 +1,12 @@
 #include "En.h"
 
-En::En(QObject *parent)
-    : Lang{parent}
-{
+En::En(QObject* parent) : Lang{parent} {
     setObjectName("En");
 
     // MainWindow
     lang_hint("HINT");
-    lang_hint_info("SAST Evento has been hidden to the tray. Click the tray to activate the window again.");
+    lang_hint_info(
+        "SAST Evento has been hidden to the tray. Click the tray to activate the window again.");
     lang_plaza("Evento Plaza");
     lang_schedule("Schedule");
     lang_department_evento("Department Evento");
@@ -54,7 +53,8 @@ En::En(QObject *parent)
     lang_register("Register");
     lang_cancellation("Cancellation");
     lang_register_success("Register Succeed");
-    lang_subscribe_hint("After you subscribe, WeChat Mini Program\nwill notify you before the event starts");
+    lang_subscribe_hint(
+        "After you subscribe, WeChat Mini Program\nwill notify you before the event starts");
 
     // my page
     lang_history("History");

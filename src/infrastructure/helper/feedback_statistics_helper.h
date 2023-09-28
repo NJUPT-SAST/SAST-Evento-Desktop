@@ -5,8 +5,7 @@
 
 struct FeedbackSummary;
 
-class FeedbackStatisticsHelper : public QObject
-{
+class FeedbackStatisticsHelper : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(FeedbackStatisticsHelper)
     QML_SINGLETON
@@ -18,11 +17,11 @@ class FeedbackStatisticsHelper : public QObject
     Q_PROPERTY(QString aveScore MEMBER m_aveScore NOTIFY aveScoreChanged)
 
 public:
-    static FeedbackStatisticsHelper *getInstance();
+    static FeedbackStatisticsHelper* getInstance();
 
-    static FeedbackStatisticsHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static FeedbackStatisticsHelper* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 
-    void updateFeedbackStatistics(const FeedbackSummary &e);
+    void updateFeedbackStatistics(const FeedbackSummary& e);
 
 private:
     FeedbackStatisticsHelper() = default;

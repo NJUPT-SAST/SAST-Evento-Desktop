@@ -1,8 +1,8 @@
 #ifndef DTO_USER_H
 #define DTO_USER_H
 
-#include "types.h"
 #include "permission.h"
+#include "types.h"
 
 struct DTO_User {
     UserID id;

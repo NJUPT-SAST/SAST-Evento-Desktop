@@ -3,8 +3,7 @@
 
 #include <QStringList>
 
-struct User
-{
+struct User {
     QString id;
     QString name;
     QString avatar;

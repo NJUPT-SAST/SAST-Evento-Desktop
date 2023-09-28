@@ -5,8 +5,7 @@
 
 struct DTO_Evento;
 
-struct Schedule
-{
+struct Schedule {
     EventoID id;
     QString title;
     EventState state;

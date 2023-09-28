@@ -1,8 +1,6 @@
 #include "Zh.h"
 
-Zh::Zh(QObject *parent)
-    : Lang{parent}
-{
+Zh::Zh(QObject* parent) : Lang{parent} {
     setObjectName("Zh");
 
     // MainWindow

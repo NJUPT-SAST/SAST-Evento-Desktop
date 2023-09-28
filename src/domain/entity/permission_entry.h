@@ -3,8 +3,7 @@
 
 #include <QStringList>
 
-struct PermissionEntry
-{
+struct PermissionEntry {
     int id;
     int eventId;
     QStringList methodAllowed;

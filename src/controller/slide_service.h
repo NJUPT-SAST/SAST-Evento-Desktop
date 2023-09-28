@@ -1,15 +1,17 @@
 #ifndef SLIDESERVICE_H
 #define SLIDESERVICE_H
 
-#include <slide.h>
+#include "slide.h"
+
 #include <shared_mutex>
 
-class SlideService
-{
+class SlideService {
     std::shared_mutex mutex;
     std::vector<Slide> slides;
+
 private:
     SlideService() = default;
+
 public:
     static SlideService& getInstance() {
         static SlideService singleton;

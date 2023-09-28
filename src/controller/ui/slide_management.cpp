@@ -1,23 +1,21 @@
 #include "slide_management.h"
-#include "slide_model.h"
 #include "repository.h"
+#include "slide_model.h"
 
 // deprecated
 
-void SlideManagementController::loadAllSlide()
-{
+void SlideManagementController::loadAllSlide() {
     return emit loadAllSlideSuccess();
 }
 
-void SlideManagementController::deleteSlide(const int slideId)
-{
+void SlideManagementController::deleteSlide(const int slideId) {
     SlideModel::getInstance()->removeById(slideId);
 
     // TODO 请求删除部分
     return emit deleteSlideSuccess();
 }
 
-SlideManagementController *SlideManagementController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+SlideManagementController* SlideManagementController::create(QQmlEngine* qmlEngine,
+                                                             QJSEngine* jsEngine) {
     return new SlideManagementController();
 }
