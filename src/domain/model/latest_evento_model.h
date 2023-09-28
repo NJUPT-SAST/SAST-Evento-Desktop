@@ -34,8 +34,6 @@ private:
 
     std::vector<LatestEvento> m_data;
 
-    std::mutex m_mutex;
-
 public:
     static LatestEventoModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
     static LatestEventoModel* getInstance();

@@ -45,7 +45,10 @@ FluScrollablePage {
                                        }))
             }
             tree_view.updateData(departmentArr)
-            DepartmentEventsController.loadSubscribedDepartment()
+            if (UserHelper.permission === 1)
+                statusMode = FluStatusViewType.Success
+            else
+                DepartmentEventsController.loadSubscribedDepartment()
         }
     }
 

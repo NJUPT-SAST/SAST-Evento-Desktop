@@ -5,7 +5,6 @@ import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import Qt.labs.platform
 import QtCore
-import Qt.labs.settings 1.0
 import FluentUI
 import SAST_Evento
 import "../imports"
@@ -95,7 +94,7 @@ CustomWindow {
         FluPaneItem {
             id: item_departmentevents
             title: lang.lang_department_evento
-            icon: FluentIcons.Calendar
+            icon: FluentIcons.GroupList
             onTap: {
                 nav_view.push("qrc:/qml/page/T_DepartmentEvents.qml")
             }
@@ -106,7 +105,7 @@ CustomWindow {
 id: item_schedule
 count: 9
 title: lang.lang_schedule
-icon: FluentIcons.ReadingList
+icon: FluentIcons.CheckList
 onTap: {
 nav_view.push("qrc:/qml/page/T_Schedule.qml")}}', items_original)
             children.push(adminItems)
@@ -122,7 +121,7 @@ nav_view.push("qrc:/qml/page/T_Calendar.qml")}}', items_original)
             var adminItems2 = Qt.createQmlObject('import FluentUI;
 FluPaneItem {
 title: lang.lang_user_feedback
-icon: FluentIcons.Feedback
+icon: FluentIcons.Comment
 onTap: {
 nav_view.push("qrc:/qml/page/T_Feedback.qml")}}', items_original)
             children.push(adminItems1)
