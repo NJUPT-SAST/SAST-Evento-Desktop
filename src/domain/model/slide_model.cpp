@@ -44,16 +44,12 @@ QHash<int, QByteArray> SlideModel::roleNames() const {
 }
 
 void SlideModel::resetModel(std::vector<Slide>&& model) {
-    std::lock_guard<std::mutex> lock(m_mutex);
-
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
 }
 
 void SlideModel::removeById(const int id) {
-    std::lock_guard<std::mutex> lock(m_mutex);
-
     beginResetModel();
     m_data.erase(
         std::remove_if(m_data.begin(), m_data.end(), [id](const auto& e) { return e.id == id; }),

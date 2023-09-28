@@ -37,7 +37,6 @@ QHash<int, QByteArray> UserBriefModel::roleNames() const {
 }
 
 void UserBriefModel::resetModel(std::vector<UserBrief>&& model) {
-    std::lock_guard<std::mutex> lock(m_mutex);
     beginResetModel();
     m_data = std::move(model);
     endResetModel();

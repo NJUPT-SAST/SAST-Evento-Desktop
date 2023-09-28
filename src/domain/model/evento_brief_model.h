@@ -35,8 +35,6 @@ private:
 
     std::vector<EventoBrief> m_data;
 
-    std::mutex m_mutex;
-
 public:
     static EventoBriefModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
     static EventoBriefModel* getInstance();

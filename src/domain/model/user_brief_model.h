@@ -30,8 +30,6 @@ private:
 
     std::vector<UserBrief> m_data;
 
-    std::mutex m_mutex;
-
 public:
     static UserBriefModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
     static UserBriefModel* getInstance();

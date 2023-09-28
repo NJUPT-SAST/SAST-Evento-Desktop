@@ -52,8 +52,6 @@ QHash<int, QByteArray> TypeModel::roleNames() const {
 }
 
 void TypeModel::resetModel(std::vector<EventType>&& model) {
-    std::lock_guard<std::mutex> lock(m_mutex);
-
     beginResetModel();
     m_data = std::move(model);
     endResetModel();

@@ -284,6 +284,7 @@ FluScrollablePage {
                     id: item_mouse
                     anchors.fill: parent
                     hoverEnabled: true
+                    propagateComposedEvents: true
                     onClicked: {
                         EventoHelper.id = model.id
                         MainWindow.window.pushPage(

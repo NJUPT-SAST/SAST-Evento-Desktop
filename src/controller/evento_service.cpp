@@ -7,6 +7,7 @@
 #include "evento_brief_model.h"
 #include "evento_edit.h"
 #include "evento_helper.h"
+#include "user_helper.h"
 #include "evento_info.h"
 #include "feedback_service.h"
 #include "latest_evento_model.h"
@@ -269,6 +270,8 @@ void EventoService::load(EventoID id) {
             return true;
         }),
         getRepo()->getUserParticipate(id).then([=](EventoResult<ParticipationStatus> result) {
+            if (UserHelper::getInstance()->property("permission").toInt() == 1)
+                return true;
             if (!result) {
                 EventoInfoController::getInstance()->onLoadFailure(result.message());
                 return false;
@@ -291,7 +294,8 @@ void EventoService::load(EventoID id) {
                 return;
         EventoInfoController::getInstance()->onLoadFinished();
     });
-    FeedbackService::getInstance().load_UserFeedback(id);
+    if (UserHelper::getInstance()->property("permission").toInt() != 1)
+        FeedbackService::getInstance().load_UserFeedback(id);
 }
 
 DTO_Evento EventoService::edit(EventoID id) {

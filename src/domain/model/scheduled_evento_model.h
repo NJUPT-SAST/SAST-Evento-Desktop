@@ -38,8 +38,6 @@ private:
 
     std::vector<Schedule> m_data;
 
-    std::mutex m_mutex;
-
 public:
     static ScheduledEventoModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
     static ScheduledEventoModel* getInstance();

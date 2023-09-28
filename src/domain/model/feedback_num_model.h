@@ -31,8 +31,6 @@ private:
 
     std::vector<FeedbackNum> m_data;
 
-    std::mutex m_mutex;
-
 public:
     static FeedbackNumModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
     static FeedbackNumModel* getInstance();
