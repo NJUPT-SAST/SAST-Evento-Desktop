@@ -5,8 +5,7 @@
 
 struct Slide;
 
-class SlideHelper : public QObject
-{
+class SlideHelper : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(SlideHelper)
     QML_SINGLETON
@@ -18,11 +17,12 @@ class SlideHelper : public QObject
     Q_PROPERTY(bool isEdit MEMBER m_isEdit NOTIFY isEditChange)
 
 public:
-    static SlideHelper *getInstance();
+    static SlideHelper* getInstance();
 
-    static SlideHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static SlideHelper* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 
-    void updateSlide(const int &slideId, const QString &title, const QString &link, const QString &url);
+    void updateSlide(const int& slideId, const QString& title, const QString& link,
+                     const QString& url);
 
 private:
     SlideHelper() = default;

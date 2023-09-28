@@ -3,8 +3,7 @@
 
 #include <QtQml>
 
-class SlideManagementController : public QObject
-{
+class SlideManagementController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(SlideManagementController)
     QML_SINGLETON
@@ -22,7 +21,7 @@ signals:
 
 public:
     SlideManagementController() = default;
-    static SlideManagementController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static SlideManagementController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // SLIDE_MANAGEMENT_H

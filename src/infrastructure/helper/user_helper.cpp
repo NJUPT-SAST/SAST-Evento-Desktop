@@ -1,21 +1,18 @@
 #include "user_helper.h"
 #include "user.h"
 
-UserHelper *UserHelper::getInstance()
-{
+UserHelper* UserHelper::getInstance() {
     static UserHelper instance;
     return &instance;
 }
 
-UserHelper *UserHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+UserHelper* UserHelper::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
     return pInstance;
 }
 
-void UserHelper::updateUser(const User &user)
-{
+void UserHelper::updateUser(const User& user) {
     setProperty("id", user.id);
     setProperty("name", user.name);
     setProperty("avatar", user.avatar);
@@ -24,4 +21,3 @@ void UserHelper::updateUser(const User &user)
     setProperty("email", user.email);
     setProperty("link", user.link);
 }
-

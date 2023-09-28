@@ -6,8 +6,7 @@
 
 #include "user_brief.h"
 
-class UserBriefModel : public QAbstractListModel
-{
+class UserBriefModel : public QAbstractListModel {
     Q_OBJECT
     QML_SINGLETON
     QML_NAMED_ELEMENT(UserBriefModel)
@@ -18,16 +17,13 @@ public:
         EMail,
     };
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex& index, int role) const override;
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(std::vector<UserBrief> model);
-
-    UserBriefModel(const UserBriefModel&) = delete;
-    UserBriefModel& operator=(const UserBriefModel&) = delete;
+    void resetModel(std::vector<UserBrief>&& model);
 
 private:
     UserBriefModel() = default;
@@ -37,8 +33,8 @@ private:
     std::mutex m_mutex;
 
 public:
-    static UserBriefModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
-    static UserBriefModel *getInstance();
+    static UserBriefModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
+    static UserBriefModel* getInstance();
 };
 
 #endif // USERBRIEFMODEL_H

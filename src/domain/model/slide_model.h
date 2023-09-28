@@ -6,8 +6,7 @@
 
 #include "slide.h"
 
-class SlideModel : public QAbstractListModel
-{
+class SlideModel : public QAbstractListModel {
     Q_OBJECT
     QML_SINGLETON
     QML_NAMED_ELEMENT(SlideModel)
@@ -20,13 +19,13 @@ public:
         Url,
     };
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(std::vector<Slide> model);
+    void resetModel(std::vector<Slide>&& model);
 
     void removeById(const int id);
 
@@ -38,8 +37,8 @@ private:
     std::mutex m_mutex;
 
 public:
-    static SlideModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
-    static SlideModel *getInstance();
+    static SlideModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
+    static SlideModel* getInstance();
 };
 
 #endif // SLIDE_MODEL_H

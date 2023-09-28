@@ -2,6 +2,7 @@
 #define FEEDBACK_H
 
 #include "types.h"
+
 struct DTO_Feedback;
 
 struct Feedback

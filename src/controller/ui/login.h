@@ -1,11 +1,10 @@
 #ifndef LOGIN_CONTROLLER_H
 #define LOGIN_CONTROLLER_H
 
-#include <QtQml>
 #include <QHttpServer>
+#include <QtQml>
 
-class LoginController : public QObject
-{
+class LoginController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(LoginController)
     QML_SINGLETON
@@ -23,7 +22,7 @@ signals:
     void loadPermissionErrorEvent(QString message);
 
 public:
-    static LoginController *create(QQmlEngine *, QJSEngine *);
+    static LoginController* create(QQmlEngine*, QJSEngine*);
 
     Q_INVOKABLE void beginLoginViaSastLink();
     Q_INVOKABLE void loadPermissionList();

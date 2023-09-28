@@ -15,18 +15,17 @@ public:
 
 signals:
     void loadGalleryUrlListSuccessEvent();
-    void loadGalleryUrlListErrorEvent(const QString &message);
+    void loadGalleryUrlListErrorEvent(const QString& message);
 
     void loadGalleryDirImgInfoSuccessEvent();
-    void loadGalleryDirImgInfoErrorEvent(const QString &message);
+    void loadGalleryDirImgInfoErrorEvent(const QString& message);
 
     void deleteImgRequestSuccessEvent();
-    void deleteImgRequestErrorEvent(const QString &message);
-
+    void deleteImgRequestErrorEvent(const QString& message);
 
 public:
     GalleryController() = default;
-    static GalleryController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static GalleryController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // GALLERY_CONTROLLER_H

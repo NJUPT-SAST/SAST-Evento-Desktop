@@ -3,8 +3,7 @@
 
 #include <QtQml>
 
-class GalleryHelper : public QObject
-{
+class GalleryHelper : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(GalleryHelper)
     QML_SINGLETON
@@ -15,12 +14,12 @@ class GalleryHelper : public QObject
     Q_PROPERTY(QString dirImgInfo MEMBER m_dirImgInfo NOTIFY dirImgInfoChanged)
 
 public:
-    static GalleryHelper *getInstance();
+    static GalleryHelper* getInstance();
 
-    static GalleryHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static GalleryHelper* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 
-    void updateDirJson(const QString &dirJson);
-    void updateDirImgInfo(const QString &dirImgInfo);
+    void updateDirJson(const QString& dirJson);
+    void updateDirImgInfo(const QString& dirImgInfo);
 
     Q_INVOKABLE void removeByIndex(int index);
 

@@ -5,8 +5,7 @@
 
 struct DTO_Slide;
 
-struct Slide
-{
+struct Slide {
     int id;
     QString title;
     QString link;

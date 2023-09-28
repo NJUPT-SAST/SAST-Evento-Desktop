@@ -1,29 +1,28 @@
 #ifndef FEEDBACKMODEL_H
 #define FEEDBACKMODEL_H
 
+#include "feedback.h"
 #include <QAbstractListModel>
 #include <QtQml>
-#include "feedback.h"
 
-class FeedbackModel : public QAbstractListModel
-{
+class FeedbackModel : public QAbstractListModel {
     Q_OBJECT
     QML_SINGLETON
     QML_NAMED_ELEMENT(FeedbackModel)
 
 public:
     enum Role {
-        Score = Qt::DisplayRole + 1,
+        Score = Qt::UserRole + 1,
         Content,
     };
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex& index, int role) const override;
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(std::vector<Feedback> model);
+    void resetModel(std::vector<Feedback>&& model);
 
 private:
     FeedbackModel() = default;
@@ -33,8 +32,8 @@ private:
     std::mutex m_mutex;
 
 public:
-    static FeedbackModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
-    static FeedbackModel *getInstance();
+    static FeedbackModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
+    static FeedbackModel* getInstance();
 };
 
 #endif // FEEDBACKMODEL_H

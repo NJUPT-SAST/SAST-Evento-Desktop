@@ -2,10 +2,10 @@
 #define FEEDBACK_SUMMARY_H
 
 #include "types.h"
+
 struct DTO_FeedbackSummary;
 
-struct FeedbackSummary
-{
+struct FeedbackSummary {
     EventoID eventId;
     QString title;
     int subscribedNum;

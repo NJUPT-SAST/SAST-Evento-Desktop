@@ -3,19 +3,17 @@
 
 #include <QString>
 #include <shared_mutex>
-#include "types.h"
 
-class InformationService
-{
+class InformationService {
     std::shared_mutex mutex;
 
     QString departmentJson;
-    std::vector<EventType> types;
     QString locationJson;
     QString subscribedDepartmentJson;
 
 private:
     InformationService() = default;
+
 public:
     static InformationService& getInstance() {
         static InformationService singleton;

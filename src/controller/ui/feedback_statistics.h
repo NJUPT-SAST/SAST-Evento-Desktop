@@ -1,8 +1,8 @@
 #ifndef FEEDBACK_STATISTICS_CONTROLLER_H
 #define FEEDBACK_STATISTICS_CONTROLLER_H
 
-#include <QtQml>
 #include "types.h"
+#include <QtQml>
 
 class FeedbackStatisticsController : public QObject {
     Q_OBJECT
@@ -22,6 +22,7 @@ signals:
 
 private:
     FeedbackStatisticsController() = default;
+
 public:
     void onLoadSummaryFinished(const int sum) {
         emit loadSummarySuccessEvent(sum);
@@ -36,8 +37,8 @@ public:
         emit loadFeedbackErrorEvent(msg);
     }
 
-    static FeedbackStatisticsController *getInstance();
-    static FeedbackStatisticsController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static FeedbackStatisticsController* getInstance();
+    static FeedbackStatisticsController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // FEEDBACKSTATISTICSCONTROLLER_H

@@ -6,16 +6,14 @@
 
 #include "scheduled_evento.h"
 
-class ScheduledEventoModel : public QAbstractListModel
-{
+class ScheduledEventoModel : public QAbstractListModel {
     Q_OBJECT
     QML_SINGLETON
     QML_NAMED_ELEMENT(ScheduledEventoModel)
 
 public:
-    enum Role
-    {
-        Id = Qt::DisplayRole + 1,
+    enum Role {
+        Id = Qt::UserRole + 1,
         Title,
         State,
         Department,
@@ -27,16 +25,13 @@ public:
         HasFeedback,
     };
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex& index, int role) const override;
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(std::vector<Schedule> model);
-
-    ScheduledEventoModel(const ScheduledEventoModel &) = delete;
-    ScheduledEventoModel &operator=(const ScheduledEventoModel &) = delete;
+    void resetModel(std::vector<Schedule>&& model);
 
 private:
     ScheduledEventoModel() = default;
@@ -46,8 +41,8 @@ private:
     std::mutex m_mutex;
 
 public:
-    static ScheduledEventoModel *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
-    static ScheduledEventoModel *getInstance();
+    static ScheduledEventoModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
+    static ScheduledEventoModel* getInstance();
 };
 
 #endif // SCHEDULED_EVENTO_MODEL_H

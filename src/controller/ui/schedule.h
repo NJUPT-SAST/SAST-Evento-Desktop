@@ -5,8 +5,7 @@
 
 #include <QtQml>
 
-class ScheduleController : public QObject
-{
+class ScheduleController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(ScheduleController)
     QML_SINGLETON
@@ -14,7 +13,7 @@ class ScheduleController : public QObject
 public:
     Q_INVOKABLE void loadRegisteredSchedule();
     Q_INVOKABLE void loadSubscribedSchedule();
-    Q_INVOKABLE void check(const int eventId, const QString &code);
+    Q_INVOKABLE void check(const int eventId, const QString& code);
 
 signals:
     void loadRegisteredScheduleSuccessEvent();
@@ -28,6 +27,7 @@ signals:
 
 private:
     ScheduleController() = default;
+
 public:
     void onLoadRegisteredFinished() {
         emit loadRegisteredScheduleSuccessEvent();
@@ -47,9 +47,10 @@ public:
     void checkFailure(const QString& msg) {
         emit checkErrorEvent(msg);
     }
+
 public:
-    static ScheduleController *getInstance();
-    static ScheduleController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static ScheduleController* getInstance();
+    static ScheduleController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // SCHEDULE_CONTROLLER_H

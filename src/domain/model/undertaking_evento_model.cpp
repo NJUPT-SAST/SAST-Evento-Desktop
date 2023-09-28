@@ -1,8 +1,6 @@
 #include "undertaking_evento_model.h"
-#include "evento_service.h"
 
-int UndertakingEventoModel::rowCount(const QModelIndex &parent) const
-{
+int UndertakingEventoModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
@@ -11,8 +9,7 @@ int UndertakingEventoModel::rowCount(const QModelIndex &parent) const
     return m_data.size();
 }
 
-QVariant UndertakingEventoModel::data(const QModelIndex &index, int role) const
-{
+QVariant UndertakingEventoModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
@@ -38,9 +35,9 @@ QVariant UndertakingEventoModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QHash<int, QByteArray> UndertakingEventoModel::roleNames() const
-{
+QHash<int, QByteArray> UndertakingEventoModel::roleNames() const {
     static QHash<int, QByteArray> roles;
+
     if (roles.isEmpty()) {
         roles.insert(Id, "id");
         roles.insert(Title, "title");
@@ -52,22 +49,19 @@ QHash<int, QByteArray> UndertakingEventoModel::roleNames() const
     return roles;
 }
 
-void UndertakingEventoModel::resetModel(std::vector<UndertakingEvento>&& model)
-{
+void UndertakingEventoModel::resetModel(std::vector<UndertakingEvento>&& model) {
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
 }
 
-UndertakingEventoModel *UndertakingEventoModel::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+UndertakingEventoModel* UndertakingEventoModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
     return pInstance;
 }
 
-UndertakingEventoModel *UndertakingEventoModel::getInstance()
-{
+UndertakingEventoModel* UndertakingEventoModel::getInstance() {
     static UndertakingEventoModel singleton;
     return &singleton;
 }

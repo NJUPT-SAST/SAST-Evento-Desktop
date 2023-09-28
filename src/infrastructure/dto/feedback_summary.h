@@ -5,8 +5,7 @@
 
 #include <dto/feedback.h>
 
-struct DTO_FeedbackSummary
-{
+struct DTO_FeedbackSummary {
     EventoID eventId;
     int subscribedNum;
     int registeredNum;

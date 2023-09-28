@@ -4,8 +4,8 @@
 #include <QString>
 
 class ImageManagement {
-	QString GetImage(int num);
-	int storeImage(QString url);
+    QString GetImage(int num);
+    int storeImage(QString url);
 };
 
 #endif // IMAGE_H

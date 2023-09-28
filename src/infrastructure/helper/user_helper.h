@@ -1,9 +1,9 @@
 #ifndef USERHELPER_H
 #define USERHELPER_H
 
-#include <QtQml>
-#include <QStringList>
 #include <QString>
+#include <QStringList>
+#include <QtQml>
 
 struct User;
 
@@ -22,17 +22,16 @@ class UserHelper : public QObject {
     Q_PROPERTY(int permission MEMBER m_permission NOTIFY permissionChanged)
 
 public:
-    enum Permission {
-        VisitorPermission = 1,
-        UserPermission,
-        AdminPermisson
-    };
+    enum Permission { VisitorPermission = 1, UserPermission, AdminPermisson };
 
-    static UserHelper *getInstance();
+    static UserHelper* getInstance();
+    static UserHelper* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 
-    static UserHelper *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
-
-    void updateUser(const User &user);
+    void updateUser(const User& user);
+public slots:
+    void setPermission(Permission permission) {
+        setProperty("permission", permission);
+    }
 
 private:
     UserHelper() = default;

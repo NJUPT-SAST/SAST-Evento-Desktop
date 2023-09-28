@@ -1,22 +1,18 @@
 #include "evento_helper.h"
 #include "evento.h"
-#include "convertor.h"
 
-EventoHelper *EventoHelper::getInstance()
-{
+EventoHelper* EventoHelper::getInstance() {
     static EventoHelper instance;
     return &instance;
 }
 
-EventoHelper *EventoHelper::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
+EventoHelper* EventoHelper::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
     return pInstance;
 }
 
-void EventoHelper::update(const Evento &evento)
-{
+void EventoHelper::update(const Evento& evento) {
     setProperty("title", evento.title);
     setProperty("state", (int)evento.state);
     setProperty("eventTime", evento.eventTime);

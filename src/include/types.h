@@ -1,8 +1,8 @@
 #ifndef EVENTO_TYPES_H
 #define EVENTO_TYPES_H
 
-#include <QString>
 #include <QDateTime>
+#include <QString>
 #include <vector>
 
 using UserID = QString;
@@ -36,8 +36,7 @@ struct Department {
     QString name;
 };
 
-struct Location
-{
+struct Location {
     int id;
     QString locationName;
     int parentId;

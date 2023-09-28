@@ -5,12 +5,12 @@ void MyPageController::loadMyPageInfo() {
     EventoService::getInstance().load_History();
 }
 
-MyPageController *MyPageController::getInstance() {
+MyPageController* MyPageController::getInstance() {
     static MyPageController instance;
     return &instance;
 }
 
-MyPageController *MyPageController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
+MyPageController* MyPageController::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto instance = getInstance();
     QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
     return instance;

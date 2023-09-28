@@ -3,8 +3,7 @@
 
 #include <QtQml>
 
-class DepartmentEventsController : public QObject
-{
+class DepartmentEventsController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(DepartmentEventsController)
     QML_SINGLETON
@@ -27,6 +26,7 @@ signals:
 
 private:
     DepartmentEventsController() = default;
+
 public:
     void onLoadDepartmentsInfoFinished(const QString& departmentJson) {
         emit loadDepartmentsSuccessEvent(departmentJson);
@@ -53,8 +53,8 @@ public:
         emit subscribeErrorEvent(msg);
     }
 
-    static DepartmentEventsController *getInstance();
-    static DepartmentEventsController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static DepartmentEventsController* getInstance();
+    static DepartmentEventsController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // DEPARTMENT_EVENTS_H

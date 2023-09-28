@@ -3,8 +3,7 @@
 
 #include "types.h"
 
-struct DTO_Permission
-{
+struct DTO_Permission {
     QStringList allMethodName;
     EventoID eventId;
 };
