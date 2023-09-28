@@ -106,15 +106,11 @@ public:
     QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event);
 
     // adminFetch
-    QFuture<EventoResult<std::vector<DTO_Evento>>>
-        getQualifiedEvent(int type = -1, const std::vector<int>& dep = std::vector<int>(),
-                          const QDate& day = QDate());
-    QFuture<EventoResult<QStringList>> getActionStateList();
-    QFuture<EventoResult<QStringList>> getActionList();
     QFuture<EventoResult<std::vector<DTO_UserBrief>>> getEventManagerList(EventoID eventoId);
     QFuture<EventoResult<std::vector<DTO_UserBrief>>> getAdminUserList();
     QFuture<EventoResult<QString>> getAdminPermissionTreeData();
     QFuture<EventoResult<QString>> getManagerPermissionTreeData();
+    QFuture<EventoResult<QVariantList>> getAdminEvents(const QString& userId);
 
 private:
     EventoNetworkClient() = default;

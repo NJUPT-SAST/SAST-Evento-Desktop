@@ -227,29 +227,42 @@ void EventoService::load_History() {
 }
 
 void EventoService::load_Block(const QString& time) {
-    auto future =
+    auto future1 =
+        getRepo()->getAdminEvents(UserHelper::getInstance()->property("id").toString()).then([=](EventoResult<QVariantList> result) {
+            if (!result) {
+                CalendarController::getInstance()->onLoadAllFailure(result.message());
+                return QVariantList{-1};
+            }
+            return result.take();
+        });
+    auto future2 =
         getRepo()->getEventListByTime(time).then([=](EventoResult<std::vector<DTO_Evento>> result) {
             if (!result) {
                 CalendarController::getInstance()->onLoadAllFailure(result.message());
                 return;
             }
+            auto f(future1);
+            auto eventList = f.result();
+            if (eventList.contains(-1))
+                return;
             auto data = result.take();
+
             std::vector<EventoBlock> model;
             {
                 std::lock_guard lock(mutex);
                 blocks.clear();
                 for (auto& i : data) {
                     blocks.push_back(i.id);
-                    model.push_back(EventoBlock(i));
+                    model.push_back(EventoBlock(i, eventList));
                     stored[i.id] = std::move(i);
                 }
             }
             EventoBlockModel::getInstance()->resetModel(std::move(model));
             CalendarController::getInstance()->onLoadAllFinished();
-        });
+    });
 
     QtConcurrent::run([=]() {
-        auto f(future);
+        auto f(future1);
         f.waitForFinished();
     });
 }
@@ -451,8 +464,9 @@ EventoBrief::EventoBrief(const DTO_Evento& src)
     this->department = departmentConvertor(src.departments);
 }
 
-EventoBlock::EventoBlock(const DTO_Evento& src)
-    : id(src.id), title(src.title), time(periodConvertor(src.gmtEventStart, src.gmtEventEnd)) {
+EventoBlock::EventoBlock(const DTO_Evento& src, const QVariantList& eventList)
+    : id(src.id), title(src.title), time(periodConvertor(src.gmtEventStart, src.gmtEventEnd)),
+      editable(eventList.contains(src.id)) {
 
     auto gmtEventStart = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss");
     auto gmtEventEnd = QDateTime::fromString(src.gmtEventEnd, "yyyy-MM-dd hh:mm:ss");
