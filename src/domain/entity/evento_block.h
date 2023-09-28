@@ -15,7 +15,7 @@ struct EventoBlock {
     bool editable;
 
     EventoBlock() = default;
-    EventoBlock(const DTO_Evento&);
+    EventoBlock(const DTO_Evento&, const QVariantList&);
 };
 
 #endif // EVENTOBLOCK_H

@@ -72,16 +72,12 @@ struct Repository {
     virtual QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event) = 0;
 
     // admin-fetch
-    virtual QFuture<EventoResult<std::vector<DTO_Evento>>>
-        getQualifiedEvent(int type = -1, const std::vector<int>& dep = std::vector<int>(),
-                          const QDate& day = QDate()) = 0;
-    virtual QFuture<EventoResult<QStringList>> getActionStateList() = 0;
-    virtual QFuture<EventoResult<QStringList>> getActionList() = 0;
     virtual QFuture<EventoResult<std::vector<DTO_UserBrief>>>
         getEventManagerList(EventoID eventoId) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_UserBrief>>> getAdminUserList() = 0;
     virtual QFuture<EventoResult<QString>> getAdminPermissionTreeData() = 0;
     virtual QFuture<EventoResult<QString>> getManagerPermissionTreeData() = 0;
+    virtual QFuture<EventoResult<QVariantList>> getAdminEvents(const QString& userId) = 0;
 
     virtual ~Repository() = default;
 };

@@ -22,7 +22,11 @@ class UserHelper : public QObject {
     Q_PROPERTY(int permission MEMBER m_permission NOTIFY permissionChanged)
 
 public:
-    enum Permission { VisitorPermission = 1, UserPermission, AdminPermisson };
+    enum Permission {
+        VisitorPermission = 1,
+        UserPermission,
+        AdminPermisson,
+    };
 
     static UserHelper* getInstance();
     static UserHelper* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
@@ -36,7 +40,7 @@ public slots:
 private:
     UserHelper() = default;
 
-    QString m_id;
+    QString m_id = "B22011111"; // FIXME
     QString m_name;
     QString m_avatar;
     QStringList m_department;
