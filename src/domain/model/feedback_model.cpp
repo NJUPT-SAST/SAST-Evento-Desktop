@@ -37,8 +37,6 @@ QHash<int, QByteArray> FeedbackModel::roleNames() const {
 }
 
 void FeedbackModel::resetModel(std::vector<Feedback>&& model) {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    
     beginResetModel();
     m_data = std::move(model);
     endResetModel();

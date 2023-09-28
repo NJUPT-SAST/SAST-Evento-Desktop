@@ -120,9 +120,10 @@ FluScrollablePage {
                 date.setDate(date_picker.current.getDate() - 7)
                 date_picker.current = date
                 dateString = date2String(date)
-                date_picker.text = dateString
+                loadAllInfo(dateString)
             }
         }
+
         FluCalendarPicker {
             id: date_picker
             anchors {
@@ -135,6 +136,55 @@ FluScrollablePage {
                 loadAllInfo(dateString)
             }
         }
+        FluRectangle {
+            id: rec_date
+            height: 30
+            width: 120
+            radius: [4, 4, 4, 4]
+            anchors {
+                left: btn_left.right
+                verticalCenter: parent.verticalCenter
+            }
+            shadow: false
+            FluText {
+                id: text_date
+                text: dateString
+                anchors.centerIn: parent
+            }
+            Rectangle {
+                anchors.fill: parent
+                radius: 8
+                color: {
+                    if (FluTheme.dark) {
+                        if (item_mouse.containsMouse) {
+                            return Qt.rgba(1, 1, 1, 0.03)
+                        }
+                        return Qt.rgba(0, 0, 0, 0)
+                    } else {
+                        if (item_mouse.containsMouse) {
+                            return Qt.rgba(0, 0, 0, 0.03)
+                        }
+                        return Qt.rgba(0, 0, 0, 0)
+                    }
+                }
+            }
+            MouseArea {
+                id: item_mouse
+                anchors.fill: parent
+                hoverEnabled: true
+                propagateComposedEvents: true
+                onClicked: function (mouse) {
+                    mouse.accepted = false
+                }
+                onPressed: function (mouse) {
+                    mouse.accepted = false
+                }
+                onReleased: function (mouse) {
+                    mouse.accepted = false
+                }
+            }
+        }
+
         FluIconButton {
             id: btn_right
             iconSource: FluentIcons.ChevronRight
@@ -147,7 +197,7 @@ FluScrollablePage {
                 date.setDate(date_picker.current.getDate() + 7)
                 date_picker.current = date
                 dateString = date2String(date)
-                date_picker.text = dateString
+                loadAllInfo(dateString)
             }
         }
 

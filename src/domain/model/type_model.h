@@ -24,18 +24,15 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     void resetModel(std::vector<EventType>&& model);
+
     inline int getID(int index) {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        
         return m_data[index].id;
     }
 
 private:
-    explicit TypeModel() = default;
+    TypeModel() = default;
 
     std::vector<EventType> m_data;
-
-    std::mutex m_mutex;
 
 public:
     static TypeModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);

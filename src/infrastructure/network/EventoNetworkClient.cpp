@@ -593,6 +593,7 @@ register_object_member(DTO_FeedbackSummary, "feedbacks", feedbacks);
 declare_object(DTO_FeedbackSummary, object_member(DTO_FeedbackSummary, eventId),
                object_member(DTO_FeedbackSummary, aveScore),
                object_member(DTO_FeedbackSummary, subscribedNum),
+               object_member(DTO_FeedbackSummary, registeredNum),
                object_member(DTO_FeedbackSummary, checkedNum),
                object_member(DTO_FeedbackSummary, feedbacks));
 

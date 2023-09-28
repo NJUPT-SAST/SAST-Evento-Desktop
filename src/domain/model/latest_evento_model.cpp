@@ -50,8 +50,6 @@ QHash<int, QByteArray> LatestEventoModel::roleNames() const {
 }
 
 void LatestEventoModel::resetModel(std::vector<LatestEvento>&& model) {
-    std::lock_guard<std::mutex> lock(m_mutex);
-
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
