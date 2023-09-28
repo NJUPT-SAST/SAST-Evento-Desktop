@@ -1024,45 +1024,6 @@ QFuture<EventoResult<bool>> EventoNetworkClient::cancelEvent(EventoID event) {
     });
 }
 
-// adminFetch
-QFuture<EventoResult<std::vector<DTO_Evento>>>
-    EventoNetworkClient::getQualifiedEvent(int type, const std::vector<int>& dep,
-                                           const QDate& day) {
-    QUrlQuery params;
-    if (type != -1)
-        params.addQueryItem("typeId", QString::number(type));
-    if (!dep.empty()) {
-        QString departmentIds = QString::number(dep[0]);
-        for (int i = 1; i < dep.size(); ++i) {
-            departmentIds += QStringLiteral(",") + QString::number(dep[i]);
-        }
-        params.addQueryItem("departmentId", departmentIds);
-    }
-    if (day.isValid())
-        params.addQueryItem("time", day.toString("yyyy-MM-dd"));
-    auto url = endpoint(QStringLiteral("/event/list"));
-    auto future = this->post(url, params);
-    return QtConcurrent::run([=]() -> EventoResult<std::vector<DTO_Evento>> {
-        auto f(future);
-        auto result = f.takeResult();
-        if (result) {
-            return asEventoDTOArray(result.take());
-        } else {
-            return {result.code(), result.message()};
-        }
-    });
-}
-
-QFuture<EventoResult<QStringList>> EventoNetworkClient::getActionStateList() {
-    // TODO: implement
-    return {};
-}
-
-QFuture<EventoResult<QStringList>> EventoNetworkClient::getActionList() {
-    // TODO: implement
-    return {};
-}
-
 register_object_member(DTO_UserBrief, "userId", userId);
 register_object_member(DTO_UserBrief, "email", email);
 declare_object(DTO_UserBrief, object_member(DTO_UserBrief, userId),
@@ -1123,4 +1084,24 @@ QFuture<EventoResult<QString>> EventoNetworkClient::getAdminPermissionTreeData()
 QFuture<EventoResult<QString>> EventoNetworkClient::getManagerPermissionTreeData() {
     // TODO: implement
     return {};
+}
+
+QFuture<EventoResult<QVariantList>> EventoNetworkClient::getAdminEvents(const QString& userId) {
+    auto url = endpoint(QStringLiteral("/permission/manager/events"), [=](QUrlQuery& params) {
+        params.addQueryItem("userId", userId);
+    });
+    auto future = this->get(url);
+    return QtConcurrent::run([=]() -> EventoResult<QVariantList> {
+        auto f(future);
+        auto result = f.takeResult();
+        if (result) {
+            auto rootValue = result.take();
+            if (rootValue.isArray())
+                return rootValue.toArray().toVariantList();
+            else
+                return QVariantList{};
+        } else {
+            return {result.code(), result.message()};
+        }
+    });
 }
