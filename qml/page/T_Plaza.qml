@@ -91,6 +91,7 @@ FluScrollablePage {
             target: page
             function onListReady() {
                 carousel.model = arr
+                loader.sourceComponent = undefined
             }
         }
 

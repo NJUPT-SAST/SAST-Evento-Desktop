@@ -24,6 +24,7 @@ FluScrollablePage {
     Connections {
         target: EventoInfoController
         function onLoadEventoSuccessEvent() {
+            arr = []
             loader_slide.sourceComponent = slide_com
             page.listReady()
             statusMode = FluStatusViewType.Success
@@ -64,6 +65,7 @@ FluScrollablePage {
         target: page
         function onListReady() {
             carousel.model = arr
+            loader_slide.sourceComponent = undefined
         }
     }
 
