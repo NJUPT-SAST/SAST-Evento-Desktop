@@ -1,5 +1,5 @@
 #include "user_helper.h"
-#include "user.h"
+#include "dto/user.h"
 
 UserHelper* UserHelper::getInstance() {
     static UserHelper instance;
@@ -12,12 +12,8 @@ UserHelper* UserHelper::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     return pInstance;
 }
 
-void UserHelper::updateUser(const User& user) {
-    setProperty("id", user.id);
-    setProperty("name", user.name);
-    setProperty("avatar", user.avatar);
-    setProperty("department", user.department);
-    setProperty("description", user.description);
+void UserHelper::updateUser(const DTO_User& user) {
+    setProperty("userId", user.userId);
+    setProperty("wechatId", user.wechatId);
     setProperty("email", user.email);
-    setProperty("link", user.link);
 }

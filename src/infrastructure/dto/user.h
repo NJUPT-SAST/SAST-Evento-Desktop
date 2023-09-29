@@ -5,11 +5,9 @@
 #include "types.h"
 
 struct DTO_User {
-    UserID id;
-    QString name;
-    Image avatar;
+    UserID userId;
+    QString wechatId;
     QString email;
-    QString description;
     std::vector<DTO_Permission> permission;
     std::vector<Department> department;
 };

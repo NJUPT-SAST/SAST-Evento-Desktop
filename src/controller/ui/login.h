@@ -27,13 +27,6 @@ public:
     Q_INVOKABLE void beginLoginViaSastLink();
     Q_INVOKABLE void loadPermissionList();
 
-    void onLoadPermissionFinished() {
-        emit loadPermissionSuccessEvent();
-    }
-    void onLoadPermissionFailure(const QString& msg) {
-        emit loadPermissionErrorEvent(msg);
-    }
-
     LoginController();
 };
 

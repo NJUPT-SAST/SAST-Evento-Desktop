@@ -204,6 +204,40 @@ static QStringList asStringList(const QJsonValue& value) {
 }
 
 // userFetch
+register_object_member(DTO_User, "userId", userId);
+register_object_member(DTO_User, "wechatId", wechatId);
+register_object_member(DTO_User, "email", email);
+declare_object(DTO_User, object_member(DTO_User, userId),
+               object_member(DTO_User, wechatId),
+               object_member(DTO_User, email));
+QFuture<EventoResult<DTO_User>> EventoNetworkClient::loginViaSastLink(const QString& code) {
+    auto url = endpoint(QStringLiteral("/user/login/link"));
+    QUrlQuery params;
+    params.addQueryItem("code", code);
+    params.addQueryItem("type", "0");
+    auto future = this->post(url, params);
+    return QtConcurrent::run([=]() -> EventoResult<DTO_User> {
+        auto f(future);
+        auto result = f.takeResult();
+        if (result) {
+            auto rootValue = result.take();
+            DTO_User dto;
+            if (rootValue.isObject()) {
+                this->tokenBytes = rootValue["token"].toString().toLatin1();
+                declare_top_deserialiser(dto, deserialiser_holder);
+                JsonDeserialise::JsonDeserialiser deserialiser(deserialiser_holder);
+                deserialiser.deserialise(rootValue["userInfo"].toObject());
+            } else {
+                return EventoException(EventoExceptionCode::JsonError,
+                                       QStringLiteral("expect object or null but got other"));
+            }
+            return dto;
+        } else {
+            return {result.code(), result.message()};
+        }
+    });
+}
+
 QFuture<EventoResult<QStringList>> EventoNetworkClient::getAdminPermission() {
     auto url = endpoint(QStringLiteral("/permission/admin/self"));
     auto future = this->get(url);
