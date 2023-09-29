@@ -1,16 +1,12 @@
 #ifndef USER_H
 #define USER_H
 
-#include <QStringList>
+#include <QString>
 
 struct User {
-    QString id;
-    QString name;
-    QString avatar;
-    QStringList department;
-    QString description;
+    QString userId;
+    QString wechatId;
     QString email;
-    QStringList link;
 };
 
 #endif // USER_H

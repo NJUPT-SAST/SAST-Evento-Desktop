@@ -231,7 +231,7 @@ void EventoService::load_History() {
 
 void EventoService::load_Block(const QString& time) {
     auto future1 =
-        getRepo()->getAdminEvents(UserHelper::getInstance()->property("id").toString()).then([=](EventoResult<QVariantList> result) {
+        getRepo()->getAdminEvents(UserHelper::getInstance()->property("userId").toString()).then([=](EventoResult<QVariantList> result) {
             if (!result) {
                 CalendarController::getInstance()->onLoadAllFailure(result.message());
                 return QVariantList{-1};

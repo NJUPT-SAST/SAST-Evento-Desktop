@@ -72,6 +72,7 @@ struct Repository {
     virtual QFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event) = 0;
 
     // admin-fetch
+    virtual QFuture<EventoResult<DTO_User>> loginViaSastLink(const QString& code) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_UserBrief>>>
         getEventManagerList(EventoID eventoId) = 0;
     virtual QFuture<EventoResult<std::vector<DTO_UserBrief>>> getAdminUserList() = 0;

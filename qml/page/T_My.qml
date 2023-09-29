@@ -58,7 +58,7 @@ FluScrollablePage {
                     asynchronous: true
                     anchors.fill: parent
                     sourceSize: Qt.size(width, height)
-                    source: UserHelper.avatar
+                    source: "qrc:/res/svg/avatar_4.svg"
                 }
             }
             Column {
@@ -71,7 +71,7 @@ FluScrollablePage {
                 FluText {
                     id: text_name
                     font: FluTextStyle.Subtitle
-                    text: UserHelper.name
+                    text: UserHelper.userId
                 }
             }
         }

@@ -60,9 +60,14 @@ LoginController::LoginController() {
 
             if (query.hasQueryItem("code")) {
                 auto code = query.queryItemValue("code");
-                // TODO
-                // (getNetwork() or getRepo())->loginViaSastLink(code, this->code_verifier)
-                emit loginSuccess();
+                auto future = getRepo()->loginViaSastLink(code).then([=](EventoResult<DTO_User> result) {
+                    if (!result) {
+                        emit loginFailed(result.message());
+                        return;
+                    }
+                    UserHelper::getInstance()->updateUser(result.take());
+                    emit loginSuccess();
+                });
             } else if (query.hasQueryItem("error")) {
                 auto errorDescription = query.hasQueryItem("error_description")
                                             ? query.queryItemValue("error_description")
