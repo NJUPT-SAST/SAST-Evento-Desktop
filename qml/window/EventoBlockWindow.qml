@@ -133,6 +133,7 @@ CustomWindow {
             id: com_info
 
             Item {
+                id: item_all
                 width: parent.width
                 implicitHeight: 15 + col.height
 
@@ -165,9 +166,12 @@ CustomWindow {
                     function onLoadEventoSuccessEvent() {
                         page.arr = []
                         loader.sourceComponent = slide_com
+                        item_all.listReady()
                         page.statusMode = FluStatusViewType.Success
                     }
                 }
+
+                signal listReady
 
                 Connections {
                     target: EventoInfoController
@@ -179,11 +183,9 @@ CustomWindow {
                 }
 
                 Connections {
-                    target: loader
-                    function onSourceComponentChanged() {
-                        if (loader.sourceComponent !== undefined) {
-                            carousel.model = page.arr
-                        }
+                    target: item_all
+                    function onListReady() {
+                        carousel.model = page.arr
                         loader.sourceComponent = undefined
                     }
                 }

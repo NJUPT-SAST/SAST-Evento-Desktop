@@ -700,7 +700,7 @@ QFuture<EventoResult<std::vector<DTO_Slide>>> EventoNetworkClient::getHomeSlideL
         auto f(future);
         auto result = f.takeResult();
         if (result) {
-            auto rootValue = result.take();
+            auto rootValue = result.take()["slides"];
             std::vector<DTO_Slide> result;
             if (rootValue.isArray()) {
                 declare_top_deserialiser(result, deserialiser);

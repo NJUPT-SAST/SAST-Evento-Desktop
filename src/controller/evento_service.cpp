@@ -17,6 +17,8 @@
 #include "schedule.h"
 #include "scheduled_evento_model.h"
 #include "undertaking_evento_model.h"
+#include "slide_model.h"
+#include "image.h"
 
 #include <QtConcurrent>
 #include <array>
@@ -61,6 +63,7 @@ void EventoService::load_Plaza() {
             LatestEventoModel::getInstance()->resetModel(std::move(model));
             return true;
         })};
+
     QtConcurrent::run([=]() {
         for (const auto& i : tasks)
             if (!i.result())
@@ -267,6 +270,30 @@ void EventoService::load_Block(const QString& time) {
     });
 }
 
+void EventoService::load_Event(EventoID id)
+{
+    auto future = getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
+        if (!result) {
+            EventoInfoController::getInstance()->onLoadFailure(result.message());
+            return false;
+        }
+        Evento event;
+        {
+            std::lock_guard lock(mutex);
+            event = (stored[id] = std::move(result.take()));
+        }
+        EventoHelper::getInstance()->update(event);
+        SlideModel::getInstance()->resetModel(ImageManagement::pictureConvertor(stored[id].departments));
+        return true;
+    });
+
+    QtConcurrent::run([=]() {
+        auto f(future);
+        f.waitForFinished();
+        EventoInfoController::getInstance()->onLoadFinished();
+    });
+}
+
 void EventoService::load(EventoID id) {
     std::array<QFuture<bool>, 2> tasks{
         getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
@@ -280,6 +307,7 @@ void EventoService::load(EventoID id) {
                 event = (stored[id] = std::move(result.take()));
             }
             EventoHelper::getInstance()->update(event);
+            SlideModel::getInstance()->resetModel(ImageManagement::pictureConvertor(stored[id].departments));
             return true;
         }),
         getRepo()->getUserParticipate(id).then([=](EventoResult<ParticipationStatus> result) {
@@ -448,6 +476,7 @@ UndertakingEvento::UndertakingEvento(const DTO_Evento& src)
 
     this->time = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
     this->department = departmentConvertor(src.departments);
+    this->image = ImageManagement::pictureConvertor(src.departments).at(0);
 }
 
 LatestEvento::LatestEvento(const DTO_Evento& src)
@@ -455,6 +484,7 @@ LatestEvento::LatestEvento(const DTO_Evento& src)
 
     this->time = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
     this->department = departmentConvertor(src.departments);
+    this->image = ImageManagement::pictureConvertor(src.departments).at(0);
 }
 
 EventoBrief::EventoBrief(const DTO_Evento& src)
@@ -462,6 +492,7 @@ EventoBrief::EventoBrief(const DTO_Evento& src)
 
     this->time = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
     this->department = departmentConvertor(src.departments);
+    this->image = ImageManagement::pictureConvertor(src.departments).at(0);
 }
 
 EventoBlock::EventoBlock(const DTO_Evento& src, const QVariantList& eventList)

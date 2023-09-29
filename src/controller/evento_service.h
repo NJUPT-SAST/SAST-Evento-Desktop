@@ -33,6 +33,7 @@ public:
     void load_DepartmentEvents(int departmentId);
     void load_History();
     void load_Block(const QString& time);
+    void load_Event(EventoID id);
     void load(EventoID id);
     DTO_Evento edit(EventoID id);
     void create(const QString& title, const QString& description, const QString& eventStart,

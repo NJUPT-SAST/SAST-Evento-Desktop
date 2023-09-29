@@ -2,6 +2,7 @@
 #include "plaza.h"
 #include "repository.h"
 #include "slide_model.h"
+#include "image.h"
 
 #include <QtConcurrent>
 
@@ -24,7 +25,7 @@ void SlideService::load_HomeSlide(const int size) {
                     model.push_back(Slide(i));
                 }
             }
-            SlideModel::getInstance()->resetModel(std::move(model));
+            SlideModel::getInstance()->resetModel(std::move(ImageManagement::fillSlideList(model)));
             PlazaController::getInstance()->onHomeSlideLoadFinished();
         });
 

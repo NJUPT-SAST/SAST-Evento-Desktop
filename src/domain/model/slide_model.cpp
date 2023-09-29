@@ -44,9 +44,23 @@ QHash<int, QByteArray> SlideModel::roleNames() const {
 }
 
 void SlideModel::resetModel(std::vector<Slide>&& model) {
-    beginResetModel();
-    m_data = std::move(model);
-    endResetModel();
+    QMetaObject::invokeMethod(this, [=]() {
+        beginResetModel();
+        m_data = std::move(model);
+        endResetModel();
+    });
+}
+
+void SlideModel::resetModel(const QStringList &slideList) {
+    QMetaObject::invokeMethod(this, [=]() {
+        std::vector<Slide> model;
+        for (const auto& slide : slideList) {
+            model.push_back(Slide("", slide));
+        }
+        beginResetModel();
+        m_data = std::move(model);
+        endResetModel();
+    });
 }
 
 void SlideModel::removeById(const int id) {
