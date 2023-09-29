@@ -7,6 +7,7 @@ import SAST_Evento
 import "../window"
 
 FluScrollablePage {
+    id: page
     launchMode: FluPageType.SingleTask
     title: lang.lang_plaza
     property var arr: []
@@ -26,6 +27,7 @@ FluScrollablePage {
 
     Component.onCompleted: {
         loadPlazaInfo()
+        loadHomeSlide()
     }
 
     Connections {
@@ -43,26 +45,36 @@ FluScrollablePage {
         }
     }
 
-    Repeater {
-        id: rep
-        model: SlideModel
+    Loader {
+        id: loader
+        sourceComponent: undefined
+    }
+    Connections {
+        target: PlazaController
+        function onLoadHomeSlideSuccessEvent() {
+            arr = []
+            loader.sourceComponent = rep_com
+            page.listReady()
+        }
+    }
 
-        Item {
-            Connections {
-                target: PlazaController
-                function onLoadHomeSlideSuccessEvent() {
+    signal listReady
+
+    Component {
+        id: rep_com
+        Repeater {
+            id: rep
+            model: SlideModel
+            Item {
+                Component.onCompleted: {
                     arr.push({
                                  "url": model.url,
                                  "link": model.link,
                                  "title": model.title
                              })
-                    if (arr.length === 3)
-                        rep.arrReady()
                 }
             }
         }
-
-        signal arrReady
     }
 
     FluCarousel {
@@ -76,9 +88,10 @@ FluScrollablePage {
         indicatorMarginTop: 15
 
         Connections {
-            target: rep
-            function onArrReady() {
+            target: page
+            function onListReady() {
                 carousel.model = arr
+                loader.sourceComponent = undefined
             }
         }
 
@@ -337,7 +350,6 @@ FluScrollablePage {
                         anchors.fill: parent
                         source: model.url
                         fillMode: Image.PreserveAspectCrop
-                        clickErrorListener: loadHomeSlide()
                     }
                 }
 
