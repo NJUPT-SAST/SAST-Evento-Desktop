@@ -11,6 +11,7 @@ struct Slide {
     QString link;
     QString url;
 
+    Slide(const QString& title, const QString& url): id(0), title(title), link(""), url(url) {}
     Slide() = default;
     Slide(const DTO_Slide&);
 };

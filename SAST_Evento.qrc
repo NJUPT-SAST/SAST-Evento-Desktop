@@ -35,9 +35,6 @@
         <file>res/svg/avatar_12.svg</file>
         <file>res/svg/home.svg</file>
         <file>res/svg/home_dark.svg</file>
-        <file>res/image/banner_1.png</file>
-        <file>res/image/banner_2.png</file>
-        <file>res/image/banner_3.png</file>
         <file>qml/page/T_SlideManagement.qml</file>
         <file>qml/page/T_SlideManagementEdit.qml</file>
         <file>qml/page/T_EventoEdit.qml</file>
@@ -51,5 +48,14 @@
         <file>qml/page/T_DepartmentManagement.qml</file>
         <file>qml/page/T_LocationManagement.qml</file>
         <file>res/svg/sast_link.svg</file>
+        <file>res/image/department/cpp_1.svg</file>
+        <file>res/image/department/cpp_2.png</file>
+        <file>res/image/department/cpp_3.png</file>
+        <file>res/image/department/game_1.svg</file>
+        <file>res/image/department/game_2.jpg</file>
+        <file>res/image/department/game_3.jpg</file>
+        <file>res/image/department/py_1.png</file>
+        <file>res/image/department/sast_1.png</file>
+        <file>res/image/department/sast_2.png</file>
     </qresource>
 </RCC>

@@ -27,6 +27,8 @@ public:
 
     void resetModel(std::vector<Slide>&& model);
 
+    void resetModel(const QStringList& slideList);
+
     void removeById(const int id);
 
 private:

@@ -6,6 +6,7 @@ import FluentUI
 import SAST_Evento
 
 FluScrollablePage {
+    id: page
     launchMode: FluPageType.SingleTask
     property var arr: []
     property int score_value: 0
@@ -23,9 +24,13 @@ FluScrollablePage {
     Connections {
         target: EventoInfoController
         function onLoadEventoSuccessEvent() {
+            loader_slide.sourceComponent = slide_com
+            page.listReady()
             statusMode = FluStatusViewType.Success
         }
     }
+
+    signal listReady
 
     Connections {
         target: EventoInfoController
@@ -56,12 +61,9 @@ FluScrollablePage {
     }
 
     Connections {
-        target: loader_slide
-        function onSourceComponentChanged() {
-            if (loader_slide.sourceComponent !== undefined) {
-                carousel.model = arr
-            }
-            loader_slide.sourceComponent = undefined
+        target: page
+        function onListReady() {
+            carousel.model = arr
         }
     }
 
