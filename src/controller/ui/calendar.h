@@ -4,8 +4,7 @@
 #include <QtQml>
 #include "types.h"
 
-class CalendarController : public QObject
-{
+class CalendarController : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(CalendarController)
     QML_SINGLETON

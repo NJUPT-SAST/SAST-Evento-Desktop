@@ -80,6 +80,8 @@ struct Repository {
     virtual QFuture<EventoResult<QString>> getManagerPermissionTreeData() = 0;
     virtual QFuture<EventoResult<QVariantList>> getAdminEvents(const QString& userId) = 0;
 
+    virtual QFuture<EventoResult<std::pair<QString, QString>>> checkUpdate() = 0;
+
     virtual ~Repository() = default;
 };
 

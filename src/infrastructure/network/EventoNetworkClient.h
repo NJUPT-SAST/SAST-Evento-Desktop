@@ -112,6 +112,8 @@ public:
     QFuture<EventoResult<QString>> getManagerPermissionTreeData();
     QFuture<EventoResult<QVariantList>> getAdminEvents(const QString& userId);
 
+    QFuture<EventoResult<std::pair<QString, QString>>> checkUpdate();
+
 private:
     EventoNetworkClient() = default;
 

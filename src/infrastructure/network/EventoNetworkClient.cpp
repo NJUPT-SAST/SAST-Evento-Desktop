@@ -1139,3 +1139,43 @@ QFuture<EventoResult<QVariantList>> EventoNetworkClient::getAdminEvents(const QS
         }
     });
 }
+
+QFuture<EventoResult<std::pair<QString, QString>>> EventoNetworkClient::checkUpdate() {
+    auto url = QUrl("https://api.github.com/repos/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest");
+    QNetworkRequest request;
+    request.setUrl(url);
+    request.setRawHeader("Accept", "application/vnd.github+json");
+    setSsl(request);
+    auto reply = manager.get(request);
+
+    return QtConcurrent::run([=]() -> EventoResult<std::pair<QString, QString>> {
+        QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
+        auto content = reply->readAll();
+        auto networkError = reply->error();
+
+        qDebug() << content << networkError;
+        if (networkError == QNetworkReply::ContentNotFoundError) {
+            return EventoException(EventoExceptionCode::NetworkError, "not found");
+        }
+        if (networkError != QNetworkReply::NoError) {
+            return EventoException(EventoExceptionCode::NetworkError, "network error");
+        }
+        QJsonParseError jsonError;
+        auto result = QJsonDocument::fromJson(content, &jsonError);
+        if (jsonError.error != QJsonParseError::NoError) {
+            return EventoException(EventoExceptionCode::JsonError,
+                                   QString("json error: %1 (offest = %2)")
+                                       .arg(jsonError.errorString())
+                                       .arg(jsonError.offset));
+        }
+        reply->deleteLater();
+        if (!result.isObject()) {
+            return EventoException(EventoExceptionCode::JsonError,
+                                   QStringLiteral("expect object but got other"));
+        }
+        QJsonObject jsonObject = result.object();
+        QString tagName = jsonObject.value("tag_name").toString();
+        QString description = jsonObject.value("body").toString();
+        return std::make_pair(tagName, description);
+    });
+}

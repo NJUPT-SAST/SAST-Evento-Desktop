@@ -4,6 +4,7 @@ import QtQuick.Window
 import QtQuick.Controls
 import QtCore
 import FluentUI
+import SAST_Evento
 import "../window"
 
 FluScrollablePage {
@@ -154,9 +155,48 @@ FluScrollablePage {
                 Layout.bottomMargin: 4
             }
 
-            FluFilledButton {
+            Timer {
+                id: timer_progress
+                interval: 200
+                onTriggered: {
+                    btn_progress.progress = (btn_progress.progress + 0.1).toFixed(
+                                0.8)
+                    if (btn_progress.progress == 1) {
+                        timer_progress.stop()
+                    } else {
+                        timer_progress.start()
+                    }
+                }
+            }
+
+            Connections {
+                target: CheckUpdate
+                function onCheckSuccessEvent(version, description) {
+                    btn_progress.progress = 1
+                    if (version !== appInfo.version) {
+                        dialog_update.newVersion = version
+                        dialog_update.body = description
+                        dialog_update.open()
+                    } else {
+                        showInfo("当前已是最新版本")
+                    }
+                }
+            }
+
+            Connections {
+                target: CheckUpdate
+                function onCheckErrorEvent(message) {
+                    btn_progress.progress = 1
+                    showError("检查更新失败: " + message, 4000)
+                }
+            }
+
+            FluProgressButton {
+                id: btn_progress
                 text: lang.lang_check_update
                 onClicked: {
+                    btn_progress.progress = 0
+                    timer_progress.restart()
                     checkUpdate()
                 }
             }
@@ -168,23 +208,18 @@ FluScrollablePage {
         property string body
         id: dialog_update
         title: "更新提示"
-        message: "SAST Evento目前最新版本 " + newVersion + " -- 当前应用版本 "
+        message: "SAST Evento目前最新版本 " + newVersion + "\n当前应用版本 "
                  + appInfo.version + " \n现在是否去下载新版本？\n\n更新内容：\n" + body
         buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
         negativeText: lang.lang_cancel
         positiveText: lang.lang_ok
         onPositiveClicked: {
-            Qt.openUrlExternally("https://sast.fun")
+            Qt.openUrlExternally(
+                        "https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases")
         }
     }
 
-    function checkUpdate() {// TODO
-        //            if (version !== appInfo.version) {
-        //                dialog_update.newVersion = "" // TODO
-        //                dialog_update.body = "" // TODO
-        //                dialog_update.open()
-        //            } else {
-        //                showMessage("当前已是最新版本")
-        //            }
+    function checkUpdate() {
+        CheckUpdate.check()
     }
 }
