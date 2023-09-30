@@ -14,7 +14,7 @@ struct DTO_Evento {
     EventType type;
     QString location;
     Tag tag;
-    EventState state;
+    QString state;
     std::vector<Department> departments;
 };
 
