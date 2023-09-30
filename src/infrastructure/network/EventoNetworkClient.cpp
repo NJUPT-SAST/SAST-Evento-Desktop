@@ -14,8 +14,6 @@ static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply) {
     auto content = reply->readAll();
     auto networkError = reply->error();
 
-    qDebug() << content << networkError;
-
     if (networkError != QNetworkReply::NoError) {
         return EventoException(EventoExceptionCode::NetworkError, "network error");
     }
@@ -1152,7 +1150,6 @@ QFuture<EventoResult<std::pair<QString, QString>>> EventoNetworkClient::checkUpd
         auto content = reply->readAll();
         auto networkError = reply->error();
 
-        qDebug() << content << networkError;
         if (networkError == QNetworkReply::ContentNotFoundError) {
             return EventoException(EventoExceptionCode::NetworkError, "not found");
         }
