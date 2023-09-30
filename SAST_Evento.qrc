@@ -57,5 +57,10 @@
         <file>res/image/department/py_1.png</file>
         <file>res/image/department/sast_1.png</file>
         <file>res/image/department/sast_2.png</file>
+        <file>res/image/department/frontend_1.png</file>
+        <file>res/image/department/frontend_2.png</file>
+        <file>res/image/department/frontend_3.png</file>
+        <file>res/image/department/sast_3.png</file>
+        <file>res/image/department/backend.png</file>
     </qresource>
 </RCC>
