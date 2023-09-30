@@ -54,6 +54,7 @@ FluScrollablePage {
     onErrorClicked: {
         loadEditInfo()
     }
+    errorButtonText: lang.lang_reload
 
     Connections {
         target: EventoEditController

@@ -21,6 +21,7 @@ FluScrollablePage {
     Component.onCompleted: {
         loadFeedbackInfo()
     }
+    errorButtonText: lang.lang_reload
 
     Connections {
         target: FeedbackStatisticsController
