@@ -74,6 +74,8 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_minimalSideBar("最小化");
     lang_automatical("自动");
     lang_check_update("检查更新");
+    lang_native_text_rendering("Native文本渲染");
+    lang_animation_effect("动画效果");
 
     // other
     lang_cancel("取消");

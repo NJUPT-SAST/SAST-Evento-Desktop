@@ -58,7 +58,7 @@ FluScrollablePage {
                 }
             }
             FluText {
-                text: "夜间模式"
+                text: lang.lang_dark_mode
                 Layout.topMargin: 20
             }
             FluToggleSwitch {
@@ -73,7 +73,7 @@ FluScrollablePage {
                 }
             }
             FluText {
-                text: "native文本渲染"
+                text: lang.lang_native_text_rendering
                 Layout.topMargin: 20
             }
             FluToggleSwitch {
@@ -88,7 +88,7 @@ FluScrollablePage {
                 }
             }
             FluText {
-                text: "开启动画效果"
+                text: lang.lang_animation_effect
                 Layout.topMargin: 20
             }
             FluToggleSwitch {
