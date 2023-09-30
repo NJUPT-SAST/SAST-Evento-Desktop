@@ -451,7 +451,7 @@ void EventoService::subscribeDepartment(int departmentId, bool unsubscribe) {
 
 Evento::Evento(const DTO_Evento& src)
     : id(src.id), title(src.title), description(src.description), type(src.type),
-      location(src.location), tag(src.tag), state(src.state) {
+    location(src.location), tag(src.tag), state(stateConvertor(src.state)) {
 
     this->department = departmentConvertor(src.departments);
     this->eventTime = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
@@ -459,7 +459,7 @@ Evento::Evento(const DTO_Evento& src)
 }
 
 Schedule::Schedule(const DTO_Evento& src, const ParticipationStatus& participate, bool hasFeedback)
-    : id(src.id), title(src.title), state(src.state), location(src.location),
+    : id(src.id), title(src.title), state(stateConvertor(src.state)), location(src.location),
       isChecked(participate.isParticipated), hasFeedback(hasFeedback) {
 
     this->department = departmentConvertor(src.departments);
