@@ -215,23 +215,36 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         property string body
         id: dialog_update
         title: "更新提示"
-        message: "SAST Evento目前最新版本 " + newVersion + " -- 当前应用版本 "
+        message: "SAST Evento目前最新版本 " + newVersion + "\n当前应用版本 "
                  + appInfo.version + " \n现在是否去下载新版本？\n\n更新内容：\n" + body
         buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
         negativeText: lang.lang_cancel
         positiveText: lang.lang_ok
         onPositiveClicked: {
-            Qt.openUrlExternally("https://sast.fun")
+            Qt.openUrlExternally(
+                        "https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases")
         }
     }
 
-    function checkUpdate() {// TODO
-        //            if (version !== appInfo.version) {
-        //                dialog_update.newVersion = "" // TODO
-        //                dialog_update.body = "" // TODO
-        //                dialog_update.open()
-        //            } else {
-        //                showMessage("当前已是最新版本")
-        //            }
+    function checkUpdate() {
+        CheckUpdate.check()
+    }
+
+    Connections {
+        target: CheckUpdate
+        function onCheckSuccessEvent(version, description) {
+            if (version !== appInfo.version) {
+                dialog_update.newVersion = version
+                dialog_update.body = description
+                dialog_update.open()
+            }
+        }
+    }
+
+    Connections {
+        target: CheckUpdate
+        function onCheckErrorEvent(message) {
+            showError("检查更新失败: " + message, 4000)
+        }
     }
 }
