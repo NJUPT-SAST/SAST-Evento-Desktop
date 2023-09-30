@@ -21,7 +21,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_login("Login");
     lang_use_link("       Login by Link");
     lang_login_failed("Login Failed");
-    lang_by_cpp("Developed by SAST-C++ Group\n");
+    lang_by_cpp("Developed by SAST-C++ Group\nv");
     lang_visitor_login("Visitor Login");
 
     // Plaza
@@ -88,4 +88,9 @@ En::En(QObject* parent) : Lang{parent} {
     lang_subscribe_success("Subscribe Succeed");
     lang_error("error: ");
     lang_input_is_empty("Input is empty");
+    lang_check_up_failure("Check up failure: ");
+    lang_reload("Reload");
+    lang_is_currently_latest_version("Is currently latest version");
+    lang_stay_tuned("STAY TUNED");
+    lang_copy_success("Copy Success");
 }

@@ -20,7 +20,7 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_login("登录");
     lang_use_link("       使用 Link 登入");
     lang_login_failed("登录失败");
-    lang_by_cpp("SAST-C++组开发\n");
+    lang_by_cpp("SAST-C++组开发\nv");
     lang_visitor_login("访客登录");
 
     // Plaza
@@ -86,4 +86,9 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_subscribe_success("订阅成功");
     lang_error("错误：");
     lang_input_is_empty("输入为空");
+    lang_check_up_failure("检查更新错误: ");
+    lang_reload("重新加载");
+    lang_is_currently_latest_version("当前已是最新版本");
+    lang_stay_tuned("敬请期待");
+    lang_copy_success("已复制到剪切板");
 }

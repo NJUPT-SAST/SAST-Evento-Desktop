@@ -15,6 +15,7 @@ FluScrollablePage {
     onErrorClicked: {
         loadPlazaInfo()
     }
+    errorButtonText: lang.lang_reload
 
     function loadPlazaInfo() {
         statusMode = FluStatusViewType.Loading
@@ -214,10 +215,14 @@ FluScrollablePage {
                     id: item_title
                     text: model.title
                     font: FluTextStyle.Subtitle
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
                     anchors {
                         left: item_icon.right
                         leftMargin: 12
                         top: item_icon.top
+                        right: parent.right
+                        rightMargin: 5
                     }
                 }
 
@@ -357,10 +362,14 @@ FluScrollablePage {
                     id: item_title
                     text: model.title
                     font: FluTextStyle.Subtitle
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
                     anchors {
                         left: item_icon.right
                         leftMargin: 12
                         top: item_icon.top
+                        right: parent.right
+                        rightMargin: 5
                     }
                 }
 

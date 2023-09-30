@@ -9,5 +9,5 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
     title: lang.lang_profile
     statusMode: FluStatusViewType.Empty
-    emptyText: "敬请期待"
+    emptyText: lang.lang_stay_tuned
 }

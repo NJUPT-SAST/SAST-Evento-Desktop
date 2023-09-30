@@ -27,6 +27,7 @@ CustomWindow {
             else
                 loadEventoInfo()
         }
+        errorButtonText: lang.lang_reload
 
         Loader {
             id: page_loader
