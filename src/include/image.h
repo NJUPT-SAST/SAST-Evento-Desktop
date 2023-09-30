@@ -41,7 +41,7 @@ class ImageManagement {
 
     inline static std::vector<Slide> defaultSlideList = { Slide("SAST", PICTURE_PATH("sast_1.png")),
                                                             Slide("SAST Evento", PICTURE_PATH("sast_2.png")),
-                                                            Slide("软件研发部", PICTURE_PATH("sast_3.jpg")),
+                                                            Slide("软件研发部", PICTURE_PATH("sast_3.png")),
                                                           };
 
 public:
