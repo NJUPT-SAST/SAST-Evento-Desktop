@@ -12,6 +12,7 @@ FluScrollablePage {
     onErrorClicked: {
         loadScheduleInfo()
     }
+    errorButtonText: lang.lang_reload
 
     function loadRegisteredScheduleInfo() {
         statusMode = FluStatusViewType.Loading
@@ -210,11 +211,25 @@ FluScrollablePage {
                     FluText {
                         text: model.title
                         font: FluTextStyle.Title
+                        maximumLineCount: 1
+                        anchors {
+                            left: parent.left
+                            leftMargin: 12
+                            right: parent.right
+                            rightMargin: 5
+                        }
                     }
                     FluText {
                         text: model.location
                         font: FluTextStyle.Caption
                         color: FluColors.Grey110
+                        maximumLineCount: 1
+                        anchors {
+                            left: parent.left
+                            leftMargin: 12
+                            right: parent.right
+                            rightMargin: 5
+                        }
                     }
                 }
 
@@ -544,11 +559,27 @@ FluScrollablePage {
                     FluText {
                         text: model.title
                         font: FluTextStyle.Title
+                        elide: Text.ElideRight
+                        maximumLineCount: 1
+                        anchors {
+                            left: parent.left
+                            leftMargin: 12
+                            right: parent.right
+                            rightMargin: 5
+                        }
                     }
                     FluText {
                         text: model.location
                         font: FluTextStyle.Caption
                         color: FluColors.Grey110
+                        elide: Text.ElideRight
+                        maximumLineCount: 1
+                        anchors {
+                            left: parent.left
+                            leftMargin: 12
+                            right: parent.right
+                            rightMargin: 5
+                        }
                     }
                 }
 

@@ -14,12 +14,19 @@ FluScrollablePage {
 
     function loadEventoInfo() {
         statusMode = FluStatusViewType.Loading
+        arr = []
         EventoInfoController.loadEventoInfo(EventoHelper.id)
     }
 
     Component.onCompleted: {
         loadEventoInfo()
     }
+
+    onErrorClicked: {
+        loadEventoInfo()
+    }
+
+    errorButtonText: lang.lang_reload
 
     Connections {
         target: EventoInfoController
@@ -97,6 +104,8 @@ FluScrollablePage {
         Layout.topMargin: 10
         font: FluTextStyle.TitleLarge
         text: EventoHelper.title
+        wrapMode: Text.WordWrap
+        Layout.fillWidth: true
     }
 
     Row {
@@ -308,7 +317,7 @@ FluScrollablePage {
     FluText {
         id: item_desc
         Layout.topMargin: 15
-        width: parent.width
+        Layout.fillWidth: true
         wrapMode: Text.WordWrap
         font.pixelSize: 18
         text: EventoHelper.description

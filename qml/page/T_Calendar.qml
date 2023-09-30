@@ -7,7 +7,6 @@ import SAST_Evento
 import "../window"
 
 FluScrollablePage {
-
     launchMode: FluPageType.SingleTask
 
     property string dateString: date2String(new Date)
@@ -102,6 +101,8 @@ FluScrollablePage {
     onErrorClicked: {
         loadAllInfo(dateString)
     }
+
+    errorButtonText: lang.lang_reload
 
     Item {
         width: 885

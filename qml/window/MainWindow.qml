@@ -244,7 +244,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
     Connections {
         target: CheckUpdate
         function onCheckErrorEvent(message) {
-            showError("检查更新失败: " + message, 4000)
+            showError(lang.lang_check_up_failure + message, 4000)
         }
     }
 }

@@ -78,6 +78,8 @@ class Lang : public QObject {
     Q_PROPERTY_AUTO(QString, lang_minimalSideBar);
     Q_PROPERTY_AUTO(QString, lang_automatical);
     Q_PROPERTY_AUTO(QString, lang_check_update);
+    Q_PROPERTY_AUTO(QString, lang_native_text_rendering);
+    Q_PROPERTY_AUTO(QString, lang_animation_effect);
 
     // other
     Q_PROPERTY_AUTO(QString, lang_cancel);
@@ -88,6 +90,11 @@ class Lang : public QObject {
     Q_PROPERTY_AUTO(QString, lang_subscribe_success);
     Q_PROPERTY_AUTO(QString, lang_error);
     Q_PROPERTY_AUTO(QString, lang_input_is_empty);
+    Q_PROPERTY_AUTO(QString, lang_check_up_failure);
+    Q_PROPERTY_AUTO(QString, lang_reload);
+    Q_PROPERTY_AUTO(QString, lang_is_currently_latest_version);
+    Q_PROPERTY_AUTO(QString, lang_stay_tuned);
+    Q_PROPERTY_AUTO(QString, lang_copy_success);
 
 public:
     explicit Lang(QObject* parent = nullptr) {}

@@ -158,7 +158,7 @@ CustomWindow {
     }
 
     FluText {
-        text: lang.lang_by_cpp + appInfo.version
+        text: lang.lang_by_cpp + appInfo.version + "-alpha"
         color: FluColors.Grey100
         font: FluTextStyle.Caption
         horizontalAlignment: Text.AlignHCenter

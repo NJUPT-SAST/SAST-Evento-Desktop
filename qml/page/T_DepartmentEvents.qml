@@ -27,6 +27,7 @@ FluScrollablePage {
     onErrorClicked: {
         loadDepartmentEventsPage()
     }
+    errorButtonText: lang.lang_reload
 
     Component.onCompleted: {
         loadDepartmentEventsPage()
@@ -247,10 +248,14 @@ FluScrollablePage {
                     id: item_title
                     text: model.title
                     font: FluTextStyle.Subtitle
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
                     anchors {
                         left: item_icon.right
                         leftMargin: 12
                         top: item_icon.top
+                        right: parent.right
+                        rightMargin: 5
                     }
                 }
 

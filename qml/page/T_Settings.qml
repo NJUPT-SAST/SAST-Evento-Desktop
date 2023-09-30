@@ -178,7 +178,7 @@ FluScrollablePage {
                         dialog_update.body = description
                         dialog_update.open()
                     } else {
-                        showInfo("当前已是最新版本")
+                        showInfo(lang.lang_is_currently_latest_version)
                     }
                 }
             }
@@ -187,7 +187,7 @@ FluScrollablePage {
                 target: CheckUpdate
                 function onCheckErrorEvent(message) {
                     btn_progress.progress = 1
-                    showError("检查更新失败: " + message, 4000)
+                    showError(lang.lang_check_up_failure + message, 4000)
                 }
             }
 

@@ -13,6 +13,7 @@ FluScrollablePage {
     onErrorClicked: {
         loadMyPageInfo()
     }
+    errorButtonText: lang.lang_reload
 
     function loadMyPageInfo() {
         statusMode = FluStatusViewType.Loading
@@ -94,7 +95,7 @@ FluScrollablePage {
                     iconSource: FluentIcons.More
                 }
                 FluText {
-                    text: "敬请期待"
+                    text: lang.lang_stay_tuned
                     width: 50
                     horizontalAlignment: Text.AlignHCenter
                 }
@@ -214,10 +215,14 @@ FluScrollablePage {
                     id: item_title
                     text: model.title
                     font: FluTextStyle.Subtitle
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
                     anchors {
                         left: item_icon.right
                         leftMargin: 12
                         top: item_icon.top
+                        right: parent.right
+                        rightMargin: 5
                     }
                 }
 

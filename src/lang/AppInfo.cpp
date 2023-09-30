@@ -8,7 +8,7 @@
 #include <QtGlobal>
 
 AppInfo::AppInfo(QObject* parent) : QObject{parent} {
-    version("v0.3.9.30-alpha");
+    version("0.3.10");
     lang(new Zh());
 }
 
