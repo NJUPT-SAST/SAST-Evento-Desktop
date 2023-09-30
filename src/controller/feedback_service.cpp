@@ -83,7 +83,8 @@ void FeedbackService::load_FeedbackInfo(EventoID id) {
             {
                 std::lock_guard lock(mutex);
                 for (auto& i : feedbackSummary.feedbacks) {
-                    model.push_back(Feedback(i));
+                    if (!i.content.isEmpty())
+                        model.push_back(Feedback(i));
                 }
             }
             FeedbackModel::getInstance()->resetModel(std::move(model));
