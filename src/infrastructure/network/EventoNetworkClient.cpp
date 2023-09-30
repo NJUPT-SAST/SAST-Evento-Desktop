@@ -10,12 +10,6 @@ constexpr const char USER_AGENT[] = "SAST-Evento-Desktop/1";
 constexpr const char MIME_FORM_URL_ENCODED[] = "application/x-www-form-urlencoded";
 constexpr const char MIME_JSON[] = "application/json";
 
-static void setSsl(QNetworkRequest& request) {
-    QSslConfiguration ssl_config(request.sslConfiguration());
-    ssl_config.setPeerVerifyMode(QSslSocket::VerifyNone);
-    ssl_config.setProtocol(QSsl::AnyProtocol);
-}
-
 static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply) {
     auto content = reply->readAll();
     auto networkError = reply->error();
@@ -72,8 +66,9 @@ QFuture<EventoResult<QJsonValue>> EventoNetworkClient::get(const QUrl& url) {
     if (!this->tokenBytes.isEmpty()) {
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
-    setSsl(request);
     auto reply = manager.get(request);
+    reply->ignoreSslErrors();
+
     return QtConcurrent::run([=]() {
         QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
         return handleNetworkReply(reply);
@@ -101,8 +96,9 @@ QFuture<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl& url,
     if (!this->tokenBytes.isEmpty()) {
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
-    setSsl(request);
     auto reply = manager.post(request, requestData);
+    reply->ignoreSslErrors();
+
     return QtConcurrent::run([=]() {
         QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
         return handleNetworkReply(reply);
@@ -130,8 +126,9 @@ QFuture<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl& url,
     if (!this->tokenBytes.isEmpty()) {
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
-    setSsl(request);
     auto reply = manager.put(request, requestData);
+    reply->ignoreSslErrors();
+
     return QtConcurrent::run([=]() {
         QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
         return handleNetworkReply(reply);
@@ -159,8 +156,9 @@ QFuture<EventoResult<QJsonValue>> EventoNetworkClient::patch(const QUrl& url,
     if (!this->tokenBytes.isEmpty()) {
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
-    setSsl(request);
     auto reply = manager.sendCustomRequest(request, "PATCH", requestData);
+    reply->ignoreSslErrors();
+
     return QtConcurrent::run([=]() {
         QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
         return handleNetworkReply(reply);
@@ -185,8 +183,9 @@ QFuture<EventoResult<QJsonValue>> EventoNetworkClient::deleteResource(const QUrl
     if (!this->tokenBytes.isEmpty()) {
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
-    setSsl(request);
     auto reply = manager.deleteResource(request);
+    reply->ignoreSslErrors();
+
     return QtConcurrent::run([=]() {
         QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
         return handleNetworkReply(reply);
@@ -1145,8 +1144,8 @@ QFuture<EventoResult<std::pair<QString, QString>>> EventoNetworkClient::checkUpd
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("Accept", "application/vnd.github+json");
-    setSsl(request);
     auto reply = manager.get(request);
+    reply->ignoreSslErrors();
 
     return QtConcurrent::run([=]() -> EventoResult<std::pair<QString, QString>> {
         QtFuture::connect(reply, &QNetworkReply::finished).waitForFinished();
