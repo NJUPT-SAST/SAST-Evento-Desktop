@@ -4,6 +4,7 @@
 #include "slide.h"
 
 #include <shared_mutex>
+#include <vector>
 
 class SlideService {
     std::shared_mutex mutex;
