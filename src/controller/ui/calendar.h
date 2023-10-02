@@ -1,8 +1,8 @@
 #ifndef CALENDARCONTROLLER_H
 #define CALENDARCONTROLLER_H
 
-#include <QtQml>
 #include "types.h"
+#include <QtQml>
 
 class CalendarController : public QObject {
     Q_OBJECT
@@ -30,7 +30,8 @@ signals:
     void loadCheckCodeErrorEvent(QString message);
 
 private:
-    CalendarController() = default;
+    CalendarController();
+
 public:
     void onLoadAllFinished() {
         emit loadAllEventoSuccessEvent();
@@ -57,8 +58,8 @@ public:
         emit loadCheckCodeErrorEvent(message);
     }
 
-    static CalendarController *getInstance();
-    static CalendarController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static CalendarController* getInstance();
+    static CalendarController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // CALENDARCONTROLLER_H

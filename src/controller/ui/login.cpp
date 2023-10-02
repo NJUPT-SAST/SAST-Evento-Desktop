@@ -60,14 +60,15 @@ LoginController::LoginController() {
 
             if (query.hasQueryItem("code")) {
                 auto code = query.queryItemValue("code");
-                auto future = getRepo()->loginViaSastLink(code).then([=](EventoResult<DTO_User> result) {
-                    if (!result) {
-                        emit loginFailed(result.message());
-                        return;
-                    }
-                    UserHelper::getInstance()->updateUser(result.take());
-                    emit loginSuccess();
-                });
+                auto future =
+                    getRepo()->loginViaSastLink(code).then([=](EventoResult<DTO_User> result) {
+                        if (!result) {
+                            emit loginFailed(result.message());
+                            return;
+                        }
+                        UserHelper::getInstance()->updateUser(result.take());
+                        emit loginSuccess();
+                    });
             } else if (query.hasQueryItem("error")) {
                 auto errorDescription = query.hasQueryItem("error_description")
                                             ? query.queryItemValue("error_description")
@@ -145,28 +146,22 @@ void LoginController::loadPermissionList() {
         if (!result) {
             auto message = result.message();
             if (message.contains("No valid permission exist")) {
-                QMetaObject::invokeMethod(this, [=]() {
-                    UserHelper::getInstance()->setProperty("permission",
+                UserHelper::getInstance()->setProperty("permission",
                                                        UserHelper::Permission::UserPermission);
-                    loadPermissionSuccessEvent();
-                });
+                loadPermissionSuccessEvent();
             } else {
-                QMetaObject::invokeMethod(this, [=]() {
-                    loadPermissionErrorEvent(message);
-                });
+                loadPermissionErrorEvent(message);
             }
             return;
         }
         auto permissionList = result.take();
-        QMetaObject::invokeMethod(this, [=]() {
-            if (permissionList.isEmpty())
-                UserHelper::getInstance()->setProperty("permission",
-                                                       UserHelper::Permission::UserPermission);
-            else
-                UserHelper::getInstance()->setProperty("permission",
-                                                       UserHelper::Permission::AdminPermisson);
-            loadPermissionSuccessEvent();
-        });
+        if (permissionList.isEmpty())
+            UserHelper::getInstance()->setProperty("permission",
+                                                   UserHelper::Permission::UserPermission);
+        else
+            UserHelper::getInstance()->setProperty("permission",
+                                                   UserHelper::Permission::AdminPermisson);
+        loadPermissionSuccessEvent();
     });
     QtConcurrent::run([=] {
         auto f(future);

@@ -1,9 +1,10 @@
 #include "EventoNetworkClient.h"
+#include "user_helper.h"
 
 #include <json_deserialise.hpp>
 
-#include <QtConcurrent>
 #include <QSslConfiguration>
+#include <QtConcurrent>
 
 static auto API_GATEWAY = QStringLiteral("https://evento.sast.fun/api");
 constexpr const char USER_AGENT[] = "SAST-Evento-Desktop/1";
@@ -204,10 +205,10 @@ static QStringList asStringList(const QJsonValue& value) {
 register_object_member(DTO_User, "userId", userId);
 register_object_member(DTO_User, "wechatId", wechatId);
 register_object_member(DTO_User, "email", email);
-declare_object(DTO_User, object_member(DTO_User, userId),
-               object_member(DTO_User, wechatId),
+declare_object(DTO_User, object_member(DTO_User, userId), object_member(DTO_User, wechatId),
                object_member(DTO_User, email));
 QFuture<EventoResult<DTO_User>> EventoNetworkClient::loginViaSastLink(const QString& code) {
+    UserHelper::getInstance();
     auto url = endpoint(QStringLiteral("/user/login/link"));
     QUrlQuery params;
     params.addQueryItem("code", code);
@@ -1118,9 +1119,8 @@ QFuture<EventoResult<QString>> EventoNetworkClient::getManagerPermissionTreeData
 }
 
 QFuture<EventoResult<QVariantList>> EventoNetworkClient::getAdminEvents(const QString& userId) {
-    auto url = endpoint(QStringLiteral("/permission/manager/events"), [=](QUrlQuery& params) {
-        params.addQueryItem("userId", userId);
-    });
+    auto url = endpoint(QStringLiteral("/permission/manager/events"),
+                        [=](QUrlQuery& params) { params.addQueryItem("userId", userId); });
     auto future = this->get(url);
     return QtConcurrent::run([=]() -> EventoResult<QVariantList> {
         auto f(future);
@@ -1138,7 +1138,8 @@ QFuture<EventoResult<QVariantList>> EventoNetworkClient::getAdminEvents(const QS
 }
 
 QFuture<EventoResult<std::pair<QString, QString>>> EventoNetworkClient::checkUpdate() {
-    auto url = QUrl("https://api.github.com/repos/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest");
+    auto url =
+        QUrl("https://api.github.com/repos/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest");
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("Accept", "application/vnd.github+json");

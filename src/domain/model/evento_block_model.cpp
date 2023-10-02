@@ -52,11 +52,9 @@ QHash<int, QByteArray> EventoBlockModel::roleNames() const {
 }
 
 void EventoBlockModel::resetModel(std::vector<EventoBlock>&& model) {
-    QMetaObject::invokeMethod(this, [=]() {
-        beginResetModel();
-        m_data = std::move(model);
-        endResetModel();
-    });
+    beginResetModel();
+    m_data = std::move(model);
+    endResetModel();
 }
 
 EventoBlockModel* EventoBlockModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
