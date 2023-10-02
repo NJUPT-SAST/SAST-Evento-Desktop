@@ -7,7 +7,7 @@
 #include <QtConcurrent>
 
 constexpr const char* AUTH_SERVER_URL = "https://link.sast.fun/auth";
-constexpr const char* AUTH_CLIENT_ID = "93f24f17-0423-4baf-9a98-b0ad418a68b8";
+constexpr const char* AUTH_CLIENT_ID = "381c34b9-14a4-4df9-a9db-40c2455be09f";
 
 static QString genCodeChallengeS256(QStringView code_verifier) {
     auto sha256 = QCryptographicHash::hash(code_verifier.toUtf8(), QCryptographicHash::Sha256);
@@ -143,7 +143,18 @@ void LoginController::beginLoginViaSastLink() {
 void LoginController::loadPermissionList() {
     auto future = getRepo()->getAdminPermission().then([this](EventoResult<QStringList> result) {
         if (!result) {
-            loadPermissionErrorEvent(result.message());
+            auto message = result.message();
+            if (message.contains("No valid permission exist")) {
+                QMetaObject::invokeMethod(this, [=]() {
+                    UserHelper::getInstance()->setProperty("permission",
+                                                       UserHelper::Permission::UserPermission);
+                    loadPermissionSuccessEvent();
+                });
+            } else {
+                QMetaObject::invokeMethod(this, [=]() {
+                    loadPermissionErrorEvent(message);
+                });
+            }
             return;
         }
         auto permissionList = result.take();
