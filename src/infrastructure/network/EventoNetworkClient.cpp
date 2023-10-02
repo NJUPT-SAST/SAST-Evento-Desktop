@@ -13,7 +13,7 @@ constexpr const char MIME_JSON[] = "application/json";
 static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply) {
     auto content = reply->readAll();
     auto networkError = reply->error();
-
+    qDebug() << content << networkError;
     if (networkError != QNetworkReply::NoError) {
         return EventoException(EventoExceptionCode::NetworkError, "network error");
     }
