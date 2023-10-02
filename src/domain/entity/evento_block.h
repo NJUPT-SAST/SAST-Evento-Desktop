@@ -12,6 +12,7 @@ struct EventoBlock {
     double rowStart; // index: 8:00 -> 0
     double rowEnd;   // index: 23:00 -> 15
     int columnStart; // index: Monday -> 0
+    int columnEnd;
     bool editable;
 
     EventoBlock() = default;

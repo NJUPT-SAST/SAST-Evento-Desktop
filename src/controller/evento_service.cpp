@@ -229,7 +229,8 @@ void EventoService::load_History() {
     });
 }
 
-void EventoService::load_Block(const QString& time) {
+void EventoService::load_Block(const QString& date) {
+    this->date = QDate::fromString(date, "yyyy-M-d");
     auto future1 =
         getRepo()
             ->getAdminEvents(UserHelper::getInstance()->property("userId").toString())
@@ -241,7 +242,7 @@ void EventoService::load_Block(const QString& time) {
                 return result.take();
             });
     auto future2 =
-        getRepo()->getEventListByTime(time).then([=](EventoResult<std::vector<DTO_Evento>> result) {
+        getRepo()->getEventListByTime(date).then([=](EventoResult<std::vector<DTO_Evento>> result) {
             if (!result) {
                 CalendarController::getInstance()->onLoadAllFailure(result.message());
                 return;
@@ -469,12 +470,18 @@ Schedule::Schedule(const DTO_Evento& src, const ParticipationStatus& participate
       isChecked(participate.isParticipated), hasFeedback(hasFeedback) {
 
     this->department = departmentConvertor(src.departments);
-    this->date = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss")
-                     .toString(QStringLiteral("MM月dd日"));
-    this->startTime = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss")
-                          .toString(QStringLiteral("hh:mm"));
-    this->endTime = QDateTime::fromString(src.gmtEventEnd, "yyyy-MM-dd hh:mm:ss")
-                        .toString(QStringLiteral("hh:mm"));
+
+    auto start = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss");
+    auto end = QDateTime::fromString(src.gmtEventEnd, "yyyy-MM-dd hh:mm:ss");
+    if (start.date() == end.date()) {
+        this->date = start.toString(QStringLiteral("MM月dd日"));
+        this->startTime = start.toString(QStringLiteral("hh:mm"));
+        this->endTime = end.toString(QStringLiteral("hh:mm"));
+    } else {
+        this->date = "多天事件";
+        this->startTime = "Many";
+        this->endTime = "Days";
+    }
 }
 
 UndertakingEvento::UndertakingEvento(const DTO_Evento& src)
@@ -501,6 +508,19 @@ EventoBrief::EventoBrief(const DTO_Evento& src)
     this->image = ImageManagement::pictureConvertor(src.departments).at(0);
 }
 
+bool areDatesInSameWeek(const QDate& date1, const QDate& date2) {
+    int week1 = date1.dayOfWeek();
+    int week2 = date2.dayOfWeek();
+
+    QDate firstDayOfWeek1 = date1.addDays(-week1 + 1);
+    QDate lastDayOfWeek1 = date1.addDays(7 - week1);
+    QDate firstDayOfWeek2 = date2.addDays(-week2 + 1);
+    QDate lastDayOfWeek2 = date2.addDays(7 - week2);
+
+    return (date1 >= firstDayOfWeek2 && date1 <= lastDayOfWeek2) ||
+           (date2 >= firstDayOfWeek1 && date2 <= lastDayOfWeek1);
+}
+
 EventoBlock::EventoBlock(const DTO_Evento& src, const QVariantList& eventList)
     : id(src.id), title(src.title), time(periodConvertor(src.gmtEventStart, src.gmtEventEnd)),
       editable(eventList.contains(src.id)) {
@@ -508,15 +528,33 @@ EventoBlock::EventoBlock(const DTO_Evento& src, const QVariantList& eventList)
     auto gmtEventStart = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss");
     auto gmtEventEnd = QDateTime::fromString(src.gmtEventEnd, "yyyy-MM-dd hh:mm:ss");
 
-    rowStart = gmtEventStart.time().hour() - 8;
-    if (rowStart < 0)
+    if (gmtEventStart.date() == gmtEventEnd.date()) {
+        rowStart = gmtEventStart.time().hour() - 7;
+        if (rowStart < 1)
+            rowStart = 1;
+        else
+            rowStart += gmtEventStart.time().minute() / 60.0;
+
+        rowEnd = gmtEventEnd.time().hour() - 7;
+        if (rowEnd > 16)
+            rowEnd = 16;
+
+        columnEnd = columnStart = gmtEventStart.date().dayOfWeek() - 1;
+    } else {
         rowStart = 0;
-    else
-        rowStart += gmtEventStart.time().minute() / 60.0;
+        rowEnd = 1;
 
-    rowEnd = gmtEventEnd.time().hour() - 8;
-    if (rowEnd > 15)
-        rowEnd = 15;
+        auto now = EventoService::getInstance().getDate();
 
-    columnStart = gmtEventEnd.date().dayOfWeek() - 1;
+        if (areDatesInSameWeek(gmtEventStart.date(), now))
+            columnStart = gmtEventStart.date().dayOfWeek() - 1;
+        else
+            columnStart = 0;
+
+        if (areDatesInSameWeek(gmtEventEnd.date(), now))
+            columnEnd = gmtEventEnd.date().dayOfWeek() - 1;
+        else
+            columnEnd = 6;
+    }
+
 }
