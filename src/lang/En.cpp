@@ -90,7 +90,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_input_is_empty("Input is empty");
     lang_check_up_failure("Check up failure: ");
     lang_reload("Reload");
-    lang_is_currently_latest_version("Is currently latest version");
+    lang_is_currently_latest_version("Already the latest version!");
     lang_stay_tuned("STAY TUNED");
     lang_copy_success("Copy Success");
 }

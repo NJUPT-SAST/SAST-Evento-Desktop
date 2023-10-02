@@ -28,6 +28,8 @@ QVariant EventoBlockModel::data(const QModelIndex& index, int role) const {
         return element.rowEnd;
     case Role::ColumnStart:
         return element.columnStart;
+    case Role::ColumnEnd:
+        return element.columnEnd;
     case Role::Editable:
         return element.editable;
     default:
@@ -46,6 +48,7 @@ QHash<int, QByteArray> EventoBlockModel::roleNames() const {
         roles.insert(RowStart, "rowStart");
         roles.insert(RowEnd, "rowEnd");
         roles.insert(ColumnStart, "columnStart");
+        roles.insert(ColumnEnd, "columnEnd");
         roles.insert(Editable, "editable");
     }
     return roles;

@@ -18,6 +18,8 @@ class EventoService {
     std::vector<EventoID> blocks;
     std::map<EventoID, DTO_Evento> stored;
 
+    QDate date;
+
 private:
     EventoService() = default;
 
@@ -26,6 +28,8 @@ public:
         static EventoService singleton;
         return singleton;
     }
+
+    QDate getDate() { return date; }
 
     void load_Plaza();
     void load_RegisteredSchedule();

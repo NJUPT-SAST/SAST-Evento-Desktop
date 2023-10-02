@@ -13,18 +13,19 @@ class EventoBlockModel : public QAbstractListModel {
 
 public:
     enum Role {
-        Id = Qt::DisplayRole + 1,
+        Id = Qt::UserRole + 1,
         Title,
         Time,
         RowStart,
         RowEnd,
         ColumnStart,
+        ColumnEnd,
         Editable,
     };
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex& index, int role) const override;
 
     QHash<int, QByteArray> roleNames() const override;
 

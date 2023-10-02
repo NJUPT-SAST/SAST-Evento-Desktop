@@ -323,7 +323,7 @@ CustomWindow {
                         loopTime: 4000
                         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
                         indicatorMarginTop: 5
-                        Layout.topMargin: 15
+                        Layout.topMargin: FluTools.isMacos() ? 25 : 15
 
                         delegate: Component {
                             Item {

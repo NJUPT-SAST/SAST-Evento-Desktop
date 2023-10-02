@@ -137,7 +137,7 @@ FluScrollablePage {
                 loadAllInfo(dateString)
             }
         }
-        FluRectangle {
+        FluArea {
             id: rec_date
             height: 30
             width: 120
@@ -146,7 +146,6 @@ FluScrollablePage {
                 left: btn_left.right
                 verticalCenter: parent.verticalCenter
             }
-            shadow: false
             FluText {
                 id: text_date
                 text: dateString
@@ -283,7 +282,7 @@ FluScrollablePage {
     }
 
     FluArea {
-        height: 780
+        height: 790
         width: 890
         color: "transparent"
         Row {
@@ -338,7 +337,7 @@ FluScrollablePage {
             spacing: 30
 
             Repeater {
-                model: ["8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]
+                model: ["Cross", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]
                 FluText {
                     text: model.modelData
                     font: FluTextStyle.Caption
@@ -381,7 +380,7 @@ FluScrollablePage {
             spacing: 44.1
             Repeater {
                 id: rep_time
-                model: 16
+                model: 17
                 FluRectangle {
                     width: parent.width
                     height: 1
@@ -406,7 +405,8 @@ FluScrollablePage {
         FluArea {
             height: 41.1 * (model.rowEnd - model.rowStart) + parseInt(
                         model.rowEnd - model.rowStart - 1)
-            width: 115
+            width: 115 * (model.columnEnd - model.columnStart + 1) + 5
+                   * (model.columnEnd - model.columnStart)
             color: FluTheme.dark ? Qt.rgba(
                                        23 / 255, 49 / 255, 102 / 255,
                                        1) : Qt.rgba(224 / 255, 233 / 255, 255 / 255, 1)
@@ -444,10 +444,13 @@ FluScrollablePage {
                 text: model.time
                 font: FluTextStyle.Caption
                 color: FluColors.Grey110
+                elide: Text.ElideRight
+                maximumLineCount: 1
                 anchors {
                     top: text_title.bottom
                     topMargin: 2
                     left: text_title.left
+                    right: parent.right
                 }
             }
 
