@@ -1,4 +1,5 @@
 #include "calendar.h"
+#include "evento_block_model.h"
 #include "evento_service.h"
 
 void CalendarController::loadAllEventoInfo(QString date) {
@@ -21,12 +22,16 @@ void CalendarController::loadCheckCode(EventoID eventId) {
     EventoService::getInstance().getQRCode(eventId);
 }
 
-CalendarController *CalendarController::getInstance() {
+CalendarController::CalendarController() {
+    EventoBlockModel::getInstance();
+}
+
+CalendarController* CalendarController::getInstance() {
     static CalendarController instance;
     return &instance;
 }
 
-CalendarController *CalendarController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
+CalendarController* CalendarController::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto instance = getInstance();
     QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
     return instance;

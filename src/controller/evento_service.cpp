@@ -7,18 +7,18 @@
 #include "evento_brief_model.h"
 #include "evento_edit.h"
 #include "evento_helper.h"
-#include "user_helper.h"
 #include "evento_info.h"
 #include "feedback_service.h"
+#include "image.h"
 #include "latest_evento_model.h"
 #include "my_page.h"
 #include "plaza.h"
 #include "repository.h"
 #include "schedule.h"
 #include "scheduled_evento_model.h"
-#include "undertaking_evento_model.h"
 #include "slide_model.h"
-#include "image.h"
+#include "undertaking_evento_model.h"
+#include "user_helper.h"
 
 #include <QtConcurrent>
 #include <array>
@@ -231,13 +231,15 @@ void EventoService::load_History() {
 
 void EventoService::load_Block(const QString& time) {
     auto future1 =
-        getRepo()->getAdminEvents(UserHelper::getInstance()->property("userId").toString()).then([=](EventoResult<QVariantList> result) {
-            if (!result) {
-                CalendarController::getInstance()->onLoadAllFailure(result.message());
-                return QVariantList{-1};
-            }
-            return result.take();
-        });
+        getRepo()
+            ->getAdminEvents(UserHelper::getInstance()->property("userId").toString())
+            .then([=](EventoResult<QVariantList> result) {
+                if (!result) {
+                    CalendarController::getInstance()->onLoadAllFailure(result.message());
+                    return QVariantList{-1};
+                }
+                return result.take();
+            });
     auto future2 =
         getRepo()->getEventListByTime(time).then([=](EventoResult<std::vector<DTO_Evento>> result) {
             if (!result) {
@@ -260,9 +262,12 @@ void EventoService::load_Block(const QString& time) {
                     stored[i.id] = std::move(i);
                 }
             }
-            EventoBlockModel::getInstance()->resetModel(std::move(model));
+            QMetaObject::invokeMethod(
+                EventoBlockModel::getInstance(),
+                [&]() { EventoBlockModel::getInstance()->resetModel(std::move(model)); },
+                Qt::BlockingQueuedConnection);
             CalendarController::getInstance()->onLoadAllFinished();
-    });
+        });
 
     QtConcurrent::run([=]() {
         auto f(future1);
@@ -270,8 +275,7 @@ void EventoService::load_Block(const QString& time) {
     });
 }
 
-void EventoService::load_Event(EventoID id)
-{
+void EventoService::load_Event(EventoID id) {
     auto future = getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
         if (!result) {
             EventoInfoController::getInstance()->onLoadFailure(result.message());
@@ -283,7 +287,8 @@ void EventoService::load_Event(EventoID id)
             event = (stored[id] = std::move(result.take()));
         }
         EventoHelper::getInstance()->update(event);
-        SlideModel::getInstance()->resetModel(ImageManagement::pictureConvertor(stored[id].departments));
+        SlideModel::getInstance()->resetModel(
+            ImageManagement::pictureConvertor(stored[id].departments));
         return true;
     });
 
@@ -307,7 +312,8 @@ void EventoService::load(EventoID id) {
                 event = (stored[id] = std::move(result.take()));
             }
             EventoHelper::getInstance()->update(event);
-            SlideModel::getInstance()->resetModel(ImageManagement::pictureConvertor(stored[id].departments));
+            SlideModel::getInstance()->resetModel(
+                ImageManagement::pictureConvertor(stored[id].departments));
             return true;
         }),
         getRepo()->getUserParticipate(id).then([=](EventoResult<ParticipationStatus> result) {
@@ -451,7 +457,7 @@ void EventoService::subscribeDepartment(int departmentId, bool unsubscribe) {
 
 Evento::Evento(const DTO_Evento& src)
     : id(src.id), title(src.title), description(src.description), type(src.type),
-    location(src.location), tag(src.tag), state(stateConvertor(src.state)) {
+      location(src.location), tag(src.tag), state(stateConvertor(src.state)) {
 
     this->department = departmentConvertor(src.departments);
     this->eventTime = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
