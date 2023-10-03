@@ -13,7 +13,7 @@ void UserService::checkIn(EventoID eventId, const QString& code) {
         }
         ScheduleController::getInstance()->checkFinished();
     });
-    
+
     QtConcurrent::run([=] {
         auto f(future);
         f.waitForFinished();

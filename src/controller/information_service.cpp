@@ -92,7 +92,7 @@ void InformationService::load_SubscribedDepartmentInfo() {
         DepartmentEventsController::getInstance()->onLoadSubscribedDepartmentsFinished(
             subscribedDepartmentJson);
     });
-    
+
     QtConcurrent::run([=]() {
         auto f(future);
         f.waitForFinished();

@@ -49,7 +49,7 @@ void SlideModel::resetModel(std::vector<Slide>&& model) {
     endResetModel();
 }
 
-void SlideModel::resetModel(const QStringList &slideList) {
+void SlideModel::resetModel(const QStringList& slideList) {
     std::vector<Slide> model;
     for (const auto& slide : slideList) {
         model.emplace_back("", slide);
