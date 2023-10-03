@@ -23,7 +23,8 @@ DepartmentEventsController* DepartmentEventsController::getInstance() {
     return &instance;
 }
 
-DepartmentEventsController* DepartmentEventsController::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+DepartmentEventsController* DepartmentEventsController::create(QQmlEngine* qmlEngine,
+                                                               QJSEngine* jsEngine) {
     auto instance = getInstance();
     QJSEngine::setObjectOwnership(instance, QQmlEngine::CppOwnership);
     return instance;

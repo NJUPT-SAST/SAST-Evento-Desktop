@@ -94,8 +94,8 @@ FluScrollablePage {
 
     Connections {
         target: DepartmentEventsController
-        function onSubscribeSuccessEvent(isSubscribe, departmentId) {
-            if (isSubscribe) {
+        function onSubscribeSuccessEvent() {
+            if (!subscribeButton.checked) {
                 subscribeArr.push(departmentId)
                 subscribeButton.checked = false
                 subscribeButton.state = "hasSub"
@@ -115,8 +115,8 @@ FluScrollablePage {
     }
 
     FluTextButton {
-        visible: UserHelper.permission !== 1
         id: subscribeButton
+        visible: UserHelper.permission !== 1
         Layout.alignment: Qt.AlignRight
         checked: true
         state: "noSub"

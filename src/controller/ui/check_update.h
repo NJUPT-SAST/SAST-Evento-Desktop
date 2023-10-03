@@ -3,7 +3,7 @@
 
 #include <QtQml>
 
-class CheckUpdate: public QObject {
+class CheckUpdate : public QObject {
     Q_OBJECT
     QML_NAMED_ELEMENT(CheckUpdate)
     QML_SINGLETON
@@ -17,8 +17,9 @@ signals:
 
 private:
     CheckUpdate() = default;
+
 public:
-    static CheckUpdate *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static CheckUpdate* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // CHECKUPDATE_H

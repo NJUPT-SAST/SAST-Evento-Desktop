@@ -21,14 +21,10 @@ class EventoEditController : public QObject {
 
 public:
     Q_INVOKABLE void loadEditInfo();
-    Q_INVOKABLE void createEvento(const QString& title,
-                                  const QString& description,
-                                  const QString& eventStart,
-                                  const QString& eventEnd,
-                                  const QString& registerStart,
-                                  const QString& registerEnd,
-                                  int index, int locationId,
-                                  const QVariantList& departmentIds,
+    Q_INVOKABLE void createEvento(const QString& title, const QString& description,
+                                  const QString& eventStart, const QString& eventEnd,
+                                  const QString& registerStart, const QString& registerEnd,
+                                  int index, int locationId, const QVariantList& departmentIds,
                                   const QString& tag);
 
 private:
@@ -59,8 +55,10 @@ signals:
     void eventEndChanged();
     void registerStartChanged();
     void registerEndChanged();
+
 private:
     EventoEditController() = default;
+
 public:
     void update(const DTO_Evento& event);
 
@@ -78,8 +76,8 @@ public:
         emit createErrorEvent(msg);
     }
 
-    static EventoEditController *getInstance();
-    static EventoEditController *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
+    static EventoEditController* getInstance();
+    static EventoEditController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 };
 
 #endif // EVENTO_EDIT_CONTROLLER_H
