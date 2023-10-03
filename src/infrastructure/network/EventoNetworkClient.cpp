@@ -787,7 +787,7 @@ QFuture<EventoResult<QString>> EventoNetworkClient::getLocationList() {
 }
 
 QFuture<EventoResult<QString>> EventoNetworkClient::getDepartmentList() {
-    auto url = endpoint(QStringLiteral("/admin/departments"));
+    auto url = endpoint(QStringLiteral("/event/departments"));
     auto future = this->get(url);
     return QtConcurrent::run([=]() -> EventoResult<QString> {
         auto f(future);
