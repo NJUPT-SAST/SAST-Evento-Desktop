@@ -14,7 +14,7 @@ constexpr const char MIME_JSON[] = "application/json";
 static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply) {
     auto content = reply->readAll();
     auto networkError = reply->error();
-    qDebug() << content << networkError;
+
     if (networkError != QNetworkReply::NoError) {
         return EventoException(EventoExceptionCode::NetworkError, "network error");
     }
@@ -1171,8 +1171,8 @@ QFuture<EventoResult<std::pair<QString, QString>>> EventoNetworkClient::checkUpd
                                    QStringLiteral("expect object but got other"));
         }
         QJsonObject jsonObject = result.object();
-        QString tagName = jsonObject.value("tag_name").toString();
+        QString name = jsonObject.value("name").toString();
         QString description = jsonObject.value("body").toString();
-        return std::make_pair(tagName, description);
+        return std::make_pair(name, description);
     });
 }

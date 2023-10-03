@@ -21,7 +21,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_login("Login");
     lang_use_link("       Login by Link");
     lang_login_failed("Login Failed");
-    lang_by_cpp("Developed by SAST-C++ Group\nv");
+    lang_by_cpp("Developed by SAST-C++ Group\n");
     lang_visitor_login("Visitor Login");
 
     // Plaza
