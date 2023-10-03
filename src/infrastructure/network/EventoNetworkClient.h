@@ -14,8 +14,7 @@
 
 class EventoNetworkClient : public Repository {
 private:
-    QByteArray tokenBytes =
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYjIyMDcwMTIzIiwiZXhwIjoxNzMwMzUzODYxfQ.68v28NTtmNGORXlDf2zJO-jlSGV96ZgI6lBUNNsV__A";
+    QByteArray tokenBytes;
     QNetworkAccessManager manager;
 
 protected:
