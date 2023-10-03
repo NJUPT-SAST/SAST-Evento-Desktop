@@ -62,5 +62,7 @@
         <file>res/image/department/frontend_3.png</file>
         <file>res/image/department/sast_3.png</file>
         <file>res/image/department/backend.png</file>
+        <file>res/image/department/sast_uni1.png</file>
+        <file>res/image/department/cs_1.png</file>
     </qresource>
 </RCC>
