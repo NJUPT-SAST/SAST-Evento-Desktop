@@ -317,13 +317,13 @@ CustomWindow {
 
                     FluCarousel {
                         id: carousel
-                        width: 300
+                        width: 270
                         height: 150
                         radius: [5, 5, 5, 5]
                         loopTime: 4000
                         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
-                        indicatorMarginTop: 5
-                        Layout.topMargin: FluTools.isMacos() ? 25 : 15
+                        indicatorMarginTop: 0
+                        Layout.topMargin: 30
 
                         delegate: Component {
                             Item {
@@ -341,8 +341,10 @@ CustomWindow {
                     FluText {
                         id: item_title
                         Layout.topMargin: 5
-                        font: FluTextStyle.TitleLarge
+                        font: FluTextStyle.Title
                         text: EventoHelper.title
+                        width: 270
+                        wrapMode: Text.WrapAnywhere
                     }
 
                     Row {

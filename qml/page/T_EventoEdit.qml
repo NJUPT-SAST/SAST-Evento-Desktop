@@ -18,6 +18,7 @@ FluScrollablePage {
         if (Array.isArray(data)) {
             for (var i = 0; i < data.length; i++) {
                 var item = data[i]
+                var key = item.key
                 var name = item.label
                 var isLeaf = false
                 var children = []
@@ -29,7 +30,7 @@ FluScrollablePage {
 
                 result.push(tree_view_location.createItem(name, isLeaf,
                                                           children, {
-                                                              "id": item.key
+                                                              "id": key
                                                           }))
             }
         } else {
@@ -46,10 +47,6 @@ FluScrollablePage {
     }
 
     signal listReady
-
-    Component.onCompleted: {
-        loadEditInfo()
-    }
 
     onErrorClicked: {
         loadEditInfo()
@@ -68,7 +65,7 @@ FluScrollablePage {
                                        }))
             }
             json = JSON.parse(EventoEditController.locationJson)
-            locationArr = parseJSON(json)
+            locationArr = parseJSON(json[0].children)
             listReady()
             statusMode = FluStatusViewType.Success
         }
@@ -86,6 +83,11 @@ FluScrollablePage {
         id: item_all
         Layout.fillWidth: true
         implicitHeight: 650 + textbox_description.implicitHeight
+
+        Component.onCompleted: {
+            loadEditInfo()
+        }
+
         FluArea {
             id: area1
             width: parent.width

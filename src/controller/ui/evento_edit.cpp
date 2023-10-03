@@ -32,10 +32,10 @@ void EventoEditController::createEvento(const QString &title, const QString &des
 }
 
 void EventoEditController::update(const DTO_Evento& event) {
-    setProperty("eventStart", event.gmtEventStart);
-    setProperty("eventEnd", event.gmtEventEnd);
-    setProperty("registerStart", event.gmtRegistrationStart);
-    setProperty("registerEnd", event.gmtRegistrationEnd);
+    setProperty("eventStart", QDateTime::fromString(event.gmtEventStart, "yyyy-MM-dd hh:mm:ss").toString("yyyy年M月d日 hh:mm:ss"));
+    setProperty("eventEnd", QDateTime::fromString(event.gmtEventEnd, "yyyy-MM-dd hh:mm:ss").toString("yyyy年M月d日 hh:mm:ss"));
+    setProperty("registerStart", QDateTime::fromString(event.gmtRegistrationStart, "yyyy-MM-dd hh:mm:ss").toString("yyyy年M月d日 hh:mm:ss"));
+    setProperty("registerEnd", QDateTime::fromString(event.gmtRegistrationEnd, "yyyy-MM-dd hh:mm:ss").toString("yyyy年M月d日 hh:mm:ss"));
 }
 
 void EventoEditController::loadEditInfo()
