@@ -323,6 +323,7 @@ FluScrollablePage {
                     }
                     FluText {
                         text: model.department
+                        width: 110
                         color: FluColors.Grey120
                         elide: Text.ElideRight
                         font: FluTextStyle.Caption
