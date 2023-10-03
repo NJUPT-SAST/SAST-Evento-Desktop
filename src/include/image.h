@@ -37,6 +37,7 @@ class ImageManagement {
         { PICTURE_PATH("game_1.svg"), PICTURE_PATH("game_2.jpg"), PICTURE_PATH("game_3.jpg") },
         { PICTURE_PATH("safe_1.jpg"), PICTURE_PATH("safe_2.jpg"), PICTURE_PATH("safe_3.jpg") },
         { PICTURE_PATH("sast_1.png"), PICTURE_PATH("sast_2.png"), PICTURE_PATH("sast_3.png") },
+        { PICTURE_PATH("sast_uni1.png"), PICTURE_PATH("sast_uni2.png")},
     };
 
     inline static std::vector<Slide> defaultSlideList = { Slide("SAST", PICTURE_PATH("sast_1.png")),
@@ -46,6 +47,8 @@ class ImageManagement {
 
 public:
     inline static QStringList pictureConvertor(const std::vector<Department>& departments) {
+        if (departments.empty())
+            return pictures[Other];
         auto name = departments[0].name;
         if (name.contains("C++")) return pictures[Cpp];
 //        if (name.contains("C#")) return pictures[Csharp];
