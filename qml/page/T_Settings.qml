@@ -173,13 +173,8 @@ FluScrollablePage {
                 target: CheckUpdate
                 function onCheckSuccessEvent(version, description) {
                     btn_progress.progress = 1
-                    if (version !== appInfo.version) {
-                        dialog_update.newVersion = version
-                        dialog_update.body = description
-                        dialog_update.open()
-                    } else {
+                    if (version === appInfo.version)
                         showInfo(lang.lang_is_currently_latest_version)
-                    }
                 }
             }
 
@@ -187,7 +182,6 @@ FluScrollablePage {
                 target: CheckUpdate
                 function onCheckErrorEvent(message) {
                     btn_progress.progress = 1
-                    showError(lang.lang_check_up_failure + message, 4000)
                 }
             }
 
@@ -200,22 +194,6 @@ FluScrollablePage {
                     checkUpdate()
                 }
             }
-        }
-    }
-
-    FluContentDialog {
-        property string newVersion
-        property string body
-        id: dialog_update
-        title: "更新提示"
-        message: "SAST Evento目前最新版本 " + newVersion + "\n当前应用版本 "
-                 + appInfo.version + " \n现在是否去下载新版本？\n\n更新内容：\n" + body
-        buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
-        negativeText: lang.lang_cancel
-        positiveText: lang.lang_ok
-        onPositiveClicked: {
-            Qt.openUrlExternally(
-                        "https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest")
         }
     }
 

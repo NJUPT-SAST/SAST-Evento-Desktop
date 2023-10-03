@@ -556,5 +556,4 @@ EventoBlock::EventoBlock(const DTO_Evento& src, const QVariantList& eventList)
         else
             columnEnd = 6;
     }
-
 }

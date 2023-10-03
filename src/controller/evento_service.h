@@ -29,7 +29,9 @@ public:
         return singleton;
     }
 
-    QDate getDate() { return date; }
+    QDate getDate() {
+        return date;
+    }
 
     void load_Plaza();
     void load_RegisteredSchedule();

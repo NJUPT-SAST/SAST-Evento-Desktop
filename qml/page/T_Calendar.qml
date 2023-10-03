@@ -15,6 +15,10 @@ FluScrollablePage {
 
     property var blockWindowRegister: registerForWindowResult("/block")
 
+    function reload() {
+        loadAllInfo(dateString)
+    }
+
     function loadAllInfo(date) {
         statusMode = FluStatusViewType.Loading
         CalendarController.loadAllEventoInfo(date)

@@ -813,11 +813,11 @@ QFuture<EventoResult<QString>> EventoNetworkClient::getSubscribedDepartmentList(
             auto arr = result.take().toArray();
             QString str = "[";
             for (const auto& i : arr) {
-                str += (QString::number(i.toObject()["id"].toInt()) + ", ");
+                str.append(QString::number(i.toObject()["id"].toInt()) + ", ");
             }
             if (!arr.isEmpty())
                 str.remove(str.size() - 2, 2);
-            str += "]";
+            str.append("]");
             return str;
         } else {
             return {result.code(), result.message()};
@@ -1021,10 +1021,13 @@ QFuture<EventoResult<bool>> EventoNetworkClient::editEvent(
     EventoID event, const QString& title, const QString& description, const QString& eventStart,
     const QString& eventEnd, const QString& registerStart, const QString& registerEnd, int typeId,
     int locationId, const QVariantList& departmentIds, const QString& tag) {
-    auto url = endpoint(QStringLiteral("/event/info"));
+    auto url = endpoint(QStringLiteral("/event/info"),
+                        [&](QUrlQuery& params) {
+                            params.addQueryItem("eventId", QString::number(event));
+                        });
     auto future = this->put(
-        url, QJsonDocument(Request_Evento{title, description, eventStart, eventEnd, registerStart,
-                                          registerEnd, typeId, locationId, departmentIds, tag}
+        url, QJsonDocument(Request_EventoPatch{title, description, eventStart, eventEnd, registerStart,
+                                          registerEnd, typeId, locationId, departmentIds, tag, event}
                                .serialise()
                                .toObject()));
     return QtConcurrent::run([=]() -> EventoResult<bool> {

@@ -1,8 +1,8 @@
 #include "slide_service.h"
+#include "image.h"
 #include "plaza.h"
 #include "repository.h"
 #include "slide_model.h"
-#include "image.h"
 
 #include <QtConcurrent>
 
