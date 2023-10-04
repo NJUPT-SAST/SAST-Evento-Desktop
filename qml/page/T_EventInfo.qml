@@ -80,7 +80,7 @@ FluScrollablePage {
         id: carousel
         Layout.topMargin: 10
         Layout.fillWidth: true
-        height: 320
+        height: 400
         radius: [10, 10, 10, 10]
         loopTime: 4000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
@@ -102,7 +102,7 @@ FluScrollablePage {
     FluText {
         id: item_title
         Layout.topMargin: 10
-        font: FluTextStyle.TitleLarge
+        font: FluTextStyle.Title
         text: EventoHelper.title
         wrapMode: Text.WordWrap
         Layout.fillWidth: true
