@@ -54,8 +54,13 @@ jobs:
         version: '16'
         style: file
         database: ${{github.workspace}}/build
+        tidy-checks: -modernize-use-trailing-return-type,-readability-avoid-const-params-in-decls
         file-annotations: false
         step-summary: true
         thread-comments: ${{ github.event_name == 'pull_request' }}
         lines-changed-only: false
         files-changed-only: true
+
+    - name: Failed if needed
+      if: steps.linter.outputs.checks-failed > 0
+      run: exit 1
