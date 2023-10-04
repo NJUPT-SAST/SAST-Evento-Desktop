@@ -1,0 +1,68 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  deploy-ubuntu:
+    name: Deploy on Ubuntu
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@v1.1
+        with:
+          version: '1.11.1'
+
+      # https://github.com/zhuzichu520/FluentUI/blob/06c9b4e3829af636234a98f946603d68c23f6459/.github/workflows/ubuntu.yml#L49-L50
+      - name: Install GL library (Ubuntu)
+        run: sudo apt-get install -y libxcb-cursor0 libgl1-mesa-dev libxcb1-dev libgtk-3-dev libxkbcommon-x11-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-sync-dev  libxcb-render-util0-dev libxcb-shm0-dev 
+
+      - name: Set up Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v3
+        with:
+          version: 1.10.2
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.5.0'
+          modules: 'qt5compat qtwebsockets qthttpserver'
+          cache: 'true'
+          cache-key-prefix: 'install-qt-action'
+
+      - name: Configure CMake
+        run: cmake -G Ninja -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_PREFIX_PATH=${{env.Qt6_DIR}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --parallel
+
+      - name: Install Qt Linux Deploy
+        uses: miurahr/install-linuxdeploy-action@v1
+        with:
+          plugins: qt appimage
+
+      - name: Package
+        env:
+          EXTRA_QT_PLUGINS: qt5compat
+        run: |
+          export QML_SOURCES_PATHS=./
+          echo "[Desktop Entry]" > SAST_Evento.desktop
+          echo "Categories=Utility;" >> SAST_Evento.desktop
+          echo "Icon=app_icon" >> SAST_Evento.desktop
+          echo "Name=SAST Evento" >> SAST_Evento.desktop
+          echo "Type=Application" >> SAST_Evento.desktop
+          echo "Exec=SAST_Evento_Desktop" >> SAST_Evento.desktop
+          linuxdeploy-x86_64.AppImage --plugin=qt --output=appimage --desktop-file=SAST_Evento.desktop --icon-file=app_icon.svg --executable=bin/release/SAST_Evento_Desktop --appdir bin/release
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: SAST_Evento_AppImage
+          path: SAST_Evento-*.AppImage
