@@ -1,5 +1,10 @@
 name: cpp-linter
 
+permissions:
+  checks: write
+  pull-requests: write
+  repository-projects: write
+
 on:
   push:
     paths:
