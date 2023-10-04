@@ -16,10 +16,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
         - os: ubuntu-latest
         - os: windows-latest
+        - os: macos-latest
 
     runs-on: ${{ matrix.os }}
     steps:
