@@ -334,18 +334,19 @@ FluScrollablePage {
         Column {
             anchors {
                 top: parent.top
-                topMargin: 50
+                topMargin: 37
                 left: parent.left
                 leftMargin: 10
             }
             spacing: 30
 
             Repeater {
-                model: ["Cross", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]
+                model: ["Multi\nDay", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]
                 FluText {
                     text: model.modelData
                     font: FluTextStyle.Caption
                     color: FluColors.Grey110
+                    horizontalAlignment: Text.AlignHCenter
                 }
             }
         }
