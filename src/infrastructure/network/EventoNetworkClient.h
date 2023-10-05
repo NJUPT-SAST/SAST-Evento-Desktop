@@ -10,9 +10,18 @@
 #include <QString>
 #include <QUrlQuery>
 
-#include "repository.h"
+#include "dto/evento.h"
+#include "dto/feedback.h"
+#include "dto/feedback_summary.h"
+#include "dto/permission.h"
+#include "dto/slide.h"
+#include "dto/user.h"
+#include "dto/user_brief.h"
 
-class EventoNetworkClient : public Repository {
+#include "result.h"
+#include "types.h"
+
+class EventoNetworkClient {
 private:
     QByteArray tokenBytes;
     QNetworkAccessManager manager;
