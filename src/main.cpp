@@ -17,8 +17,10 @@ int main(int argc, char* argv[]) {
     QGuiApplication::setOrganizationDomain("https://github.com/NJUPT-SAST-Cpp");
     QGuiApplication app(argc, argv);
     app.setWindowIcon(QIcon(QStringLiteral(":/app.ico")));
-    QFontDatabase::addApplicationFont(":/font/MiSans-Regular.ttf");
-    app.setFont(QFont("MiSans"));
+    auto fontId = QFontDatabase::addApplicationFont(":/res/font/MiSans-Regular.ttf");
+    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
+    if (!fontFamilies.empty())
+        app.setFont(QFont(fontFamilies[0]));
     FramelessConfig::instance()->set(Global::Option::DisableLazyInitializationForMicaMaterial);
     FramelessConfig::instance()->set(Global::Option::CenterWindowBeforeShow);
     FramelessConfig::instance()->set(Global::Option::ForceNonNativeBackgroundBlur);
