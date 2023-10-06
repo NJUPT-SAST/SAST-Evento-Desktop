@@ -13,6 +13,7 @@ FluScrollablePage {
         loadScheduleInfo()
     }
     errorButtonText: lang.lang_reload
+    loadingText: lang.lang_loading
 
     function loadRegisteredScheduleInfo() {
         statusMode = FluStatusViewType.Loading

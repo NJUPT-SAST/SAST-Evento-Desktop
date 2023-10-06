@@ -16,6 +16,7 @@ FluScrollablePage {
         loadPlazaInfo()
     }
     errorButtonText: lang.lang_reload
+    loadingText: lang.lang_loading
 
     function loadPlazaInfo() {
         statusMode = FluStatusViewType.Loading

@@ -91,4 +91,7 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_is_currently_latest_version("当前已是最新版本");
     lang_stay_tuned("敬请期待");
     lang_copy_success("已复制到剪切板");
+    lang_move_up("上移一层");
+    lang_move_down("下移一层");
+    lang_loading("正在加载中...");
 }
