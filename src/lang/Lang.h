@@ -98,6 +98,7 @@ class Lang : public QObject {
     Q_PROPERTY_AUTO(QString, lang_move_up);
     Q_PROPERTY_AUTO(QString, lang_move_down);
     Q_PROPERTY_AUTO(QString, lang_loading);
+    Q_PROPERTY_AUTO(QString, lang_calendar_hint);
 
 public:
     explicit Lang(QObject* parent = nullptr) {}

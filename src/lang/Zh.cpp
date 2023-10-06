@@ -94,4 +94,5 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_move_up("上移一层");
     lang_move_down("下移一层");
     lang_loading("正在加载中...");
+    lang_calendar_hint("右键活动卡片可调整层级");
 }

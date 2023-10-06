@@ -96,4 +96,5 @@ En::En(QObject* parent) : Lang{parent} {
     lang_move_up("Move one layer up");
     lang_move_down("Move one layer down");
     lang_loading("Loading...");
+    lang_calendar_hint("Adjustable layer by right-clicking event card");
 }

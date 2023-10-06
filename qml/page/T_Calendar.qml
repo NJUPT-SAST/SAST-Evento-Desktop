@@ -107,6 +107,7 @@ FluScrollablePage {
     }
 
     errorButtonText: lang.lang_reload
+    loadingText: lang.lang_loading
 
     Item {
         width: 885
@@ -285,6 +286,15 @@ FluScrollablePage {
         }
     }
 
+    FluText {
+        text: lang.lang_calendar_hint
+        font: FluTextStyle.Caption
+        anchors {
+            left: parent.left
+            leftMargin: 10
+        }
+    }
+
     FluArea {
         height: 790
         width: 890
@@ -408,6 +418,7 @@ FluScrollablePage {
     Component {
         id: com_rec
         FluArea {
+            id: area
             height: 41.1 * (model.rowEnd - model.rowStart) + parseInt(
                         model.rowEnd - model.rowStart - 1)
             width: 115 * (model.columnEnd - model.columnStart + 1) + 5
@@ -463,10 +474,31 @@ FluScrollablePage {
                 id: item_mouse
                 anchors.fill: parent
                 hoverEnabled: true
-                onClicked: {
-                    EventoHelper.id = model.id
-                    EventoInfoController.editable = model.editable
-                    blockWindowRegister.launch()
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: mouse => {
+                               if (mouse.button === Qt.LeftButton) {
+                                   EventoHelper.id = model.id
+                                   EventoInfoController.editable = model.editable
+                                   blockWindowRegister.launch()
+                               } else {
+                                   menu.popup()
+                               }
+                           }
+            }
+
+            FluMenu {
+                id: menu
+                FluMenuItem: {
+                    text: lang.lang_move_up
+                    onClicked: {
+                        area.z += 1
+                    }
+                }
+                FluMenuItem: {
+                    text: lang.lang_move_down
+                    onClicked: {
+                        area.z -= 1
+                    }
                 }
             }
 
