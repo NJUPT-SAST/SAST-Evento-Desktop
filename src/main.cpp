@@ -1,6 +1,7 @@
 #include <FramelessHelper/Core/private/framelessconfig_p.h>
 #include <FramelessHelper/Quick/framelessquickmodule.h>
 
+#include <QFontDatabase>
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQmlApplicationEngine>
@@ -16,11 +17,13 @@ int main(int argc, char* argv[]) {
     QGuiApplication::setOrganizationDomain("https://github.com/NJUPT-SAST-Cpp");
     QGuiApplication app(argc, argv);
     app.setWindowIcon(QIcon(QStringLiteral(":/app.ico")));
+    QFontDatabase::addApplicationFont(":/font/MiSans-Regular.ttf");
+    app.setFont(QFont("MiSans"));
     FramelessConfig::instance()->set(Global::Option::DisableLazyInitializationForMicaMaterial);
     FramelessConfig::instance()->set(Global::Option::CenterWindowBeforeShow);
     FramelessConfig::instance()->set(Global::Option::ForceNonNativeBackgroundBlur);
     FramelessConfig::instance()->set(Global::Option::EnableBlurBehindWindow);
-#ifdef Q_OS_WIN // 此设置仅在Windows下生效
+#ifdef Q_OS_WIN
     FramelessConfig::instance()->set(Global::Option::ForceHideWindowFrameBorder);
 #endif
 #ifdef Q_OS_MACOS
@@ -30,7 +33,7 @@ int main(int argc, char* argv[]) {
     QQmlApplicationEngine engine;
     FramelessHelper::Quick::registerTypes(&engine);
 #ifdef FLUENTUI_BUILD_STATIC_LIB
-    engine.addImportPath("qrc:/"); // 让静态资源可以被QML引擎搜索到
+    engine.addImportPath("qrc:/");
 #endif
     appInfo->init(&engine);
 
