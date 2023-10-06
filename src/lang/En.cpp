@@ -93,4 +93,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_is_currently_latest_version("Already the latest version!");
     lang_stay_tuned("STAY TUNED");
     lang_copy_success("Copy Success");
+    lang_move_up("Move one layer up");
+    lang_move_down("Move one layer down");
+    lang_loading("Loading...");
 }

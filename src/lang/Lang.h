@@ -95,6 +95,9 @@ class Lang : public QObject {
     Q_PROPERTY_AUTO(QString, lang_is_currently_latest_version);
     Q_PROPERTY_AUTO(QString, lang_stay_tuned);
     Q_PROPERTY_AUTO(QString, lang_copy_success);
+    Q_PROPERTY_AUTO(QString, lang_move_up);
+    Q_PROPERTY_AUTO(QString, lang_move_down);
+    Q_PROPERTY_AUTO(QString, lang_loading);
 
 public:
     explicit Lang(QObject* parent = nullptr) {}

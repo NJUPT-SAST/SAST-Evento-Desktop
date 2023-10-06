@@ -174,7 +174,7 @@ FluScrollablePage {
                 function onCheckSuccessEvent(version, description) {
                     btn_progress.progress = 1
                     if (version === appInfo.version)
-                        showInfo(lang.lang_is_currently_latest_version)
+                        showInfo(lang.lang_is_currently_latest_version, 4000)
                 }
             }
 

@@ -25,6 +25,7 @@ FluScrollablePage {
         loadFeedbackInfo(page)
     }
     errorButtonText: lang.lang_reload
+    loadingText: lang.lang_loading
 
     Connections {
         target: FeedbackStatisticsController

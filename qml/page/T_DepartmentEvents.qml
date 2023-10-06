@@ -28,6 +28,7 @@ FluScrollablePage {
         loadDepartmentEventsPage()
     }
     errorButtonText: lang.lang_reload
+    loadingText: lang.lang_loading
 
     Component.onCompleted: {
         loadDepartmentEventsPage()
