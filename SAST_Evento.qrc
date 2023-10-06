@@ -63,5 +63,6 @@
         <file>res/image/department/backend_1.png</file>
         <file>res/image/department/lambda_1.png</file>
         <file>res/image/department/lambda_2.png</file>
+        <file>res/font/MiSans-Regular.ttf</file>
     </qresource>
 </RCC>
