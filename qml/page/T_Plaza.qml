@@ -100,7 +100,7 @@ FluScrollablePage {
         delegate: Component {
             Item {
                 anchors.fill: parent
-                Image {
+                FluImage {
                     anchors.fill: parent
                     source: model.url
                     asynchronous: true
