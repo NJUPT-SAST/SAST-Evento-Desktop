@@ -13,7 +13,8 @@ void PlazaController::loadHomeSlide() {
 }
 
 void PlazaController::openUrl(const QString &link) {
-    QDesktopServices::openUrl(QUrl(link));
+    if (!link.isEmpty())
+        QDesktopServices::openUrl(QUrl(link));
 }
 
 PlazaController *PlazaController::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
