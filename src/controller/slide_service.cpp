@@ -21,8 +21,8 @@ void SlideService::load_HomeSlide(const int size) {
                 std::lock_guard lock(mutex);
                 slides.clear();
                 for (auto& i : data) {
-                    slides.push_back(Slide(i));
-                    model.push_back(Slide(i));
+                    slides.emplace_back(i);
+                    model.emplace_back(i);
                 }
             }
             SlideModel::getInstance()->resetModel(std::move(ImageManagement::fillSlideList(model)));

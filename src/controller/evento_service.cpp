@@ -259,20 +259,19 @@ void EventoService::load_Block(const QString& date) {
                 blocks.clear();
                 for (auto& i : data) {
                     blocks.push_back(i.id);
-                    model.push_back(EventoBlock(i, eventList));
+                    model.emplace_back(i, eventList);
                     stored[i.id] = std::move(i);
                 }
             }
-            QMetaObject::invokeMethod(
-                EventoBlockModel::getInstance(),
-                [&]() { EventoBlockModel::getInstance()->resetModel(std::move(model)); },
-                Qt::BlockingQueuedConnection);
+            EventoBlockModel::getInstance()->resetModel(std::move(model));
             CalendarController::getInstance()->onLoadAllFinished();
         });
 
     QtConcurrent::run([=]() {
         auto f(future1);
         f.waitForFinished();
+        auto f2(future2);
+        f2.waitForFinished();
     });
 }
 
