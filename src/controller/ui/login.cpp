@@ -69,6 +69,10 @@ LoginController::LoginController() {
                         UserHelper::getInstance()->updateUser(result.take());
                         emit loginSuccess();
                     });
+                QtConcurrent::run([=]() {
+                    auto f(future);
+                    f.waitForFinished();
+                });
             } else if (query.hasQueryItem("error")) {
                 auto errorDescription = query.hasQueryItem("error_description")
                                             ? query.queryItemValue("error_description")
@@ -160,7 +164,7 @@ void LoginController::loadPermissionList() {
                                                    UserHelper::Permission::UserPermission);
         else
             UserHelper::getInstance()->setProperty("permission",
-                                                   UserHelper::Permission::AdminPermisson);
+                                                   UserHelper::Permission::AdminPermission);
         loadPermissionSuccessEvent();
     });
     QtConcurrent::run([=] {

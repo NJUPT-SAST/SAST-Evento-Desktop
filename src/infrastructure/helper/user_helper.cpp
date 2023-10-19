@@ -13,7 +13,13 @@ UserHelper* UserHelper::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
 }
 
 void UserHelper::updateUser(const DTO_User& user) {
-    setProperty("userId", user.userId);
-    setProperty("wechatId", user.wechatId);
+    setProperty("userId", user.id);
+    setProperty("linkId", user.linkId);
+    setProperty("studentId", user.studentId);
     setProperty("email", user.email);
+    setProperty("nickname", user.nickname);
+    setProperty("avatar", user.avatar);
+    setProperty("organization", user.organization);
+    setProperty("biography", user.biography);
+    setProperty("link", user.link);
 }

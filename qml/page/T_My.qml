@@ -27,6 +27,7 @@ FluScrollablePage {
 
     Connections {
         target: MyPageController
+
         function onLoadMyPageSuccessEvent() {
             statusMode = FluStatusViewType.Success
         }
@@ -34,6 +35,7 @@ FluScrollablePage {
 
     Connections {
         target: MyPageController
+
         function onLoadMyPageErrorEvent(message) {
             errorText = message
             statusMode = FluStatusViewType.Error
@@ -60,7 +62,7 @@ FluScrollablePage {
                     asynchronous: true
                     anchors.fill: parent
                     sourceSize: Qt.size(width, height)
-                    source: "qrc:/res/svg/avatar_4.svg"
+                    source: UserHelper.avatar
                 }
             }
             Column {
@@ -73,7 +75,7 @@ FluScrollablePage {
                 FluText {
                     id: text_name
                     font: FluTextStyle.Subtitle
-                    text: UserHelper.userId
+                    text: UserHelper.nickname
                 }
             }
         }
@@ -116,7 +118,7 @@ FluScrollablePage {
                     iconSource: FluentIcons.Smartcard
                     onClicked: {
                         MainWindow.window.pushPage(
-                                    "qrc:/qml/page/T_SouvenirCard.qml")
+                            "qrc:/qml/page/T_SouvenirCard.qml")
                     }
                 }
                 FluText {
@@ -138,7 +140,7 @@ FluScrollablePage {
                     iconSource: FluentIcons.PersonalFolder
                     onClicked: {
                         MainWindow.window.pushPage(
-                                    "qrc:/qml/page/T_Profile.qml")
+                            "qrc:/qml/page/T_Profile.qml")
                     }
                 }
                 FluText {
@@ -284,7 +286,7 @@ FluScrollablePage {
                     onClicked: {
                         EventoHelper.id = model.id
                         MainWindow.window.pushPage(
-                                    "qrc:/qml/page/T_EventInfo.qml")
+                            "qrc:/qml/page/T_EventInfo.qml")
                     }
                 }
             }

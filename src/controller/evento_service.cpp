@@ -268,10 +268,8 @@ void EventoService::load_Block(const QString& date) {
         });
 
     QtConcurrent::run([=]() {
-        auto f(future1);
+        auto f(future2);
         f.waitForFinished();
-        auto f2(future2);
-        f2.waitForFinished();
     });
 }
 
