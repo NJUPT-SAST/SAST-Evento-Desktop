@@ -5,11 +5,15 @@
 #include "types.h"
 
 struct DTO_User {
-    UserID userId;
-    QString wechatId;
+    UserID id;
+    QString linkId;
+    QString studentId;
     QString email;
-    std::vector<DTO_Permission> permission;
-    std::vector<Department> department;
+    QString nickname;
+    QString avatar;
+    QString organization;
+    QString biography;
+    QString link;
 };
 
 #endif // DTO_USER_H

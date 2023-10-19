@@ -22,7 +22,7 @@ static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply) {
     auto result = QJsonDocument::fromJson(content, &jsonError);
     if (jsonError.error != QJsonParseError::NoError) {
         return EventoException(EventoExceptionCode::JsonError,
-                               QString("json error: %1 (offest = %2)")
+                               QString("json error: %1 (offset = %2)")
                                    .arg(jsonError.errorString())
                                    .arg(jsonError.offset));
     }
@@ -202,11 +202,21 @@ static QStringList asStringList(const QJsonValue& value) {
 }
 
 // userFetch
-register_object_member(DTO_User, "userId", userId);
-register_object_member(DTO_User, "wechatId", wechatId);
+register_object_member(DTO_User, "id", id);
+register_object_member(DTO_User, "linkId", linkId);
+register_object_member(DTO_User, "studentId", studentId);
 register_object_member(DTO_User, "email", email);
-declare_object(DTO_User, object_member(DTO_User, userId), object_member(DTO_User, wechatId),
-               object_member(DTO_User, email));
+register_object_member(DTO_User, "nickname", nickname);
+register_object_member(DTO_User, "avatar", avatar);
+register_object_member(DTO_User, "organization", organization);
+register_object_member(DTO_User, "biography", biography);
+register_object_member(DTO_User, "link", link);
+declare_object(DTO_User, object_member(DTO_User, id), object_member(DTO_User, linkId),
+               object_member(DTO_User, studentId), object_member(DTO_User, email),
+               object_member(DTO_User, nickname), object_member(DTO_User, avatar),
+               object_member(DTO_User, organization), object_member(DTO_User, biography),
+               object_member(DTO_User, link));
+
 QFuture<EventoResult<DTO_User>> EventoNetworkClient::loginViaSastLink(const QString& code) {
     UserHelper::getInstance();
     auto url = endpoint(QStringLiteral("/user/login/link"));
@@ -1021,15 +1031,14 @@ QFuture<EventoResult<bool>> EventoNetworkClient::editEvent(
     EventoID event, const QString& title, const QString& description, const QString& eventStart,
     const QString& eventEnd, const QString& registerStart, const QString& registerEnd, int typeId,
     int locationId, const QVariantList& departmentIds, const QString& tag) {
-    auto url = endpoint(QStringLiteral("/event/info"),
-                        [&](QUrlQuery& params) {
-                            params.addQueryItem("eventId", QString::number(event));
-                        });
-    auto future = this->put(
-        url, QJsonDocument(Request_EventoPatch{title, description, eventStart, eventEnd, registerStart,
-                                          registerEnd, typeId, locationId, departmentIds, tag, event}
-                               .serialise()
-                               .toObject()));
+    auto url = endpoint(QStringLiteral("/event/info"), [&](QUrlQuery& params) {
+        params.addQueryItem("eventId", QString::number(event));
+    });
+    auto future = this->put(url, QJsonDocument(Request_EventoPatch{
+                                     title, description, eventStart, eventEnd, registerStart,
+                                     registerEnd, typeId, locationId, departmentIds, tag, event}
+                                                   .serialise()
+                                                   .toObject()));
     return QtConcurrent::run([=]() -> EventoResult<bool> {
         auto f(future);
         auto result = f.takeResult();
@@ -1141,8 +1150,8 @@ QFuture<EventoResult<QVariantList>> EventoNetworkClient::getAdminEvents(const QS
 }
 
 QFuture<EventoResult<std::pair<QString, QString>>> EventoNetworkClient::checkUpdate() {
-    auto url =
-        QUrl("https://api.github.com/repos/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest");
+    auto url = QUrl("https://api.github.com/repos/NJUPT-SAST-Cpp/"
+                    "SAST-Evento-Desktop/releases/latest");
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("Accept", "application/vnd.github+json");
