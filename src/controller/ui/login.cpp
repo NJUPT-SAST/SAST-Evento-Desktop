@@ -34,6 +34,8 @@ LoginController::LoginController() {
     login_redirect_server.route("/", [this](const QHttpServerRequest& request) {
         // OAuth 2.0 Redirect Uri
         auto status_code = QHttpServerResponder::StatusCode::Ok;
+        bool flag = false;
+        QString errorDescription;
         switch (request.method()) {
         case QHttpServerRequest::Method::Options:
             goto finished;
@@ -60,13 +62,14 @@ LoginController::LoginController() {
 
             if (query.hasQueryItem("code")) {
                 auto code = query.queryItemValue("code");
-                auto future =
-                    getRepo()->loginViaSastLink(code).then([=](EventoResult<DTO_User> result) {
+                auto future = getRepo()->loginViaSastLink(code).then(
+                    [=, &flag](EventoResult<DTO_User> result) {
                         if (!result) {
                             emit loginFailed(result.message());
                             return;
                         }
                         UserHelper::getInstance()->updateUser(result.take());
+                        flag = true;
                         emit loginSuccess();
                     });
                 QtConcurrent::run([=]() {
@@ -74,9 +77,9 @@ LoginController::LoginController() {
                     f.waitForFinished();
                 });
             } else if (query.hasQueryItem("error")) {
-                auto errorDescription = query.hasQueryItem("error_description")
-                                            ? query.queryItemValue("error_description")
-                                            : query.queryItemValue("error");
+                errorDescription = query.hasQueryItem("error_description")
+                                       ? query.queryItemValue("error_description")
+                                       : query.queryItemValue("error");
                 emit loginFailed(errorDescription);
             } else {
                 status_code = QHttpServerResponder::StatusCode::BadRequest;
@@ -85,14 +88,95 @@ LoginController::LoginController() {
 
     finished:
         QHttpServerResponse resp(QHttpServerResponder::StatusCode::InternalServerError);
-        if (status_code == QHttpServerResponder::StatusCode::Ok) {
-            resp = QHttpServerResponse(
-                "text/html",
-                "<!DOCTYPE html><html><head><title>Completed</title></head><body><script>window.close();</script><p>Authentication completed. Please close this window. </p></body></html>",
-                status_code);
+        if (status_code == QHttpServerResponder::StatusCode::Ok && flag) {
+            resp = QHttpServerResponse("text/html",
+                                       R"(
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Login Success</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #f0f0f0;
+                            text-align: center;
+                            padding: 50px;
+                        }
+                        .message {
+                            background-color: #4CAF50;
+                            color: white;
+                            padding: 20px;
+                            border-radius: 5px;
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="message" id="successMessage">
+                        <p id="messageText">SAST Link Authorization Successful, please close this page</p>
+                    </div>
+                    <script>
+                        var userLanguage = navigator.language || navigator.userLanguage;
+                        var messages = {
+                            'zh-CN': 'SAST Link授权成功，请关闭当前网页',
+                            'en': 'SAST Link Authorization Successful, please close this page'
+                        };
+                        var messageText = document.getElementById('messageText');
+                        if (messages[userLanguage]) {
+                            messageText.textContent = messages[userLanguage];
+                        }
+                    </script>
+                </body>
+                </html>
+                )",
+                                       status_code);
         } else {
-            resp = QHttpServerResponse("text/plain",
-                                       QStringLiteral("Error %1").arg((int)status_code).toUtf8(),
+            resp = QHttpServerResponse("text/html",
+                                       QStringLiteral(R"(
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Authorization Failed</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #f0f0f0;
+                            text-align: center;
+                            padding: 50px;
+                        }
+                        .message {
+                            background-color: #FF5733;
+                            color: white;
+                            padding: 20px;
+                            border-radius: 5px;
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="message" id="failureMessage">
+                        <p id="messageText">Authorization Failed, error: %1</p>
+                    </div>
+                    <script>
+                        var userLanguage = navigator.language || navigator.userLanguage;
+                        var messages = {
+                            'en': 'Authorization Failed, error: %1',
+                            'zh-CN': '授权失败，错误信息：%1'
+                        };
+                        var messageText = document.getElementById('messageText');
+                        if (messages[userLanguage]) {
+                            messageText.textContent = messages[userLanguage];
+                        }
+                    </script>
+                </body>
+                </html>
+                )")
+                                           .arg(errorDescription)
+                                           .toUtf8(),
                                        status_code);
         }
         resp.setHeader("Access-Control-Allow-Origin", "https://link.sast.fun");

@@ -79,6 +79,15 @@ En::En(QObject* parent) : Lang{parent} {
     lang_native_text_rendering("Native Text Rendering");
     lang_animation_effect("Animation Effect");
 
+    // evento block
+    lang_copy("Copy");
+    lang_get_qrcode("Get QR-Code");
+    lang_edit_event("Edit Event");
+    lang_cancel_event("Cancel Event");
+    lang_delete_event("Delete Event");
+    lang_confirm_cancel("Confirm cancel? Operation UNRECOVERABLE!");
+    lang_confirm_delete("Confirm delete? Operation UNRECOVERABLE!");
+
     // other
     lang_cancel("Cancel");
     lang_exit("Exit");

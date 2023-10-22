@@ -118,7 +118,7 @@ FluScrollablePage {
                     iconSource: FluentIcons.Smartcard
                     onClicked: {
                         MainWindow.window.pushPage(
-                            "qrc:/qml/page/T_SouvenirCard.qml")
+                                    "qrc:/qml/page/T_SouvenirCard.qml")
                     }
                 }
                 FluText {
@@ -140,7 +140,7 @@ FluScrollablePage {
                     iconSource: FluentIcons.PersonalFolder
                     onClicked: {
                         MainWindow.window.pushPage(
-                            "qrc:/qml/page/T_Profile.qml")
+                                    "qrc:/qml/page/T_Profile.qml")
                     }
                 }
                 FluText {
@@ -202,6 +202,7 @@ FluScrollablePage {
                     height: 115
                     width: 115
                     radius: [6, 6, 6, 6]
+                    shadow: false
                     anchors {
                         left: parent.left
                         leftMargin: 10
@@ -286,7 +287,7 @@ FluScrollablePage {
                     onClicked: {
                         EventoHelper.id = model.id
                         MainWindow.window.pushPage(
-                            "qrc:/qml/page/T_EventInfo.qml")
+                                    "qrc:/qml/page/T_EventInfo.qml")
                     }
                 }
             }

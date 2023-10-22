@@ -61,6 +61,12 @@ FluWindow {
                 FramelessUtils.systemTheme = FramelessHelperConstants.Light
         }
     }
+
+    Component.onCompleted: {
+        FramelessUtils.systemTheme
+                = FluTheme.dark ? FramelessHelperConstants.Dark : FramelessHelperConstants.Light
+    }
+
     function setHitTestVisible(com) {
         framless_helper.setHitTestVisible(com)
     }

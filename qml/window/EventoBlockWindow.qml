@@ -116,14 +116,15 @@ CustomWindow {
                     spacing: 5
                     FluCopyableText {
                         id: code_text
-                        text: "13EDX4" //page.code
+                        text: page.code
                         font: FluTextStyle.Title
                     }
                     FluIconButton {
                         iconSource: FluentIcons.Copy
+                        text: lang.lang_copy
                         onClicked: {
                             FluTools.clipText(code_text.text)
-                            showSuccess("复制成功")
+                            showSuccess(lang.lang_copy_success)
                         }
                     }
                 }
@@ -205,6 +206,7 @@ CustomWindow {
                     FluIconButton {
                         iconSource: FluentIcons.QRCode
                         iconSize: 15
+                        text: lang.lang_get_qrcode
                         onClicked: {
                             var widthAnimation = Qt.createQmlObject(
                                         'import QtQuick 2.0; PropertyAnimation {target: window; property: "width"; to: 420; easing.type: Easing.InOutQuad}',
@@ -232,6 +234,7 @@ CustomWindow {
                         id: btn_edit
                         iconSource: FluentIcons.Edit
                         iconSize: 15
+                        text: lang.lang_edit_event
                         onClicked: {
                             EventoEditController.isEditMode = true
                             onResult({
@@ -247,6 +250,7 @@ CustomWindow {
                         id: btn_cancel
                         iconSource: FluentIcons.Cancel
                         iconSize: 15
+                        text: lang.lang_cancel_event
                         onClicked: {
                             cancel_btn_dialog.open()
                             window.close()
@@ -259,6 +263,7 @@ CustomWindow {
                         id: btn_delete
                         iconSource: FluentIcons.Delete
                         iconSize: 15
+                        text: lang.lang_delete_event
                         onClicked: {
                             delete_btn_dialog.open()
                         }
@@ -270,12 +275,12 @@ CustomWindow {
 
                 FluContentDialog {
                     id: delete_btn_dialog
-                    title: "删除活动"
-                    message: "是否删除活动？"
+                    title: lang.lang_delete_event
+                    message: lang.lang_confirm_delete
                     buttonFlags: FluContentDialogType.NegativeButton
                                  | FluContentDialogType.PositiveButton
-                    negativeText: "取消"
-                    positiveText: "确定"
+                    negativeText: lang.lang_cancel
+                    positiveText: lang.lang_ok
                     onPositiveClicked: {
                         page.statusMode = FluStatusViewType.Loading
                         CalendarController.deleteEvento(EventoHelper.id)
@@ -284,12 +289,12 @@ CustomWindow {
 
                 FluContentDialog {
                     id: cancel_btn_dialog
-                    title: "取消活动"
-                    message: "是否取消活动？"
+                    title: lang.lang_cancel_event
+                    message: lang.lang_confirm_cancel
                     buttonFlags: FluContentDialogType.NegativeButton
                                  | FluContentDialogType.PositiveButton
-                    negativeText: "取消"
-                    positiveText: "确定"
+                    negativeText: lang.lang_cancel
+                    positiveText: lang.lang_ok
                     onPositiveClicked: {
                         page.statusMode = FluStatusViewType.Loading
                         CalendarController.cancelEvento(EventoHelper.id)

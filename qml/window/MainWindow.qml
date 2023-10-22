@@ -28,13 +28,8 @@ CustomWindow {
 
     Component.onCompleted: {
         window.requestActivate()
-        //        if (!UserHelper.isLogin()) {
-        //            window.autoShow = false
-        //            FluApp.navigate("/login")
-        //        } else {
         window.autoShow = true
         FluTools.setQuitOnLastWindowClosed(false)
-        //}
         checkUpdate()
     }
 
