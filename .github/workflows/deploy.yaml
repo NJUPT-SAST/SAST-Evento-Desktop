@@ -166,7 +166,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.package.outputs.packageName }}
-          path: bin/release/${{ env.targetName }}.exe
+          path: bin/release/${{ env.targetName }}
           
       - name: inno setup install
         if: startsWith(github.event.ref, 'refs/tags/')
