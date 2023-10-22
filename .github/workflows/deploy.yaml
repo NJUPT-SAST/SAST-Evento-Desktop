@@ -122,6 +122,11 @@ jobs:
         uses: ashutoshvarma/setup-ninja@v1.1
         with:
           version: "1.11.1"
+
+      - name: Setup MSVC Environment
+        uses: TheMrMilchmann/setup-msvc-dev@v2
+        with:
+          arch: x64
              
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
