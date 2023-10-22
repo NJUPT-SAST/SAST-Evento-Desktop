@@ -165,7 +165,7 @@ jobs:
            
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.package.outputs.packageName }}
+          name: SAST_Evento_win64.exe
           path: bin/release/${{ env.targetName }}
           
       - name: inno setup install
@@ -180,6 +180,6 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./action-cli/installer.exe
-          asset_name: ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}.exe
+          asset_name: ${{ env.fileName }}_win64.exe
           tag: ${{ github.ref }}
           overwrite: true 
