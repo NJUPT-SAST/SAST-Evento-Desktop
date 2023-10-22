@@ -81,6 +81,15 @@ class Lang : public QObject {
     Q_PROPERTY_AUTO(QString, lang_native_text_rendering);
     Q_PROPERTY_AUTO(QString, lang_animation_effect);
 
+    // evento block
+    Q_PROPERTY_AUTO(QString, lang_copy);
+    Q_PROPERTY_AUTO(QString, lang_get_qrcode);
+    Q_PROPERTY_AUTO(QString, lang_edit_event);
+    Q_PROPERTY_AUTO(QString, lang_cancel_event);
+    Q_PROPERTY_AUTO(QString, lang_delete_event);
+    Q_PROPERTY_AUTO(QString, lang_confirm_cancel);
+    Q_PROPERTY_AUTO(QString, lang_confirm_delete);
+
     // other
     Q_PROPERTY_AUTO(QString, lang_cancel);
     Q_PROPERTY_AUTO(QString, lang_exit);

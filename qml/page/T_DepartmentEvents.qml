@@ -233,6 +233,7 @@ FluScrollablePage {
                     height: 115
                     width: 115
                     radius: [6, 6, 6, 6]
+                    shadow: false
                     anchors {
                         left: parent.left
                         leftMargin: 10

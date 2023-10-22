@@ -62,7 +62,7 @@ CustomWindow {
         function onLoginFailed(reason) {
             hideLoading()
             system_tray.showMessage(lang.lang_login_failed,
-                                    lang.lang_error + reason)
+                lang.lang_error + reason)
             window.requestActivate()
             showError(lang.lang_login_failed, 4000)
         }
@@ -155,13 +155,6 @@ CustomWindow {
                     topMargin: 20
                     horizontalCenter: parent.horizontalCenter
                 }
-                onTextChanged: {
-                    if (txt_username.text.length > 0
-                            && txt_password.text.length > 0)
-                        btn_login.enabled = true
-                    else
-                        btn_login.enabled = false
-                }
             }
             FluTextBox {
                 id: txt_password
@@ -170,17 +163,10 @@ CustomWindow {
                 height: 45
                 anchors {
                     top: txt_username.bottom
-                    topMargin: 10
+                    topMargin: 15
                     horizontalCenter: parent.horizontalCenter
                 }
                 echoMode: TextInput.Password
-                onTextChanged: {
-                    if (txt_username.text.length > 0
-                            && txt_password.text.length > 0)
-                        btn_login.enabled = true
-                    else
-                        btn_login.enabled = false
-                }
             }
 
             FluFilledButton {
@@ -188,21 +174,22 @@ CustomWindow {
                 text: lang.lang_login
                 font.pixelSize: 16
                 font.bold: true
+                enabled: txt_username.text.length > 0
+                    && txt_password.text.length > 0
                 width: 190
                 height: 45
                 anchors {
                     top: txt_password.bottom
-                    topMargin: 10
+                    topMargin: 15
                     horizontalCenter: parent.horizontalCenter
                 }
                 focus: true
-                enabled: false
                 onClicked: {
                     if (loginSuccess)
                         LoginController.loadPermissionList()
                     else
                         LoginController.beginLoginViaUsername(
-                                    txt_username.text, txt_password.text)
+                            txt_username.text, txt_password.text)
                 }
             }
         }
@@ -306,11 +293,11 @@ CustomWindow {
             }
         }
         onActivated: reason => {
-                         if (reason === SystemTrayIcon.Trigger) {
-                             window.show()
-                             window.raise()
-                             window.requestActivate()
-                         }
-                     }
+            if (reason === SystemTrayIcon.Trigger) {
+                window.show()
+                window.raise()
+                window.requestActivate()
+            }
+        }
     }
 }

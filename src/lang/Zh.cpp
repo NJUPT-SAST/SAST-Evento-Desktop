@@ -77,6 +77,15 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_native_text_rendering("Native文本渲染");
     lang_animation_effect("动画效果");
 
+    // evento block
+    lang_copy("复制");
+    lang_get_qrcode("获取签到二维码");
+    lang_edit_event("编辑活动");
+    lang_cancel_event("取消活动");
+    lang_delete_event("删除活动");
+    lang_confirm_cancel("确认取消？该操作不可恢复！");
+    lang_confirm_delete("确认删除？该操作不可恢复！");
+
     // other
     lang_cancel("取消");
     lang_exit("退出");
