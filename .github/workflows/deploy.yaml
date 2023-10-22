@@ -110,7 +110,7 @@ jobs:
           path: bin/release/*.dmg
           
   deploy-windows:
-    name: Build
+    name: Deploy on Windows
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -135,7 +135,7 @@ jobs:
           version: ${{ matrix.qt_ver }}
           arch: ${{ matrix.qt_arch }}
           cache: ${{steps.cache-qt.outputs.cache-hit}}
-          modules: 'qt5compat qtmultimedia qtshadertools qtimageformats qtspeech qt3d'
+          modules: 'qt5compat qtwebsockets qthttpserver qtshadertools'
           
       - name: msvc-build
         id: build
@@ -174,12 +174,7 @@ jobs:
         with:
           filepath: ./action-cli/InstallerScript.iss
           
-      - name: uploadRelease
-        if: startsWith(github.event.ref, 'refs/tags/')
-        uses: svenstaro/upload-release-action@v2
+      - uses: actions/upload-artifact@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./action-cli/installer.exe
-          asset_name: ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}.exe
-          tag: ${{ github.ref }}
-          overwrite: true 
+          name: SAST_Evento_win64
+          path: bin/release/*.exe
