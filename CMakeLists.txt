@@ -63,7 +63,10 @@ if(WIN32)
         ${CMAKE_SOURCE_DIR}/.cmake/version_exe.rc.in
         ${VERSION_RC_PATH}
     )
-
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/.cmake/InstallerScript.iss.in
+        ${CMAKE_SOURCE_DIR}/action-cli/InstallerScript.iss
+    )
     set(WIN32_MANIFEST_PATH ${CMAKE_SOURCE_DIR}/app.manifest)
 endif()
 
