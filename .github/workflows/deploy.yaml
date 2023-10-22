@@ -121,7 +121,7 @@ jobs:
             msvc_arch: x64
             qt_arch_install: msvc2019_64  
     env:
-      targetName: SAST_Evento.exe
+      targetName: SAST_Evento_Desktop.exe
       fileName: SAST_Evento
     steps:
       - name: Check out repository
@@ -174,7 +174,12 @@ jobs:
         with:
           filepath: ./action-cli/InstallerScript.iss
           
-      - uses: actions/upload-artifact@v2
+      - name: uploadRelease
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v2
         with:
-          name: SAST_Evento_win64
-          path: bin/release/*.exe
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./action-cli/installer.exe
+          asset_name: ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}.exe
+          tag: ${{ github.ref }}
+          overwrite: true 
