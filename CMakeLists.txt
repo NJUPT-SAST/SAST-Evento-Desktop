@@ -16,7 +16,6 @@ if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
 endif()
 
-
 #设置可执行文件输出目录
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/debug)
@@ -68,8 +67,24 @@ if(WIN32)
     set(WIN32_MANIFEST_PATH ${CMAKE_SOURCE_DIR}/app.manifest)
 endif()
 
+if(APPLE)
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER ${IDENTIFIER})
+    set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
+    set(MACOSX_BUNDLE_COPYRIGHT ${COPYRIGHT})
+
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${spectral_VERSION})
+    set(MACOSX_BUNDLE_BUNDLE_VERSION ${spectral_VERSION})
+
+    set(ICON_NAME "app.icns")
+    set(${PROJECT_NAME}_MAC_ICON "${CMAKE_SOURCE_DIR}/${ICON_NAME}")
+    set(MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
+    set_property(SOURCE "${${PROJECT_NAME}_MAC_ICON}" PROPERTY
+        MACOSX_PACKAGE_LOCATION Resources)
+endif()
+
 #添加可执行文件
-qt_add_executable(SAST_Evento_Desktop
+qt_add_executable(SAST_Evento_Desktop MACOSX_BUNDLE
+    ${${PROJECT_NAME}_MAC_ICON}
     ${SOURCE_FILES}
     ${VERSION_RC_PATH}
     ${WIN32_MANIFEST_PATH}
@@ -80,6 +95,9 @@ qt_add_qml_module(SAST_Evento_Desktop
     VERSION 1.0
     SOURCES ${SOURCE_IMPORT_FILES}
 )
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY
+    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_SOURCE_DIR}/.cmake/Info.plist.in")
 
 target_include_directories(SAST_Evento_Desktop
     PRIVATE
