@@ -62,7 +62,7 @@ CustomWindow {
         function onLoginFailed(reason) {
             hideLoading()
             system_tray.showMessage(lang.lang_login_failed,
-                lang.lang_error + reason)
+                                    lang.lang_error + reason)
             window.requestActivate()
             showError(lang.lang_login_failed, 4000)
         }
@@ -147,7 +147,7 @@ CustomWindow {
             anchors.centerIn: parent
             FluTextBox {
                 id: txt_username
-                placeholderText: "账号"
+                placeholderText: lang.lang_username
                 width: parent.width - 30
                 height: 45
                 anchors {
@@ -158,7 +158,7 @@ CustomWindow {
             }
             FluTextBox {
                 id: txt_password
-                placeholderText: "密码"
+                placeholderText: lang.lang_password
                 width: parent.width - 30
                 height: 45
                 anchors {
@@ -175,7 +175,7 @@ CustomWindow {
                 font.pixelSize: 16
                 font.bold: true
                 enabled: txt_username.text.length > 0
-                    && txt_password.text.length > 0
+                         && txt_password.text.length > 0
                 width: 190
                 height: 45
                 anchors {
@@ -189,7 +189,7 @@ CustomWindow {
                         LoginController.loadPermissionList()
                     else
                         LoginController.beginLoginViaUsername(
-                            txt_username.text, txt_password.text)
+                                    txt_username.text, txt_password.text)
                 }
             }
         }
@@ -202,8 +202,9 @@ CustomWindow {
             anchors.centerIn: parent
             FluText {
                 id: text_scan_qrcode
-                text: "使用小程序扫码登录"
-                anchors.topMargin: 50
+                text: lang.lang_login_hint
+                font: FluTextStyle.Caption
+                anchors.topMargin: 60
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             FluQRCode {
@@ -225,7 +226,7 @@ CustomWindow {
         spacing: 5
         FluTextButton {
             id: btn_visitor
-            text: lang.lang_visitor_login
+            text: lang.lang_guest_login
             onClicked: {
                 UserHelper.permission = 1
                 FluApp.navigate("/")
@@ -234,7 +235,7 @@ CustomWindow {
         }
         FluTextButton {
             id: qrcode_login
-            text: "扫码登录"
+            text: lang.lang_scan_login
             onClicked: {
                 loader.sourceComponent = com_qrcode_login
                 qrcode_login.disabled = true
@@ -244,7 +245,7 @@ CustomWindow {
         }
         FluTextButton {
             id: username_login
-            text: "账号登录"
+            text: lang.lang_username_login
             onClicked: {
                 loader.sourceComponent = com_username_login
                 qrcode_login.disabled = false
@@ -254,7 +255,7 @@ CustomWindow {
         }
         FluTextButton {
             id: link_login
-            text: "Link登录"
+            text: lang.lang_Link_login
             onClicked: {
                 loader.sourceComponent = com_link_login
                 qrcode_login.disabled = false
@@ -293,11 +294,11 @@ CustomWindow {
             }
         }
         onActivated: reason => {
-            if (reason === SystemTrayIcon.Trigger) {
-                window.show()
-                window.raise()
-                window.requestActivate()
-            }
-        }
+                         if (reason === SystemTrayIcon.Trigger) {
+                             window.show()
+                             window.raise()
+                             window.requestActivate()
+                         }
+                     }
     }
 }
