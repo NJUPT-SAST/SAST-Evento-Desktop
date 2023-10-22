@@ -22,7 +22,13 @@ En::En(QObject* parent) : Lang{parent} {
     lang_use_link("       Login by Link");
     lang_login_failed("Login Failed");
     lang_by_cpp("Developed by SAST-C++ Group\n");
-    lang_visitor_login("Visitor Login");
+    lang_guest_login("Guest");
+    lang_Link_login("Link");
+    lang_scan_login("QR-Code");
+    lang_username_login("Username");
+    lang_username("username");
+    lang_password("password");
+    lang_login_hint("Use Smart Program to scan the QR-Code");
 
     // Plaza
     lang_undertaking_evento("Undertaking Evento");
