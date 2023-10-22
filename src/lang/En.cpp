@@ -31,7 +31,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_login_hint("Use Smart Program to scan the QR-Code");
 
     // Plaza
-    lang_undertaking_evento("Undertaking Evento");
+    lang_undertaking_evento("Ongoing Evento");
     lang_latest_evento("Latest Evento");
 
     // schedule
@@ -43,7 +43,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_check_hint("Please get the key from the instructor");
 
     // event info
-    lang_undertaking("Undertaking");
+    lang_undertaking("Ongoing");
     lang_not_started("Not Started");
     lang_over("Over");
     lang_cancelled("Cancelled");
