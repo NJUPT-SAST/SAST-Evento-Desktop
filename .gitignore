@@ -60,4 +60,4 @@ x64
 example
 *.aps
 *.rc
-localdata
+action-cli
