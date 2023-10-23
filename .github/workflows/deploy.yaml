@@ -13,7 +13,8 @@ env:
   BUILD_TYPE: Release
   QT_VERSION: "6.5.0"
   QT_MODULES: "qt5compat qtwebsockets qthttpserver qtshadertools"
-  targetName: SAST_Evento_Desktop
+  TARGET: SAST_Evento_Desktop
+  targetName: SAST_Evento_Desktop.exe     
   fileName: SAST_Evento
 
 jobs:
@@ -74,19 +75,19 @@ jobs:
           echo "Type=Application" >> SAST_Evento.desktop
           echo "Exec=SAST_Evento_Desktop" >> SAST_Evento.desktop
           linuxdeploy-x86_64.AppImage --plugin=qt --output=appimage --desktop-file=SAST_Evento.desktop --icon-file=app_icon.svg --executable=bin/release/SAST_Evento_Desktop --appdir AppDir
-          mv ${{ env.fileName }}-*.AppImage ${{ env.targetName }}.AppImage
+          mv ${{ env.fileName }}-*.AppImage ${{ env.TARGET }}.AppImage
           
       - uses: actions/upload-artifact@v2
         with:
           name: SAST_Evento_AppImage
-          path: ${{ env.targetName }}.AppImage
+          path: ${{ env.TARGET }}.AppImage
 
       - name: uploadRelease
         if: startsWith(github.event.ref, 'refs/tags/')
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ env.targetName }}.AppImage
+          file: ${{ env.TARGET }}.AppImage
           asset_name: ${{ env.fileName }}_AppImage.AppImage
           tag: ${{ github.ref }}
           overwrite: true
@@ -128,19 +129,19 @@ jobs:
 
       - name: Package
         run: |
-          macdeployqt bin/release/${targetName}.app -qmldir=. -verbose=1 -dmg
+          macdeployqt bin/release/SAST_Evento_Desktop.app -qmldir=. -verbose=1 -dmg
        
       - uses: actions/upload-artifact@v2
         with:
           name: SAST_Evento_MacOS
-          path: bin/release/${{ env.targetName }}.app
+          path: bin/release/${{ env.TARGET }}.app
 
       - name: uploadRelease
         if: startsWith(github.event.ref, 'refs/tags/')
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: bin/release/${{ env.targetName }}.dmg
+          file: bin/release/${{ env.TARGET }}.dmg
           asset_name: ${{ env.fileName }}_MacOS.dmg
           tag: ${{ github.ref }}
           overwrite: true
@@ -189,10 +190,10 @@ jobs:
         id: package      
         env:
           archiveName: ${{ env.fileName }}-${{ matrix.qt_arch }}-${{ matrix.qt_ver }}
-          msvcArch: ${{ matrix.msvc_arch }}          
+          msvcArch: ${{ matrix.msvc_arch }}
         shell: pwsh
         run: |
-          & scripts\windows-publish.ps1 ${env:archiveName} ${env:targetName}.exe
+          & scripts\windows-publish.ps1 ${env:archiveName} ${env:targetName}
           # 记录packageName给后续step
            $name = ${env:archiveName}
            echo "::set-output name=packageName::$name"   
