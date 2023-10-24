@@ -81,7 +81,8 @@ FluScrollablePage {
         id: carousel
         Layout.topMargin: 10
         Layout.fillWidth: true
-        height: 400
+        height: width * 40 / 89
+        implicitHeight: height
         radius: [10, 10, 10, 10]
         loopTime: 4000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop

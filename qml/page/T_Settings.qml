@@ -13,6 +13,7 @@ FluScrollablePage {
 
     Settings {
         id: settings
+        location: FluTools.getApplicationDirPath() + "/config.ini"
         property string langMode
         property int displayMode
     }

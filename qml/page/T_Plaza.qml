@@ -9,7 +9,6 @@ import "../window"
 FluScrollablePage {
     id: page
     launchMode: FluPageType.SingleTask
-    title: lang.lang_plaza
     property var arr: []
 
     onErrorClicked: {
@@ -83,12 +82,12 @@ FluScrollablePage {
         id: carousel
         Layout.topMargin: 10
         Layout.fillWidth: true
-        height: 320
+        height: width * 0.36
+        implicitHeight: height
         radius: [10, 10, 10, 10]
         loopTime: 4000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
         indicatorMarginTop: 10
-
         Connections {
             target: page
             function onListReady() {
@@ -99,11 +98,13 @@ FluScrollablePage {
 
         delegate: Component {
             Item {
-                anchors.fill: parent
+                width: carousel.width
+                height: carousel.height
                 FluImage {
                     anchors.fill: parent
                     source: model.url
                     asynchronous: true
+                    cache: true
                     fillMode: Image.PreserveAspectCrop
                 }
                 Rectangle {
@@ -134,8 +135,8 @@ FluScrollablePage {
     FluText {
         text: lang.lang_undertaking_evento
         font: FluTextStyle.Title
-        Layout.topMargin: 20
         Layout.leftMargin: 20
+        Layout.topMargin: 20
     }
 
     GridView {

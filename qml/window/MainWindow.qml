@@ -202,7 +202,12 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
 
     Settings {
         id: settings
+        location: FluTools.getApplicationDirPath() + "/config.ini"
         property var displayMode
+        property alias x: window.x
+        property alias y: window.y
+        property alias windowWidth: window.width
+        property alias windowHeight: window.height
     }
 
     FluContentDialog {

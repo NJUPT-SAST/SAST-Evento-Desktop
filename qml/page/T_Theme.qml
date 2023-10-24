@@ -11,6 +11,7 @@ FluScrollablePage {
 
     Settings {
         id: settings
+        location: FluTools.getApplicationDirPath() + "/config.ini"
         property int colorIndex
     }
 

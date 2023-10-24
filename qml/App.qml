@@ -11,6 +11,7 @@ Window {
 
     Settings {
         id: settings
+        location: FluTools.getApplicationDirPath() + "/config.ini"
         property int darkMode
         property int nativeTextSet
         property int enableAnimationSet
