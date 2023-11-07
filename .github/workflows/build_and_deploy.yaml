@@ -1,9 +1,9 @@
-name: Deploy
+name: Build and Deploy
 
 on:
   workflow_dispatch:
   push:
-    branch:
+    branches:
       - main
   pull_request:
 
