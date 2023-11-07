@@ -34,7 +34,6 @@ LoginController::LoginController() {
     login_redirect_server.route("/", [this](const QHttpServerRequest& request) {
         // OAuth 2.0 Redirect Uri
         auto status_code = QHttpServerResponder::StatusCode::Ok;
-        bool flag = false;
         QString errorDescription;
         switch (request.method()) {
         case QHttpServerRequest::Method::Options:
@@ -63,13 +62,12 @@ LoginController::LoginController() {
             if (query.hasQueryItem("code")) {
                 auto code = query.queryItemValue("code");
                 auto future = getRepo()->loginViaSastLink(code).then(
-                    [=, &flag](EventoResult<DTO_User> result) {
+                    [=](EventoResult<DTO_User> result) {
                         if (!result) {
                             emit loginFailed(result.message());
                             return;
                         }
                         UserHelper::getInstance()->updateUser(result.take());
-                        flag = true;
                         emit loginSuccess();
                     });
                 QtConcurrent::run([=]() {
@@ -81,6 +79,7 @@ LoginController::LoginController() {
                                        ? query.queryItemValue("error_description")
                                        : query.queryItemValue("error");
                 emit loginFailed(errorDescription);
+                status_code = QHttpServerResponder::StatusCode::BadRequest;
             } else {
                 status_code = QHttpServerResponder::StatusCode::BadRequest;
             }
@@ -88,7 +87,7 @@ LoginController::LoginController() {
 
     finished:
         QHttpServerResponse resp(QHttpServerResponder::StatusCode::InternalServerError);
-        if (status_code == QHttpServerResponder::StatusCode::Ok && flag) {
+        if (status_code == QHttpServerResponder::StatusCode::Ok) {
             resp = QHttpServerResponse("text/html",
                                        R"(
                 <!DOCTYPE html>
