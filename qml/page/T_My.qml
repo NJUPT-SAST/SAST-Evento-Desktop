@@ -63,6 +63,7 @@ FluScrollablePage {
                     anchors.fill: parent
                     sourceSize: Qt.size(width, height)
                     source: UserHelper.avatar
+                    cache: true
                 }
             }
             Column {
@@ -89,16 +90,20 @@ FluScrollablePage {
             color: "transparent"
 
             Column {
-                id: button_subscribe
+                id: button_profile
                 anchors.leftMargin: 50
                 FluIconButton {
                     width: 50
                     height: 50
                     scale: 1.8
-                    iconSource: FluentIcons.More
+                    iconSource: FluentIcons.PersonalFolder
+                    onClicked: {
+                        MainWindow.window.pushPage(
+                                    "qrc:/qml/page/T_Profile.qml")
+                    }
                 }
                 FluText {
-                    text: lang.lang_stay_tuned
+                    text: lang.lang_profile
                     width: 50
                     horizontalAlignment: Text.AlignHCenter
                 }
@@ -107,7 +112,7 @@ FluScrollablePage {
             Column {
                 id: button_souvenirCard
                 anchors {
-                    left: button_subscribe.right
+                    left: button_profile.right
                     leftMargin: parent.width / 3
                 }
 
@@ -129,6 +134,7 @@ FluScrollablePage {
             }
 
             Column {
+                id: button_subscribe
                 anchors {
                     left: button_souvenirCard.right
                     leftMargin: parent.width / 3
@@ -137,14 +143,10 @@ FluScrollablePage {
                     width: 50
                     height: 50
                     scale: 1.8
-                    iconSource: FluentIcons.PersonalFolder
-                    onClicked: {
-                        MainWindow.window.pushPage(
-                                    "qrc:/qml/page/T_Profile.qml")
-                    }
+                    iconSource: FluentIcons.More
                 }
                 FluText {
-                    text: lang.lang_profile
+                    text: lang.lang_stay_tuned
                     width: 50
                     horizontalAlignment: Text.AlignHCenter
                 }
