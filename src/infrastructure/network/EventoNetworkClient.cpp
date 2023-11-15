@@ -837,7 +837,7 @@ EventoFuture<EventoResult<bool>> EventoNetworkClient::hasFeedbacked(EventoID eve
     auto url = endpoint(QStringLiteral("/feedback/user/info"), params);
     return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<bool> {
         if (result) {
-            return result.take().isNull();
+            return !result.take().isNull();
         } else {
             return {result.code(), result.message()};
         }

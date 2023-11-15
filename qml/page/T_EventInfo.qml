@@ -241,7 +241,7 @@ FluScrollablePage {
                 implicitWidth: 250
                 text: EventoInfoController.isRegistrated ? lang.lang_cancellation : lang.lang_register
                 checked: EventoInfoController.isRegistrated
-                disabled: EventoHelper.state !== 2
+                disabled: EventoHelper.state >= 2
                 onClicked: {
                     statusMode = FluStatusViewType.Loading
                     EventoInfoController.isRegistrated = !EventoInfoController.isRegistrated
@@ -270,9 +270,9 @@ FluScrollablePage {
                 id: btn_subscribe
                 implicitWidth: 250
                 Layout.topMargin: 15
-                text: EventoInfoController.isSubscribed ? lang.lang_subscribe : lang.lang_subscribe
+                text: EventoInfoController.isSubscribed ? lang.lang_subscribe : lang.lang_unsubscribe
                 checked: EventoInfoController.isSubscribed
-                disabled: EventoHelper.state !== 2
+                disabled: EventoHelper.state >= 2
                 onClicked: {
                     statusMode = FluStatusViewType.Loading
                     EventoInfoController.isSubscribed = !EventoInfoController.isSubscribed
