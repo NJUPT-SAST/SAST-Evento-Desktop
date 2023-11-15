@@ -33,6 +33,8 @@ class EventoResult {
         Member(const Member&) = delete;
 
         Member& operator=(Member&& other) {
+            if (this == &other)
+                return other;
             this->~Member();
             if (other.err)
                 new (this) EventoException(std::move(other.err));
@@ -94,7 +96,10 @@ public:
 
 template <>
 struct EventoResult<bool> : public EventoException {
-    EventoResult() = default;
+    EventoResult(bool result = true) {
+        if (!result)
+            set_code(EventoExceptionCode::FalseValue);
+    }
     EventoResult(EventoException&& other) : EventoException(std::move(other)) {}
     EventoResult(EventoExceptionCode code, const QString& msg) : EventoException(code, msg) {}
     EventoResult(EventoResult&& other) : EventoException(std::move(other)) {}

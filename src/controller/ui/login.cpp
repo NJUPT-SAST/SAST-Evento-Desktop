@@ -1,10 +1,10 @@
 #include "login.h"
 #include "repository.h"
 #include "user_helper.h"
+
 #include <QDesktopServices>
 #include <QHttpServerResponse>
 #include <QString>
-#include <QtConcurrent>
 
 constexpr const char* AUTH_SERVER_URL = "https://link.sast.fun/auth";
 constexpr const char* AUTH_CLIENT_ID = "381c34b9-14a4-4df9-a9db-40c2455be09f";
@@ -61,7 +61,7 @@ LoginController::LoginController() {
 
             if (query.hasQueryItem("code")) {
                 auto code = query.queryItemValue("code");
-                auto future = getRepo()->loginViaSastLink(code).then(
+                getRepo()->loginViaSastLink(code).then(
                     [=](EventoResult<DTO_User> result) {
                         if (!result) {
                             emit loginFailed(result.message());
@@ -70,10 +70,6 @@ LoginController::LoginController() {
                         UserHelper::getInstance()->updateUser(result.take());
                         emit loginSuccess();
                     });
-                QtConcurrent::run([=]() {
-                    auto f(future);
-                    f.waitForFinished();
-                });
             } else if (query.hasQueryItem("error")) {
                 errorDescription = query.hasQueryItem("error_description")
                                        ? query.queryItemValue("error_description")
@@ -229,7 +225,7 @@ void LoginController::beginLoginViaSastLink() {
 }
 
 void LoginController::loadPermissionList() {
-    auto future = getRepo()->getAdminPermission().then([this](EventoResult<QStringList> result) {
+    getRepo()->getAdminPermission().then([this](EventoResult<QStringList> result) {
         if (!result) {
             auto message = result.message();
             if (message.contains("No valid permission exist")) {
@@ -249,9 +245,5 @@ void LoginController::loadPermissionList() {
             UserHelper::getInstance()->setProperty("permission",
                                                    UserHelper::Permission::AdminPermission);
         loadPermissionSuccessEvent();
-    });
-    QtConcurrent::run([=] {
-        auto f(future);
-        f.waitForFinished();
     });
 }

@@ -130,7 +130,6 @@ if (FLUENTUI_BUILD_STATIC_LIB)
         Qt6::Svg
         Qt6::Network
         Qt6::HttpServer
-        Qt6::Concurrent
         fluentui
         fluentuiplugin
         FramelessHelper::Core
@@ -142,7 +141,6 @@ else()
         Qt6::Svg
         Qt6::Network
         Qt6::HttpServer
-        Qt6::Concurrent
         fluentuiplugin
         FramelessHelper::Core
         FramelessHelper::Quick

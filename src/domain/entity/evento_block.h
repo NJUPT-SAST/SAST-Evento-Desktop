@@ -2,6 +2,7 @@
 #define EVENTO_BLOCK_H
 
 #include "types.h"
+#include <set>
 
 struct DTO_Evento;
 
@@ -16,7 +17,7 @@ struct EventoBlock {
     bool editable;
 
     EventoBlock() = default;
-    EventoBlock(const DTO_Evento&, const QVariantList&);
+    EventoBlock(const DTO_Evento&, const std::set<EventoID>&);
 };
 
 #endif // EVENTOBLOCK_H

@@ -3,11 +3,10 @@
 #include "evento_edit.h"
 #include "repository.h"
 #include "type_model.h"
-#include <QtConcurrent>
 
 void InformationService::load_EditInfo() {
     std::array<QFuture<bool>, 3> tasks = {
-        getRepo()->getTypeList().then([=](EventoResult<std::vector<EventType>> result) {
+        getRepo()->getTypeList().then([](EventoResult<std::vector<EventType>> result) {
             if (!result) {
                 EventoEditController::getInstance()->onLoadEditFailure(result.message());
                 return false;
@@ -16,7 +15,7 @@ void InformationService::load_EditInfo() {
             TypeModel::getInstance()->resetModel(std::move(typeList));
             return true;
         }),
-        getRepo()->getLocationList().then([=](EventoResult<QString> result) {
+        getRepo()->getLocationList().then([this](EventoResult<QString> result) {
             if (!result) {
                 EventoEditController::getInstance()->onLoadEditFailure(result.message());
                 return false;
@@ -31,7 +30,7 @@ void InformationService::load_EditInfo() {
             }
             return true;
         }),
-        getRepo()->getDepartmentList().then([=](EventoResult<QString> result) {
+        getRepo()->getDepartmentList().then([this](EventoResult<QString> result) {
             if (!result) {
                 EventoEditController::getInstance()->onLoadEditFailure(result.message());
                 return false;
@@ -47,7 +46,7 @@ void InformationService::load_EditInfo() {
             return true;
         })};
 
-    QtConcurrent::run([=]() {
+    QtFuture::whenAll(tasks.begin(), tasks.end()).then([](QList<QFuture<bool>> tasks) {
         for (const auto& i : tasks)
             if (!i.result())
                 return;
@@ -56,7 +55,7 @@ void InformationService::load_EditInfo() {
 }
 
 void InformationService::load_DepartmentInfo() {
-    auto future = getRepo()->getDepartmentList().then([=](EventoResult<QString> result) {
+    getRepo()->getDepartmentList().then([this](EventoResult<QString> result) {
         if (!result) {
             DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(result.message());
             return;
@@ -70,15 +69,10 @@ void InformationService::load_DepartmentInfo() {
         }
         DepartmentEventsController::getInstance()->onLoadDepartmentsInfoFinished(departmentJson);
     });
-
-    QtConcurrent::run([=]() {
-        auto f(future);
-        f.waitForFinished();
-    });
 }
 
 void InformationService::load_SubscribedDepartmentInfo() {
-    auto future = getRepo()->getSubscribedDepartmentList().then([=](EventoResult<QString> result) {
+    getRepo()->getSubscribedDepartmentList().then([this](EventoResult<QString> result) {
         if (!result) {
             DepartmentEventsController::getInstance()->onLoadSubscribedDepartmentsFailure(
                 result.message());
@@ -91,10 +85,5 @@ void InformationService::load_SubscribedDepartmentInfo() {
         }
         DepartmentEventsController::getInstance()->onLoadSubscribedDepartmentsFinished(
             subscribedDepartmentJson);
-    });
-
-    QtConcurrent::run([=]() {
-        auto f(future);
-        f.waitForFinished();
     });
 }

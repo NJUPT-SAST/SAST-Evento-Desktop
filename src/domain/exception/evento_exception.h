@@ -9,10 +9,17 @@ enum class EventoExceptionCode {
     Ok = 0,
     NetworkError = 1,
     JsonError = 2,
+    FutureError = 3,
+    FalseValue = 4,
 };
 
 template <EventoExceptionCode code = EventoExceptionCode::UnexpectedError>
 struct DefaultMessage;
+
+template <>
+struct DefaultMessage<EventoExceptionCode::FutureError> {
+    static constexpr char msg[] = "Future has been taken or broken!";
+};
 
 template <>
 struct DefaultMessage<EventoExceptionCode::UnexpectedError> {
@@ -49,6 +56,10 @@ public:
 
     inline operator bool() const {
         return m_code != EventoExceptionCode::Ok;
+    }
+
+    inline void set_code(EventoExceptionCode code) {
+        m_code = code;
     }
 };
 

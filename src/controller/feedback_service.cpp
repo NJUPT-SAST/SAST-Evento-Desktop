@@ -9,10 +9,8 @@
 #include "feedback_summary.h"
 #include "repository.h"
 
-#include <QtConcurrent>
-
 void FeedbackService::load_UserFeedback(EventoID id) {
-    auto future = getRepo()->getFeedbackInfo(id).then([=](EventoResult<DTO_Feedback> result) {
+    getRepo()->getFeedbackInfo(id).then([](EventoResult<DTO_Feedback> result) {
         if (!result) {
             EventoInfoController::getInstance()->onLoadFailure(result.message());
             return;
@@ -20,15 +18,11 @@ void FeedbackService::load_UserFeedback(EventoID id) {
         auto feedback = result.take();
         FeedbackHelper::getInstance()->updateFeedback(feedback);
     });
-    QtConcurrent::run([=]() {
-        auto f(future);
-        f.waitForFinished();
-    });
 }
 
 void FeedbackService::load_SummaryInfo(int page) {
-    auto future = getRepo()->getFeedbackSummaryListInPage(page).then(
-        [=](EventoResult<std::pair<int, std::vector<FeedbackNum>>> result) {
+    getRepo()->getFeedbackSummaryListInPage(page).then(
+        [this](EventoResult<std::pair<int, std::vector<FeedbackNum>>> result) {
             if (!result) {
                 FeedbackStatisticsController::getInstance()->onLoadSummaryFailure(result.message());
                 return;
@@ -45,57 +39,39 @@ void FeedbackService::load_SummaryInfo(int page) {
             FeedbackNumModel::getInstance()->resetModel(std::move(model));
             FeedbackStatisticsController::getInstance()->onLoadSummaryFinished(data.first);
         });
-
-    QtConcurrent::run([=]() {
-        auto f(future);
-        f.waitForFinished();
-    });
 }
 
 void FeedbackService::feedback(EventoID id, int score, const QString& content) {
-    auto future =
-        getRepo()
-            ->feedbackEvent(DTO_Feedback{0, id, score, content})
-            .then([=](EventoResult<bool> result) {
-                if (!result) {
-                    EventoInfoController::getInstance()->onFeedbackFailure(result.message());
-                    return;
-                }
-                EventoInfoController::getInstance()->onFeedbackFinished();
-            });
-
-    QtConcurrent::run([=]() {
-        auto f(future);
-        f.waitForFinished();
-    });
+    getRepo()
+        ->feedbackEvent(DTO_Feedback{0, id, score, content})
+        .then([](EventoResult<bool> result) {
+            if (!result) {
+                EventoInfoController::getInstance()->onFeedbackFailure(result.message());
+                return;
+            }
+            EventoInfoController::getInstance()->onFeedbackFinished();
+        });
 }
 
 void FeedbackService::load_FeedbackInfo(EventoID id) {
-    auto future =
-        getRepo()->getFeedbackSummary(id).then([=](EventoResult<DTO_FeedbackSummary> result) {
-            if (!result) {
-                FeedbackStatisticsController::getInstance()->onLoadFeedbackFailure(
-                    result.message());
-                return;
+    getRepo()->getFeedbackSummary(id).then([=](EventoResult<DTO_FeedbackSummary> result) {
+        if (!result) {
+            FeedbackStatisticsController::getInstance()->onLoadFeedbackFailure(result.message());
+            return;
+        }
+        auto feedbackSummary = result.take();
+        std::vector<Feedback> model;
+        {
+            std::lock_guard lock(mutex);
+            for (auto& i : feedbackSummary.feedbacks) {
+                if (!i.content.isEmpty())
+                    model.push_back(Feedback(i));
             }
-            auto feedbackSummary = result.take();
-            std::vector<Feedback> model;
-            {
-                std::lock_guard lock(mutex);
-                for (auto& i : feedbackSummary.feedbacks) {
-                    if (!i.content.isEmpty())
-                        model.push_back(Feedback(i));
-                }
-            }
-            FeedbackModel::getInstance()->resetModel(std::move(model));
-            FeedbackStatisticsHelper::getInstance()->updateFeedbackStatistics(
-                FeedbackSummary(feedbackSummary, feedbacks[id].title));
-            FeedbackStatisticsController::getInstance()->onLoadFeedbackFinished();
-        });
-
-    QtConcurrent::run([=]() {
-        auto f(future);
-        f.waitForFinished();
+        }
+        FeedbackModel::getInstance()->resetModel(std::move(model));
+        FeedbackStatisticsHelper::getInstance()->updateFeedbackStatistics(
+            FeedbackSummary(feedbackSummary, feedbacks[id].title));
+        FeedbackStatisticsController::getInstance()->onLoadFeedbackFinished();
     });
 }
 
