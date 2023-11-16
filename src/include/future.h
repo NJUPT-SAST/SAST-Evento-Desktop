@@ -61,7 +61,7 @@ public:
     template <typename U, typename Type = typename GetQFutureType<
                               decltype(std::declval<QFuture<T>>().then(std::declval<U>()))>::Type>
     inline EventoFuture<Type> then(U&& function) {
-        return EventoFuture<Type>(*this, future.then(function));
+        return EventoFuture<Type>(*this, future.then(QtFuture::Launch::Async, function));
     }
 
     template <typename U = T>
@@ -70,7 +70,7 @@ public:
             !future.isValid() && future.isFinished() && !future.isRunning())
             throw EventoException(EventoExceptionCode::FutureError,
                                   DefaultMessage<EventoExceptionCode::FutureError>::msg);
-        return std::move(future.takeResult());
+        return future.takeResult();
     }
 
     void waitForFinished() {
