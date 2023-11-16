@@ -102,7 +102,8 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl& url
         reply = manager.post(request, requestData);
     else
         QMetaObject::invokeMethod(
-            &manager, [&]() { return manager.post(request, requestData); }, Qt::BlockingQueuedConnection, &reply);
+            &manager, [&]() { return manager.post(request, requestData); },
+            Qt::BlockingQueuedConnection, &reply);
 
     reply->ignoreSslErrors();
 
@@ -136,7 +137,8 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl& url,
         reply = manager.put(request, requestData);
     else
         QMetaObject::invokeMethod(
-            &manager, [&]() { return manager.put(request, requestData); }, Qt::BlockingQueuedConnection, &reply);
+            &manager, [&]() { return manager.put(request, requestData); },
+            Qt::BlockingQueuedConnection, &reply);
 
     reply->ignoreSslErrors();
 
@@ -170,7 +172,8 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::patch(const QUrl& ur
         reply = manager.sendCustomRequest(request, "PATCH", requestData);
     else
         QMetaObject::invokeMethod(
-            &manager, [&]() { return manager.sendCustomRequest(request, "PATCH", requestData); }, Qt::BlockingQueuedConnection, &reply);
+            &manager, [&]() { return manager.sendCustomRequest(request, "PATCH", requestData); },
+            Qt::BlockingQueuedConnection, &reply);
 
     reply->ignoreSslErrors();
 
@@ -201,7 +204,8 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::deleteResource(const
         reply = manager.deleteResource(request);
     else
         QMetaObject::invokeMethod(
-            &manager, [&]() { return manager.deleteResource(request); }, Qt::BlockingQueuedConnection, &reply);
+            &manager, [&]() { return manager.deleteResource(request); },
+            Qt::BlockingQueuedConnection, &reply);
 
     reply->ignoreSslErrors();
 
@@ -246,14 +250,13 @@ EventoFuture<EventoResult<DTO_User>> EventoNetworkClient::loginViaSastLink(const
             if (result) {
                 auto rootValue = result.take();
                 DTO_User dto;
-                if (rootValue.isObject()) {
-                    this->tokenBytes = rootValue["token"].toString().toLatin1();
-                    declare_top_deserialiser(dto, deserialiser_holder);
-                    deserialiser_holder.assign(rootValue["userInfo"].toObject());
-                } else {
+                qDebug() << rootValue;
+                if (!rootValue.isObject())
                     return EventoException(EventoExceptionCode::JsonError,
                                            QStringLiteral("expect object or null but got other"));
-                }
+                this->tokenBytes = rootValue["token"].toString().toLatin1();
+                declare_top_deserialiser(dto, deserialiser_holder);
+                deserialiser_holder.assign(rootValue["userInfo"].toObject());
                 return dto;
             } else {
                 return {result.code(), result.message()};

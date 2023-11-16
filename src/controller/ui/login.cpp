@@ -62,7 +62,7 @@ LoginController::LoginController() {
             if (query.hasQueryItem("code")) {
                 auto code = query.queryItemValue("code");
                 getRepo()->loginViaSastLink(code).then(
-                    [=](EventoResult<DTO_User> result) {
+                    [this](EventoResult<DTO_User> result) {
                         if (!result) {
                             emit loginFailed(result.message());
                             return;
@@ -231,7 +231,7 @@ void LoginController::loadPermissionList() {
             if (message.contains("No valid permission exist")) {
                 UserHelper::getInstance()->setProperty("permission",
                                                        UserHelper::Permission::UserPermission);
-                loadPermissionSuccessEvent();
+                emit loadPermissionSuccessEvent();
             } else {
                 loadPermissionErrorEvent(message);
             }
@@ -244,6 +244,6 @@ void LoginController::loadPermissionList() {
         else
             UserHelper::getInstance()->setProperty("permission",
                                                    UserHelper::Permission::AdminPermission);
-        loadPermissionSuccessEvent();
+        emit loadPermissionSuccessEvent();
     });
 }
