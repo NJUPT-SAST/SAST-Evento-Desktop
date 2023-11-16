@@ -25,6 +25,13 @@ FluScrollablePage {
         ScheduleController.loadSubscribedSchedule()
     }
 
+    function loadScheduleInfo(){
+        if (pivot.currentIndex === 0)
+            loadRegisteredScheduleInfo()
+        else
+            loadSubscribedScheduleInfo()
+    }
+
     Component.onCompleted: {
         loadRegisteredScheduleInfo()
     }
@@ -81,6 +88,7 @@ FluScrollablePage {
     property var arr2: []
 
     FluPivot {
+        id: pivot
         Layout.fillWidth: true
         currentIndex: 0
         implicitHeight: listHeight
@@ -113,11 +121,7 @@ FluScrollablePage {
         onCurrentIndexChanged: {
             arr1 = []
             arr2 = []
-            if (currentIndex === 0) {
-                loadRegisteredScheduleInfo()
-            } else if (currentIndex === 1) {
-                loadSubscribedScheduleInfo()
-            }
+            loadScheduleInfo()
         }
     }
 
