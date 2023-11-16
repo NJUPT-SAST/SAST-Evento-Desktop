@@ -63,7 +63,13 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::get(const QUrl& url)
     if (!this->tokenBytes.isEmpty()) {
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
-    auto reply = manager.get(request);
+    QNetworkReply* reply;
+    if (manager.thread() == QThread::currentThread())
+        reply = manager.get(request);
+    else
+        QMetaObject::invokeMethod(
+            &manager, [&]() { return manager.get(request); }, Qt::BlockingQueuedConnection, &reply);
+
     reply->ignoreSslErrors();
 
     return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
@@ -91,7 +97,13 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl& url
     if (!this->tokenBytes.isEmpty()) {
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
-    auto reply = manager.post(request, requestData);
+    QNetworkReply* reply;
+    if (manager.thread() == QThread::currentThread())
+        reply = manager.post(request, requestData);
+    else
+        QMetaObject::invokeMethod(
+            &manager, [&]() { return manager.post(request, requestData); }, Qt::BlockingQueuedConnection, &reply);
+
     reply->ignoreSslErrors();
 
     return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
@@ -119,7 +131,13 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl& url,
     if (!this->tokenBytes.isEmpty()) {
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
-    auto reply = manager.put(request, requestData);
+    QNetworkReply* reply;
+    if (manager.thread() == QThread::currentThread())
+        reply = manager.put(request, requestData);
+    else
+        QMetaObject::invokeMethod(
+            &manager, [&]() { return manager.put(request, requestData); }, Qt::BlockingQueuedConnection, &reply);
+
     reply->ignoreSslErrors();
 
     return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
@@ -147,7 +165,13 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::patch(const QUrl& ur
     if (!this->tokenBytes.isEmpty()) {
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
-    auto reply = manager.sendCustomRequest(request, "PATCH", requestData);
+    QNetworkReply* reply;
+    if (manager.thread() == QThread::currentThread())
+        reply = manager.sendCustomRequest(request, "PATCH", requestData);
+    else
+        QMetaObject::invokeMethod(
+            &manager, [&]() { return manager.sendCustomRequest(request, "PATCH", requestData); }, Qt::BlockingQueuedConnection, &reply);
+
     reply->ignoreSslErrors();
 
     return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
@@ -172,7 +196,13 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::deleteResource(const
     if (!this->tokenBytes.isEmpty()) {
         request.setRawHeader("TOKEN", this->tokenBytes);
     }
-    auto reply = manager.deleteResource(request);
+    QNetworkReply* reply;
+    if (manager.thread() == QThread::currentThread())
+        reply = manager.deleteResource(request);
+    else
+        QMetaObject::invokeMethod(
+            &manager, [&]() { return manager.deleteResource(request); }, Qt::BlockingQueuedConnection, &reply);
+
     reply->ignoreSslErrors();
 
     return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
