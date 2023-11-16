@@ -30,9 +30,17 @@ SAST Evento 是一个 SAST 的事件管理系统，平时我们在活动过程�
 
 ## License
 
-项目基于 [MIT License](./License) 发布
+项目基于 [MIT License](./LICENSE) 发布
 
 ## Release
+
+### alpha: extremely unstable, updated frequently
+
+[Latest version](https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest)
+
+### beta: unstable, updated frequently
+
+COMING SOON
 
 ## Start
 
