@@ -82,6 +82,7 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_check_update("检查更新");
     lang_native_text_rendering("Native文本渲染");
     lang_animation_effect("动画效果");
+    lang_current_version("当前版本：");
 
     // evento block
     lang_copy("复制");

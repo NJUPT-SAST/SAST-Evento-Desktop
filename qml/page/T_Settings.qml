@@ -140,11 +140,11 @@ FluScrollablePage {
     FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
-        height: 80
+        height: 95
         paddings: 10
 
         ColumnLayout {
-            spacing: 10
+            spacing: 5
             anchors {
                 top: parent.top
                 left: parent.left
@@ -154,6 +154,10 @@ FluScrollablePage {
                 text: lang.lang_check_update
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
+            }
+            FluText {
+                text: lang.lang_current_version + appInfo.version
+                font: FluTextStyle.Caption
             }
 
             Timer {

@@ -84,6 +84,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_check_update("Check Update");
     lang_native_text_rendering("Native Text Rendering");
     lang_animation_effect("Animation Effect");
+    lang_current_version("Current Version: ");
 
     // evento block
     lang_copy("Copy");
