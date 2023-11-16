@@ -28,10 +28,16 @@ FluScrollablePage {
     }
 
     function loadScheduleInfo(){
-        if (pivot.currentIndex === 0)
+        if (pivot.currentIndex === 0) {
             loadRegisteredScheduleInfo()
-        else if (pivot.currentIndex === 1)
+            pivot.registeredModel = []
+            pivot.registeredModel = ScheduledEventoModel
+        }
+        else if (pivot.currentIndex === 1) {
             loadSubscribedScheduleInfo()
+            pivot.subscribedModel = []
+            pivot.subscribedModel = ScheduledEventoModel
+        }
     }
 
     Component.onCompleted: {
@@ -85,15 +91,18 @@ FluScrollablePage {
         }
     }
 
-    property int listHeight
     property var arr1: []
     property var arr2: []
+    property int listHeight
 
     FluPivot {
-        id: pivot
+        id: pivot     
+        property var registeredModel
+        property var subscribedModel
         Layout.fillWidth: true
         currentIndex: 0
         implicitHeight: listHeight
+
         FluPivotItem {
             id: pivot1
             title: lang.lang_registered_evento
@@ -103,7 +112,7 @@ FluScrollablePage {
                 implicitHeight: contentHeight
                 interactive: false
                 spacing: 5
-                model: ScheduledEventoModel
+                model: pivot.registeredModel
                 delegate: com_schedule1
             }
         }
@@ -116,7 +125,7 @@ FluScrollablePage {
                 implicitHeight: contentHeight
                 interactive: false
                 spacing: 5
-                model: ScheduledEventoModel
+                model: pivot.subscribedModel
                 delegate: com_schedule2
             }
         }
@@ -130,18 +139,22 @@ FluScrollablePage {
     Component {
         id: com_schedule1
         Item {
-            property bool _hasSameDate: hasSameDate(arr1, model.date)
+            property bool _hasSameDate1: {
+                var res = hasSameDate(arr1, model.date)
+                arr2 = []
+                return res
+            }
             Layout.fillWidth: true
             height: 85 + loader.height
 
             Loader {
                 id: loader
-                height: _hasSameDate ? 0 : 20
+                height: _hasSameDate1 ? 0 : 20
                 anchors {
                     left: parent.left
                     leftMargin: 10
                 }
-                sourceComponent: _hasSameDate ? undefined : com_date
+                sourceComponent: _hasSameDate1 ? undefined : com_date
             }
 
             Component {
@@ -480,18 +493,22 @@ FluScrollablePage {
     Component {
         id: com_schedule2
         Item {
-            property bool _hasSameDate: hasSameDate(arr2, model.date)
+            property bool _hasSameDate2: {
+                var res = hasSameDate(arr2, model.date)
+                arr1 = []
+                return res
+            }
             Layout.fillWidth: true
             height: 85 + loader.height
 
             Loader {
                 id: loader
-                height: _hasSameDate ? 0 : 20
+                height: _hasSameDate2 ? 0 : 20
                 anchors {
                     left: parent.left
                     leftMargin: 10
                 }
-                sourceComponent: _hasSameDate ? undefined : com_date
+                sourceComponent: _hasSameDate2 ? undefined : com_date
             }
 
             Component {
