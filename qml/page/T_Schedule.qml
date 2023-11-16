@@ -7,7 +7,9 @@ import SAST_Evento
 import "../window"
 
 FluScrollablePage {
+    id: page
     launchMode: FluPageType.SingleTask
+    Layout.fillWidth: true
 
     onErrorClicked: {
         loadScheduleInfo()
@@ -28,12 +30,12 @@ FluScrollablePage {
     function loadScheduleInfo(){
         if (pivot.currentIndex === 0)
             loadRegisteredScheduleInfo()
-        else
+        else if (pivot.currentIndex === 1)
             loadSubscribedScheduleInfo()
     }
 
     Component.onCompleted: {
-        loadRegisteredScheduleInfo()
+        loadScheduleInfo()
     }
 
     Connections {
@@ -129,7 +131,7 @@ FluScrollablePage {
         id: com_schedule1
         Item {
             property bool _hasSameDate: hasSameDate(arr1, model.date)
-            width: parent.width
+            Layout.fillWidth: true
             height: 85 + loader.height
 
             Loader {
@@ -152,7 +154,7 @@ FluScrollablePage {
 
             FluArea {
                 id: area_content
-                width: parent.width - 85
+                width: page.width - 105
                 height: 80
                 anchors {
                     top: loader.bottom
@@ -208,6 +210,7 @@ FluScrollablePage {
 
                 Column {
                     spacing: 5
+                    width: parent.width
                     anchors {
                         left: item_dot.right
                         leftMargin: 10
@@ -216,24 +219,24 @@ FluScrollablePage {
                     FluText {
                         text: model.title
                         font: FluTextStyle.Title
+                        elide: Text.ElideRight
                         maximumLineCount: 1
+                        width: page.width - 330
                         anchors {
                             left: parent.left
                             leftMargin: 12
-                            right: parent.right
-                            rightMargin: 5
                         }
                     }
                     FluText {
                         text: model.location
                         font: FluTextStyle.Caption
                         color: FluColors.Grey110
+                        elide: Text.ElideRight
                         maximumLineCount: 1
+                        width: page.width - 220 - text_department.implicitWidth
                         anchors {
                             left: parent.left
                             leftMargin: 12
-                            right: parent.right
-                            rightMargin: 5
                         }
                     }
                 }
@@ -252,6 +255,7 @@ FluScrollablePage {
                 }
 
                 FluText {
+                    id: text_department
                     anchors {
                         right: parent.right
                         bottom: parent.bottom
@@ -324,7 +328,7 @@ FluScrollablePage {
                 }
                 height: 80
                 width: 75
-                font.pixelSize: 16
+                font.pixelSize: 14
             }
 
             states: [
@@ -477,7 +481,7 @@ FluScrollablePage {
         id: com_schedule2
         Item {
             property bool _hasSameDate: hasSameDate(arr2, model.date)
-            width: parent.width
+            Layout.fillWidth: true
             height: 85 + loader.height
 
             Loader {
@@ -500,7 +504,7 @@ FluScrollablePage {
 
             FluArea {
                 id: area_content
-                width: parent.width - 85
+                width: page.width - 105
                 height: 80
                 anchors {
                     top: loader.bottom
@@ -556,6 +560,7 @@ FluScrollablePage {
 
                 Column {
                     spacing: 5
+                    width: parent.width
                     anchors {
                         left: item_dot.right
                         leftMargin: 10
@@ -566,11 +571,10 @@ FluScrollablePage {
                         font: FluTextStyle.Title
                         elide: Text.ElideRight
                         maximumLineCount: 1
+                        width: page.width - 330
                         anchors {
                             left: parent.left
                             leftMargin: 12
-                            right: parent.right
-                            rightMargin: 5
                         }
                     }
                     FluText {
@@ -579,11 +583,10 @@ FluScrollablePage {
                         color: FluColors.Grey110
                         elide: Text.ElideRight
                         maximumLineCount: 1
+                        width: page.width - 220 - text_department.implicitWidth
                         anchors {
                             left: parent.left
                             leftMargin: 12
-                            right: parent.right
-                            rightMargin: 5
                         }
                     }
                 }
@@ -602,6 +605,7 @@ FluScrollablePage {
                 }
 
                 FluText {
+                    id: text_department
                     anchors {
                         right: parent.right
                         bottom: parent.bottom
@@ -674,8 +678,7 @@ FluScrollablePage {
                 }
                 height: 80
                 width: 75
-                text: ""
-                font.pixelSize: 16
+                font.pixelSize: 14
             }
 
             states: [
@@ -805,7 +808,7 @@ FluScrollablePage {
                     FluTextBox {
                         id: textbox
                         width: 350
-                        placeholderText: lang_check_hint
+                        placeholderText: lang.lang_check_hint
                     }
                 }
 

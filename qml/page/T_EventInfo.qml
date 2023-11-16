@@ -270,7 +270,7 @@ FluScrollablePage {
                 id: btn_subscribe
                 implicitWidth: 250
                 Layout.topMargin: 15
-                text: EventoInfoController.isSubscribed ? lang.lang_subscribe : lang.lang_unsubscribe
+                text: EventoInfoController.isSubscribed ? lang.lang_unsubscribe : lang.lang_subscribe
                 checked: EventoInfoController.isSubscribed
                 disabled: EventoHelper.state >= 2
                 onClicked: {

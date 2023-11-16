@@ -480,26 +480,8 @@ FluScrollablePage {
                                    EventoHelper.id = model.id
                                    EventoInfoController.editable = model.editable
                                    blockWindowRegister.launch()
-                               } else {
-                                   menu.popup()
                                }
                            }
-            }
-
-            FluMenu {
-                id: menu
-                FluMenuItem: {
-                    text: lang.lang_move_up
-                    onClicked: {
-                        area.z += 1
-                    }
-                }
-                FluMenuItem: {
-                    text: lang.lang_move_down
-                    onClicked: {
-                        area.z -= 1
-                    }
-                }
             }
 
             Rectangle {

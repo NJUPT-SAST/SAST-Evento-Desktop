@@ -372,11 +372,11 @@ Schedule::Schedule(const DTO_Evento& src, const ParticipationStatus& participate
     auto start = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss");
     auto end = QDateTime::fromString(src.gmtEventEnd, "yyyy-MM-dd hh:mm:ss");
     if (start.date() == end.date()) {
-        this->date = start.toString(QStringLiteral("MM月dd日"));
+        this->date = start.toString(QStringLiteral("MM.dd"));
         this->startTime = start.toString(QStringLiteral("hh:mm"));
         this->endTime = end.toString(QStringLiteral("hh:mm"));
     } else {
-        this->date = "多天事件";
+        this->date = "Multi-day";
         this->startTime = "Many";
         this->endTime = "Days";
     }
