@@ -251,7 +251,6 @@ EventoFuture<EventoResult<DTO_User>> EventoNetworkClient::loginViaSastLink(const
             if (result) {
                 auto rootValue = result.take();
                 DTO_User dto;
-                qDebug() << rootValue;
                 if (!rootValue.isObject())
                     return EventoException(EventoExceptionCode::JsonError,
                                            QStringLiteral("expect object or null but got other"));

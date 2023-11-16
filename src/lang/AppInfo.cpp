@@ -3,13 +3,16 @@
 #include "En.h"
 #include "Zh.h"
 #include <QDebug>
+#include <QLocale>
 #include <QQmlContext>
-
 #include <QtGlobal>
 
 AppInfo::AppInfo(QObject* parent) : QObject{parent} {
     version("v0.4.1117-alpha");
-    lang(new Zh());
+    if (QLocale::system().language() == QLocale::Chinese)
+        lang(new Zh());
+    else
+        lang(new En());
 }
 
 void AppInfo::init(QQmlApplicationEngine* engine) {

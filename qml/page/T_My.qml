@@ -8,7 +8,6 @@ import "../window"
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask
-    title: lang.lang_my
 
     onErrorClicked: {
         loadMyPageInfo()
@@ -69,14 +68,24 @@ FluScrollablePage {
             Column {
                 anchors.left: img.right
                 anchors.leftMargin: 15
+                spacing: 10
                 FluText {
                     text: lang.lang_welcome
-                    font: FluTextStyle.Title
-                }
-                FluText {
-                    id: text_name
                     font: FluTextStyle.Subtitle
-                    text: UserHelper.nickname
+                }
+                Row{
+                    FluText {
+                        id: text_name
+                        font.pixelSize: 24
+                        text: UserHelper.nickname
+                    }
+                    FluText {
+                        anchors.bottom: parent.bottom
+                        id: text_bio
+                        font.pixelSize: 20
+                        color: FluColors.Grey110
+                        text: " | " + UserHelper.biography
+                    }
                 }
             }
         }
