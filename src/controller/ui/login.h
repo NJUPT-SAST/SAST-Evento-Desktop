@@ -10,7 +10,7 @@ class LoginController : public QObject {
     QML_SINGLETON
 
 private:
-    QHttpServer login_redirect_server;
+    QHttpServer* login_redirect_server = nullptr;
     QString state;
     QString code_verifier;
 
@@ -27,7 +27,18 @@ public:
     Q_INVOKABLE void beginLoginViaSastLink();
     Q_INVOKABLE void loadPermissionList();
 
-    LoginController();
+    ~LoginController() {
+        close_tcp_listen();
+    }
+
+private:
+    void setup_server();
+    inline void close_tcp_listen() {
+        login_redirect_server->deleteLater();
+        login_redirect_server = nullptr;
+    }
+
+    LoginController() = default;
 };
 
 #endif // LOGIN_CONTROLLER_H

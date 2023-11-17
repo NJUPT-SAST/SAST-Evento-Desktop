@@ -6,86 +6,9 @@
 #include <QHttpServerResponse>
 #include <QString>
 
-constexpr const char* AUTH_SERVER_URL = "https://link.sast.fun/auth";
-constexpr const char* AUTH_CLIENT_ID = "381c34b9-14a4-4df9-a9db-40c2455be09f";
-
-static QString genCodeChallengeS256(QStringView code_verifier) {
-    auto sha256 = QCryptographicHash::hash(code_verifier.toUtf8(), QCryptographicHash::Sha256);
-    return QString::fromLatin1(
-        sha256.toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals));
-}
-
-[[maybe_unused]] static QString generateCryptoRandomString(quint8 length) {
-    // FIXME
-    // !!! SEVERE SECURITY WARNING !!!
-    // 当前实现的熵池可能不满足密码学的要求
-
-    const char characters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    static std::random_device randomEngine;
-    std::uniform_int_distribution<int> distribution(0, sizeof(characters) - 2);
-    QByteArray data;
-    data.reserve(length);
-    for (quint8 i = 0; i < length; ++i)
-        data.append(characters[distribution(randomEngine)]);
-    return data;
-}
-
-LoginController::LoginController() {
-    login_redirect_server.route("/", [this](const QHttpServerRequest& request) {
-        // OAuth 2.0 Redirect Uri
-        auto status_code = QHttpServerResponder::StatusCode::Ok;
-        QString errorDescription;
-        switch (request.method()) {
-        case QHttpServerRequest::Method::Options:
-            goto finished;
-        case QHttpServerRequest::Method::Get:
-            break;
-        default:
-            status_code = QHttpServerResponder::StatusCode::BadRequest;
-            goto finished;
-        }
-
-        {
-            auto query = request.query();
-            if (!query.hasQueryItem("state")) {
-                status_code = QHttpServerResponder::StatusCode::BadRequest;
-                goto finished;
-            }
-
-            auto state = query.queryItemValue("state");
-            if (state != this->state) {
-                status_code = QHttpServerResponder::StatusCode::BadRequest;
-                goto finished;
-            }
-            this->state = nullptr; // Clear State, as it should be used only once
-
-            if (query.hasQueryItem("code")) {
-                auto code = query.queryItemValue("code");
-                getRepo()->loginViaSastLink(code).then(
-                    [this](EventoResult<DTO_User> result) {
-                        if (!result) {
-                            emit loginFailed(result.message());
-                            return;
-                        }
-                        UserHelper::getInstance()->updateUser(result.take());
-                        emit loginSuccess();
-                    });
-            } else if (query.hasQueryItem("error")) {
-                errorDescription = query.hasQueryItem("error_description")
-                                       ? query.queryItemValue("error_description")
-                                       : query.queryItemValue("error");
-                emit loginFailed(errorDescription);
-                status_code = QHttpServerResponder::StatusCode::BadRequest;
-            } else {
-                status_code = QHttpServerResponder::StatusCode::BadRequest;
-            }
-        }
-
-    finished:
-        QHttpServerResponse resp(QHttpServerResponder::StatusCode::InternalServerError);
-        if (status_code == QHttpServerResponder::StatusCode::Ok) {
-            resp = QHttpServerResponse("text/html",
-                                       R"(
+static const auto AUTH_SERVER_URL = QStringLiteral("https://link.sast.fun/auth");
+static const auto AUTH_CLIENT_ID = QStringLiteral("381c34b9-14a4-4df9-a9db-40c2455be09f");
+static const auto OK_RESPONSE = QByteArrayLiteral(R"(
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -125,11 +48,8 @@ LoginController::LoginController() {
                     </script>
                 </body>
                 </html>
-                )",
-                                       status_code);
-        } else {
-            resp = QHttpServerResponse("text/html",
-                                       QStringLiteral(R"(
+                )");
+static const auto ERROR_RESPONSE = QStringLiteral(R"(
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -169,25 +89,109 @@ LoginController::LoginController() {
                     </script>
                 </body>
                 </html>
-                )")
-                                           .arg(errorDescription)
-                                           .toUtf8(),
-                                       status_code);
+                )");
+
+static QString genCodeChallengeS256(QStringView code_verifier) {
+    auto sha256 = QCryptographicHash::hash(code_verifier.toUtf8(), QCryptographicHash::Sha256);
+    return QString::fromLatin1(
+        sha256.toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals));
+}
+
+[[maybe_unused]] static QString generateCryptoRandomString(quint8 length) {
+    // FIXME
+    // !!! SEVERE SECURITY WARNING !!!
+    // 当前实现的熵池可能不满足密码学的要求
+
+    const char characters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    static std::random_device randomEngine;
+    std::uniform_int_distribution<int> distribution(0, sizeof(characters) - 2);
+    QByteArray data;
+    data.reserve(length);
+    for (quint8 i = 0; i < length; ++i)
+        data.append(characters[distribution(randomEngine)]);
+    return data;
+}
+
+void LoginController::setup_server() {
+    if (!login_redirect_server)
+        login_redirect_server = new QHttpServer;
+    login_redirect_server->route("/", [this](const QHttpServerRequest& request) {
+        // OAuth 2.0 Redirect Uri
+        auto status_code = QHttpServerResponder::StatusCode::Ok;
+        QString errorDescription;
+
+        switch (request.method()) {
+        case QHttpServerRequest::Method::Get: {
+            auto query = request.query();
+            // check for state
+            if (!query.hasQueryItem("state")) {
+                status_code = QHttpServerResponder::StatusCode::BadRequest;
+                break;
+            }
+            auto state = query.queryItemValue("state");
+            if (state != this->state) {
+                status_code = QHttpServerResponder::StatusCode::BadRequest;
+                break;
+            }
+            this->state.clear(); // Clear State, as it should be used only once
+
+            // check for error
+            if (query.hasQueryItem("error")) {
+                errorDescription = query.hasQueryItem("error_description")
+                                       ? query.queryItemValue("error_description")
+                                       : query.queryItemValue("error");
+                emit loginFailed(errorDescription);
+                status_code = QHttpServerResponder::StatusCode::BadRequest;
+                break;
+            }
+
+            // check for code
+            if (query.hasQueryItem("code")) {
+                auto code = query.queryItemValue("code");
+                getRepo()->loginViaSastLink(code).then([this](EventoResult<DTO_User> result) {
+                    if (!result) {
+                        emit loginFailed(result.message());
+                        return;
+                    }
+                    UserHelper::getInstance()->updateUser(result.take());
+                    emit loginSuccess();
+                });
+                break;
+            }
+
+            // otherwise
+            status_code = QHttpServerResponder::StatusCode::BadRequest;
+        } break;
+        case QHttpServerRequest::Method::Options:
+            break;
+        default:
+            status_code = QHttpServerResponder::StatusCode::BadRequest;
+            break;
         }
+
+        QHttpServerResponse resp(QHttpServerResponder::StatusCode::InternalServerError);
+        if (status_code == QHttpServerResponder::StatusCode::Ok)
+            resp = QHttpServerResponse("text/html", OK_RESPONSE, status_code);
+        else
+            resp = QHttpServerResponse("text/html", ERROR_RESPONSE.arg(errorDescription).toUtf8(),
+                                       status_code);
         resp.setHeader("Access-Control-Allow-Origin", "https://link.sast.fun");
         resp.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
         resp.setHeader("Access-Control-Allow-Headers",
                        "Origin, Content-Type, Accept, Authorization");
         return resp;
     });
-    login_redirect_server.listen(QHostAddress::LocalHost, 1919);
+    login_redirect_server->listen(QHostAddress::LocalHost, 1919);
 }
 
 LoginController* LoginController::create(QQmlEngine*, QJSEngine*) {
-    return new LoginController();
+    static LoginController singleton;
+    QJSEngine::setObjectOwnership(&singleton, QQmlEngine::CppOwnership);
+    return &singleton;
 }
 
 void LoginController::beginLoginViaSastLink() {
+    setup_server();
     // FIXME
     // !!! SEVERE SECURITY WARNING !!!
     // !!! THIS MUST BE FIXED BEFORE RELEASED !!!
@@ -225,25 +229,24 @@ void LoginController::beginLoginViaSastLink() {
 }
 
 void LoginController::loadPermissionList() {
-    getRepo()->getAdminPermission().then([this](EventoResult<QStringList> result) {
-        if (!result) {
-            auto message = result.message();
-            if (message.contains("No valid permission exist")) {
-                UserHelper::getInstance()->setProperty("permission",
-                                                       UserHelper::Permission::UserPermission);
-                emit loadPermissionSuccessEvent();
-            } else {
-                loadPermissionErrorEvent(message);
+    getRepo()
+        ->getAdminPermission()
+        .then([this](EventoResult<QStringList> result) {
+            if (!result) {
+                auto message = result.message();
+                if (message.contains("No valid permission exist")) {
+                    UserHelper::getInstance()->setProperty("permission",
+                                                           UserHelper::Permission::UserPermission);
+                    emit loadPermissionSuccessEvent();
+                } else {
+                    emit loadPermissionErrorEvent(message);
+                }
+                return;
             }
-            return;
-        }
-        auto permissionList = result.take();
-        if (permissionList.isEmpty())
-            UserHelper::getInstance()->setProperty("permission",
-                                                   UserHelper::Permission::UserPermission);
-        else
+            auto permissionList = result.take();
             UserHelper::getInstance()->setProperty("permission",
                                                    UserHelper::Permission::AdminPermission);
-        emit loadPermissionSuccessEvent();
-    });
+            emit loadPermissionSuccessEvent();
+        })
+        .then(std::bind(&LoginController::close_tcp_listen, this));
 }
