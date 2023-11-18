@@ -223,6 +223,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         onPositiveClicked: {
             Qt.openUrlExternally(
                         "https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest")
+            Qt.quit();
         }
     }
 
