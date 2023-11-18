@@ -107,8 +107,7 @@ FluScrollablePage {
                     scale: 1.8
                     iconSource: FluentIcons.PersonalFolder
                     onClicked: {
-                        MainWindow.window.pushPage(
-                                    "qrc:/qml/page/T_Profile.qml")
+                        Qt.openUrlExternally("https://link.sast.fun/home")
                     }
                 }
                 FluText {
