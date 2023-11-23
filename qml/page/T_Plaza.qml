@@ -84,10 +84,8 @@ FluScrollablePage {
         Layout.fillWidth: true
         height: width * 0.36
         implicitHeight: height
-        radius: [10, 10, 10, 10]
         loopTime: 4000
-        indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
-        indicatorMarginTop: 10
+
         Connections {
             target: page
             function onListReady() {
@@ -96,37 +94,38 @@ FluScrollablePage {
             }
         }
 
-        delegate: Component {
-            Item {
-                width: carousel.width
-                height: carousel.height
-                FluImage {
+        delegate: Item {
+            height: carousel.height
+            width: carousel.width
+
+            FluImage {
+                anchors.fill: parent
+                source: model.url
+                asynchronous: true
+                cache: true
+                fillMode: Image.PreserveAspectCrop
+            }
+
+            Rectangle {
+                height: 40
+                width: parent.width
+                anchors.bottom: parent.bottom
+                color: "#33000000"
+                FluText {
                     anchors.fill: parent
-                    source: model.url
-                    asynchronous: true
-                    cache: true
-                    fillMode: Image.PreserveAspectCrop
+                    verticalAlignment: Qt.AlignVCenter
+                    horizontalAlignment: Qt.AlignHCenter
+                    text: model.title
+                    color: FluColors.Grey10
+                    font.pixelSize: 15
                 }
-                Rectangle {
-                    height: 40
-                    width: parent.width
-                    anchors.bottom: parent.bottom
-                    color: "#33000000"
-                    FluText {
-                        anchors.fill: parent
-                        verticalAlignment: Qt.AlignVCenter
-                        horizontalAlignment: Qt.AlignHCenter
-                        text: model.title
-                        color: FluColors.Grey10
-                        font.pixelSize: 15
-                    }
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    anchors.topMargin: 30
-                    onClicked: {
-                        PlazaController.openUrl(model.link)
-                    }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                anchors.topMargin: 30
+                onClicked: {
+                    PlazaController.openUrl(model.link)
                 }
             }
         }
@@ -201,7 +200,6 @@ FluScrollablePage {
                     height: 115
                     width: 115
                     radius: [6, 6, 6, 6]
-                    shadow: false
                     anchors {
                         left: parent.left
                         leftMargin: 10
@@ -350,7 +348,6 @@ FluScrollablePage {
                     height: 115
                     width: 115
                     radius: [6, 6, 6, 6]
-                    shadow: false
                     anchors {
                         left: parent.left
                         leftMargin: 10

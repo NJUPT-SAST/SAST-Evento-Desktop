@@ -124,28 +124,13 @@ set_target_properties(SAST_Evento_Desktop PROPERTIES
 )
 
 #链接库
-if (FLUENTUI_BUILD_STATIC_LIB)
-    target_link_libraries(SAST_Evento_Desktop PRIVATE
-        Qt6::Quick
-        Qt6::Svg
-        Qt6::Network
-        Qt6::HttpServer
-        fluentui
-        fluentuiplugin
-        FramelessHelper::Core
-        FramelessHelper::Quick
-    )
-else()
-    target_link_libraries(SAST_Evento_Desktop PRIVATE
-        Qt6::Quick
-        Qt6::Svg
-        Qt6::Network
-        Qt6::HttpServer
-        fluentuiplugin
-        FramelessHelper::Core
-        FramelessHelper::Quick
-    )
-endif()
+target_link_libraries(SAST_Evento_Desktop PRIVATE
+    Qt6::Quick
+    Qt6::Svg
+    Qt6::Network
+    Qt6::HttpServer
+    fluentuiplugin
+)
 
 #安装
 install(TARGETS SAST_Evento_Desktop

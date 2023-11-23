@@ -3,7 +3,6 @@
         <file>qml/App.qml</file>
         <file>qml/window/LoginWindow.qml</file>
         <file>qml/window/MainWindow.qml</file>
-        <file>qml/imports/CustomWindow.qml</file>
         <file>qml/page/T_DepartmentEvents.qml</file>
         <file>qml/page/T_EventInfo.qml</file>
         <file>qml/page/T_Feedback.qml</file>

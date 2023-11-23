@@ -4,16 +4,16 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import FluentUI
 import SAST_Evento
-import "../imports"
 
-CustomWindow {
+FluWindow {
     id: window
+    title: lang.lang_login
     width: 320
     height: 448
     fixSize: true
     launchMode: FluWindowType.SingleTask
     closeDestory: true
-    title: lang.lang_login
+
     property bool loginSuccess: false
 
     Component.onCompleted: {

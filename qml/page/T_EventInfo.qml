@@ -83,20 +83,16 @@ FluScrollablePage {
         Layout.fillWidth: true
         height: width * 40 / 89
         implicitHeight: height
-        radius: [10, 10, 10, 10]
         loopTime: 4000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
         indicatorMarginTop: 15
 
         delegate: Component {
-            Item {
+            FluImage {
                 anchors.fill: parent
-                FluImage {
-                    anchors.fill: parent
-                    source: model.url
-                    asynchronous: true
-                    fillMode: Image.PreserveAspectCrop
-                }
+                source: model.url
+                asynchronous: true
+                fillMode: Image.PreserveAspectCrop
             }
         }
     }
@@ -201,7 +197,6 @@ FluScrollablePage {
                     width: 50
                     radius: [5, 5, 5, 5]
                     color: "#99ffcc"
-                    shadow: false
                     FluText {
                         id: text_tag
                         wrapMode: Text.WordWrap

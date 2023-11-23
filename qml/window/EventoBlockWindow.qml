@@ -438,7 +438,6 @@ CustomWindow {
                             width: 50
                             radius: [5, 5, 5, 5]
                             color: "#99ffcc"
-                            shadow: false
                             FluText {
                                 id: text_tag
                                 wrapMode: Text.WordWrap

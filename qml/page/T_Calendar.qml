@@ -377,7 +377,6 @@ FluScrollablePage {
                     height: 1130
                     anchors.top: parent.top
                     anchors.topMargin: 5
-                    shadow: false
                     color: FluTheme.dark ? Qt.rgba(62 / 255, 62 / 255,
                                                    62 / 255, 1) : "#e1dfdd"
                 }
@@ -401,7 +400,6 @@ FluScrollablePage {
                     height: 1
                     anchors.right: parent.right
                     anchors.rightMargin: 10
-                    shadow: false
                     color: FluTheme.dark ? Qt.rgba(62 / 255, 62 / 255,
                                                    62 / 255, 1) : "#e1dfdd"
                 }
@@ -432,7 +430,6 @@ FluScrollablePage {
                 height: parent.height - 8
                 color: FluColors.Blue.normal
                 radius: [2, 2, 2, 2]
-                shadow: false
                 anchors {
                     left: parent.left
                     leftMargin: 3

@@ -7,28 +7,24 @@ import Qt.labs.platform
 import QtCore
 import FluentUI
 import SAST_Evento
-import "../imports"
 
-CustomWindow {
+FluWindow {
     id: window
+    title: "SAST Evento"
     width: 1110
     height: 640
     closeDestory: false
     minimumWidth: 520
     minimumHeight: 200
-    appBarVisible: false
-    autoShow: false
     launchMode: FluWindowType.SingleTask
-    title: "SAST Evento"
+    appBar: undefined
 
-    closeFunc: function (event) {
+    closeListener: function (event) {
         dialog_close.open()
         event.accepted = false
     }
 
     Component.onCompleted: {
-        window.requestActivate()
-        window.autoShow = true
         FluTools.setQuitOnLastWindowClosed(false)
         checkUpdate()
     }
@@ -70,8 +66,7 @@ CustomWindow {
         positiveText: lang.lang_exit
         neutralText: lang.lang_cancel
         onPositiveClicked: {
-            window.deleteWindow()
-            FluApp.closeApp()
+            FluApp.exit()
         }
     }
 
@@ -161,7 +156,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         }
 
         Component.onCompleted: {
-            if (UserHelper.permission != 1)
+            if (UserHelper.permission !== 1)
                 createItems()
         }
     }
@@ -184,7 +179,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         width: parent.width
         height: parent.height
         z: 999
-        navWidth: 200
+        pageMode: FluNavigationViewType.NoStack
         items: items_original
         footerItems: items_footer
         topPadding: FluTools.isMacos() ? 20 : 5
@@ -223,6 +218,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         onPositiveClicked: {
             Qt.openUrlExternally(
                         "https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest")
+            Qt.quik();
         }
     }
 

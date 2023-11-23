@@ -179,7 +179,6 @@ FluScrollablePage {
                     width: 6
                     height: 60
                     radius: [3, 3, 3, 3]
-                    shadow: false
                     color: FluTheme.primaryColor.normal
                     anchors {
                         left: parent.left
@@ -217,7 +216,6 @@ FluScrollablePage {
                     width: 6
                     height: 6
                     radius: [3, 3, 3, 3]
-                    shadow: false
                     color: FluColors.Orange.normal
                 }
 
@@ -533,7 +531,6 @@ FluScrollablePage {
                     width: 6
                     height: 60
                     radius: [3, 3, 3, 3]
-                    shadow: false
                     color: FluTheme.primaryColor.normal
                     anchors {
                         left: parent.left
@@ -571,7 +568,6 @@ FluScrollablePage {
                     width: 6
                     height: 6
                     radius: [3, 3, 3, 3]
-                    shadow: false
                     color: FluColors.Orange.normal
                 }
 

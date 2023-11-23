@@ -280,7 +280,6 @@ FluScrollablePage {
             height: img_review.cellHeight - img_review.spacing
             FluRectangle {
                 anchors.fill: parent
-                shadow: false
                 radius: [6, 6, 6, 6]
                 FluImage {
                     anchors.fill: parent
