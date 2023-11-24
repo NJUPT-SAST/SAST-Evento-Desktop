@@ -9,15 +9,13 @@ class DepartmentEventsController : public QObject {
     QML_SINGLETON
 
 public:
-    Q_INVOKABLE void loadDepartmentsInfo();
-    Q_INVOKABLE void loadSubscribedDepartment();
+    Q_INVOKABLE void loadDepartments();
+    Q_INVOKABLE void loadDepartmentsWithSubscriptionInfo();
     Q_INVOKABLE void loadDepartmentEvents(int departmentId);
     Q_INVOKABLE void subscribeDepartment(bool isSubscribe, int departmentId);
 
 signals:
-    void loadSubscribedDepartmentsSuccessEvent(QString departmentJson);
-    void loadSubscribedDepartmentsErrorEvent(QString message);
-    void loadDepartmentsSuccessEvent(QString departmentsJson);
+    void loadDepartmentsSuccessEvent();
     void loadDepartmentsErrorEvent(QString message);
     void loadDepartmentEventSuccessEvent();
     void loadDepartmentEventErrorEvent(QString message);
@@ -28,17 +26,11 @@ private:
     DepartmentEventsController() = default;
 
 public:
-    void onLoadDepartmentsInfoFinished(const QString& departmentJson) {
-        emit loadDepartmentsSuccessEvent(departmentJson);
+    void onLoadDepartmentsFinished() {
+        emit loadDepartmentsSuccessEvent();
     }
     void onLoadDepartmentsFailure(const QString& msg) {
         emit loadDepartmentsErrorEvent(msg);
-    }
-    void onLoadSubscribedDepartmentsFinished(const QString& departmentJson) {
-        emit loadSubscribedDepartmentsSuccessEvent(departmentJson);
-    }
-    void onLoadSubscribedDepartmentsFailure(const QString& msg) {
-        emit loadSubscribedDepartmentsErrorEvent(msg);
     }
     void onLoadDepartmentEventFinished() {
         emit loadDepartmentEventSuccessEvent();

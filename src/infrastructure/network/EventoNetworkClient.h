@@ -77,8 +77,8 @@ public:
     EventoFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(int size);
     EventoFuture<EventoResult<std::vector<EventType>>> getTypeList();
     EventoFuture<EventoResult<QString>> getLocationList();
-    EventoFuture<EventoResult<QString>> getDepartmentList();
-    EventoFuture<EventoResult<QString>> getSubscribedDepartmentList();
+    EventoFuture<EventoResult<std::vector<Department>>> getDepartmentList();
+    EventoFuture<EventoResult<std::vector<Department>>> getDepartmentListWithSubscriptionInfo();
     EventoFuture<EventoResult<QString>> getQRCode(EventoID eventId);
 
     // eventUpload

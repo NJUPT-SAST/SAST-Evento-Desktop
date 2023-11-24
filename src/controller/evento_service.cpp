@@ -54,7 +54,7 @@ void EventoService::load_Plaza() {
                 std::lock_guard lock(mutex);
                 latest.clear();
                 for (auto& i : data) {
-                    undertaking.push_back(i.id);
+                    latest.push_back(i.id);
                     model.push_back(LatestEvento(i));
                     stored[i.id] = std::move(i);
                 }

@@ -1,5 +1,6 @@
 #include "information_service.h"
 #include "department_events.h"
+#include "department_model.h"
 #include "evento_edit.h"
 #include "repository.h"
 #include "type_model.h"
@@ -30,19 +31,14 @@ void InformationService::load_EditInfo() {
             }
             return true;
         }),
-        getRepo()->getDepartmentList().then([this](EventoResult<QString> result) {
+        getRepo()->getDepartmentList().then([this](EventoResult<std::vector<Department>> result) {
             if (!result) {
-                EventoEditController::getInstance()->onLoadEditFailure(result.message());
+                DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(result.message());
                 return false;
             }
             auto departmentList = result.take();
-            if (departmentList.isEmpty())
-                departmentList = "[]";
-            {
-                std::lock_guard lock(mutex);
-                EventoEditController::getInstance()->setProperty("departmentJson", departmentList);
-                departmentJson = std::move(departmentList);
-            }
+            DepartmentModel::getInstance()->resetModel(std::move(departmentList));
+            DepartmentEventsController::getInstance()->onLoadDepartmentsFinished();
             return true;
         })};
 
@@ -55,35 +51,25 @@ void InformationService::load_EditInfo() {
 }
 
 void InformationService::load_DepartmentInfo() {
-    getRepo()->getDepartmentList().then([this](EventoResult<QString> result) {
+    getRepo()->getDepartmentListWithSubscriptionInfo().then([this](EventoResult<std::vector<Department>> result) {
         if (!result) {
             DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(result.message());
             return;
         }
         auto departmentList = result.take();
-        if (departmentList.isEmpty())
-            departmentList = "[]";
-        {
-            std::lock_guard lock(mutex);
-            departmentJson = std::move(departmentList);
-        }
-        DepartmentEventsController::getInstance()->onLoadDepartmentsInfoFinished(departmentJson);
+        DepartmentModel::getInstance()->resetModel(std::move(departmentList));
+        DepartmentEventsController::getInstance()->onLoadDepartmentsFinished();
     });
 }
 
 void InformationService::load_SubscribedDepartmentInfo() {
-    getRepo()->getSubscribedDepartmentList().then([this](EventoResult<QString> result) {
+    getRepo()->getDepartmentListWithSubscriptionInfo().then([this](EventoResult<std::vector<Department>> result) {
         if (!result) {
-            DepartmentEventsController::getInstance()->onLoadSubscribedDepartmentsFailure(
-                result.message());
+            DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(result.message());
             return;
         }
         auto departmentList = result.take();
-        {
-            std::lock_guard lock(mutex);
-            subscribedDepartmentJson = std::move(departmentList);
-        }
-        DepartmentEventsController::getInstance()->onLoadSubscribedDepartmentsFinished(
-            subscribedDepartmentJson);
+        DepartmentModel::getInstance()->resetModel(std::move(departmentList));
+        DepartmentEventsController::getInstance()->onLoadDepartmentsFinished();
     });
 }
