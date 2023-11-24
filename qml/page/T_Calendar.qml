@@ -286,6 +286,7 @@ FluScrollablePage {
         }
     }
 
+    /*
     FluText {
         text: lang.lang_calendar_hint
         font: FluTextStyle.Caption
@@ -293,7 +294,7 @@ FluScrollablePage {
             left: parent.left
             leftMargin: 10
         }
-    }
+    }*/
 
     FluArea {
         height: 790

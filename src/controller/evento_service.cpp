@@ -214,17 +214,16 @@ void EventoService::load_Event(EventoID id) {
     getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
         if (!result) {
             EventoInfoController::getInstance()->onLoadFailure(result.message());
-            return false;
+            return;
         }
-        Evento event;
         {
             std::lock_guard lock(mutex);
-            event = (stored[id] = std::move(result.take()));
+            const auto& event = (stored[id] = std::move(result.take()));
+            EventoHelper::getInstance()->update(event);
+            SlideModel::getInstance()->resetModel(
+                ImageManagement::pictureConvertor(event.departments));
         }
-        EventoHelper::getInstance()->update(event);
-        SlideModel::getInstance()->resetModel(
-            ImageManagement::pictureConvertor(stored[id].departments));
-        return true;
+        EventoInfoController::getInstance()->onLoadFinished();
     });
 }
 

@@ -104,7 +104,7 @@ FluScrollablePage {
 
                 FluImage {
                     anchors.fill: parent
-                    source: url
+                    source: model.url
                     asynchronous: true
                     cache: true
                     fillMode: Image.PreserveAspectCrop
@@ -121,7 +121,7 @@ FluScrollablePage {
                     anchors.fill: parent
                     verticalAlignment: Qt.AlignVCenter
                     horizontalAlignment: Qt.AlignHCenter
-                    text: title
+                    text: model.title
                     color: FluColors.Grey10
                     font.pixelSize: 15
                 }
@@ -131,7 +131,7 @@ FluScrollablePage {
                 anchors.fill: parent
                 anchors.topMargin: 30
                 onClicked: {
-                    PlazaController.openUrl(link)
+                    PlazaController.openUrl(model.link)
                 }
             }
         }

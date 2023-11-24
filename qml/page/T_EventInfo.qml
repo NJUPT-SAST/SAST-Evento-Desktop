@@ -87,7 +87,9 @@ FluScrollablePage {
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
         indicatorMarginTop: 15
 
-        delegate: Component {
+        delegate: FluClip {
+            anchors.fill: parent
+            radius: [10, 10, 10, 10]
             FluImage {
                 anchors.fill: parent
                 source: model.url
@@ -211,16 +213,16 @@ FluScrollablePage {
         }
 
         FluRectangle {
-            visible: UserHelper.permission !== 1
-            width: 4
+            anchors.verticalCenter: parent.verticalCenter
             height: parent.height
+            width: 4
             radius: [2, 2, 2, 2]
             color: FluTheme.primaryColor.normal
-            anchors.verticalCenter: parent.verticalCenter
+            visible: UserHelper.permission != 1
         }
 
         ColumnLayout {
-            visible: UserHelper.permission !== 1
+            visible: UserHelper.permission != 1
             width: parent.width / 2 - 135
             anchors.verticalCenter: parent.verticalCenter
             FluText {
