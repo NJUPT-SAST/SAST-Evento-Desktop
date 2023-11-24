@@ -69,9 +69,9 @@ FluScrollablePage {
             Item {
                 Component.onCompleted: {
                     arr.push({
-                                 "url": model.url,
-                                 "link": model.link,
-                                 "title": model.title
+                                 "url": url,
+                                 "link": link,
+                                 "title": title
                              })
                 }
             }
@@ -98,12 +98,17 @@ FluScrollablePage {
             height: carousel.height
             width: carousel.width
 
-            FluImage {
+            FluClip {
                 anchors.fill: parent
-                source: model.url
-                asynchronous: true
-                cache: true
-                fillMode: Image.PreserveAspectCrop
+                radius: [10, 10, 10, 10]
+
+                FluImage {
+                    anchors.fill: parent
+                    source: url
+                    asynchronous: true
+                    cache: true
+                    fillMode: Image.PreserveAspectCrop
+                }
             }
 
             Rectangle {
@@ -111,11 +116,12 @@ FluScrollablePage {
                 width: parent.width
                 anchors.bottom: parent.bottom
                 color: "#33000000"
+
                 FluText {
                     anchors.fill: parent
                     verticalAlignment: Qt.AlignVCenter
                     horizontalAlignment: Qt.AlignHCenter
-                    text: model.title
+                    text: title
                     color: FluColors.Grey10
                     font.pixelSize: 15
                 }
@@ -125,7 +131,7 @@ FluScrollablePage {
                 anchors.fill: parent
                 anchors.topMargin: 30
                 onClicked: {
-                    PlazaController.openUrl(model.link)
+                    PlazaController.openUrl(link)
                 }
             }
         }
@@ -144,7 +150,6 @@ FluScrollablePage {
         implicitHeight: contentHeight
         cellHeight: 150
         cellWidth: 292
-        interactive: false
         delegate: com_item
         model: UndertakingEventoModel
     }
@@ -162,7 +167,6 @@ FluScrollablePage {
         implicitHeight: contentHeight
         cellHeight: 160
         cellWidth: 292
-        interactive: false
         delegate: com_item2
         model: LatestEventoModel
     }
@@ -173,11 +177,13 @@ FluScrollablePage {
             Layout.topMargin: 10
             width: 280
             height: 135
+
             FluArea {
                 radius: 8
                 width: 280
                 height: 135
                 anchors.centerIn: parent
+
                 Rectangle {
                     anchors.fill: parent
                     radius: 8
@@ -195,6 +201,7 @@ FluScrollablePage {
                         }
                     }
                 }
+
                 FluRectangle {
                     id: item_icon
                     height: 115
@@ -207,14 +214,14 @@ FluScrollablePage {
                     }
                     FluImage {
                         anchors.fill: parent
-                        source: model.image
+                        source: image
                         fillMode: Image.PreserveAspectCrop
                     }
                 }
 
                 FluText {
                     id: item_title
-                    text: model.title
+                    text: title
                     font: FluTextStyle.Subtitle
                     elide: Text.ElideRight
                     maximumLineCount: 1
@@ -237,11 +244,13 @@ FluScrollablePage {
                         top: item_title.bottom
                         topMargin: 10
                     }
+
                     FluIcon {
                         iconSource: FluentIcons.EmojiTabFavorites
                     }
+
                     FluText {
-                        text: model.time
+                        text: time
                         color: FluColors.Grey120
                         width: 110
                         wrapMode: Text.WordWrap
@@ -262,11 +271,13 @@ FluScrollablePage {
                         top: item_time.bottom
                         topMargin: 5
                     }
+
                     FluIcon {
                         iconSource: FluentIcons.POI
                     }
+
                     FluText {
-                        text: model.location
+                        text: location
                         width: 110
                         color: FluColors.Grey120
                         font: FluTextStyle.Caption
@@ -286,11 +297,13 @@ FluScrollablePage {
                         top: item_location.bottom
                         topMargin: 5
                     }
+
                     FluIcon {
                         iconSource: FluentIcons.EMI
                     }
+
                     FluText {
-                        text: model.department
+                        text: department
                         width: 110
                         color: FluColors.Grey120
                         elide: Text.ElideRight
@@ -306,7 +319,7 @@ FluScrollablePage {
                     hoverEnabled: true
                     propagateComposedEvents: true
                     onClicked: {
-                        EventoHelper.id = model.id
+                        EventoHelper.id = id
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_EventInfo.qml")
                     }
@@ -321,11 +334,13 @@ FluScrollablePage {
             Layout.topMargin: 10
             width: 280
             height: 140
+
             FluArea {
                 radius: 8
                 width: 280
                 height: 140
                 anchors.centerIn: parent
+
                 Rectangle {
                     anchors.fill: parent
                     radius: 8
@@ -343,6 +358,7 @@ FluScrollablePage {
                         }
                     }
                 }
+
                 FluRectangle {
                     id: item_icon
                     height: 115
@@ -353,19 +369,16 @@ FluScrollablePage {
                         leftMargin: 10
                         verticalCenter: parent.verticalCenter
                     }
+
                     FluImage {
                         anchors.fill: parent
-                        source: model.url
+                        source: url
                         fillMode: Image.PreserveAspectCrop
                     }
                 }
 
                 FluText {
                     id: item_title
-                    text: model.title
-                    font: FluTextStyle.Subtitle
-                    elide: Text.ElideRight
-                    maximumLineCount: 1
                     anchors {
                         left: item_icon.right
                         leftMargin: 12
@@ -373,6 +386,10 @@ FluScrollablePage {
                         right: parent.right
                         rightMargin: 5
                     }
+                    text: title
+                    font: FluTextStyle.Subtitle
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
                 }
 
                 FluText {
@@ -384,7 +401,7 @@ FluScrollablePage {
                         rightMargin: 20
                         topMargin: 10
                     }
-                    text: model.time
+                    text: time
                     color: FluColors.Grey120
                     width: 110
                     wrapMode: Text.WordWrap
@@ -401,7 +418,7 @@ FluScrollablePage {
                         top: item_time.bottom
                         topMargin: 5
                     }
-                    text: model.department
+                    text: department
                     color: FluColors.Grey120
                     elide: Text.ElideRight
                     font: FluTextStyle.Caption
@@ -417,7 +434,7 @@ FluScrollablePage {
                         top: item_department.bottom
                         topMargin: 8
                     }
-                    text: model.description
+                    text: description
                     color: FluColors.Grey120
                     wrapMode: Text.WordWrap
                     elide: Text.ElideRight
@@ -430,7 +447,7 @@ FluScrollablePage {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        EventoHelper.id = model.id
+                        EventoHelper.id = id
                         MainWindow.window.pushPage(
                                     "qrc:/qml/page/T_EventInfo.qml")
                     }
