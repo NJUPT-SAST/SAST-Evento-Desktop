@@ -55,6 +55,9 @@ public:
     void del(EventoID id);
     void cancel(EventoID id);
     void subscribeDepartment(int departmentId, bool unsubscribe);
+
+private:
+    bool isSameDay(const QString& date1, const QString& date2);
 };
 
 #endif // EVENTO_SERVICE_H

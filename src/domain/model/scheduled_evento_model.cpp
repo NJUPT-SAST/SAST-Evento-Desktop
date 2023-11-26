@@ -32,6 +32,8 @@ QVariant ScheduledEventoModel::data(const QModelIndex& index, int role) const {
         return element.startTime;
     case Role::EndTime:
         return element.endTime;
+    case Role::HasSameDate:
+        return element.hasSameDate;
     case Role::IsChecked:
         return element.isChecked;
     case Role::HasFeedback:
@@ -55,6 +57,7 @@ QHash<int, QByteArray> ScheduledEventoModel::roleNames() const {
         roles.insert(Date, "date");
         roles.insert(StartTime, "startTime");
         roles.insert(EndTime, "endTime");
+        roles.insert(HasSameDate, "hasSameDate");
         roles.insert(IsChecked, "isChecked");
         roles.insert(HasFeedback, "isFeedback");
     }

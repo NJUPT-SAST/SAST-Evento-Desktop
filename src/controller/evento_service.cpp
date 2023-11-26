@@ -15,12 +15,17 @@
 #include "plaza.h"
 #include "repository.h"
 #include "schedule.h"
+#include "scheduled_evento.h"
 #include "scheduled_evento_model.h"
 #include "slide_model.h"
 #include "undertaking_evento_model.h"
 #include "user_helper.h"
 
+#include <algorithm>
 #include <array>
+#include <qdatetime.h>
+#include <set>
+#include <vector>
 
 void EventoService::load_Plaza() {
     std::array<QFuture<bool>, 2> tasks = {
@@ -70,6 +75,13 @@ void EventoService::load_Plaza() {
     });
 }
 
+bool EventoService::isSameDay(const QString& dateStr1, const QString& dateStr2) {
+    auto date1 = QDate::fromString(dateStr1, "yyyy-M-d hh:mm:ss");
+    auto date2 = QDate::fromString(dateStr2, "yyyy-M-d hh:mm:ss");
+    return date1.year() == date2.year() && date1.month() == date2.month() &&
+           date1.day() == date2.day();
+}
+
 void EventoService::load_RegisteredSchedule() {
     getRepo()->getRegisteredList().then([this](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
@@ -77,7 +89,8 @@ void EventoService::load_RegisteredSchedule() {
             return;
         }
         auto data = result.take();
-        std::vector<Schedule> model;
+        std::vector<Schedule> multiDayEvents;
+        std::vector<Schedule> singleDayEvents;
         {
             std::lock_guard lock(mutex);
             registered.clear();
@@ -86,16 +99,39 @@ void EventoService::load_RegisteredSchedule() {
                 auto participation = getRepo()->getUserParticipate(evento.id).takeResult();
                 auto has_feedback = getRepo()->hasFeedbacked(evento.id).takeResult();
                 if (participation &&
-                    (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue))
-                    model.push_back(Schedule(evento, participation.take(), has_feedback));
-                else {
+                    (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue)) {
+                    if (isSameDay(evento.gmtEventStart, evento.gmtEventEnd)) {
+                        singleDayEvents.emplace_back(evento, participation.take(), has_feedback);
+                    } else {
+                        multiDayEvents.emplace_back(evento, participation.take(), has_feedback);
+                    }
+                } else {
                     ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
                     return;
                 }
                 stored[evento.id] = std::move(evento);
             }
         }
-        ScheduledEventoModel::getInstance()->resetModel(std::move(model));
+        std::sort(singleDayEvents.begin(), singleDayEvents.end(),
+                  [](const Schedule& e1, const Schedule& e2) {
+                      auto date1 = QDate::fromString(e1.date, "MM.dd");
+                      auto date2 = QDate::fromString(e2.date, "MM.dd");
+                      return date1 > date2;
+                  });
+        std::vector<Schedule> model(multiDayEvents.begin(), multiDayEvents.end());
+        model.insert(model.end(), singleDayEvents.begin(), singleDayEvents.end());
+        std::set<QString> dateSet;
+        std::for_each(model.begin(), model.end(), [&dateSet](Schedule& e) {
+            auto size = dateSet.size();
+            dateSet.insert(e.date);
+            if (dateSet.size() == size) {
+                e.hasSameDate = true;
+            }
+        });
+        QMetaObject::invokeMethod(
+            ScheduledEventoModel::getInstance(),
+            [&]() { ScheduledEventoModel::getInstance()->resetModel(std::move(model)); },
+            Qt::BlockingQueuedConnection);
         ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
 }
@@ -107,25 +143,49 @@ void EventoService::load_SubscribedSchedule() {
             return;
         }
         auto data = result.take();
-        std::vector<Schedule> model;
+        std::vector<Schedule> multiDayEvents;
+        std::vector<Schedule> singleDayEvents;
         {
             std::lock_guard lock(mutex);
             subscribed.clear();
             for (auto& evento : data) {
-                subscribed.push_back(evento.id);
+                registered.push_back(evento.id);
                 auto participation = getRepo()->getUserParticipate(evento.id).takeResult();
                 auto has_feedback = getRepo()->hasFeedbacked(evento.id).takeResult();
                 if (participation &&
-                    (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue))
-                    model.push_back(Schedule(evento, participation.take(), has_feedback));
-                else {
+                    (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue)) {
+                    if (isSameDay(evento.gmtEventStart, evento.gmtEventEnd)) {
+                        singleDayEvents.emplace_back(evento, participation.take(), has_feedback);
+                    } else {
+                        multiDayEvents.emplace_back(evento, participation.take(), has_feedback);
+                    }
+                } else {
                     ScheduleController::getInstance()->onLoadSubscribedFailure(result.message());
                     return;
                 }
                 stored[evento.id] = std::move(evento);
             }
         }
-        ScheduledEventoModel::getInstance()->resetModel(std::move(model));
+        std::sort(singleDayEvents.begin(), singleDayEvents.end(),
+                  [](const Schedule& e1, const Schedule& e2) {
+                      auto date1 = QDate::fromString(e1.date, "MM.dd");
+                      auto date2 = QDate::fromString(e2.date, "MM.dd");
+                      return date1 > date2;
+                  });
+        std::vector<Schedule> model(multiDayEvents.begin(), multiDayEvents.end());
+        model.insert(model.end(), singleDayEvents.begin(), singleDayEvents.end());
+        std::set<QString> dateSet;
+        std::for_each(model.begin(), model.end(), [&dateSet](Schedule& e) {
+            auto size = dateSet.size();
+            dateSet.insert(e.date);
+            if (dateSet.size() == size) {
+                e.hasSameDate = true;
+            }
+        });
+        QMetaObject::invokeMethod(
+            ScheduledEventoModel::getInstance(),
+            [&]() { ScheduledEventoModel::getInstance()->resetModel(std::move(model)); },
+            Qt::BlockingQueuedConnection);
         ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
 }
@@ -150,7 +210,11 @@ void EventoService::load_DepartmentEvents(int departmentId) {
                     stored[i.id] = std::move(i);
                 }
             }
-            EventoBriefModel::getInstance()->resetModel(std::move(model));
+            QMetaObject::invokeMethod(
+                EventoBriefModel::getInstance(),
+                [&]() { EventoBriefModel::getInstance()->resetModel(std::move(model)); },
+                Qt::BlockingQueuedConnection);
+
             DepartmentEventsController::getInstance()->onLoadDepartmentEventFinished();
         });
 }
