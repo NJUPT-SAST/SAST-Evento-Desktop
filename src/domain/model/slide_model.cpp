@@ -57,7 +57,6 @@ void SlideModel::resetModel(const QStringList& slideList) {
     beginResetModel();
     m_data = std::move(model);
     endResetModel();
-
 }
 
 void SlideModel::removeById(const int id) {
