@@ -178,6 +178,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         id: nav_view
         width: parent.width
         height: parent.height
+        cellWidth: 200
         z: 999
         pageMode: FluNavigationViewType.NoStack
         items: items_original

@@ -66,9 +66,14 @@ QHash<int, QByteArray> ScheduledEventoModel::roleNames() const {
 }
 
 void ScheduledEventoModel::resetModel(std::vector<Schedule>&& model) {
-    beginResetModel();
-    m_data = std::move(model);
-    endResetModel();
+    QMetaObject::invokeMethod(
+        this,
+        [&]() {
+            beginResetModel();
+            m_data = std::move(model);
+            endResetModel();
+        },
+        Qt::BlockingQueuedConnection);
 }
 
 ScheduledEventoModel* ScheduledEventoModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

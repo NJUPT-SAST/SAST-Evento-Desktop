@@ -114,6 +114,7 @@ FluScrollablePage {
             Rectangle {
                 height: 40
                 width: parent.width
+                radius: 10
                 anchors.bottom: parent.bottom
                 color: "#33000000"
 

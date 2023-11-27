@@ -121,17 +121,18 @@ void EventoService::load_RegisteredSchedule() {
         std::vector<Schedule> model(multiDayEvents.begin(), multiDayEvents.end());
         model.insert(model.end(), singleDayEvents.begin(), singleDayEvents.end());
         std::set<QString> dateSet;
-        std::for_each(model.begin(), model.end(), [&dateSet](Schedule& e) {
+        int width = 110;
+        std::for_each(model.begin(), model.end(), [&dateSet, &width](Schedule& e) {
             auto size = dateSet.size();
             dateSet.insert(e.date);
             if (dateSet.size() == size) {
                 e.hasSameDate = true;
+                width += 20;
             }
+            width += 90;
         });
-        QMetaObject::invokeMethod(
-            ScheduledEventoModel::getInstance(),
-            [&]() { ScheduledEventoModel::getInstance()->resetModel(std::move(model)); },
-            Qt::BlockingQueuedConnection);
+        ScheduleController::getInstance()->setProperty("width", width);
+        ScheduledEventoModel::getInstance()->resetModel(std::move(model));
         ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
 }
@@ -175,17 +176,18 @@ void EventoService::load_SubscribedSchedule() {
         std::vector<Schedule> model(multiDayEvents.begin(), multiDayEvents.end());
         model.insert(model.end(), singleDayEvents.begin(), singleDayEvents.end());
         std::set<QString> dateSet;
-        std::for_each(model.begin(), model.end(), [&dateSet](Schedule& e) {
+        int width = 110;
+        std::for_each(model.begin(), model.end(), [&dateSet, &width](Schedule& e) {
             auto size = dateSet.size();
             dateSet.insert(e.date);
             if (dateSet.size() == size) {
                 e.hasSameDate = true;
-            }
+                width += 90;
+            } else
+                width += 110;
         });
-        QMetaObject::invokeMethod(
-            ScheduledEventoModel::getInstance(),
-            [&]() { ScheduledEventoModel::getInstance()->resetModel(std::move(model)); },
-            Qt::BlockingQueuedConnection);
+        ScheduleController::getInstance()->setProperty("width", width);
+        ScheduledEventoModel::getInstance()->resetModel(std::move(model));
         ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
 }
@@ -210,11 +212,7 @@ void EventoService::load_DepartmentEvents(int departmentId) {
                     stored[i.id] = std::move(i);
                 }
             }
-            QMetaObject::invokeMethod(
-                EventoBriefModel::getInstance(),
-                [&]() { EventoBriefModel::getInstance()->resetModel(std::move(model)); },
-                Qt::BlockingQueuedConnection);
-
+            EventoBriefModel::getInstance()->resetModel(std::move(model));
             DepartmentEventsController::getInstance()->onLoadDepartmentEventFinished();
         });
 }

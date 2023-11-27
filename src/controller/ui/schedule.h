@@ -10,6 +10,8 @@ class ScheduleController : public QObject {
     QML_NAMED_ELEMENT(ScheduleController)
     QML_SINGLETON
 
+    Q_PROPERTY(int width MEMBER m_width NOTIFY widthChanged)
+
 public:
     Q_INVOKABLE void loadRegisteredSchedule();
     Q_INVOKABLE void loadSubscribedSchedule();
@@ -27,6 +29,8 @@ signals:
 
 private:
     ScheduleController() = default;
+
+    int m_width;
 
 public:
     void onLoadRegisteredFinished() {
@@ -51,6 +55,9 @@ public:
 public:
     static ScheduleController* getInstance();
     static ScheduleController* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
+
+signals:
+    void widthChanged();
 };
 
 #endif // SCHEDULE_CONTROLLER_H

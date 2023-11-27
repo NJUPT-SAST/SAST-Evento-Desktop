@@ -50,9 +50,14 @@ QHash<int, QByteArray> LatestEventoModel::roleNames() const {
 }
 
 void LatestEventoModel::resetModel(std::vector<LatestEvento>&& model) {
-    beginResetModel();
-    m_data = std::move(model);
-    endResetModel();
+    QMetaObject::invokeMethod(
+        this,
+        [&]() {
+            beginResetModel();
+            m_data = std::move(model);
+            endResetModel();
+        },
+        Qt::BlockingQueuedConnection);
 }
 
 LatestEventoModel* LatestEventoModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

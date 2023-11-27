@@ -37,9 +37,14 @@ QHash<int, QByteArray> FeedbackModel::roleNames() const {
 }
 
 void FeedbackModel::resetModel(std::vector<Feedback>&& model) {
-    beginResetModel();
-    m_data = std::move(model);
-    endResetModel();
+    QMetaObject::invokeMethod(
+        this,
+        [&]() {
+            beginResetModel();
+            m_data = std::move(model);
+            endResetModel();
+        },
+        Qt::BlockingQueuedConnection);
 }
 
 FeedbackModel* FeedbackModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

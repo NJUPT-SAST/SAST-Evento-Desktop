@@ -29,11 +29,12 @@ FluScrollablePage {
 
     function loadScheduleInfo(){
         if (pivot.currentIndex === 0) {
-            loadRegisteredScheduleInfo()
+            loadRegisteredScheduleInfo() 
         }
         else if (pivot.currentIndex === 1) {
             loadSubscribedScheduleInfo()
         }
+        pivot.implicitHeight = Qt.binding(()=>ScheduleController.width)
     }
 
     Component.onCompleted: {
@@ -88,8 +89,7 @@ FluScrollablePage {
     }
 
     FluPivot {
-        id: pivot     
-        Layout.fillWidth: true
+        id: pivot
         currentIndex: 0
 
         FluPivotItem {

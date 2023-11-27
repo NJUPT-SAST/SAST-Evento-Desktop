@@ -52,7 +52,12 @@ QHash<int, QByteArray> FeedbackNumModel::roleNames() const {
 }
 
 void FeedbackNumModel::resetModel(std::vector<FeedbackNum>&& model) {
-    beginResetModel();
-    m_data = std::move(model);
-    endResetModel();
+    QMetaObject::invokeMethod(
+        this,
+        [&]() {
+            beginResetModel();
+            m_data = std::move(model);
+            endResetModel();
+        },
+        Qt::BlockingQueuedConnection);
 }

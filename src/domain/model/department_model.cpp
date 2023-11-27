@@ -40,9 +40,14 @@ QHash<int, QByteArray> DepartmentModel::roleNames() const {
 }
 
 void DepartmentModel::resetModel(std::vector<Department>&& model) {
-    beginResetModel();
-    m_data = std::move(model);
-    endResetModel();
+    QMetaObject::invokeMethod(
+        this,
+        [&]() {
+            beginResetModel();
+            m_data = std::move(model);
+            endResetModel();
+        },
+        Qt::BlockingQueuedConnection);
 }
 
 DepartmentModel* DepartmentModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
