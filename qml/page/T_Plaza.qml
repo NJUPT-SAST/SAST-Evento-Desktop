@@ -84,6 +84,7 @@ FluScrollablePage {
         Layout.fillWidth: true
         height: width * 0.36
         implicitHeight: height
+        indicatorGravity : Qt.AlignTop | Qt.AlignHCenter
         loopTime: 4000
 
         Connections {

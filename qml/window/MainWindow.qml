@@ -180,7 +180,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         height: parent.height
         cellWidth: 200
         z: 999
-        pageMode: FluNavigationViewType.NoStack
+        pageMode: FluNavigationViewType.Stack
         items: items_original
         footerItems: items_footer
         topPadding: FluTools.isMacos() ? 20 : 5
