@@ -2,6 +2,7 @@
 #define CALENDARCONTROLLER_H
 
 #include "types.h"
+
 #include <QtQml>
 
 class CalendarController : public QObject {

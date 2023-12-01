@@ -6,9 +6,7 @@
 
 #include "types.h"
 
-inline QString periodConvertor(const QString& startTime, const QString& endTime) {
-    auto start = QDateTime::fromString(startTime, "yyyy-MM-dd hh:mm:ss");
-    auto end = QDateTime::fromString(endTime, "yyyy-MM-dd hh:mm:ss");
+inline QString periodConvertor(const QDateTime& start, const QDateTime& end) {
     if (!start.isValid() || !end.isValid())
         return {};
     if (start.date() == end.date())
@@ -38,10 +36,14 @@ inline QString timeConvertor(const QString& time) {
 }
 
 inline EventState stateConvertor(const QString& state) {
-    if (state == "NOT_STARTED") return EventState::Before;
-    if (state == "IN_PROGRESS") return EventState::Undertaking;
-    if (state == "CHECKING_IN") return EventState::Registration;
-    if (state == "CANCELED") return EventState::Cancelled;
+    if (state == "NOT_STARTED")
+        return EventState::Before;
+    if (state == "IN_PROGRESS")
+        return EventState::Undertaking;
+    if (state == "CHECKING_IN")
+        return EventState::Registration;
+    if (state == "CANCELED")
+        return EventState::Cancelled;
     return EventState::Over;
 }
 

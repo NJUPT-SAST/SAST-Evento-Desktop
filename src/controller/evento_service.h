@@ -4,6 +4,7 @@
 #include <dto/evento.h>
 
 #include <QFuture>
+
 #include <shared_mutex>
 
 class EventoService {
@@ -18,8 +19,6 @@ class EventoService {
     std::vector<EventoID> blocks;
     std::map<EventoID, DTO_Evento> stored;
 
-    QDate date;
-
 private:
     EventoService() = default;
 
@@ -29,16 +28,12 @@ public:
         return singleton;
     }
 
-    QDate getDate() {
-        return date;
-    }
-
     void load_Plaza();
     void load_RegisteredSchedule();
     void load_SubscribedSchedule();
     void load_DepartmentEvents(int departmentId);
     void load_History();
-    void load_Block(const QString& time);
+    void load_Block(QDate date);
     void load_Event(EventoID id);
     void load(EventoID id);
     DTO_Evento edit(EventoID id);
@@ -55,9 +50,6 @@ public:
     void del(EventoID id);
     void cancel(EventoID id);
     void subscribeDepartment(int departmentId, bool unsubscribe);
-
-private:
-    bool isSameDay(const QString& date1, const QString& date2);
 };
 
 #endif // EVENTO_SERVICE_H

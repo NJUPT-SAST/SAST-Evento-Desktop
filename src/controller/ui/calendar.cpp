@@ -3,7 +3,7 @@
 #include "evento_service.h"
 
 void CalendarController::loadAllEventoInfo(QString date) {
-    EventoService::getInstance().load_Block(date);
+    EventoService::getInstance().load_Block(QDate::fromString(date, "yyyy-M-d"));
 }
 
 void CalendarController::loadEventoInfo(EventoID eventId) {

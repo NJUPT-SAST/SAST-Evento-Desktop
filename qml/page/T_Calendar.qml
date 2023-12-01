@@ -10,54 +10,16 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
 
     property string dateString: date2String(new Date)
-    property var rowStartArr: []
-    property var columnStartArr: []
-
     property var blockWindowRegister: registerForWindowResult("/block")
 
-    function reload() {
-        loadAllInfo(dateString)
-    }
-
-    function loadAllInfo(date) {
+    function load() {
         statusMode = FluStatusViewType.Loading
-        CalendarController.loadAllEventoInfo(date)
-    }
-
-    Loader {
-        id: loader
-        sourceComponent: undefined
-    }
-
-    Component {
-        id: com_model
-        Repeater {
-            id: rep_model
-            model: EventoBlockModel
-            Item {
-                Component.onCompleted: {
-                    rowStartArr.push(model.rowStart)
-                    columnStartArr.push(model.columnStart)
-                }
-            }
-        }
+        CalendarController.loadAllEventoInfo(dateString)
     }
 
     Connections {
         target: CalendarController
         function onLoadAllEventoSuccessEvent() {
-            rowStartArr = []
-            columnStartArr = []
-            loader.sourceComponent = com_model
-            for (var i = 0; i < rep_block.count; i++) {
-                rep_block.itemAt(i).x = rep_date.itemAt(
-                            columnStartArr[i]).x + 53
-                rep_block.itemAt(i).y = rep_time.itemAt(
-                            parseInt(
-                                rowStartArr[i])).y + 60 + (rowStartArr[i] - parseInt(
-                                                               rowStartArr[i])) * 43.1
-            }
-            loader.sourceComponent = undefined
             statusMode = FluStatusViewType.Success
         }
     }
@@ -74,7 +36,7 @@ FluScrollablePage {
         target: CalendarController
         function onDeleteSuccessEvent() {
             showSuccess("删除成功")
-            loadAllInfo(dateString)
+            load()
         }
     }
 
@@ -99,11 +61,11 @@ FluScrollablePage {
     }
 
     Component.onCompleted: {
-        loadAllInfo(dateString)
+        load()
     }
 
     onErrorClicked: {
-        loadAllInfo(dateString)
+        load()
     }
 
     errorButtonText: lang.lang_reload
@@ -122,11 +84,11 @@ FluScrollablePage {
                 verticalCenter: parent.verticalCenter
             }
             onClicked: {
-                var date = new Date(date_picker.current)
+                let date = new Date(date_picker.current)
                 date.setDate(date_picker.current.getDate() - 7)
                 date_picker.current = date
-                dateString = date2String(date)
-                loadAllInfo(dateString)
+                dateString = date2String(date_picker.current)
+                load()
             }
         }
 
@@ -139,7 +101,7 @@ FluScrollablePage {
             current: new Date
             onAccepted: {
                 dateString = date2String(date_picker.current)
-                loadAllInfo(dateString)
+                load()
             }
         }
         FluArea {
@@ -198,11 +160,11 @@ FluScrollablePage {
                 verticalCenter: parent.verticalCenter
             }
             onClicked: {
-                var date = new Date(date_picker.current)
+                let date = new Date(date_picker.current)
                 date.setDate(date_picker.current.getDate() + 7)
                 date_picker.current = date
-                dateString = date2String(date)
-                loadAllInfo(dateString)
+                dateString = date2String(date_picker.current)
+                load()
             }
         }
 
@@ -218,7 +180,6 @@ FluScrollablePage {
         }
 
         // deprecated
-
 
         /*
         Item {
@@ -333,9 +294,7 @@ FluScrollablePage {
                         "index": 6
                     }]
                 FluText {
-                    text: modelData.text + getNextDate(
-                              getMondayOfWeek(date_picker.current),
-                              modelData.index)
+                    text: modelData.text + getDate(getMondayOfWeek(date_picker.current), modelData.index)
                     font: FluTextStyle.BodyStrong
                     horizontalAlignment: Text.AlignHCenter
                 }
@@ -410,120 +369,111 @@ FluScrollablePage {
         Repeater {
             id: rep_block
             model: EventoBlockModel
-            delegate: com_rec
-        }
-    }
+            delegate: FluArea {
+                id: area
+                height: 41.1 * (end - start) + parseInt(
+                                end - start - 1)
+                width: 115 * (end - start + 1) + 5
+                           * (end - start)
+                color: FluTheme.dark ? Qt.rgba(
+                                               23 / 255, 49 / 255, 102 / 255,
+                                               1) : Qt.rgba(224 / 255, 233 / 255, 255 / 255, 1)
 
-    Component {
-        id: com_rec
-        FluArea {
-            id: area
-            height: 41.1 * (model.rowEnd - model.rowStart) + parseInt(
-                        model.rowEnd - model.rowStart - 1)
-            width: 115 * (model.columnEnd - model.columnStart + 1) + 5
-                   * (model.columnEnd - model.columnStart)
-            color: FluTheme.dark ? Qt.rgba(
-                                       23 / 255, 49 / 255, 102 / 255,
-                                       1) : Qt.rgba(224 / 255, 233 / 255, 255 / 255, 1)
-
-            FluRectangle {
-                width: 4
-                height: parent.height - 8
-                color: FluColors.Blue.normal
-                radius: [2, 2, 2, 2]
-                anchors {
-                    left: parent.left
-                    leftMargin: 3
-                    verticalCenter: parent.verticalCenter
-                }
-            }
-
-            FluText {
-                id: text_title
-                text: model.title
-                font: FluTextStyle.BodyStrong
-                elide: Text.ElideRight
-                maximumLineCount: parent.height > 55 ? 2 : 1
-                wrapMode: Text.WordWrap
-                anchors {
-                    top: parent.top
-                    topMargin: parent.height / 2 - 15
-                    left: parent.left
-                    right: parent.right
-                    leftMargin: 13
-                    rightMargin: 3
-                }
-            }
-            FluText {
-                text: model.time
-                font: FluTextStyle.Caption
-                color: FluColors.Grey110
-                elide: Text.ElideRight
-                maximumLineCount: 1
-                anchors {
-                    top: text_title.bottom
-                    topMargin: 2
-                    left: text_title.left
-                    right: parent.right
-                }
-            }
-
-            MouseArea {
-                id: item_mouse
-                anchors.fill: parent
-                hoverEnabled: true
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: mouse => {
-                               if (mouse.button === Qt.LeftButton) {
-                                   EventoHelper.id = model.id
-                                   EventoInfoController.editable = model.editable
-                                   blockWindowRegister.launch()
-                               }
-                           }
-            }
-
-            Rectangle {
-                anchors.fill: parent
-                color: {
-                    if (!model.editable) {
-                        return FluTheme.dark ? Qt.rgba(
-                                                   33 / 255, 45 / 255,
-                                                   69 / 255,
-                                                   0.5) : Qt.rgba(241 / 255, 245
-                                                                  / 255, 255 / 255, 0.5)
+                FluRectangle {
+                    width: 4
+                    height: parent.height - 8
+                    color: FluColors.Blue.normal
+                    radius: [2, 2, 2, 2]
+                    anchors {
+                        left: parent.left
+                        leftMargin: 3
+                        verticalCenter: parent.verticalCenter
                     }
-                    if (FluTheme.dark) {
-                        if (item_mouse.containsMouse) {
-                            return Qt.rgba(1, 1, 1, 0.03)
+                }
+
+                FluText {
+                    id: text_title
+                    text: title
+                    font: FluTextStyle.BodyStrong
+                    elide: Text.ElideRight
+                    maximumLineCount: parent.height > 55 ? 2 : 1
+                    wrapMode: Text.WordWrap
+                    anchors {
+                        top: parent.top
+                        topMargin: parent.height / 2 - 15
+                        left: parent.left
+                        right: parent.right
+                        leftMargin: 13
+                        rightMargin: 3
+                    }
+                }
+                FluText {
+                        text: time
+                        font: FluTextStyle.Caption
+                        color: FluColors.Grey110
+                        elide: Text.ElideRight
+                        maximumLineCount: 1
+                        anchors {
+                            top: text_title.bottom
+                            topMargin: 2
+                            left: text_title.left
+                            right: parent.right
                         }
-                        return Qt.rgba(0, 0, 0, 0)
-                    } else {
-                        if (item_mouse.containsMouse) {
-                            return Qt.rgba(0, 0, 0, 0.03)
+                    }
+
+                    MouseArea {
+                        id: event_mouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+                        onClicked: mouse => {
+                                       if (mouse.button === Qt.LeftButton) {
+                                           EventoHelper.id = id
+                                           EventoInfoController.editable = editable
+                                           blockWindowRegister.launch()
+                                       }
+                                   }
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: {
+                            if (!editable) {
+                                return FluTheme.dark ? Qt.rgba(
+                                                           33 / 255, 45 / 255,
+                                                           69 / 255,
+                                                           0.5) : Qt.rgba(241 / 255, 245
+                                                                          / 255, 255 / 255, 0.5)
+                            }
+                            if (FluTheme.dark) {
+                                if (event_mouse.containsMouse) {
+                                    return Qt.rgba(1, 1, 1, 0.03)
+                                }
+                                return Qt.rgba(0, 0, 0, 0)
+                            } else {
+                                if (event_mouse.containsMouse) {
+                                    return Qt.rgba(0, 0, 0, 0.03)
+                                }
+                                return Qt.rgba(0, 0, 0, 0)
+                            }
                         }
-                        return Qt.rgba(0, 0, 0, 0)
                     }
                 }
             }
         }
-    }
 
     function getMondayOfWeek(date) {
-        var dayOfWeek = date.getDay()
-        var daysToMonday = (dayOfWeek + 6) % 7
-        var mondayDate = new Date(date.getTime(
-                                      ) - daysToMonday * 24 * 60 * 60 * 1000)
-        return mondayDate
+        var dayOfWeek = (date.getDay() + 6) % 7
+        return new Date(date.getDate() - dayOfWeek)
     }
 
-    function getNextDate(date, days) {
-        var nextDate = new Date(date)
-        nextDate.setDate(date.getDate() + days)
-        return nextDate.getDate()
+    function getDate(monday, weekOfDay) {
+        var result = new Date(monday)
+        result.setDate(result.getDate() + weekOfDay)
+        return result.getDate()
     }
 
     function date2String(date) {
-        return date.getFullYear() + "-" + (date.getMonth(
-                                               ) + 1) + "-" + date.getDate()
+        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
     }
 }

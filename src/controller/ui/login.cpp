@@ -113,8 +113,9 @@ static QString genCodeChallengeS256(QStringView code_verifier) {
 }
 
 void LoginController::setup_server() {
-    if (!login_redirect_server)
-        login_redirect_server = new QHttpServer;
+    if (login_redirect_server)
+        return;
+    login_redirect_server = new QHttpServer;
     login_redirect_server->route("/", [this](const QHttpServerRequest& request) {
         // OAuth 2.0 Redirect Uri
         auto status_code = QHttpServerResponder::StatusCode::Ok;
