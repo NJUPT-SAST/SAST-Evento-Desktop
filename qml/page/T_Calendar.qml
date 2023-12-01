@@ -258,10 +258,17 @@ FluScrollablePage {
     }*/
 
     FluArea {
+        id: table
         height: 790
         width: 890
         color: "transparent"
+
+        // TODO
+        readonly property int blockHeight: 10
+        property int blockWidth: 100
+
         Row {
+            id: weekTitle
             anchors {
                 top: parent.top
                 topMargin: 10
@@ -269,7 +276,6 @@ FluScrollablePage {
                 leftMargin: 100
             }
             spacing: 92
-
             Repeater {
                 model: [{
                         "text": "周一\n",
@@ -303,6 +309,22 @@ FluScrollablePage {
 
         Column {
             anchors {
+                top: weekTitle.bottom
+                topMargin: 10
+                left: parent.left
+                leftMargin: 100
+            }
+            Repeater {
+                model: EventoBlockModel.all_day_line_num
+                Item {
+                    Layout.fillWidth: parent
+                    height: table.blockHeight
+                }
+            }
+        }
+
+        Column {
+            anchors {
                 top: parent.top
                 topMargin: 37
                 left: parent.left
@@ -311,7 +333,7 @@ FluScrollablePage {
             spacing: 30
 
             Repeater {
-                model: ["Multi\nDay", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]
+                model: ["8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]
                 FluText {
                     text: model.modelData
                     font: FluTextStyle.Caption
