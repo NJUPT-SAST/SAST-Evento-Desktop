@@ -61,9 +61,9 @@ QHash<int, QByteArray> EventoBlockModel::roleNames() const {
         roles.insert(Start, "start");
         roles.insert(End, "end");
         roles.insert(StartFloat, "start_float");
-        roles.insert(EndFloat, "end_ float");
+        roles.insert(EndFloat, "end_float");
         roles.insert(Editable, "editable");
-        roles.insert(Depth, "columnEnd");
+        roles.insert(Depth, "depth");
         roles.insert(DepthMax, "depth_max");
     }
     return roles;
@@ -163,7 +163,7 @@ void EventoBlockModel::arrange_pipeline(QDate monday) {
         std::copy(i.begin(), i.end(), std::back_inserter(pipeline));
 
     // update all_day_line_num
-    this->setProperty("all_day_line_num", all_day_map.size());
+    this->setProperty("all_day_line_num", (quint64)all_day_map.size());
     // update z_map
     for (auto col = 0; col < 7; col++) {
         Z_MAP_FLAG processed = INIT;

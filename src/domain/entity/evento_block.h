@@ -3,40 +3,52 @@
 
 #include "types.h"
 
-#include <bit>
 #include <set>
 
 struct DTO_Evento;
 
 struct TimePoint {
-    uint8_t fraction : 3 = 0;
-    uint8_t major : 4 = 0;
-    uint8_t ahead : 1 = 0;
+    uint8_t fraction : 3;
+    uint8_t major : 4;
+    uint8_t ahead : 1;
+
+    operator uint8_t() {
+        return *reinterpret_cast<uint8_t*>(this);
+    }
+
+    TimePoint() {
+        *(uint8_t*)this = 0;
+    }
 
     struct IEEE_Float {
         uint32_t m : 23;
         uint32_t e : 8;
-        uint32_t sign : 1 = 0;
+        uint32_t sign : 1;
+
+        operator float() {
+            return *reinterpret_cast<float*>(this);
+        }
     };
 
-    static constexpr uint32_t M_OPRAND = 0b100'00000'00000'00000'00000;
-
     static inline float to_float(TimePoint t) {
-        static_assert(std::endian::native == std::endian::little, "Big Endian Untested!");
+        constexpr uint32_t M_OPRAND = 0b100'00000'00000'00000'00000;
+        static_assert(QSysInfo::ByteOrder == QSysInfo::LittleEndian, "Big Endian Untested!");
         if (t.ahead)
-            return t.major ? std::bit_cast<float>(0b01111111100000000000000000000000)
-                           : std::bit_cast<float>(0b11111111100000000000000000000000);
+            return t.major ? -0.5 : 15.5;
         if (!t.major && !t.fraction)
             return 0;
         t.ahead = 0;
-        IEEE_Float result{.m = std::bit_cast<uint8_t>(t), .e = 127 + 20}; // 24 - bitsize of (major)
+        IEEE_Float result;
+        result.e = 127 + 20; // 24 - bitsize of (major)
+        result.m = t;
+        result.sign = 0;
         while (!(result.m & M_OPRAND)) {
             result.m <<= 1;
             result.e--;
         }
         result.m <<= 1;
         result.e--;
-        return std::bit_cast<float>(result);
+        return result;
     }
 };
 
