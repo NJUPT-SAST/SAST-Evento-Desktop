@@ -119,7 +119,11 @@ void EventoBlockModel::arrange_pipeline(QDate monday) {
             all_day.push_back(i);
         } else {
             auto end = element.end.major;
-            if (element.end.fraction & end)
+            if (!end) {
+                element.depth = 0;
+                continue;
+            }
+            if (!element.end.fraction)
                 end--;
             Z_MAP_FLAG flag = INIT;
             for (auto index = element.start.major; index <= end; ++index)

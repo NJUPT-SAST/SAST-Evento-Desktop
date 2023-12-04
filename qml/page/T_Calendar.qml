@@ -259,7 +259,7 @@ FluScrollablePage {
         readonly property int all_day_height : EventoBlockModel.all_day_line_num * blockHeight
 
         Row {
-            id: weekTittle
+            id: weekTitle
             anchors {
                 top: parent.top
                 topMargin: 20
@@ -270,38 +270,38 @@ FluScrollablePage {
             Repeater {
                 model: ListModel {
                     ListElement {
-                        tittle: "周一\n"
+                        title: "周一\n"
                         index: 0
                     }
                     ListElement {
-                        tittle: "周二\n"
+                        title: "周二\n"
                         index: 1
                     }
                     ListElement {
-                        tittle: "周三\n"
+                        title: "周三\n"
                         index: 2
                     }
                     ListElement {
-                        tittle: "周四\n"
+                        title: "周四\n"
                         index: 3
                     }
                     ListElement {
-                        tittle: "周五\n"
+                        title: "周五\n"
                         index: 4
                     }
                     ListElement {
-                        tittle: "周六\n"
+                        title: "周六\n"
                         index: 5
                     }
                     ListElement {
-                        tittle: "周日\n"
+                        title: "周日\n"
                         index: 6
                     }
                 }
 
                 delegate: FluText {
                     width: table.blockWidth
-                    text: tittle + getDate(getMondayOfWeek(date_picker.current), index)
+                    text: title + getDate(getMondayOfWeek(date_picker.current), index)
                     font: FluTextStyle.BodyStrong
                     horizontalAlignment: Text.AlignHCenter
                 }
@@ -310,7 +310,7 @@ FluScrollablePage {
 
         FluText {
             anchors {
-                top: weekTittle.bottom
+                top: weekTitle.bottom
                 topMargin: 10
             }
 
@@ -327,7 +327,7 @@ FluScrollablePage {
 
             delegate: FluRectangle {
                 anchors {
-                    top: weekTittle.bottom
+                    top: weekTitle.bottom
                     topMargin: 10 + index * table.blockHeight
                     left: parent.left
                     leftMargin: 50
@@ -364,67 +364,67 @@ FluScrollablePage {
         Repeater {
             model: ListModel {
                 ListElement {
-                    tittle: "8:00"
+                    title: "8:00"
                     index: 0
                 }
                 ListElement {
-                    tittle: "9:00"
+                    title: "9:00"
                     index: 1
                 }
                 ListElement {
-                    tittle: "10:00"
+                    title: "10:00"
                     index: 2
                 }
                 ListElement {
-                    tittle: "11:00"
+                    title: "11:00"
                     index: 3
                 }
                 ListElement {
-                    tittle: "12:00"
+                    title: "12:00"
                     index: 4
                 }
                 ListElement {
-                    tittle: "13:00"
+                    title: "13:00"
                     index: 5
                 }
                 ListElement {
-                    tittle: "14:00"
+                    title: "14:00"
                     index: 6
                 }
                 ListElement {
-                    tittle: "15:00"
+                    title: "15:00"
                     index: 7
                 }
                 ListElement {
-                    tittle: "16:00"
+                    title: "16:00"
                     index: 8
                 }
                 ListElement {
-                    tittle: "17:00"
+                    title: "17:00"
                     index: 9
                 }
                 ListElement {
-                    tittle: "18:00"
+                    title: "18:00"
                     index: 10
                 }
                 ListElement {
-                    tittle: "19:00"
+                    title: "19:00"
                     index: 11
                 }
                 ListElement {
-                    tittle: "20:00"
+                    title: "20:00"
                     index: 12
                 }
                 ListElement {
-                    tittle: "21:00"
+                    title: "21:00"
                     index: 13
                 }
                 ListElement {
-                    tittle: "22:00"
+                    title: "22:00"
                     index: 14
                 }
                 ListElement {
-                    tittle: "23:00"
+                    title: "23:00"
                     index: 15
                 }
 
@@ -432,7 +432,7 @@ FluScrollablePage {
 
             delegate: Item {
                 anchors {
-                    top: weekTittle.bottom
+                    top: weekTitle.bottom
                     topMargin: 10 + index * table.blockHeight + table.all_day_height
                     left: parent.left
                     right: parent.right
@@ -459,7 +459,7 @@ FluScrollablePage {
                         right: row_line.left
                         verticalCenter: row_line.top
                     }
-                    text: tittle
+                    text: title
                     font: FluTextStyle.Caption
                     color: FluColors.Grey110
                     horizontalAlignment: Text.AlignHCenter
@@ -474,7 +474,7 @@ FluScrollablePage {
                 readonly property double width_min : table.blockWidth / (depth_max + 1)
 
                 anchors {
-                    top: weekTittle.bottom
+                    top: weekTitle.bottom
                     topMargin: is_all_day ? 10 + depth * table.blockHeight : 10 + table.all_day_height + start * table.blockHeight
                     left: parent.left
                     leftMargin: is_all_day ? 50 + start * table.blockWidth : 50 + column * table.blockWidth + depth * width_min

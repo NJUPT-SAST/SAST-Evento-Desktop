@@ -468,13 +468,15 @@ EventoBlock::EventoBlock(const DTO_Evento& src, const std::set<EventoID>& permit
             start.ahead = 1;
         else
             start.major = (time.hour() - 8);
-        start.fraction = (time.minute() * 60 + time.second()) / 450;
+        if (time.hour() != 23)
+            start.fraction = (time.minute() * 60 + time.second()) / 450;
         time = gmtEventEnd.time();
         if (time.hour() >= 8)
             end.major = (time.hour() - 8);
-        end.fraction = (time.minute() * 60 + time.second()) / 450;
         if (time.hour() == 23 && time != QTime(23, 0))
             end.ahead = 1;
+        else
+            end.fraction = (time.minute() * 60 + time.second()) / 450;
         column_or_flag = gmtEventStart.date().dayOfWeek() - 1;
     } else {
         if (getMonday(gmtEventStart.date()) == getMonday(gmtEventEnd.date())) {
