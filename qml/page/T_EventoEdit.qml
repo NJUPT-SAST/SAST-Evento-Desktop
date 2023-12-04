@@ -4,7 +4,6 @@ import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
 import SAST_Evento
-import "../imports"
 import "../window"
 import "../page"
 

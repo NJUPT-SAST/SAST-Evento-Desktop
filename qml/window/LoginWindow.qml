@@ -288,7 +288,7 @@ FluWindow {
             MenuItem {
                 text: lang.lang_exit
                 onTriggered: {
-                    window.deleteWindow()
+                    window.close()
                     FluApp.closeApp()
                 }
             }

@@ -309,18 +309,36 @@ FluScrollablePage {
         }
 
         FluText {
-            id: allDayEvents
             anchors {
                 top: weekTittle.bottom
                 topMargin: 10
-                left: parent.left
             }
+
             height: table.all_day_height
             width: 50
             text: "Multi\nDay"
             verticalAlignment: Text.AlignTop
             horizontalAlignment: Text.AlignHCenter
             visible: EventoBlockModel.all_day_line_num
+        }
+
+        Repeater {
+            model: EventoBlockModel.all_day_line_num
+
+            delegate: FluRectangle {
+                anchors {
+                    top: weekTittle.bottom
+                    topMargin: 10 + index * table.blockHeight
+                    left: parent.left
+                    leftMargin: 50
+                    right: parent.right
+                    rightMargin: 10
+                }
+                Layout.fillWidth: true
+                height: 1
+                color: FluTheme.dark ? Qt.rgba(62 / 255, 62 / 255,
+                                               62 / 255, 1) : "#e1dfdd"
+            }
         }
 
         Row {
@@ -336,7 +354,7 @@ FluScrollablePage {
                 model: 7
                 delegate: FluRectangle {
                     width: 1
-                    height: table.height - 18
+                    height: table.height - 28
                     color: FluTheme.dark ? Qt.rgba(62 / 255, 62 / 255,
                                                    62 / 255, 1) : "#e1dfdd"
                 }
@@ -433,7 +451,7 @@ FluScrollablePage {
                     height: 1
                     color: FluTheme.dark ? Qt.rgba(62 / 255, 62 / 255,
                                                    62 / 255, 1) : "#e1dfdd"
-                    }
+                }
 
                 FluText {
                     anchors {

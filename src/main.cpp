@@ -29,13 +29,7 @@ int main(int argc, char* argv[]) {
     appInfo->init(&engine);
 
     const QUrl url(QStringLiteral("qrc:/qml/App.qml"));
-    QObject::connect(
-        &engine, &QQmlApplicationEngine::objectCreated, &app,
-        [url](QObject* obj, const QUrl& objUrl) {
-            if (!obj && url == objUrl)
-                QCoreApplication::exit(-1);
-        },
-        Qt::QueuedConnection);
+    QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
     engine.load(url);
 
     return app.exec();

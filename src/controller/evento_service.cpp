@@ -469,12 +469,8 @@ EventoBlock::EventoBlock(const DTO_Evento& src, const std::set<EventoID>& permit
         else
             start.major = (time.hour() - 8);
         start.fraction = (time.minute() * 60 + time.second()) / 450;
-        if (time.hour() == 23 && time != QTime(23, 0))
-            start.ahead = 1;
         time = gmtEventEnd.time();
-        if (time.hour() < 8)
-            end.ahead = 1;
-        else
+        if (time.hour() >= 8)
             end.major = (time.hour() - 8);
         end.fraction = (time.minute() * 60 + time.second()) / 450;
         if (time.hour() == 23 && time != QTime(23, 0))
@@ -484,7 +480,7 @@ EventoBlock::EventoBlock(const DTO_Evento& src, const std::set<EventoID>& permit
         if (getMonday(gmtEventStart.date()) == getMonday(gmtEventEnd.date())) {
             column_or_flag = -1;
             start.major = gmtEventStart.date().dayOfWeek() - 1;
-            end.major = gmtEventEnd.date().dayOfWeek() - 1;
+            end.major = gmtEventEnd.date().dayOfWeek();
         }
     }
 }

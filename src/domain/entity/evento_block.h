@@ -34,7 +34,7 @@ struct TimePoint {
         constexpr uint32_t M_OPRAND = 0b100'00000'00000'00000'00000;
         static_assert(QSysInfo::ByteOrder == QSysInfo::LittleEndian, "Big Endian Untested!");
         if (t.ahead)
-            return t.major ? -0.5 : 15.5;
+            return t.major ? t.major + 0.5 : -0.5;
         if (!t.major && !t.fraction)
             return 0;
         t.ahead = 0;
@@ -72,12 +72,12 @@ struct EventoBlock {
         if (gmtEventStart.date() < monday)
             start.ahead = 1;
         else
-            start.ahead = gmtEventStart.date().dayOfWeek() - 1;
-        if (gmtEventEnd.date() > monday) {
+            start.major = gmtEventStart.date().dayOfWeek() - 1;
+        if (gmtEventEnd.date() > monday.addDays(6)) {
             end.ahead = 1;
-            end.major = 6;
+            end.major = 7;
         } else
-            end.major = gmtEventEnd.date().dayOfWeek() - 1;
+            end.major = gmtEventEnd.date().dayOfWeek();
     }
 };
 
