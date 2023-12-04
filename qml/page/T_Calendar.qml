@@ -7,6 +7,7 @@ import SAST_Evento
 import "../window"
 
 FluScrollablePage {
+    id: calendar
     launchMode: FluPageType.SingleTask
 
     property string dateString: date2String(new Date)
@@ -247,100 +248,79 @@ FluScrollablePage {
         }
     }
 
-    /*
-    FluText {
-        text: lang.lang_calendar_hint
-        font: FluTextStyle.Caption
-        anchors {
-            left: parent.left
-            leftMargin: 10
-        }
-    }*/
-
     FluArea {
         id: table
-        height: 790
+        height: 765 + all_day_height
         width: 890
         color: "transparent"
 
-        // TODO
-        readonly property int blockHeight: 10
-        property int blockWidth: 100
+        readonly property int blockHeight: 45
+        readonly property int blockWidth: 120
+        readonly property int all_day_height : EventoBlockModel.all_day_line_num * blockHeight
 
         Row {
-            id: weekTitle
+            id: weekTittle
             anchors {
                 top: parent.top
-                topMargin: 10
+                topMargin: 20
                 left: parent.left
-                leftMargin: 100
+                leftMargin: 50
             }
-            spacing: 92
+
             Repeater {
-                model: [{
-                        "text": "周一\n",
-                        "index": 0
-                    }, {
-                        "text": "周二\n",
-                        "index": 1
-                    }, {
-                        "text": "周三\n",
-                        "index": 2
-                    }, {
-                        "text": "周四\n",
-                        "index": 3
-                    }, {
-                        "text": "周五\n",
-                        "index": 4
-                    }, {
-                        "text": "周六\n",
-                        "index": 5
-                    }, {
-                        "text": "周日\n",
-                        "index": 6
-                    }]
-                FluText {
-                    text: modelData.text + getDate(getMondayOfWeek(date_picker.current), modelData.index)
+                model: ListModel {
+                    ListElement {
+                        tittle: "周一\n"
+                        index: 0
+                    }
+                    ListElement {
+                        tittle: "周二\n"
+                        index: 1
+                    }
+                    ListElement {
+                        tittle: "周三\n"
+                        index: 2
+                    }
+                    ListElement {
+                        tittle: "周四\n"
+                        index: 3
+                    }
+                    ListElement {
+                        tittle: "周五\n"
+                        index: 4
+                    }
+                    ListElement {
+                        tittle: "周六\n"
+                        index: 5
+                    }
+                    ListElement {
+                        tittle: "周日\n"
+                        index: 6
+                    }
+                }
+
+                delegate: FluText {
+                    width: table.blockWidth
+                    text: tittle + getDate(getMondayOfWeek(date_picker.current), index)
                     font: FluTextStyle.BodyStrong
                     horizontalAlignment: Text.AlignHCenter
                 }
             }
         }
 
-        Column {
+        FluText {
+            id: allDayEvents
             anchors {
-                top: weekTitle.bottom
+                top: weekTittle.bottom
                 topMargin: 10
                 left: parent.left
-                leftMargin: 100
             }
-            Repeater {
-                model: EventoBlockModel.all_day_line_num
-                Item {
-                    Layout.fillWidth: parent
-                    height: table.blockHeight
-                }
-            }
-        }
-
-        Column {
-            anchors {
-                top: parent.top
-                topMargin: 37
-                left: parent.left
-                leftMargin: 10
-            }
-            spacing: 30
-
-            Repeater {
-                model: ["8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]
-                FluText {
-                    text: model.modelData
-                    font: FluTextStyle.Caption
-                    color: FluColors.Grey110
-                    horizontalAlignment: Text.AlignHCenter
-                }
-            }
+            height: table.all_day_height
+            width: 50
+            text: "Multi\nDay"
+            verticalAlignment: Text.AlignTop
+            horizontalAlignment: Text.AlignHCenter
+            visible: EventoBlockModel.all_day_line_num
         }
 
         Row {
@@ -350,38 +330,13 @@ FluScrollablePage {
                 left: parent.left
                 leftMargin: 50
             }
-            spacing: 119
-            Repeater {
-                id: rep_date
-                model: 7
-                FluRectangle {
-                    width: 1
-                    height: 1130
-                    anchors.top: parent.top
-                    anchors.topMargin: 5
-                    color: FluTheme.dark ? Qt.rgba(62 / 255, 62 / 255,
-                                                   62 / 255, 1) : "#e1dfdd"
-                }
-            }
-        }
+            spacing: table.blockWidth - 1
 
-        Column {
-            anchors {
-                top: parent.top
-                topMargin: 57
-                left: parent.left
-                leftMargin: 60
-                right: parent.right
-            }
-            spacing: 44.1
             Repeater {
-                id: rep_time
-                model: 17
-                FluRectangle {
-                    width: parent.width
-                    height: 1
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
+                model: 7
+                delegate: FluRectangle {
+                    width: 1
+                    height: table.height - 18
                     color: FluTheme.dark ? Qt.rgba(62 / 255, 62 / 255,
                                                    62 / 255, 1) : "#e1dfdd"
                 }
@@ -389,17 +344,127 @@ FluScrollablePage {
         }
 
         Repeater {
-            id: rep_block
+            model: ListModel {
+                ListElement {
+                    tittle: "8:00"
+                    index: 0
+                }
+                ListElement {
+                    tittle: "9:00"
+                    index: 1
+                }
+                ListElement {
+                    tittle: "10:00"
+                    index: 2
+                }
+                ListElement {
+                    tittle: "11:00"
+                    index: 3
+                }
+                ListElement {
+                    tittle: "12:00"
+                    index: 4
+                }
+                ListElement {
+                    tittle: "13:00"
+                    index: 5
+                }
+                ListElement {
+                    tittle: "14:00"
+                    index: 6
+                }
+                ListElement {
+                    tittle: "15:00"
+                    index: 7
+                }
+                ListElement {
+                    tittle: "16:00"
+                    index: 8
+                }
+                ListElement {
+                    tittle: "17:00"
+                    index: 9
+                }
+                ListElement {
+                    tittle: "18:00"
+                    index: 10
+                }
+                ListElement {
+                    tittle: "19:00"
+                    index: 11
+                }
+                ListElement {
+                    tittle: "20:00"
+                    index: 12
+                }
+                ListElement {
+                    tittle: "21:00"
+                    index: 13
+                }
+                ListElement {
+                    tittle: "22:00"
+                    index: 14
+                }
+                ListElement {
+                    tittle: "23:00"
+                    index: 15
+                }
+
+            }
+
+            delegate: Item {
+                anchors {
+                    top: weekTittle.bottom
+                    topMargin: 10 + index * table.blockHeight + table.all_day_height
+                    left: parent.left
+                    right: parent.right
+                }
+
+                FluRectangle {
+                    id: row_line
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        leftMargin: 50
+                        right: parent.right
+                        rightMargin: 10
+                    }
+                    Layout.fillWidth: true
+                    height: 1
+                    color: FluTheme.dark ? Qt.rgba(62 / 255, 62 / 255,
+                                                   62 / 255, 1) : "#e1dfdd"
+                    }
+
+                FluText {
+                    anchors {
+                        left: parent.left
+                        right: row_line.left
+                        verticalCenter: row_line.top
+                    }
+                    text: tittle
+                    font: FluTextStyle.Caption
+                    color: FluColors.Grey110
+                    horizontalAlignment: Text.AlignHCenter
+                }
+            }
+        }
+
+        Repeater {
             model: EventoBlockModel
+
             delegate: FluArea {
-                id: area
-                height: 41.1 * (end - start) + parseInt(
-                                end - start - 1)
-                width: 115 * (end - start + 1) + 5
-                           * (end - start)
-                color: FluTheme.dark ? Qt.rgba(
-                                               23 / 255, 49 / 255, 102 / 255,
-                                               1) : Qt.rgba(224 / 255, 233 / 255, 255 / 255, 1)
+                readonly property double width_min : table.blockWidth / (depth_max + 1)
+
+                anchors {
+                    top: weekTittle.bottom
+                    topMargin: is_all_day ? 10 + depth * table.blockHeight : 10 + table.all_day_height + start * table.blockHeight
+                    left: parent.left
+                    leftMargin: is_all_day ? 50 + start * table.blockWidth : 50 + column * table.blockWidth + depth * width_min
+                }
+
+                height: is_all_day ? table.blockHeight : table.blockHeight * (end - start)
+                width: is_all_day ? table.blockWidth * (end - start) : (depth == depth_max ? 1 : 1.618) * width_min
+                color: FluTheme.dark ? Qt.rgba(23 / 255, 49 / 255, 102 / 255, 1) : Qt.rgba(224 / 255, 233 / 255, 255 / 255, 1)
 
                 FluRectangle {
                     width: 4
@@ -412,7 +477,6 @@ FluScrollablePage {
                         verticalCenter: parent.verticalCenter
                     }
                 }
-
                 FluText {
                     id: text_title
                     text: title
@@ -429,70 +493,73 @@ FluScrollablePage {
                         rightMargin: 3
                     }
                 }
+
                 FluText {
-                        text: time
-                        font: FluTextStyle.Caption
-                        color: FluColors.Grey110
-                        elide: Text.ElideRight
-                        maximumLineCount: 1
-                        anchors {
-                            top: text_title.bottom
-                            topMargin: 2
-                            left: text_title.left
-                            right: parent.right
+                    text: time
+                    font: FluTextStyle.Caption
+                    color: FluColors.Grey110
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
+                    anchors {
+                        top: text_title.bottom
+                        topMargin: 2
+                        left: text_title.left
+                        right: parent.right
+                    }
+                }
+
+                MouseArea {
+                    id: event_mouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: mouse => {
+                        if (mouse.button === Qt.LeftButton) {
+                            EventoHelper.id = id
+                            EventoInfoController.editable = editable
+                            blockWindowRegister.launch()
                         }
                     }
+                }
 
-                    MouseArea {
-                        id: event_mouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        acceptedButtons: Qt.LeftButton | Qt.RightButton
-                        onClicked: mouse => {
-                                       if (mouse.button === Qt.LeftButton) {
-                                           EventoHelper.id = id
-                                           EventoInfoController.editable = editable
-                                           blockWindowRegister.launch()
-                                       }
-                                   }
-                    }
-
-                    Rectangle {
-                        anchors.fill: parent
-                        color: {
-                            if (!editable) {
-                                return FluTheme.dark ? Qt.rgba(
+                Rectangle {
+                    anchors.fill: parent
+                    color: {
+                        if (!editable) {
+                            return FluTheme.dark ? Qt.rgba(
                                                            33 / 255, 45 / 255,
                                                            69 / 255,
                                                            0.5) : Qt.rgba(241 / 255, 245
                                                                           / 255, 255 / 255, 0.5)
-                            }
-                            if (FluTheme.dark) {
-                                if (event_mouse.containsMouse) {
+                        }
+                        if (FluTheme.dark) {
+                            if (event_mouse.containsMouse) {
                                     return Qt.rgba(1, 1, 1, 0.03)
-                                }
-                                return Qt.rgba(0, 0, 0, 0)
-                            } else {
-                                if (event_mouse.containsMouse) {
-                                    return Qt.rgba(0, 0, 0, 0.03)
-                                }
-                                return Qt.rgba(0, 0, 0, 0)
                             }
+                            return Qt.rgba(0, 0, 0, 0)
+                        } else {
+                            if (event_mouse.containsMouse) {
+                                return Qt.rgba(0, 0, 0, 0.03)
+                            }
+                            return Qt.rgba(0, 0, 0, 0)
                         }
                     }
                 }
             }
         }
-
-    function getMondayOfWeek(date) {
-        var dayOfWeek = (date.getDay() + 6) % 7
-        return new Date(date.getDate() - dayOfWeek)
     }
 
-    function getDate(monday, weekOfDay) {
-        var result = new Date(monday)
-        result.setDate(result.getDate() + weekOfDay)
-        return result.getDate()
+    function getMondayOfWeek(date) {
+        let dayOfWeek = (date.getDay() + 6) % 7
+        let result = new Date(date)
+        result.setDate(date.getDate() - dayOfWeek)
+        return result
+    }
+
+    function getDate(monday, dayOfWeek) {
+        let result = new Date(monday)
+        result.setDate(monday.getDate() + dayOfWeek)
+        return (result.getMonth() + 1) + "/" + result.getDate()
     }
 
     function date2String(date) {

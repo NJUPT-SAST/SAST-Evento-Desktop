@@ -23,11 +23,8 @@ public:
         Title,
         Time,
         Column,
-        Row,
         Start,
         End,
-        StartFloat,
-        EndFloat,
         Editable,
         Depth,
         DepthMax

@@ -29,16 +29,11 @@ QVariant EventoBlockModel::data(const QModelIndex& index, int role) const {
     case Role::Column:
         return element.column_or_flag;
     case Role::Start:
-        return element.start.major;
-    case Role::End:
-        return element.end.fraction ? element.end.major : element.end.major - 1;
-    case Role::StartFloat:
         return TimePoint::to_float(element.start);
-    case Role::EndFloat:
+    case Role::End:
         return TimePoint::to_float(element.end);
     case Role::Editable:
         return element.editable;
-    case Role::Row:
     case Role::Depth:
         return element.depth;
     case Role::DepthMax:
@@ -57,11 +52,8 @@ QHash<int, QByteArray> EventoBlockModel::roleNames() const {
         roles.insert(Title, "title");
         roles.insert(Time, "time");
         roles.insert(Column, "column");
-        roles.insert(Row, "row");
         roles.insert(Start, "start");
         roles.insert(End, "end");
-        roles.insert(StartFloat, "start_float");
-        roles.insert(EndFloat, "end_float");
         roles.insert(Editable, "editable");
         roles.insert(Depth, "depth");
         roles.insert(DepthMax, "depth_max");
@@ -136,7 +128,7 @@ void EventoBlockModel::arrange_pipeline(QDate monday) {
             for (auto index = element.start.major; index <= end; ++index)
                 rel[index] = Z_MAP_FLAG(rel[index] | flag);
             auto& layout = z_map_layout[element.column_or_flag];
-            auto max = z_map_layout.size();
+            auto max = layout.size();
             std::size_t j;
             for (j = 0; j < max; j++)
                 if (!(flag & layout[j])) {
