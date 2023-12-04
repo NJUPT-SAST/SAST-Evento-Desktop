@@ -44,7 +44,7 @@ void InformationService::load_EditInfo() {
 
     QtFuture::whenAll(tasks.begin(), tasks.end()).then([](QList<QFuture<bool>> tasks) {
         for (const auto& i : tasks)
-            if (!i.result())
+            if (i.isCanceled() || !i.result())
                 return;
         EventoEditController::getInstance()->onLoadEditFinished();
     });

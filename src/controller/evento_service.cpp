@@ -70,7 +70,7 @@ void EventoService::load_Plaza() {
         })};
     QtFuture::whenAll(tasks.begin(), tasks.end()).then([](QList<QFuture<bool>> jobs) {
         for (auto& i : jobs)
-            if (!i.takeResult())
+            if (i.isCanceled() || !i.takeResult())
                 return;
         PlazaController::getInstance()->onPlazaLoadFinished();
     });
@@ -321,7 +321,7 @@ void EventoService::load(EventoID id) {
         })};
     QtFuture::whenAll(tasks.begin(), tasks.end()).then([](QList<QFuture<bool>> tasks) {
         for (auto& i : tasks)
-            if (!i.takeResult())
+            if (i.isCanceled() || !i.takeResult())
                 return;
         EventoInfoController::getInstance()->onLoadFinished();
     });
