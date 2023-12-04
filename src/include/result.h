@@ -5,11 +5,11 @@
 
 template <typename T = bool>
 class EventoResult {
-    union alignas(32) Member {
-        alignas(32) EventoException err;
-        struct alignas(32) Data {
+    union alignas(8) Member {
+        alignas(8) EventoException err;
+        struct alignas(8) Data {
             alignas(8) EventoExceptionCode err_code = EventoExceptionCode::Ok;
-            T result;
+            alignas(8) T result;
 
             Data(T&& other) : result(std::move(other)) {}
             Data(const T& other) : result(other) {}
