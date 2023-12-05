@@ -112,7 +112,8 @@ FluScrollablePage {
         Layout.fillWidth: true
         spacing: 13
         ColumnLayout {
-            width: parent.width / 2 + 135
+            id: info_col
+            width: parent.width / 2 + 70
             Row {
                 spacing: 5
                 Layout.topMargin: 8
@@ -223,7 +224,7 @@ FluScrollablePage {
 
         ColumnLayout {
             visible: UserHelper.permission != 1
-            width: parent.width / 2 - 135
+            width: parent.width - 30 - info_col.width
             anchors.verticalCenter: parent.verticalCenter
             FluText {
                 id: text_evento_state
@@ -235,7 +236,7 @@ FluScrollablePage {
             FluToggleButton {
                 id: btn_register
                 Layout.topMargin: 15
-                implicitWidth: 250
+                implicitWidth: parent.width
                 text: EventoInfoController.isRegistrated ? lang.lang_cancellation : lang.lang_register
                 checked: EventoInfoController.isRegistrated
                 disabled: EventoHelper.state >= 2
@@ -265,7 +266,7 @@ FluScrollablePage {
 
             FluToggleButton {
                 id: btn_subscribe
-                implicitWidth: 250
+                implicitWidth: parent.width
                 Layout.topMargin: 15
                 text: EventoInfoController.isSubscribed ? lang.lang_unsubscribe : lang.lang_subscribe
                 checked: EventoInfoController.isSubscribed
@@ -278,6 +279,7 @@ FluScrollablePage {
                                 EventoInfoController.isSubscribed)
                 }
             }
+
             Connections {
                 target: EventoInfoController
                 function onSubscribeSuccessEvent() {
@@ -297,12 +299,17 @@ FluScrollablePage {
             FluText {
                 id: text_subs_info
                 text: lang.lang_subscribe_hint
+                Layout.fillWidth: true
+                elide: Text.ElideRight
+                maximumLineCount: 2
+                wrapMode: Text.WordWrap
                 font: FluTextStyle.Caption
                 color: FluColors.Grey110
             }
+
             FluButton {
                 id: btn_check
-                implicitWidth: 250
+                implicitWidth: parent.width
                 Layout.topMargin: 9
                 text: EventoInfoController.isParticipated ? lang.lang_checked_in : lang.lang_check_in
                 disabled: EventoInfoController.isParticipated
