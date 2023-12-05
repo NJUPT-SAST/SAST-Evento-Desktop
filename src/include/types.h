@@ -3,10 +3,10 @@
 
 #include <QDateTime>
 #include <QString>
-#include <vector>
 
 using UserID = QString;
 using EventoID = int;
+using LocationID = int;
 using Image = QString;
 using Tag = QString;
 
@@ -35,12 +35,6 @@ struct Department {
     int id;
     QString name;
     bool subscribed = false;
-};
-
-struct Location {
-    int id;
-    QString locationName;
-    int parentId;
 };
 
 struct FeedbackNum {
