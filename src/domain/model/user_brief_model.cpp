@@ -37,9 +37,14 @@ QHash<int, QByteArray> UserBriefModel::roleNames() const {
 }
 
 void UserBriefModel::resetModel(std::vector<UserBrief>&& model) {
-    beginResetModel();
-    m_data = std::move(model);
-    endResetModel();
+    QMetaObject::invokeMethod(
+        this,
+        [&]() {
+            beginResetModel();
+            m_data = std::move(model);
+            endResetModel();
+        },
+        Qt::BlockingQueuedConnection);
 }
 
 UserBriefModel* UserBriefModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

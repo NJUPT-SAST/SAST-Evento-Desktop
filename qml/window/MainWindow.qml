@@ -7,28 +7,24 @@ import Qt.labs.platform
 import QtCore
 import FluentUI
 import SAST_Evento
-import "../imports"
 
-CustomWindow {
+FluWindow {
     id: window
+    title: "SAST Evento"
     width: 1110
     height: 640
     closeDestory: false
     minimumWidth: 520
     minimumHeight: 200
-    appBarVisible: false
-    autoShow: false
     launchMode: FluWindowType.SingleTask
-    title: "SAST Evento"
+    appBar: undefined
 
-    closeFunc: function (event) {
+    closeListener: function (event) {
         dialog_close.open()
         event.accepted = false
     }
 
     Component.onCompleted: {
-        window.requestActivate()
-        window.autoShow = true
         FluTools.setQuitOnLastWindowClosed(false)
         checkUpdate()
     }
@@ -70,8 +66,8 @@ CustomWindow {
         positiveText: lang.lang_exit
         neutralText: lang.lang_cancel
         onPositiveClicked: {
-            window.deleteWindow()
-            FluApp.closeApp()
+            window.close()
+            FluApp.exit()
         }
     }
 
@@ -183,8 +179,9 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         id: nav_view
         width: parent.width
         height: parent.height
+        cellWidth: 200
         z: 999
-        navWidth: 200
+        pageMode: FluNavigationViewType.Stack
         items: items_original
         footerItems: items_footer
         topPadding: FluTools.isMacos() ? 20 : 5

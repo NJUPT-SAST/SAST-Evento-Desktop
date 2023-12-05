@@ -244,7 +244,6 @@ FluScrollablePage {
             FluRectangle {
                 id: item_rectangle
                 anchors.fill: parent
-                shadow: false
                 radius: [6, 6, 6, 6]
                 FluImage {
                     id: item_img

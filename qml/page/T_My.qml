@@ -51,7 +51,7 @@ FluScrollablePage {
             paddings: 10
             border.width: 0
             color: "transparent"
-            FluRectangle {
+            FluClip {
                 id: img
                 width: 70
                 height: 70
@@ -212,7 +212,6 @@ FluScrollablePage {
                     height: 115
                     width: 115
                     radius: [6, 6, 6, 6]
-                    shadow: false
                     anchors {
                         left: parent.left
                         leftMargin: 10

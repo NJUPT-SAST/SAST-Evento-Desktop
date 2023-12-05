@@ -50,9 +50,14 @@ QHash<int, QByteArray> UndertakingEventoModel::roleNames() const {
 }
 
 void UndertakingEventoModel::resetModel(std::vector<UndertakingEvento>&& model) {
-    beginResetModel();
-    m_data = std::move(model);
-    endResetModel();
+    QMetaObject::invokeMethod(
+        this,
+        [&]() {
+            beginResetModel();
+            m_data = std::move(model);
+            endResetModel();
+        },
+        Qt::BlockingQueuedConnection);
 }
 
 UndertakingEventoModel* UndertakingEventoModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

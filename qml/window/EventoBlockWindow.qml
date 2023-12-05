@@ -3,15 +3,12 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import FluentUI
 import SAST_Evento
-import "../imports"
 
-CustomWindow {
+FluWindow {
     id: window
     width: 290
     height: 380
     closeDestory: true
-    showMinimize: false
-    showMaximize: false
     fixSize: true
     launchMode: FluWindowType.SingleInstance
 
@@ -178,8 +175,8 @@ CustomWindow {
                 Connections {
                     target: EventoInfoController
                     function onLoadEventoErrorEvent(message) {
-                        page.statusMode = FluStatusViewType.Success
-                        MainWindow.window.showError(message)
+                        page.statusMode = FluStatusViewType.Error
+                        window.showError(message)
                         window.close()
                     }
                 }
@@ -324,21 +321,20 @@ CustomWindow {
                         id: carousel
                         width: 270
                         height: 150
-                        radius: [5, 5, 5, 5]
                         loopTime: 4000
                         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
                         indicatorMarginTop: 0
                         Layout.topMargin: 30
 
-                        delegate: Component {
-                            Item {
+                        delegate: FluClip {
+                            anchors.fill: parent
+                            radius: [5, 5, 5, 5]
+
+                            Image {
                                 anchors.fill: parent
-                                Image {
-                                    anchors.fill: parent
-                                    source: model.url
-                                    asynchronous: true
-                                    fillMode: Image.PreserveAspectCrop
-                                }
+                                source: model.url
+                                asynchronous: true
+                                fillMode: Image.PreserveAspectCrop
                             }
                         }
                     }
@@ -438,7 +434,6 @@ CustomWindow {
                             width: 50
                             radius: [5, 5, 5, 5]
                             color: "#99ffcc"
-                            shadow: false
                             FluText {
                                 id: text_tag
                                 wrapMode: Text.WordWrap

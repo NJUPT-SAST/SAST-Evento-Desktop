@@ -15,12 +15,18 @@
 #include "plaza.h"
 #include "repository.h"
 #include "schedule.h"
+#include "scheduled_evento.h"
 #include "scheduled_evento_model.h"
 #include "slide_model.h"
 #include "undertaking_evento_model.h"
 #include "user_helper.h"
 
+#include <QDateTime>
+
+#include <algorithm>
 #include <array>
+#include <set>
+#include <vector>
 
 void EventoService::load_Plaza() {
     std::array<QFuture<bool>, 2> tasks = {
@@ -54,7 +60,7 @@ void EventoService::load_Plaza() {
                 std::lock_guard lock(mutex);
                 latest.clear();
                 for (auto& i : data) {
-                    undertaking.push_back(i.id);
+                    latest.push_back(i.id);
                     model.push_back(LatestEvento(i));
                     stored[i.id] = std::move(i);
                 }
@@ -64,7 +70,7 @@ void EventoService::load_Plaza() {
         })};
     QtFuture::whenAll(tasks.begin(), tasks.end()).then([](QList<QFuture<bool>> jobs) {
         for (auto& i : jobs)
-            if (!i.takeResult())
+            if (i.isCanceled() || !i.takeResult())
                 return;
         PlazaController::getInstance()->onPlazaLoadFinished();
     });
@@ -77,7 +83,8 @@ void EventoService::load_RegisteredSchedule() {
             return;
         }
         auto data = result.take();
-        std::vector<Schedule> model;
+        std::vector<Schedule> multiDayEvents;
+        std::vector<Schedule> singleDayEvents;
         {
             std::lock_guard lock(mutex);
             registered.clear();
@@ -86,15 +93,38 @@ void EventoService::load_RegisteredSchedule() {
                 auto participation = getRepo()->getUserParticipate(evento.id).takeResult();
                 auto has_feedback = getRepo()->hasFeedbacked(evento.id).takeResult();
                 if (participation &&
-                    (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue))
-                    model.push_back(Schedule(evento, participation.take(), has_feedback));
-                else {
+                    (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue)) {
+                    if (evento.gmtEventStart == evento.gmtEventEnd)
+                        singleDayEvents.emplace_back(evento, participation.take(), has_feedback);
+                    else
+                        multiDayEvents.emplace_back(evento, participation.take(), has_feedback);
+                } else {
                     ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
                     return;
                 }
                 stored[evento.id] = std::move(evento);
             }
         }
+        std::sort(singleDayEvents.begin(), singleDayEvents.end(),
+                  [](const Schedule& e1, const Schedule& e2) {
+                      auto date1 = QDate::fromString(e1.date, "MM.dd");
+                      auto date2 = QDate::fromString(e2.date, "MM.dd");
+                      return date1 > date2;
+                  });
+        std::vector<Schedule> model(multiDayEvents.begin(), multiDayEvents.end());
+        model.insert(model.end(), singleDayEvents.begin(), singleDayEvents.end());
+        std::set<QString> dateSet;
+        int width = 110;
+        std::for_each(model.begin(), model.end(), [&dateSet, &width](Schedule& e) {
+            auto size = dateSet.size();
+            dateSet.insert(e.date);
+            if (dateSet.size() == size) {
+                e.hasSameDate = true;
+                width += 20;
+            }
+            width += 90;
+        });
+        ScheduleController::getInstance()->setProperty("width", width);
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
         ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
@@ -107,24 +137,48 @@ void EventoService::load_SubscribedSchedule() {
             return;
         }
         auto data = result.take();
-        std::vector<Schedule> model;
+        std::vector<Schedule> multiDayEvents;
+        std::vector<Schedule> singleDayEvents;
         {
             std::lock_guard lock(mutex);
             subscribed.clear();
             for (auto& evento : data) {
-                subscribed.push_back(evento.id);
+                registered.push_back(evento.id);
                 auto participation = getRepo()->getUserParticipate(evento.id).takeResult();
                 auto has_feedback = getRepo()->hasFeedbacked(evento.id).takeResult();
                 if (participation &&
-                    (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue))
-                    model.push_back(Schedule(evento, participation.take(), has_feedback));
-                else {
+                    (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue)) {
+                    if (evento.gmtEventStart == evento.gmtEventEnd)
+                        singleDayEvents.emplace_back(evento, participation.take(), has_feedback);
+                    else
+                        multiDayEvents.emplace_back(evento, participation.take(), has_feedback);
+                } else {
                     ScheduleController::getInstance()->onLoadSubscribedFailure(result.message());
                     return;
                 }
                 stored[evento.id] = std::move(evento);
             }
         }
+        std::sort(singleDayEvents.begin(), singleDayEvents.end(),
+                  [](const Schedule& e1, const Schedule& e2) {
+                      auto date1 = QDate::fromString(e1.date, "MM.dd");
+                      auto date2 = QDate::fromString(e2.date, "MM.dd");
+                      return date1 > date2;
+                  });
+        std::vector<Schedule> model(multiDayEvents.begin(), multiDayEvents.end());
+        model.insert(model.end(), singleDayEvents.begin(), singleDayEvents.end());
+        std::set<QString> dateSet;
+        int width = 110;
+        std::for_each(model.begin(), model.end(), [&dateSet, &width](Schedule& e) {
+            auto size = dateSet.size();
+            dateSet.insert(e.date);
+            if (dateSet.size() == size) {
+                e.hasSameDate = true;
+                width += 90;
+            } else
+                width += 110;
+        });
+        ScheduleController::getInstance()->setProperty("width", width);
         ScheduledEventoModel::getInstance()->resetModel(std::move(model));
         ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
@@ -177,35 +231,37 @@ void EventoService::load_History() {
     });
 }
 
-void EventoService::load_Block(const QString& date) {
-    this->date = QDate::fromString(date, "yyyy-M-d");
-
-    getRepo()->getEventListByTime(date).then([this](EventoResult<std::vector<DTO_Evento>> result) {
+void EventoService::load_Block(QDate date) {
+    date = getMonday(date);
+    getRepo()->getEventListAfterTime(date).then([=](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
             CalendarController::getInstance()->onLoadAllFailure(result.message());
             return;
         }
-        auto id_filter =
+        auto permitted_list =
             getRepo()
                 ->getPermittedEvents(UserHelper::getInstance()->property("userId").toString())
                 .takeResult();
-        if (!id_filter) {
+        if (!permitted_list) {
             CalendarController::getInstance()->onLoadAllFailure(result.message());
             return;
         }
-        auto filter_data = id_filter.take();
+        auto permitted = permitted_list.take();
         auto data = result.take();
         std::vector<EventoBlock> model;
+        auto sunday = date.addDays(6);
         {
             std::lock_guard lock(mutex);
             blocks.clear();
             for (auto& i : data) {
+                if (i.gmtEventStart.date() > sunday)
+                    continue;
                 blocks.push_back(i.id);
-                model.emplace_back(i, filter_data);
+                model.emplace_back(i, permitted);
                 stored[i.id] = std::move(i);
             }
         }
-        EventoBlockModel::getInstance()->resetModel(std::move(model));
+        EventoBlockModel::getInstance()->resetModel(date, std::move(model));
         CalendarController::getInstance()->onLoadAllFinished();
     });
 }
@@ -214,17 +270,16 @@ void EventoService::load_Event(EventoID id) {
     getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
         if (!result) {
             EventoInfoController::getInstance()->onLoadFailure(result.message());
-            return false;
+            return;
         }
-        Evento event;
         {
             std::lock_guard lock(mutex);
-            event = (stored[id] = std::move(result.take()));
+            const auto& event = (stored[id] = std::move(result.take()));
+            EventoHelper::getInstance()->update(event);
+            SlideModel::getInstance()->resetModel(
+                ImageManagement::pictureConvertor(event.departments));
         }
-        EventoHelper::getInstance()->update(event);
-        SlideModel::getInstance()->resetModel(
-            ImageManagement::pictureConvertor(stored[id].departments));
-        return true;
+        EventoInfoController::getInstance()->onLoadFinished();
     });
 }
 
@@ -266,7 +321,7 @@ void EventoService::load(EventoID id) {
         })};
     QtFuture::whenAll(tasks.begin(), tasks.end()).then([](QList<QFuture<bool>> tasks) {
         for (auto& i : tasks)
-            if (!i.takeResult())
+            if (i.isCanceled() || !i.takeResult())
                 return;
         EventoInfoController::getInstance()->onLoadFinished();
     });
@@ -369,12 +424,10 @@ Schedule::Schedule(const DTO_Evento& src, const ParticipationStatus& participate
 
     this->department = departmentConvertor(src.departments);
 
-    auto start = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss");
-    auto end = QDateTime::fromString(src.gmtEventEnd, "yyyy-MM-dd hh:mm:ss");
-    if (start.date() == end.date()) {
-        this->date = start.toString(QStringLiteral("MM.dd"));
-        this->startTime = start.toString(QStringLiteral("hh:mm"));
-        this->endTime = end.toString(QStringLiteral("hh:mm"));
+    if (src.gmtEventStart.date() == src.gmtEventEnd.date()) {
+        this->date = src.gmtEventStart.toString(QStringLiteral("MM.dd"));
+        this->startTime = src.gmtEventStart.toString(QStringLiteral("hh:mm"));
+        this->endTime = src.gmtEventEnd.toString(QStringLiteral("hh:mm"));
     } else {
         this->date = "Multi-day";
         this->startTime = "Many";
@@ -406,52 +459,30 @@ EventoBrief::EventoBrief(const DTO_Evento& src)
     this->image = ImageManagement::pictureConvertor(src.departments).at(0);
 }
 
-bool areDatesInSameWeek(const QDate& date1, const QDate& date2) {
-    int week1 = date1.dayOfWeek();
-    int week2 = date2.dayOfWeek();
-
-    QDate firstDayOfWeek1 = date1.addDays(-week1 + 1);
-    QDate lastDayOfWeek1 = date1.addDays(7 - week1);
-    QDate firstDayOfWeek2 = date2.addDays(-week2 + 1);
-    QDate lastDayOfWeek2 = date2.addDays(7 - week2);
-
-    return (date1 >= firstDayOfWeek2 && date1 <= lastDayOfWeek2) ||
-           (date2 >= firstDayOfWeek1 && date2 <= lastDayOfWeek1);
-}
-
-EventoBlock::EventoBlock(const DTO_Evento& src, const std::set<EventoID>& eventList)
-    : id(src.id), title(src.title), time(periodConvertor(src.gmtEventStart, src.gmtEventEnd)),
-      editable(eventList.count(src.id)) {
-
-    auto gmtEventStart = QDateTime::fromString(src.gmtEventStart, "yyyy-MM-dd hh:mm:ss");
-    auto gmtEventEnd = QDateTime::fromString(src.gmtEventEnd, "yyyy-MM-dd hh:mm:ss");
-
+EventoBlock::EventoBlock(const DTO_Evento& src, const std::set<EventoID>& permitted)
+    : id(src.id), title(src.title), gmtEventStart(src.gmtEventStart), gmtEventEnd(src.gmtEventEnd),
+      editable(permitted.count(src.id)) {
     if (gmtEventStart.date() == gmtEventEnd.date()) {
-        rowStart = gmtEventStart.time().hour() - 7;
-        if (rowStart < 1)
-            rowStart = 1;
+        auto time = gmtEventStart.time();
+        if (time.hour() < 8)
+            start.ahead = 1;
         else
-            rowStart += gmtEventStart.time().minute() / 60.0;
-
-        rowEnd = gmtEventEnd.time().hour() - 7;
-        if (rowEnd > 16)
-            rowEnd = 16;
-
-        columnEnd = columnStart = gmtEventStart.date().dayOfWeek() - 1;
+            start.major = (time.hour() - 8);
+        if (time.hour() != 23)
+            start.fraction = (time.minute() * 60 + time.second()) / 450;
+        time = gmtEventEnd.time();
+        if (time.hour() >= 8)
+            end.major = (time.hour() - 8);
+        if (time.hour() == 23 && time != QTime(23, 0))
+            end.ahead = 1;
+        else
+            end.fraction = (time.minute() * 60 + time.second()) / 450;
+        column_or_flag = gmtEventStart.date().dayOfWeek() - 1;
     } else {
-        rowStart = 0;
-        rowEnd = 1;
-
-        auto now = EventoService::getInstance().getDate();
-
-        if (areDatesInSameWeek(gmtEventStart.date(), now))
-            columnStart = gmtEventStart.date().dayOfWeek() - 1;
-        else
-            columnStart = 0;
-
-        if (areDatesInSameWeek(gmtEventEnd.date(), now))
-            columnEnd = gmtEventEnd.date().dayOfWeek() - 1;
-        else
-            columnEnd = 6;
+        if (getMonday(gmtEventStart.date()) == getMonday(gmtEventEnd.date())) {
+            column_or_flag = -1;
+            start.major = gmtEventStart.date().dayOfWeek() - 1;
+            end.major = gmtEventEnd.date().dayOfWeek();
+        }
     }
 }

@@ -4,20 +4,20 @@ import QtQuick.Layouts
 import QtQuick.Window
 import FluentUI
 import SAST_Evento
-import "../imports"
 import "../window"
 
 FluScrollablePage {
     id: control
     launchMode: FluPageType.SingleTask
 
-    property var departmentJson
     property int departmentId: -1
-    property var subscribeArr
 
-    function loadDepartmentEventsPage() {
-        statusMode = FluStatusViewType.Loading
-        DepartmentEventsController.loadDepartmentsInfo()
+    function loadDepartmentPage() {
+        statusMode = FluStatusViewType.Loading        
+        if (UserHelper.permission == 1)
+            DepartmentEventsController.loadDepartments()
+        else
+            DepartmentEventsController.loadDepartmentsWithSubscriptionInfo()
     }
 
     function loadDepartmentEvents(departmentId) {
@@ -25,33 +25,13 @@ FluScrollablePage {
     }
 
     onErrorClicked: {
-        loadDepartmentEventsPage()
+        loadDepartmentPage()
     }
     errorButtonText: lang.lang_reload
     loadingText: lang.lang_loading
 
     Component.onCompleted: {
-        loadDepartmentEventsPage()
-    }
-
-    Connections {
-        target: DepartmentEventsController
-        function onLoadDepartmentsSuccessEvent(json) {
-            departmentJson = JSON.parse(json)
-            var departmentArr = []
-            for (var i = 0; i < departmentJson.length; ++i) {
-                departmentArr.push(tree_view.createItem(
-                                       departmentJson[i].departmentName,
-                                       true, [], {
-                                           "id": departmentJson[i].id
-                                       }))
-            }
-            tree_view.updateData(departmentArr)
-            if (UserHelper.permission === 1)
-                statusMode = FluStatusViewType.Success
-            else
-                DepartmentEventsController.loadSubscribedDepartment()
-        }
+        loadDepartmentPage()
     }
 
     Connections {
@@ -79,17 +59,8 @@ FluScrollablePage {
 
     Connections {
         target: DepartmentEventsController
-        function onLoadSubscribedDepartmentsSuccessEvent(departmentJson) {
-            subscribeArr = JSON.parse(departmentJson)
+        function onLoadDepartmentsSuccessEvent() {
             statusMode = FluStatusViewType.Success
-        }
-    }
-
-    Connections {
-        target: DepartmentEventsController
-        function onLoadSubscribedDepartmentsErrorEvent(message) {
-            errorText = message
-            statusMode = FluStatusViewType.Error
         }
     }
 
@@ -97,12 +68,10 @@ FluScrollablePage {
         target: DepartmentEventsController
         function onSubscribeSuccessEvent() {
             if (!subscribeButton.checked) {
-                subscribeArr.push(departmentId)
                 subscribeButton.checked = false
                 subscribeButton.state = "hasSub"
                 showInfo(lang.lang_subscribe_success)
             } else {
-                subscribeArr.splice(subscribeArr.indexOf(departmentId), 1)
                 subscribeButton.checked = true
                 subscribeButton.state = "noSub"
                 showInfo(lang.lang_cancelled)
@@ -117,7 +86,7 @@ FluScrollablePage {
 
     FluTextButton {
         id: subscribeButton
-        visible: UserHelper.permission !== 1
+        visible: UserHelper.permission != 1
         Layout.alignment: Qt.AlignRight
         checked: true
         state: "noSub"
@@ -158,29 +127,32 @@ FluScrollablePage {
             width: 200
             Layout.alignment: Qt.AlignTop
             height: 500
-            FluTreeView {
-                id: tree_view
+
+            ListView {
+                id: department_view
                 width: 200
                 height: 500
-                selectionMode: FluTreeViewType.Single
                 anchors.fill: parent
-                onItemClicked: item => {
-                                   if (UserHelper.permission !== 1) {
-                                       departmentId = item.data.id
-                                       if (subscribeArr.indexOf(
-                                               departmentId) !== -1) {
-                                           subscribeButton.checked = false
-                                           subscribeButton.state = "hasSub"
-                                       } else {
-                                           subscribeButton.checked = true
-                                           subscribeButton.state = "noSub"
-                                       }
-                                   }
-                                   loadDepartmentEvents(item.data.id)
-                               }
+                model: DepartmentModel
+                delegate: FluText {
+                    text: title
 
-                Component.onCompleted: {
-
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            departmentId = id
+                            if (UserHelper.permission != 1) {
+                                if (subscribed) {
+                                    subscribeButton.checked = true
+                                    subscribeButton.state = "noSub"
+                                } else {
+                                    subscribeButton.checked = false
+                                    subscribeButton.state = "hasSub"
+                                }
+                            }
+                            loadDepartmentEvents(id)
+                        }
+                    }
                 }
             }
         }
@@ -233,7 +205,6 @@ FluScrollablePage {
                     height: 115
                     width: 115
                     radius: [6, 6, 6, 6]
-                    shadow: false
                     anchors {
                         left: parent.left
                         leftMargin: 10

@@ -34,6 +34,7 @@ struct EventType {
 struct Department {
     int id;
     QString name;
+    bool subscribed = false;
 };
 
 struct Location {

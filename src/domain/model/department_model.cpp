@@ -1,6 +1,6 @@
-#include "feedback_model.h"
+#include "department_model.h"
 
-int FeedbackModel::rowCount(const QModelIndex& parent) const {
+int DepartmentModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
@@ -9,17 +9,19 @@ int FeedbackModel::rowCount(const QModelIndex& parent) const {
     return m_data.size();
 }
 
-QVariant FeedbackModel::data(const QModelIndex& index, int role) const {
+QVariant DepartmentModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
     const auto& element = m_data.at(index.row());
 
     switch (role) {
-    case Role::Score:
-        return element.score;
-    case Role::Content:
-        return element.content;
+    case Role::Id:
+        return element.id;
+    case Role::Title:
+        return element.name;
+    case Role::Subscribed:
+        return element.subscribed;
     default:
         break;
     }
@@ -27,16 +29,17 @@ QVariant FeedbackModel::data(const QModelIndex& index, int role) const {
     return QVariant();
 }
 
-QHash<int, QByteArray> FeedbackModel::roleNames() const {
+QHash<int, QByteArray> DepartmentModel::roleNames() const {
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {
-        roles.insert(Score, "score");
-        roles.insert(Content, "content");
+        roles.insert(Id, "id");
+        roles.insert(Title, "title");
+        roles.insert(Subscribed, "subscribed");
     }
     return roles;
 }
 
-void FeedbackModel::resetModel(std::vector<Feedback>&& model) {
+void DepartmentModel::resetModel(std::vector<Department>&& model) {
     QMetaObject::invokeMethod(
         this,
         [&]() {
@@ -47,13 +50,13 @@ void FeedbackModel::resetModel(std::vector<Feedback>&& model) {
         Qt::BlockingQueuedConnection);
 }
 
-FeedbackModel* FeedbackModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+DepartmentModel* DepartmentModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
     return pInstance;
 }
 
-FeedbackModel* FeedbackModel::getInstance() {
-    static FeedbackModel singleton;
-    return &singleton;
+DepartmentModel* DepartmentModel::getInstance() {
+    static DepartmentModel instance;
+    return &instance;
 }

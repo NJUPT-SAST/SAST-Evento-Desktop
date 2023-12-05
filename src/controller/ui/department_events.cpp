@@ -2,11 +2,11 @@
 #include "evento_service.h"
 #include "information_service.h"
 
-void DepartmentEventsController::loadDepartmentsInfo() {
+void DepartmentEventsController::loadDepartments() {
     InformationService::getInstance().load_DepartmentInfo();
 }
 
-void DepartmentEventsController::loadSubscribedDepartment() {
+void DepartmentEventsController::loadDepartmentsWithSubscriptionInfo() {
     InformationService::getInstance().load_SubscribedDepartmentInfo();
 }
 

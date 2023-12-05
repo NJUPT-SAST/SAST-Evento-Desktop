@@ -36,7 +36,7 @@ struct DefaultMessage<EventoExceptionCode::Ok> {
     static constexpr char msg[] = "No Error!";
 };
 
-class alignas(32) EventoException {
+class alignas(8) EventoException {
 private:
     alignas(8) EventoExceptionCode m_code;
     alignas(8) QString m_message;

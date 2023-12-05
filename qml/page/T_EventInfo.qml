@@ -83,20 +83,18 @@ FluScrollablePage {
         Layout.fillWidth: true
         height: width * 40 / 89
         implicitHeight: height
-        radius: [10, 10, 10, 10]
         loopTime: 4000
         indicatorGravity: Qt.AlignHCenter | Qt.AlignTop
         indicatorMarginTop: 15
 
-        delegate: Component {
-            Item {
+        delegate: FluClip {
+            anchors.fill: parent
+            radius: [10, 10, 10, 10]
+            FluImage {
                 anchors.fill: parent
-                FluImage {
-                    anchors.fill: parent
-                    source: model.url
-                    asynchronous: true
-                    fillMode: Image.PreserveAspectCrop
-                }
+                source: model.url
+                asynchronous: true
+                fillMode: Image.PreserveAspectCrop
             }
         }
     }
@@ -114,7 +112,8 @@ FluScrollablePage {
         Layout.fillWidth: true
         spacing: 13
         ColumnLayout {
-            width: parent.width / 2 + 135
+            id: info_col
+            width: parent.width / 2 + 70
             Row {
                 spacing: 5
                 Layout.topMargin: 8
@@ -201,7 +200,6 @@ FluScrollablePage {
                     width: 50
                     radius: [5, 5, 5, 5]
                     color: "#99ffcc"
-                    shadow: false
                     FluText {
                         id: text_tag
                         wrapMode: Text.WordWrap
@@ -216,17 +214,17 @@ FluScrollablePage {
         }
 
         FluRectangle {
-            visible: UserHelper.permission !== 1
-            width: 4
+            anchors.verticalCenter: parent.verticalCenter
             height: parent.height
+            width: 4
             radius: [2, 2, 2, 2]
             color: FluTheme.primaryColor.normal
-            anchors.verticalCenter: parent.verticalCenter
+            visible: UserHelper.permission != 1
         }
 
         ColumnLayout {
-            visible: UserHelper.permission !== 1
-            width: parent.width / 2 - 135
+            visible: UserHelper.permission != 1
+            width: parent.width - 30 - info_col.width
             anchors.verticalCenter: parent.verticalCenter
             FluText {
                 id: text_evento_state
@@ -238,7 +236,7 @@ FluScrollablePage {
             FluToggleButton {
                 id: btn_register
                 Layout.topMargin: 15
-                implicitWidth: 250
+                implicitWidth: parent.width
                 text: EventoInfoController.isRegistrated ? lang.lang_cancellation : lang.lang_register
                 checked: EventoInfoController.isRegistrated
                 disabled: EventoHelper.state >= 2
@@ -268,7 +266,7 @@ FluScrollablePage {
 
             FluToggleButton {
                 id: btn_subscribe
-                implicitWidth: 250
+                implicitWidth: parent.width
                 Layout.topMargin: 15
                 text: EventoInfoController.isSubscribed ? lang.lang_unsubscribe : lang.lang_subscribe
                 checked: EventoInfoController.isSubscribed
@@ -281,6 +279,7 @@ FluScrollablePage {
                                 EventoInfoController.isSubscribed)
                 }
             }
+
             Connections {
                 target: EventoInfoController
                 function onSubscribeSuccessEvent() {
@@ -300,12 +299,17 @@ FluScrollablePage {
             FluText {
                 id: text_subs_info
                 text: lang.lang_subscribe_hint
+                Layout.fillWidth: true
+                elide: Text.ElideRight
+                maximumLineCount: 2
+                wrapMode: Text.WordWrap
                 font: FluTextStyle.Caption
                 color: FluColors.Grey110
             }
+
             FluButton {
                 id: btn_check
-                implicitWidth: 250
+                implicitWidth: parent.width
                 Layout.topMargin: 9
                 text: EventoInfoController.isParticipated ? lang.lang_checked_in : lang.lang_check_in
                 disabled: EventoInfoController.isParticipated

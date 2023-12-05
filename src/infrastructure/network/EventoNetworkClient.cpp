@@ -406,8 +406,9 @@ static QString date2str(const QDateTime& time) {
 };
 declare_global_extension(QDateTime, QString, str2date, date2str);
 
-static const char* strings[] = {"ERROR",       "NOT_STARTED", "CHECKING_IN",
-                                "IN_PROGRESS", "CANCELED",    "ENDED"};
+constexpr static const char* strings[] = {
+    "ERROR", "NOT_STARTED", "CHECKING_IN", "IN_PROGRESS", "CANCELED", "ENDED",
+};
 static EventState str2eventstate(const QString& str) {
     for (int i = 0; i < 6; i++)
         if (str == strings[i])
@@ -544,9 +545,9 @@ EventoFuture<EventoResult<std::vector<DTO_Evento>>>
 }
 
 EventoFuture<EventoResult<std::vector<DTO_Evento>>>
-    EventoNetworkClient::getEventListByTime(const QString& time) {
+    EventoNetworkClient::getEventListAfterTime(QDate time) {
     QUrlQuery params;
-    params.addQueryItem("time", time);
+    params.addQueryItem("time", time.toString("yyyy-MM-dd"));
     params.addQueryItem("typeId", "");
     params.addQueryItem("departmentId", "");
     auto url = endpoint(QStringLiteral("/event/list"));
@@ -759,35 +760,63 @@ EventoFuture<EventoResult<QString>> EventoNetworkClient::getLocationList() {
     });
 }
 
-EventoFuture<EventoResult<QString>> EventoNetworkClient::getDepartmentList() {
+EventoFuture<EventoResult<std::vector<Department>>> EventoNetworkClient::getDepartmentList() {
     auto url = endpoint(QStringLiteral("/event/departments"));
-    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<QString> {
-        if (result) {
-            return QString::fromUtf8(
-                QJsonDocument(result.take().toArray()).toJson(QJsonDocument::Compact));
-        } else {
-            return {result.code(), result.message()};
-        }
-    });
+    return this->get(url).then(
+        [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<Department>> {
+            if (result) {
+                auto rootValue = result.take();
+                std::vector<Department> result;
+                if (rootValue.isArray()) {
+                    declare_top_deserialiser(result, deserialiser);
+                    deserialiser.assign(rootValue);
+                    return result;
+                } else if (rootValue.isNull())
+                    return result;
+                return {EventoExceptionCode::JsonError, "Format Error!"};
+            } else {
+                return {result.code(), result.message()};
+            }
+        });
 }
 
-EventoFuture<EventoResult<QString>> EventoNetworkClient::getSubscribedDepartmentList() {
+EventoFuture<EventoResult<std::vector<Department>>>
+    EventoNetworkClient::getDepartmentListWithSubscriptionInfo() {
     auto url = endpoint("/user/subscribe/departments");
-    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<QString> {
-        if (result) {
-            auto arr = result.take().toArray();
-            QString str = "[";
-            for (const auto& i : arr) {
-                str.append(QString::number(i.toObject()["id"].toInt()) + ", ");
-            }
-            if (!arr.isEmpty())
-                str.remove(str.size() - 2, 2);
-            str.append("]");
-            return str;
-        } else {
-            return {result.code(), result.message()};
-        }
-    });
+    return getDepartmentList().then(
+        [=](EventoResult<std::vector<Department>> result) -> EventoResult<std::vector<Department>> {
+            if (!result)
+                return result;
+            auto filter_result =
+                this->get(url)
+                    .then([](EventoResult<QJsonValue> result) -> EventoResult<std::set<int>> {
+                        if (result) {
+                            auto rootValue = result.take();
+                            std::set<int> result;
+                            std::vector<Department> infos;
+                            if (rootValue.isArray()) {
+                                declare_top_deserialiser(infos, deserialiser);
+                                deserialiser.assign(rootValue);
+                                for (const auto& i : infos)
+                                    result.insert(i.id);
+                                return result;
+                            } else if (rootValue.isNull())
+                                return result;
+                            return {EventoExceptionCode::JsonError, "Format Error!"};
+                        } else {
+                            return {result.code(), result.message()};
+                        };
+                    })
+                    .takeResult();
+            if (!filter_result)
+                return {filter_result.code(), filter_result.message()};
+            auto data = result.take();
+            auto filter = filter_result.take();
+            for (auto& i : data)
+                if (filter.count(i.id))
+                    i.subscribed = true;
+            return data;
+        });
 }
 
 EventoFuture<EventoResult<QString>> EventoNetworkClient::getQRCode(EventoID eventId) {
