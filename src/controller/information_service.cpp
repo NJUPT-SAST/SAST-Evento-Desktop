@@ -33,7 +33,8 @@ void InformationService::load_EditInfo() {
         }),
         getRepo()->getDepartmentList().then([this](EventoResult<std::vector<Department>> result) {
             if (!result) {
-                DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(result.message());
+                DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(
+                    result.message());
                 return false;
             }
             auto departmentList = result.take();
@@ -51,25 +52,29 @@ void InformationService::load_EditInfo() {
 }
 
 void InformationService::load_DepartmentInfo() {
-    getRepo()->getDepartmentListWithSubscriptionInfo().then([this](EventoResult<std::vector<Department>> result) {
-        if (!result) {
-            DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(result.message());
-            return;
-        }
-        auto departmentList = result.take();
-        DepartmentModel::getInstance()->resetModel(std::move(departmentList));
-        DepartmentEventsController::getInstance()->onLoadDepartmentsFinished();
-    });
+    getRepo()->getDepartmentListWithSubscriptionInfo().then(
+        [this](EventoResult<std::vector<Department>> result) {
+            if (!result) {
+                DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(
+                    result.message());
+                return;
+            }
+            auto departmentList = result.take();
+            DepartmentModel::getInstance()->resetModel(std::move(departmentList));
+            DepartmentEventsController::getInstance()->onLoadDepartmentsFinished();
+        });
 }
 
 void InformationService::load_SubscribedDepartmentInfo() {
-    getRepo()->getDepartmentListWithSubscriptionInfo().then([this](EventoResult<std::vector<Department>> result) {
-        if (!result) {
-            DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(result.message());
-            return;
-        }
-        auto departmentList = result.take();
-        DepartmentModel::getInstance()->resetModel(std::move(departmentList));
-        DepartmentEventsController::getInstance()->onLoadDepartmentsFinished();
-    });
+    getRepo()->getDepartmentListWithSubscriptionInfo().then(
+        [this](EventoResult<std::vector<Department>> result) {
+            if (!result) {
+                DepartmentEventsController::getInstance()->onLoadDepartmentsFailure(
+                    result.message());
+                return;
+            }
+            auto departmentList = result.take();
+            DepartmentModel::getInstance()->resetModel(std::move(departmentList));
+            DepartmentEventsController::getInstance()->onLoadDepartmentsFinished();
+        });
 }
