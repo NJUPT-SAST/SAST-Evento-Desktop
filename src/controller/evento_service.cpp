@@ -21,12 +21,7 @@
 #include "undertaking_evento_model.h"
 #include "user_helper.h"
 
-#include <QDateTime>
-
-#include <algorithm>
 #include <array>
-#include <set>
-#include <vector>
 
 void EventoService::load_Plaza() {
     std::array<QFuture<bool>, 2> tasks = {
@@ -462,27 +457,5 @@ EventoBrief::EventoBrief(const DTO_Evento& src)
 EventoBlock::EventoBlock(const DTO_Evento& src, const std::set<EventoID>& permitted)
     : id(src.id), title(src.title), gmtEventStart(src.gmtEventStart), gmtEventEnd(src.gmtEventEnd),
       editable(permitted.count(src.id)) {
-    if (gmtEventStart.date() == gmtEventEnd.date()) {
-        auto time = gmtEventStart.time();
-        if (time.hour() < 8)
-            start.ahead = 1;
-        else
-            start.major = (time.hour() - 8);
-        if (time.hour() != 23)
-            start.fraction = (time.minute() * 60 + time.second()) / 450;
-        time = gmtEventEnd.time();
-        if (time.hour() >= 8)
-            end.major = (time.hour() - 8);
-        if (time.hour() == 23 && time != QTime(23, 0))
-            end.ahead = 1;
-        else
-            end.fraction = (time.minute() * 60 + time.second()) / 450;
-        column_or_flag = gmtEventStart.date().dayOfWeek() - 1;
-    } else {
-        if (getMonday(gmtEventStart.date()) == getMonday(gmtEventEnd.date())) {
-            column_or_flag = -1;
-            start.major = gmtEventStart.date().dayOfWeek() - 1;
-            end.major = gmtEventEnd.date().dayOfWeek();
-        }
-    }
+    init();
 }
