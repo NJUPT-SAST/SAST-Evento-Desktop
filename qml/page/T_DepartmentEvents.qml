@@ -14,7 +14,7 @@ FluScrollablePage {
 
     function loadDepartmentPage() {
         statusMode = FluStatusViewType.Loading        
-        if (UserHelper.permission == 1)
+        if (UserHelper.permission === 1)
             DepartmentEventsController.loadDepartments()
         else
             DepartmentEventsController.loadDepartmentsWithSubscriptionInfo()
@@ -86,7 +86,7 @@ FluScrollablePage {
 
     FluTextButton {
         id: subscribeButton
-        visible: UserHelper.permission != 1
+        visible: UserHelper.permission !== 1
         Layout.alignment: Qt.AlignRight
         checked: true
         state: "noSub"
@@ -141,7 +141,7 @@ FluScrollablePage {
                         anchors.fill: parent
                         onClicked: {
                             departmentId = id
-                            if (UserHelper.permission != 1) {
+                            if (UserHelper.permission !== 1) {
                                 if (subscribed) {
                                     subscribeButton.checked = true
                                     subscribeButton.state = "noSub"

@@ -10,7 +10,6 @@ class EventoEditController : public QObject {
     QML_NAMED_ELEMENT(EventoEditController)
     QML_SINGLETON
 
-    Q_PROPERTY(QString locationJson MEMBER m_locationJson NOTIFY locationJsonChanged)
     Q_PROPERTY(int index MEMBER m_index NOTIFY typeIdChanged)
     Q_PROPERTY(bool isEditMode MEMBER m_isEditMode NOTIFY isEditModeChanged)
     Q_PROPERTY(QString eventStart MEMBER m_eventStart NOTIFY eventStartChanged)
@@ -27,7 +26,6 @@ public:
                                   const QString& tag);
 
 private:
-    QString m_locationJson;
     bool m_isEditMode; // true: 编辑模式 false: 创建模式
     // 编辑模式属性
     int m_index;
@@ -45,8 +43,6 @@ signals:
     void createSuccessEvent();
     void createErrorEvent(QString message);
 
-    void departmentJsonChanged();
-    void locationJsonChanged();
     void typeIdChanged();
     void isEditModeChanged();
     void eventStartChanged();

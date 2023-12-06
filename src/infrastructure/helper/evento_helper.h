@@ -30,7 +30,7 @@ public:
 private:
     EventoHelper() = default;
 
-    std::atomic<int> m_id;
+    int m_id = -1;
     QString m_title;
     int m_state;
     QString m_eventTime;
@@ -52,6 +52,8 @@ signals:
     void typeChanged();
     void tagChanged();
     void descriptionChanged();
+
+    friend class EventoEditController;
 };
 
 #endif // EVENTOHELPER_H

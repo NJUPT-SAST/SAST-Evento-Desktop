@@ -9,13 +9,14 @@
 #include <QString>
 #include <QUrlQuery>
 
-#include "dto/evento.h"
-#include "dto/feedback.h"
-#include "dto/feedback_summary.h"
-#include "dto/permission.h"
-#include "dto/slide.h"
-#include "dto/user.h"
-#include "dto/user_brief.h"
+#include <dto/evento.h>
+#include <dto/feedback.h>
+#include <dto/feedback_summary.h>
+#include <dto/location.h>
+#include <dto/permission.h>
+#include <dto/slide.h>
+#include <dto/user.h>
+#include <dto/user_brief.h>
 
 #include "future.h"
 #include "result.h"
@@ -57,7 +58,7 @@ public:
     EventoFuture<EventoResult<QStringList>> getAdminPermission();
     EventoFuture<EventoResult<QStringList>> getManagerPermission(EventoID event);
     EventoFuture<EventoResult<QStringList>> getPermittedEvent();
-    EventoFuture<EventoResult<DTO_Permission>> getEventPermission(EventoID event);
+    [[maybe_unused]] EventoFuture<EventoResult<DTO_Permission>> getEventPermission(EventoID event);
     EventoFuture<EventoResult<DTO_User>> getUserInfo(const UserID& id);
     EventoFuture<EventoResult<ParticipationStatus>> getUserParticipate(EventoID event);
 
@@ -72,11 +73,12 @@ public:
     EventoFuture<EventoResult<std::vector<DTO_Evento>>> getEventListAfterTime(QDate time);
     EventoFuture<EventoResult<DTO_Evento>> getEventById(EventoID event);
 
+    // othersFetch
     EventoFuture<EventoResult<std::vector<DTO_Slide>>> getSlideList();
     EventoFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id);
     EventoFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(int size);
     EventoFuture<EventoResult<std::vector<EventType>>> getTypeList();
-    EventoFuture<EventoResult<QString>> getLocationList();
+    EventoFuture<EventoResult<std::vector<DTO_Location>>> getLocationList();
     EventoFuture<EventoResult<std::vector<Department>>> getDepartmentList();
     EventoFuture<EventoResult<std::vector<Department>>> getDepartmentListWithSubscriptionInfo();
     EventoFuture<EventoResult<QString>> getQRCode(EventoID eventId);
