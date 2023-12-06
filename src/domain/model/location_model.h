@@ -27,7 +27,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
-    void resetModel(DTO_Location&& model);
+    void resetModel(std::vector<DTO_Location>&& model);
 
     Q_INVOKABLE void click(const QModelIndex& index);
 
@@ -37,7 +37,7 @@ signals:
 private:
     LocationModel() = default;
 
-    DTO_Location m_data;
+    std::vector<DTO_Location> m_data;
     LocationID selected = -1;
 
 public:

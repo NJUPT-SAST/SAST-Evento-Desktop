@@ -10,7 +10,8 @@ int LocationModel::rowCount(const QModelIndex& parent) const {
     if (parent.isValid())
         return 0;
 
-    return m_data.count();
+    return std::transform_reduce(m_data.cbegin(), m_data.cend(), 0, std::plus{},
+                                 DTO_Location::functor);
 }
 
 QVariant LocationModel::data(const QModelIndex& index, int role) const {
@@ -18,22 +19,22 @@ QVariant LocationModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 
     int num = index.row();
-    const auto& element = m_data.at(num);
-
-    if (!num)
-        switch (role) {
-        case Role::Id:
-            return element.id;
-        case Role::Title:
-            return element.name;
-        case Role::Expanded:
-            return element.expanded;
-        case Role::Depth:
-            return element.depth;
-        default:
-            break;
-        }
-
+    for (const auto& i : m_data) {
+        const auto& element = m_data.at(num);
+        if (!num)
+            switch (role) {
+            case Role::Id:
+                return element.id;
+            case Role::Title:
+                return element.name;
+            case Role::Expanded:
+                return element.expanded;
+            case Role::Depth:
+                return element.depth;
+            default:
+                break;
+            }
+    }
     return QVariant();
 }
 
@@ -66,7 +67,7 @@ QHash<int, QByteArray> LocationModel::roleNames() const {
     return roles;
 }
 
-void LocationModel::resetModel(DTO_Location&& model) {
+void LocationModel::resetModel(std::vector<DTO_Location>&& model) {
     QMetaObject::invokeMethod(
         this,
         [&]() {
