@@ -2,33 +2,27 @@
 #include "department_events.h"
 #include "department_model.h"
 #include "evento_edit.h"
+#include "location_model.h"
 #include "repository.h"
 #include "type_model.h"
 
 void InformationService::load_EditInfo() {
+    DepartmentEventsController::getInstance();
     std::array<QFuture<bool>, 3> tasks = {
         getRepo()->getTypeList().then([](EventoResult<std::vector<EventType>> result) {
             if (!result) {
                 EventoEditController::getInstance()->onLoadEditFailure(result.message());
                 return false;
             }
-            auto typeList = result.take();
-            TypeModel::getInstance()->resetModel(std::move(typeList));
+            TypeModel::getInstance()->resetModel(result.take());
             return true;
         }),
-        getRepo()->getLocationList().then([this](EventoResult<QString> result) {
+        getRepo()->getLocationList().then([this](EventoResult<std::vector<DTO_Location>> result) {
             if (!result) {
                 EventoEditController::getInstance()->onLoadEditFailure(result.message());
                 return false;
             }
-            auto locationList = result.take();
-            if (locationList.isEmpty())
-                locationList = "[]";
-            {
-                std::lock_guard lock(mutex);
-                EventoEditController::getInstance()->setProperty("locationJson", locationList);
-                locationJson = std::move(locationList);
-            }
+            LocationModel::getInstance()->resetModel(result.take());
             return true;
         }),
         getRepo()->getDepartmentList().then([this](EventoResult<std::vector<Department>> result) {
@@ -37,8 +31,7 @@ void InformationService::load_EditInfo() {
                     result.message());
                 return false;
             }
-            auto departmentList = result.take();
-            DepartmentModel::getInstance()->resetModel(std::move(departmentList));
+            DepartmentModel::getInstance()->resetModel(result.take());
             DepartmentEventsController::getInstance()->onLoadDepartmentsFinished();
             return true;
         })};
@@ -52,6 +45,7 @@ void InformationService::load_EditInfo() {
 }
 
 void InformationService::load_DepartmentInfo() {
+    DepartmentEventsController::getInstance();
     getRepo()->getDepartmentListWithSubscriptionInfo().then(
         [this](EventoResult<std::vector<Department>> result) {
             if (!result) {

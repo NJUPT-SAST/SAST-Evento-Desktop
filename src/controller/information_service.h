@@ -1,16 +1,7 @@
 #ifndef INFORMATIONSERVICE_H
 #define INFORMATIONSERVICE_H
 
-#include <QString>
-#include <shared_mutex>
-
 class InformationService {
-    std::shared_mutex mutex;
-
-    QString departmentJson;
-    QString locationJson;
-    QString subscribedDepartmentJson;
-
 private:
     InformationService() = default;
 

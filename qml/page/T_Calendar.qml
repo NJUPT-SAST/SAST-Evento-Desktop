@@ -504,7 +504,7 @@ FluScrollablePage {
                     wrapMode: Text.WordWrap
                     anchors {
                         top: parent.top
-                        topMargin: parent.height / 2 - 15
+                        topMargin: 5
                         left: parent.left
                         right: parent.right
                         leftMargin: 13

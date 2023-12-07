@@ -9,7 +9,6 @@ import "../window"
 FluScrollablePage {
     id: page
     launchMode: FluPageType.SingleTask
-    Layout.fillWidth: true
 
     onErrorClicked: {
         loadScheduleInfo()

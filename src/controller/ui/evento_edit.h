@@ -10,13 +10,13 @@ class EventoEditController : public QObject {
     QML_NAMED_ELEMENT(EventoEditController)
     QML_SINGLETON
 
-    Q_PROPERTY(QString locationJson MEMBER m_locationJson NOTIFY locationJsonChanged)
     Q_PROPERTY(int index MEMBER m_index NOTIFY typeIdChanged)
     Q_PROPERTY(bool isEditMode MEMBER m_isEditMode NOTIFY isEditModeChanged)
     Q_PROPERTY(QString eventStart MEMBER m_eventStart NOTIFY eventStartChanged)
     Q_PROPERTY(QString eventEnd MEMBER m_eventEnd NOTIFY eventEndChanged)
     Q_PROPERTY(QString registerStart MEMBER m_registerStart NOTIFY registerStartChanged)
     Q_PROPERTY(QString registerEnd MEMBER m_registerEnd NOTIFY registerEndChanged)
+    Q_PROPERTY(QString departmentIds MEMBER m_departmentIds NOTIFY departmentIdsChanged)
 
 public:
     Q_INVOKABLE void loadEditInfo();
@@ -27,7 +27,6 @@ public:
                                   const QString& tag);
 
 private:
-    QString m_locationJson;
     bool m_isEditMode; // true: 编辑模式 false: 创建模式
     // 编辑模式属性
     int m_index;
@@ -35,6 +34,7 @@ private:
     QString m_eventEnd;
     QString m_registerStart;
     QString m_registerEnd;
+    QString m_departmentIds;
 
     void preload();
 
@@ -45,14 +45,13 @@ signals:
     void createSuccessEvent();
     void createErrorEvent(QString message);
 
-    void departmentJsonChanged();
-    void locationJsonChanged();
     void typeIdChanged();
     void isEditModeChanged();
     void eventStartChanged();
     void eventEndChanged();
     void registerStartChanged();
     void registerEndChanged();
+    void departmentIdsChanged();
 
 private:
     EventoEditController() = default;

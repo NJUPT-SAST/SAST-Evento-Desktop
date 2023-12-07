@@ -133,6 +133,7 @@ FluScrollablePage {
                 id: department_view
                 width: 200
                 height: 500
+                clip: true
                 anchors.fill: parent
                 model: DepartmentModel
                 delegate: com_rect
@@ -144,7 +145,23 @@ FluScrollablePage {
                     height: 40
                     width: 180
                     border.width: 0
-
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: 8
+                        color: {
+                            if (FluTheme.dark) {
+                                if (item_mouse.containsMouse) {
+                                    return Qt.rgba(1, 1, 1, 0.03)
+                                }
+                                return Qt.rgba(0, 0, 0, 0)
+                            } else {
+                                if (item_mouse.containsMouse) {
+                                    return Qt.rgba(0, 0, 0, 0.03)
+                                }
+                                return Qt.rgba(0, 0, 0, 0)
+                            }
+                        }
+                    }
                     FluRectangle {
                         id: rect_division
                         width: 6
@@ -168,7 +185,7 @@ FluScrollablePage {
                     }
 
                     MouseArea {
-                        id: item_mouse
+                        id:item_mouse
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: {
@@ -185,23 +202,7 @@ FluScrollablePage {
                         }
                     }
 
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: 8
-                        color: {
-                            if (FluTheme.dark) {
-                                if (item_mouse.containsMouse) {
-                                    return Qt.rgba(1, 1, 1, 0.03)
-                                }
-                                return Qt.rgba(0, 0, 0, 0)
-                            } else {
-                                if (item_mouse.containsMouse) {
-                                    return Qt.rgba(0, 0, 0, 0.03)
-                                }
-                                return Qt.rgba(0, 0, 0, 0)
-                            }
-                        }
-                    }
+
                 }
             }
         }

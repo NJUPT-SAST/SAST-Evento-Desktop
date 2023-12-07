@@ -185,6 +185,7 @@ void EventoService::load_SubscribedSchedule() {
 }
 
 void EventoService::load_DepartmentEvents(int departmentId) {
+    DepartmentEventsController::getInstance();
     getRepo()
         ->getDepartmentEventList(departmentId)
         .then([this](EventoResult<std::vector<DTO_Evento>> result) {
@@ -232,6 +233,7 @@ void EventoService::load_History() {
 }
 
 void EventoService::load_Block(QDate date) {
+    CalendarController::getInstance();
     date = getMonday(date);
     getRepo()->getEventListAfterTime(date).then([=](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
@@ -411,7 +413,7 @@ void EventoService::subscribeDepartment(int departmentId, bool unsubscribe) {
 
 Evento::Evento(const DTO_Evento& src)
     : id(src.id), title(src.title), description(src.description), type(src.type),
-      location(src.location), tag(src.tag), state(stateConvertor(src.state)) {
+      location(src.location), tag(src.tag), state(src.state) {
 
     this->department = departmentConvertor(src.departments);
     this->eventTime = periodConvertor(src.gmtEventStart, src.gmtEventEnd);
@@ -419,7 +421,7 @@ Evento::Evento(const DTO_Evento& src)
 }
 
 Schedule::Schedule(const DTO_Evento& src, const ParticipationStatus& participate, bool hasFeedback)
-    : id(src.id), title(src.title), state(stateConvertor(src.state)), location(src.location),
+    : id(src.id), title(src.title), state(src.state), location(src.location),
       isChecked(participate.isParticipated), hasFeedback(hasFeedback) {
 
     this->department = departmentConvertor(src.departments);
@@ -462,27 +464,5 @@ EventoBrief::EventoBrief(const DTO_Evento& src)
 EventoBlock::EventoBlock(const DTO_Evento& src, const std::set<EventoID>& permitted)
     : id(src.id), title(src.title), gmtEventStart(src.gmtEventStart), gmtEventEnd(src.gmtEventEnd),
       editable(permitted.count(src.id)) {
-    if (gmtEventStart.date() == gmtEventEnd.date()) {
-        auto time = gmtEventStart.time();
-        if (time.hour() < 8)
-            start.ahead = 1;
-        else
-            start.major = (time.hour() - 8);
-        if (time.hour() != 23)
-            start.fraction = (time.minute() * 60 + time.second()) / 450;
-        time = gmtEventEnd.time();
-        if (time.hour() >= 8)
-            end.major = (time.hour() - 8);
-        if (time.hour() == 23 && time != QTime(23, 0))
-            end.ahead = 1;
-        else
-            end.fraction = (time.minute() * 60 + time.second()) / 450;
-        column_or_flag = gmtEventStart.date().dayOfWeek() - 1;
-    } else {
-        if (getMonday(gmtEventStart.date()) == getMonday(gmtEventEnd.date())) {
-            column_or_flag = -1;
-            start.major = gmtEventStart.date().dayOfWeek() - 1;
-            end.major = gmtEventEnd.date().dayOfWeek();
-        }
-    }
+    init();
 }
