@@ -3,20 +3,21 @@ cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/.cmake/)
 include(GetGitRevisionDescription)
 
-project(SAST_Evento_Desktop VERSION 0.3 LANGUAGES CXX)
+project(SAST_Evento_Desktop VERSION 0.5 LANGUAGES CXX)
 
 set(FLUENTUI_BUILD_EXAMPLES OFF)
 
 add_subdirectory(libs)
 
-#配置通用编译
+# 配置通用编译
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
 endif()
 
-#设置可执行文件输出目录
+# 设置可执行文件输出目录
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/debug)
 else()
@@ -46,6 +47,7 @@ file(GLOB_RECURSE SOURCE_IMPORT_PATHS
     ${CMAKE_SOURCE_DIR}/src/domain/model/*.h
     ${CMAKE_SOURCE_DIR}/src/domain/model/*.cpp
 )
+
 foreach(filepath ${SOURCE_IMPORT_PATHS})
     string(REPLACE "${CMAKE_SOURCE_DIR}/" "" filename ${filepath})
     list(APPEND SOURCE_IMPORT_FILES ${filename})
@@ -57,6 +59,7 @@ endif()
 
 set(VERSION_RC_PATH "")
 set(WIN32_MANIFEST_PATH "")
+
 if(WIN32)
     set(VERSION_RC_PATH ${CMAKE_SOURCE_DIR}/SAST_Evento.rc)
     configure_file(
@@ -85,7 +88,7 @@ if(APPLE)
         MACOSX_PACKAGE_LOCATION Resources)
 endif()
 
-#添加可执行文件
+# 添加可执行文件
 qt_add_executable(SAST_Evento_Desktop MACOSX_BUNDLE
     ${${PROJECT_NAME}_MAC_ICON}
     ${SOURCE_FILES}
@@ -115,7 +118,7 @@ target_include_directories(SAST_Evento_Desktop
     ${CMAKE_SOURCE_DIR}/libs/Qt-Based-JsonDeserialiser
 )
 
-#设置属性
+# 设置属性
 set_target_properties(SAST_Evento_Desktop PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -123,7 +126,7 @@ set_target_properties(SAST_Evento_Desktop PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-#链接库
+# 链接库
 target_link_libraries(SAST_Evento_Desktop PRIVATE
     Qt6::Quick
     Qt6::Svg
@@ -132,7 +135,7 @@ target_link_libraries(SAST_Evento_Desktop PRIVATE
     fluentuiplugin
 )
 
-#安装
+# 安装
 install(TARGETS SAST_Evento_Desktop
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
