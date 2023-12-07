@@ -14,13 +14,14 @@ FluScrollablePage {
     property var blockWindowRegister: registerForWindowResult("/block")
 
     function load() {
-        statusMode = FluStatusViewType.Loading
+        showLoading()
         CalendarController.loadAllEventoInfo(dateString)
     }
 
     Connections {
         target: CalendarController
         function onLoadAllEventoSuccessEvent() {
+            hideLoading()
             statusMode = FluStatusViewType.Success
         }
     }

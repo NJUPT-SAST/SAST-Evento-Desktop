@@ -13,16 +13,17 @@ FluScrollablePage {
     property string feedback_content
 
     function loadEventoInfo() {
-        statusMode = FluStatusViewType.Loading
         arr = []
         EventoInfoController.loadEventoInfo(EventoHelper.id)
     }
 
     Component.onCompleted: {
+        statusMode = FluStatusViewType.Loading
         loadEventoInfo()
     }
 
     onErrorClicked: {
+        statusMode = FluStatusViewType.Loading
         loadEventoInfo()
     }
 
@@ -36,6 +37,8 @@ FluScrollablePage {
             loader_slide.sourceComponent = slide_com
             page.listReady()
             statusMode = FluStatusViewType.Success
+            btn_subscribe.loading = false
+            btn_register.loading = false
         }
     }
 
@@ -235,13 +238,48 @@ FluScrollablePage {
 
             FluToggleButton {
                 id: btn_register
+                property bool loading: false
                 Layout.topMargin: 15
                 implicitWidth: parent.width
-                text: EventoInfoController.isRegistrated ? lang.lang_cancellation : lang.lang_register
                 checked: EventoInfoController.isRegistrated
-                disabled: EventoHelper.state >= 2
+                disabled: EventoHelper.state >= 2 || loading
+                contentItem: Row{
+                    spacing: 6
+                    FluText {
+                        text: EventoInfoController.isRegistrated ? lang.lang_cancellation : lang.lang_register
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: {
+                            if (btn_register.disabled)
+                                return Qt.rgba(160/255,160/255,160/255,1)
+                            else
+                                return FluTheme.dark ? FluColors.White : FluColors.Grey220
+                        }
+                    }
+                    Item{
+                        width: btn_register.loading ? 16 : 0
+                        height: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: width!==0
+                        clip: true
+                        Behavior on width {
+                            enabled: FluTheme.enableAnimation
+                            NumberAnimation{
+                                duration: 167
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                        FluProgressRing{
+                            width: 16
+                            height: 16
+                            strokeWidth:3
+                            anchors.centerIn: parent
+                        }
+                    }
+                }
                 onClicked: {
-                    statusMode = FluStatusViewType.Loading
+                    loading = true
                     EventoInfoController.isRegistrated = !EventoInfoController.isRegistrated
                     EventoInfoController.registerEvento(
                                 EventoHelper.id,
@@ -266,24 +304,59 @@ FluScrollablePage {
 
             FluToggleButton {
                 id: btn_subscribe
+                property bool loading: false
                 implicitWidth: parent.width
                 Layout.topMargin: 15
-                text: EventoInfoController.isSubscribed ? lang.lang_unsubscribe : lang.lang_subscribe
                 checked: EventoInfoController.isSubscribed
-                disabled: EventoHelper.state >= 2
+                disabled: EventoHelper.state >= 2 || loading
+                contentItem: Row{
+                    spacing: 6
+                    FluText {
+                        text: EventoInfoController.isSubscribed ? lang.lang_unsubscribe : lang.lang_subscribe
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: {
+                            if (btn_register.disabled)
+                                return Qt.rgba(160/255,160/255,160/255,1)
+                            else
+                                return FluTheme.dark ? FluColors.White : FluColors.Grey220
+                        }
+                    }
+                    Item{
+                        width: btn_subscribe.loading ? 16 : 0
+                        height: 16
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: width!==0
+                        clip: true
+                        Behavior on width {
+                            enabled: FluTheme.enableAnimation
+                            NumberAnimation{
+                                duration: 167
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                        FluProgressRing{
+                            width: 16
+                            height: 16
+                            strokeWidth:3
+                            anchors.centerIn: parent
+                        }
+                    }
+                }
                 onClicked: {
-                    statusMode = FluStatusViewType.Loading
+                    loading = true
                     EventoInfoController.isSubscribed = !EventoInfoController.isSubscribed
                     EventoInfoController.subscribeEvento(
                                 EventoHelper.id,
                                 EventoInfoController.isSubscribed)
                 }
+
             }
 
             Connections {
                 target: EventoInfoController
                 function onSubscribeSuccessEvent() {
-                    statusMode = FluStatusViewType.Success
                     showSuccess((EventoInfoController.isSubscribed ? lang.lang_subscribe_success : lang.lang_cancelled))
                     loadEventoInfo()
                 }

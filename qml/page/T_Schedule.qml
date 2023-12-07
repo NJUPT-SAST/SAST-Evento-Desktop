@@ -18,12 +18,12 @@ FluScrollablePage {
     loadingText: lang.lang_loading
 
     function loadRegisteredScheduleInfo() {
-        statusMode = FluStatusViewType.Loading
+        showLoading()
         ScheduleController.loadRegisteredSchedule()
     }
 
     function loadSubscribedScheduleInfo() {
-        statusMode = FluStatusViewType.Loading
+        showLoading()
         ScheduleController.loadSubscribedSchedule()
     }
 
@@ -45,6 +45,7 @@ FluScrollablePage {
         target: ScheduleController
         function onLoadRegisteredScheduleSuccessEvent() {
             statusMode = FluStatusViewType.Success
+            hideLoading()
         }
     }
 
@@ -60,6 +61,7 @@ FluScrollablePage {
         target: ScheduleController
         function onLoadSubscribedScheduleSuccessEvent() {
             statusMode = FluStatusViewType.Success
+            hideLoading()
         }
     }
 

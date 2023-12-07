@@ -245,7 +245,6 @@ EventoFuture<EventoResult<DTO_User>> EventoNetworkClient::loginViaSastLink(const
     QUrlQuery params;
     params.addQueryItem("code", code);
     params.addQueryItem("type", "0");
-    params.addQueryItem("update", "true");
     return this->post(url, params)
         .then([this](EventoResult<QJsonValue> result) -> EventoResult<DTO_User> {
             if (result) {

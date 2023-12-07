@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import FluentUI
 import SAST_Evento
+import org.wangwenx190.FramelessHelper
 
 FluWindow {
     id: window
@@ -11,6 +12,13 @@ FluWindow {
     closeDestory: true
     fixSize: true
     launchMode: FluWindowType.SingleInstance
+
+    Component.onCompleted: {
+        if (FluTheme.dark)
+            FramelessUtils.systemTheme = FramelessHelperConstants.Dark
+        else
+            FramelessUtils.systemTheme = FramelessHelperConstants.Light
+    }
 
     FluScrollablePage {
         id: page

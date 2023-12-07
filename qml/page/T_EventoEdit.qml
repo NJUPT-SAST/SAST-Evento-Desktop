@@ -333,21 +333,7 @@ FluScrollablePage {
                 anchors.fill: parent
                 model: LocationModel
                 clip: true
-                delegate: com_rect
-            }
-
-            signal delegateClicked()
-
-            Connections {
-                target: rect_location
-                function onDelegateClicked() {
-                    LocationModel.click(location_view.currentIndex)
-                }
-            }
-
-            Component {
-                id: com_rect
-                Item {
+                delegate: Item {
                     id: area
                     height: 40
                     width: 180
@@ -379,9 +365,8 @@ FluScrollablePage {
                         id: item_mouse
                         anchors.fill: parent
                         hoverEnabled: true
-                        propagateComposedEvents: true
                         onClicked: {
-                            rect_location.delegateClicked()
+                            LocationModel.click(index)
                         }
                     }
 
