@@ -352,6 +352,7 @@ FluScrollablePage {
                                                         FluColors.Grey110
 
                             anchors {
+                                left: parent.left
                                 leftMargin: 5 + depth * 10
                                 verticalCenter: parent.verticalCenter
                             }

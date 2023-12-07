@@ -14,14 +14,13 @@ FluScrollablePage {
     property var blockWindowRegister: registerForWindowResult("/block")
 
     function load() {
-        showLoading()
+        statusMode = FluStatusViewType.Loading
         CalendarController.loadAllEventoInfo(dateString)
     }
 
     Connections {
         target: CalendarController
         function onLoadAllEventoSuccessEvent() {
-            hideLoading()
             statusMode = FluStatusViewType.Success
         }
     }
@@ -505,7 +504,7 @@ FluScrollablePage {
                     wrapMode: Text.WordWrap
                     anchors {
                         top: parent.top
-                        topMargin: parent.height / 2 - 15
+                        topMargin: 5
                         left: parent.left
                         right: parent.right
                         leftMargin: 13

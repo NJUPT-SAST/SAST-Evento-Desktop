@@ -141,7 +141,7 @@ FluWindow {
 
             Item {
                 id: item_all
-                width: parent.width
+                width: 290
                 implicitHeight: 15 + col.height
 
                 function loadEventoInfo() {
@@ -323,7 +323,7 @@ FluWindow {
 
                 ColumnLayout {
                     id: col
-                    width: parent.width
+                    width: 270
 
                     FluCarousel {
                         id: carousel
@@ -352,8 +352,8 @@ FluWindow {
                         Layout.topMargin: 5
                         font: FluTextStyle.Title
                         text: EventoHelper.title
-                        width: 270
-                        wrapMode: Text.WrapAnywhere
+                        Layout.fillWidth: true
+                        wrapMode: Text.WordWrap
                     }
 
                     Row {
@@ -364,6 +364,7 @@ FluWindow {
                         }
                         FluText {
                             id: text_eventTime
+                            Layout.fillWidth: true
                             wrapMode: Text.WordWrap
                             font: FluTextStyle.Caption
                             anchors.verticalCenter: parent.verticalCenter
@@ -379,6 +380,7 @@ FluWindow {
                         }
                         FluText {
                             id: text_registerTime
+                            Layout.fillWidth: true
                             wrapMode: Text.WordWrap
                             font: FluTextStyle.Caption
                             anchors.verticalCenter: parent.verticalCenter
@@ -394,6 +396,7 @@ FluWindow {
                         }
                         FluText {
                             id: text_loc
+                            Layout.fillWidth: true
                             wrapMode: Text.WordWrap
                             font: FluTextStyle.Caption
                             anchors.verticalCenter: parent.verticalCenter
@@ -409,6 +412,7 @@ FluWindow {
                         }
                         FluText {
                             id: text_dep
+                            Layout.fillWidth: true
                             wrapMode: Text.WordWrap
                             font: FluTextStyle.Caption
                             anchors.verticalCenter: parent.verticalCenter
@@ -424,6 +428,7 @@ FluWindow {
                         }
                         FluText {
                             id: text_type
+                            Layout.fillWidth: true
                             wrapMode: Text.WordWrap
                             font: FluTextStyle.Caption
                             anchors.verticalCenter: parent.verticalCenter
@@ -439,12 +444,11 @@ FluWindow {
                         }
                         FluRectangle {
                             height: 20
-                            width: 50
+                            width: text_tag.implicitWidth + 5
                             radius: [5, 5, 5, 5]
                             color: "#99ffcc"
                             FluText {
                                 id: text_tag
-                                wrapMode: Text.WordWrap
                                 font: FluTextStyle.Caption
                                 color: FluColors.Grey100
                                 anchors.verticalCenter: parent.verticalCenter
@@ -457,7 +461,7 @@ FluWindow {
                     FluText {
                         id: item_desc
                         Layout.topMargin: 15
-                        width: parent.width
+                        Layout.fillWidth: true
                         wrapMode: Text.WordWrap
                         font.pixelSize: 18
                         text: EventoHelper.description

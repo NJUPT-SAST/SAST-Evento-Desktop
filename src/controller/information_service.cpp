@@ -7,6 +7,7 @@
 #include "type_model.h"
 
 void InformationService::load_EditInfo() {
+    DepartmentEventsController::getInstance();
     std::array<QFuture<bool>, 3> tasks = {
         getRepo()->getTypeList().then([](EventoResult<std::vector<EventType>> result) {
             if (!result) {

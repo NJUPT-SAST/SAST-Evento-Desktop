@@ -185,6 +185,7 @@ void EventoService::load_SubscribedSchedule() {
 }
 
 void EventoService::load_DepartmentEvents(int departmentId) {
+    DepartmentEventsController::getInstance();
     getRepo()
         ->getDepartmentEventList(departmentId)
         .then([this](EventoResult<std::vector<DTO_Evento>> result) {

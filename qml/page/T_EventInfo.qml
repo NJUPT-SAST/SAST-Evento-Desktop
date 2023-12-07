@@ -200,7 +200,7 @@ FluScrollablePage {
                 }
                 FluRectangle {
                     height: 20
-                    width: 50
+                    width: text_tag.implicitWidth + 5
                     radius: [5, 5, 5, 5]
                     color: "#99ffcc"
                     FluText {

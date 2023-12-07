@@ -9,7 +9,6 @@ import "../window"
 FluScrollablePage {
     id: page
     launchMode: FluPageType.SingleTask
-    Layout.fillWidth: true
 
     onErrorClicked: {
         loadScheduleInfo()
@@ -18,12 +17,12 @@ FluScrollablePage {
     loadingText: lang.lang_loading
 
     function loadRegisteredScheduleInfo() {
-        showLoading()
+        statusMode = FluStatusViewType.Loading
         ScheduleController.loadRegisteredSchedule()
     }
 
     function loadSubscribedScheduleInfo() {
-        showLoading()
+        statusMode = FluStatusViewType.Loading
         ScheduleController.loadSubscribedSchedule()
     }
 
@@ -45,7 +44,6 @@ FluScrollablePage {
         target: ScheduleController
         function onLoadRegisteredScheduleSuccessEvent() {
             statusMode = FluStatusViewType.Success
-            hideLoading()
         }
     }
 
@@ -61,7 +59,6 @@ FluScrollablePage {
         target: ScheduleController
         function onLoadSubscribedScheduleSuccessEvent() {
             statusMode = FluStatusViewType.Success
-            hideLoading()
         }
     }
 

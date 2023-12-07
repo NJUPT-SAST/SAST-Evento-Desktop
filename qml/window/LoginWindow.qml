@@ -28,7 +28,7 @@ FluWindow {
         target: LoginController
 
         function onLoginProcessing() {
-            showLoading()
+            showLoading(lang.lang_loading)
         }
     }
 
