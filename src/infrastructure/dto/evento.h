@@ -5,6 +5,7 @@
 
 struct DTO_Evento {
     EventoID id;
+    EventState state;
     QString title;
     QString description;
     QDateTime gmtEventStart;
@@ -14,7 +15,6 @@ struct DTO_Evento {
     EventType type;
     QString location;
     Tag tag;
-    QString state;
     std::vector<Department> departments;
 };
 

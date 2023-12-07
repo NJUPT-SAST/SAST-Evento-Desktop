@@ -35,16 +35,4 @@ inline QString timeConvertor(const QString& time) {
     return QDateTime::fromString(time, "yyyy-M-d h:m").toString("yyyy-MM-dd hh:mm:ss");
 }
 
-inline EventState stateConvertor(const QString& state) {
-    if (state == "NOT_STARTED")
-        return EventState::Before;
-    if (state == "IN_PROGRESS")
-        return EventState::Undertaking;
-    if (state == "CHECKING_IN")
-        return EventState::Registration;
-    if (state == "CANCELED")
-        return EventState::Cancelled;
-    return EventState::Over;
-}
-
 #endif // CONVERTOR_H

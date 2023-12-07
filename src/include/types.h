@@ -20,9 +20,9 @@ enum class EventState : int {
     Uninitialised = 0,
     Before,
     Registration,
-    Undertaking,
+    Ongoing,
     Cancelled,
-    Over
+    Over,
 };
 
 struct EventType {

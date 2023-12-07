@@ -405,19 +405,7 @@ static QString date2str(const QDateTime& time) {
 };
 declare_global_extension(QDateTime, QString, str2date, date2str);
 
-constexpr static const char* strings[] = {
-    "ERROR", "NOT_STARTED", "CHECKING_IN", "IN_PROGRESS", "CANCELED", "ENDED",
-};
-static EventState str2eventstate(const QString& str) {
-    for (int i = 0; i < 6; i++)
-        if (str == strings[i])
-            return static_cast<EventState>(i);
-    return EventState::Uninitialised;
-}
-static auto eventstate2str(EventState state) {
-    return strings[int(state)];
-}
-declare_global_extension(EventState, QString, str2eventstate, eventstate2str);
+declare_non_trivial_as(EventState, int);
 
 register_object_member(DTO_Evento, "id", id);
 register_object_member(DTO_Evento, "title", title);
