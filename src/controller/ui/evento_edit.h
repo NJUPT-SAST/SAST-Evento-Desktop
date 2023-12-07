@@ -16,6 +16,7 @@ class EventoEditController : public QObject {
     Q_PROPERTY(QString eventEnd MEMBER m_eventEnd NOTIFY eventEndChanged)
     Q_PROPERTY(QString registerStart MEMBER m_registerStart NOTIFY registerStartChanged)
     Q_PROPERTY(QString registerEnd MEMBER m_registerEnd NOTIFY registerEndChanged)
+    Q_PROPERTY(QString departmentIds MEMBER m_departmentIds NOTIFY departmentIdsChanged)
 
 public:
     Q_INVOKABLE void loadEditInfo();
@@ -33,6 +34,7 @@ private:
     QString m_eventEnd;
     QString m_registerStart;
     QString m_registerEnd;
+    QString m_departmentIds;
 
     void preload();
 
@@ -49,6 +51,7 @@ signals:
     void eventEndChanged();
     void registerStartChanged();
     void registerEndChanged();
+    void departmentIdsChanged();
 
 private:
     EventoEditController() = default;

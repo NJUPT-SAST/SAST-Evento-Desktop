@@ -83,15 +83,12 @@ FluScrollablePage {
         FluArea {
             id: area3
             width: parent.width
-            height: 65 + textbox_description.implicitHeight
+            height: 80 + textbox_description.implicitHeight
             anchors {
                 top: area2.bottom
                 topMargin: 10
             }
         }
-
-        // deprecated
-
 
         /*
         Item {
@@ -334,7 +331,7 @@ FluScrollablePage {
                 id: location_view
                 anchors.fill: parent
                 model: LocationModel
-
+                clip: true
                 delegate: FluText {
                     text: title
                 }
@@ -355,19 +352,94 @@ FluScrollablePage {
 
         FluArea {
             id: rect_department
+            property var departmentIds: EventoEditController.isEditMode ? EventoEditController.departmentIds : []
             width: 200
             height: 200
+            paddings: 10
             anchors {
                 top: item_department.top
                 left: item_department.right
                 leftMargin: 60
             }
             ListView {
+                clip: true
                 anchors.fill: parent
                 model: DepartmentModel
+                delegate: com_rect
+            }
 
-                delegate: FluText {
-                    text: title
+            Component {
+                id: com_rect
+                Item {
+                    id: area
+                    height: 40
+                    width: 180
+                    FluRectangle {
+                        id: rect_division
+                        width: 6
+                        height: 30
+                        radius: [3, 3, 3, 3]
+                        color: FluColors.Grey110
+                        anchors {
+                            leftMargin: 5
+                            verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    Connections {
+                        target: area
+                        function onCheckedChanged() {
+                            rect_division.color = rect_department.departmentIds.indexOf(model.id) < 0 ?
+                                        FluColors.Grey110 :
+                                        FluTheme.primaryColor.normal
+                        }
+                    }
+
+                    FluText {
+                        anchors {
+                            left: rect_division.right
+                            leftMargin: 5
+                            verticalCenter: parent.verticalCenter
+                        }
+                        text: model.title
+                        font.pixelSize: 20
+                    }
+
+                    MouseArea {
+                        id: item_mouse
+                        property bool checked: false
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: {
+                            if (!checked)
+                                rect_department.departmentIds.push(model.id)
+                            else
+                                rect_department.departmentIds.splice(rect_department.departmentIds.indexOf(model.id), 1)
+
+                            checked = !checked
+                            area.checkedChanged()
+                        }
+                    }
+
+                    signal checkedChanged()
+
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: 8
+                        color: {
+                            if (FluTheme.dark) {
+                                if (item_mouse.containsMouse) {
+                                    return Qt.rgba(1, 1, 1, 0.03)
+                                }
+                                return Qt.rgba(0, 0, 0, 0)
+                            } else {
+                                if (item_mouse.containsMouse) {
+                                    return Qt.rgba(0, 0, 0, 0.03)
+                                }
+                                return Qt.rgba(0, 0, 0, 0)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -521,12 +593,9 @@ FluScrollablePage {
                 right: area3.right
             }
             onClicked: {
-                var ids = []
-                tree_view_department.multipData().map(value => ids.push(
-                                                          value.data.id))
                 EventoEditController.index = combo_box_type.find(
                             combo_box_type.displayText)
-                if (ids.length === 0 || textbox_title.text === ""
+                if (rect_department.departmentIds.length === 0 || textbox_title.text === ""
                         || textbox_description.text === ""
                         || tree_view_location.locationId === 0
                         || EventoEditController.index < 0
@@ -552,7 +621,7 @@ FluScrollablePage {
                                    time_picker_register_start.current), format(
                                 clender_picker_register_end.current, time_picker_register_end.current),
                             EventoEditController.index, tree_view_location.locationId,
-                            ids, textbox_tag.text)
+                            rect_department.departmentIds, textbox_tag.text)
             }
         }
     }
