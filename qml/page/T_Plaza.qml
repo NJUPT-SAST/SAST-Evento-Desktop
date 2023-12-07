@@ -204,7 +204,7 @@ FluScrollablePage {
                     }
                 }
 
-                FluRectangle {
+                FluClip {
                     id: item_icon
                     height: 115
                     width: 115
@@ -361,7 +361,7 @@ FluScrollablePage {
                     }
                 }
 
-                FluRectangle {
+                FluClip {
                     id: item_icon
                     height: 115
                     width: 115
