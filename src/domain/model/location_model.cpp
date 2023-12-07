@@ -20,7 +20,7 @@ QVariant LocationModel::data(const QModelIndex& index, int role) const {
 
     int num = index.row();
     for (const auto& i : m_data) {
-        const auto& element = m_data.at(num);
+        const auto& element = i.at(num);
         if (!num)
             switch (role) {
             case Role::Id:
@@ -39,19 +39,20 @@ QVariant LocationModel::data(const QModelIndex& index, int role) const {
 }
 
 void LocationModel::click(const QModelIndex& index) {
-    if (!index.isValid())
-        return;
-
     int num = index.row();
-    const DTO_Location& element = m_data.at(num);
-
-    if (!num) {
-        setProperty("selected", element.id);
-        if (!element.expanded) {
-            beginInsertRows(index.parent(), index.row() + 1,
-                            index.row() + 1 + element.count_children());
-            element.expand();
-            endInsertRows();
+    for (const auto& i : m_data) {
+        const auto& element = i.at(num);
+        if (!num) {
+            setProperty("selected", element.id);
+            if (!element.expanded) {
+                num = index.row();
+                auto add = element.count_children();
+                if (!add)
+                    return;
+                beginResetModel();
+                element.expand();
+                endResetModel();
+            }
         }
     }
 }
@@ -73,6 +74,7 @@ void LocationModel::resetModel(std::vector<DTO_Location>&& model) {
         [&]() {
             beginResetModel();
             m_data = std::move(model);
+            update_depth();
             endResetModel();
         },
         Qt::BlockingQueuedConnection);

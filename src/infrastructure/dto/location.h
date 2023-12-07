@@ -27,15 +27,21 @@ struct DTO_Location {
         expanded = true;
     }
 
+    inline void set_depth(uint8_t depth = 0) {
+        this->depth = depth++;
+        for (auto& i : children)
+            i.set_depth(depth);
+    }
+
     const DTO_Location& at(int& index) const {
         if (!index)
             return *this;
+        index--;
         for (const auto& i : children) {
             auto count = i.count();
-            if (count == index)
-                return i;
-            else if (count > index)
-                return i.at(--index);
+            if (count > index)
+                return i.at(index);
+            index -= count;
         }
     }
 };

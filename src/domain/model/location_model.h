@@ -31,6 +31,11 @@ public:
 
     Q_INVOKABLE void click(const QModelIndex& index);
 
+    inline void update_depth() {
+        for (auto& i : m_data)
+            i.set_depth();
+    }
+
 signals:
     void selectedChanged();
 

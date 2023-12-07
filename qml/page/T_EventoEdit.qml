@@ -328,62 +328,69 @@ FluScrollablePage {
                 top: item_location.top
                 left: textbox_title.left
             }
+
             ListView {
                 id: location_view
                 anchors.fill: parent
-                model: LocationModel
                 clip: true
-                delegate: Item {
-                    id: area
-                    height: 40
-                    width: 180
-                    FluRectangle {
-                        id: rect_division
-                        width: 6
-                        height: 30
-                        radius: [3, 3, 3, 3]
-                        color: ListView.isCurrentItem ? FluTheme.primaryColor.normal :
-                                                    FluColors.Grey110
 
-                        anchors {
-                            leftMargin: 5 + model.depth * 10
-                            verticalCenter: parent.verticalCenter
+                model: DelegateModel {
+                    id: delegate
+                    model: LocationModel
+
+                    delegate: Item {
+                        id: area
+                        height: 40
+                        width: 180
+
+                        FluRectangle {
+                            id: rect_division
+                            width: 6
+                            height: 30
+                            radius: [3, 3, 3, 3]
+                            color: ListView.isCurrentItem ? FluTheme.primaryColor.normal :
+                                                        FluColors.Grey110
+
+                            anchors {
+                                leftMargin: 5 + depth * 10
+                                verticalCenter: parent.verticalCenter
+                            }
                         }
-                    }
 
-                    FluText {
-                        anchors {
-                            left: rect_division.right
-                            leftMargin: 5
-                            verticalCenter: parent.verticalCenter
+                        FluText {
+                            anchors {
+                                left: rect_division.right
+                                leftMargin: 5
+                                verticalCenter: parent.verticalCenter
+                            }
+                            text: title
+                            font.pixelSize: 20
                         }
-                        text: model.title
-                        font.pixelSize: 20
-                    }
 
-                    MouseArea {
-                        id: item_mouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: {
-                            LocationModel.click(index)
+                        MouseArea {
+                            id: item_mouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onClicked: {
+                                LocationModel.click(delegate.modelIndex(index))
+                            }
                         }
-                    }
 
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: 8
-                        color: {
-                            if (FluTheme.dark) {
-                                if (item_mouse.containsMouse) {
-                                    return Qt.rgba(1, 1, 1, 0.03)
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: 8
+                            color: {
+                                if (FluTheme.dark) {
+                                    if (item_mouse.containsMouse) {
+                                        return Qt.rgba(1, 1, 1, 0.03)
+                                    }
+                                    return Qt.rgba(0, 0, 0, 0)
+                                } else {
+                                    if (item_mouse.containsMouse) {
+                                        return Qt.rgba(0, 0, 0, 0.03)
+                                    }
+                                    return Qt.rgba(0, 0, 0, 0)
                                 }
-                                return Qt.rgba(0, 0, 0, 0)
-                            } else {
-                                if (item_mouse.containsMouse) {
-                                    return Qt.rgba(0, 0, 0, 0.03)
-                                }
-                                return Qt.rgba(0, 0, 0, 0)
                             }
                         }
                     }
