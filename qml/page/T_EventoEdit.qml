@@ -323,6 +323,7 @@ FluScrollablePage {
             id: rect_location
             width: 200
             height: 200
+            paddings: 10
             anchors {
                 top: item_location.top
                 left: textbox_title.left
@@ -332,8 +333,75 @@ FluScrollablePage {
                 anchors.fill: parent
                 model: LocationModel
                 clip: true
-                delegate: FluText {
-                    text: title
+                delegate: com_rect
+            }
+
+            signal delegateClicked()
+
+            Connections {
+                target: rect_location
+                function onDelegateClicked() {
+                    LocationModel.click(location_view.currentIndex)
+                }
+            }
+
+            Component {
+                id: com_rect
+                Item {
+                    id: area
+                    height: 40
+                    width: 180
+                    FluRectangle {
+                        id: rect_division
+                        width: 6
+                        height: 30
+                        radius: [3, 3, 3, 3]
+                        color: ListView.isCurrentItem ? FluTheme.primaryColor.normal :
+                                                    FluColors.Grey110
+
+                        anchors {
+                            leftMargin: 5 + model.depth * 10
+                            verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    FluText {
+                        anchors {
+                            left: rect_division.right
+                            leftMargin: 5
+                            verticalCenter: parent.verticalCenter
+                        }
+                        text: model.title
+                        font.pixelSize: 20
+                    }
+
+                    MouseArea {
+                        id: item_mouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        propagateComposedEvents: true
+                        onClicked: {
+                            rect_location.delegateClicked()
+                        }
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: 8
+                        color: {
+                            if (FluTheme.dark) {
+                                if (item_mouse.containsMouse) {
+                                    return Qt.rgba(1, 1, 1, 0.03)
+                                }
+                                return Qt.rgba(0, 0, 0, 0)
+                            } else {
+                                if (item_mouse.containsMouse) {
+                                    return Qt.rgba(0, 0, 0, 0.03)
+                                }
+                                return Qt.rgba(0, 0, 0, 0)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -365,11 +433,11 @@ FluScrollablePage {
                 clip: true
                 anchors.fill: parent
                 model: DepartmentModel
-                delegate: com_rect
+                delegate: com_tree_item
             }
 
             Component {
-                id: com_rect
+                id: com_tree_item
                 Item {
                     id: area
                     height: 40
@@ -597,7 +665,7 @@ FluScrollablePage {
                             combo_box_type.displayText)
                 if (rect_department.departmentIds.length === 0 || textbox_title.text === ""
                         || textbox_description.text === ""
-                        || tree_view_location.locationId === 0
+                        || LocationModel.selected === -1
                         || EventoEditController.index < 0
                         || textbox_tag.text === "") {
                     showInfo("有信息未填写")
@@ -620,7 +688,7 @@ FluScrollablePage {
                             format(clender_picker_register_start.current,
                                    time_picker_register_start.current), format(
                                 clender_picker_register_end.current, time_picker_register_end.current),
-                            EventoEditController.index, tree_view_location.locationId,
+                            EventoEditController.index, LocationModel.selected,
                             rect_department.departmentIds, textbox_tag.text)
             }
         }
