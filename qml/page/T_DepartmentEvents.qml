@@ -9,11 +9,12 @@ import "../window"
 FluScrollablePage {
     id: control
     launchMode: FluPageType.SingleTask
+    title: lang.lang_department_evento
 
     property int departmentId: -1
 
     function loadDepartmentPage() {
-        statusMode = FluStatusViewType.Loading        
+        subscribeButton.loading = true
         if (UserHelper.permission == 1)
             DepartmentEventsController.loadDepartments()
         else
@@ -25,12 +26,14 @@ FluScrollablePage {
     }
 
     onErrorClicked: {
+        statusMode = FluStatusViewType.Loading
         loadDepartmentPage()
     }
     errorButtonText: lang.lang_reload
     loadingText: lang.lang_loading
 
     Component.onCompleted: {
+        statusMode = FluStatusViewType.Loading
         loadDepartmentPage()
     }
 
@@ -60,6 +63,7 @@ FluScrollablePage {
     Connections {
         target: DepartmentEventsController
         function onLoadDepartmentsSuccessEvent() {
+            subscribeButton.loading = false
             statusMode = FluStatusViewType.Success
         }
     }
@@ -67,12 +71,11 @@ FluScrollablePage {
     Connections {
         target: DepartmentEventsController
         function onSubscribeSuccessEvent() {
-            if (!subscribeButton.checked) {
-                subscribeButton.checked = false
+            loadDepartmentPage()
+            if (subscribeButton.checked) {
                 subscribeButton.state = "hasSub"
                 showInfo(lang.lang_subscribe_success)
             } else {
-                subscribeButton.checked = true
                 subscribeButton.state = "noSub"
                 showInfo(lang.lang_cancelled)
             }
@@ -84,11 +87,10 @@ FluScrollablePage {
         return (h ? h : h + 1) * eventCard.cellHeight
     }
 
-    FluTextButton {
+    FluLoadingButton {
         id: subscribeButton
         visible: UserHelper.permission != 1
         Layout.alignment: Qt.AlignRight
-        checked: true
         state: "noSub"
         opacity: (departmentId > 0) ? 1 : 0
         states: [
@@ -96,22 +98,21 @@ FluScrollablePage {
                 name: "hasSub"
                 PropertyChanges {
                     target: subscribeButton
+                    checked: false
                     text: lang.lang_unsubscribe
-                    textColor: disableColor
                 }
             },
             State {
                 name: "noSub"
                 PropertyChanges {
                     target: subscribeButton
+                    checked: true
                     text: lang.lang_subscribe
-                    textColor: pressedColor
                 }
             }
         ]
 
         onClicked: {
-            checked = !checked
             DepartmentEventsController.subscribeDepartment(!checked,
                                                            departmentId)
         }
@@ -134,23 +135,71 @@ FluScrollablePage {
                 height: 500
                 anchors.fill: parent
                 model: DepartmentModel
-                delegate: FluText {
-                    text: title
+                delegate: com_rect
+            }
+
+            Component {
+                id: com_rect
+                FluArea {
+                    height: 40
+                    width: 180
+                    border.width: 0
+
+                    FluRectangle {
+                        id: rect_division
+                        width: 6
+                        height: 30
+                        radius: [3, 3, 3, 3]
+                        color: FluTheme.primaryColor.normal
+                        anchors {
+                            leftMargin: 5
+                            verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    FluText {
+                        anchors {
+                            left: rect_division.right
+                            leftMargin: 5
+                            verticalCenter: parent.verticalCenter
+                        }
+                        text: model.title
+                        font.pixelSize: 20
+                    }
 
                     MouseArea {
+                        id: item_mouse
                         anchors.fill: parent
+                        hoverEnabled: true
                         onClicked: {
-                            departmentId = id
+                            departmentId = model.id
                             if (UserHelper.permission != 1) {
-                                if (subscribed) {
-                                    subscribeButton.checked = true
+                                if (model.subscribed) {
                                     subscribeButton.state = "noSub"
                                 } else {
-                                    subscribeButton.checked = false
                                     subscribeButton.state = "hasSub"
                                 }
                             }
-                            loadDepartmentEvents(id)
+                            loadDepartmentEvents(model.id)
+                            control.title = model.title
+                        }
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: 8
+                        color: {
+                            if (FluTheme.dark) {
+                                if (item_mouse.containsMouse) {
+                                    return Qt.rgba(1, 1, 1, 0.03)
+                                }
+                                return Qt.rgba(0, 0, 0, 0)
+                            } else {
+                                if (item_mouse.containsMouse) {
+                                    return Qt.rgba(0, 0, 0, 0.03)
+                                }
+                                return Qt.rgba(0, 0, 0, 0)
+                            }
                         }
                     }
                 }
