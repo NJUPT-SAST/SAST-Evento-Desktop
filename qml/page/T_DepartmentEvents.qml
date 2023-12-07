@@ -133,6 +133,7 @@ FluScrollablePage {
                 id: department_view
                 width: 200
                 height: 500
+                clip: true
                 anchors.fill: parent
                 model: DepartmentModel
                 delegate: com_rect
