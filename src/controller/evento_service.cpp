@@ -232,6 +232,7 @@ void EventoService::load_History() {
 }
 
 void EventoService::load_Block(QDate date) {
+    CalendarController::getInstance();
     date = getMonday(date);
     getRepo()->getEventListAfterTime(date).then([=](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {

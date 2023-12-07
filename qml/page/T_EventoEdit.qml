@@ -348,7 +348,7 @@ FluScrollablePage {
                             width: 6
                             height: 30
                             radius: [3, 3, 3, 3]
-                            color: ListView.isCurrentItem ? FluTheme.primaryColor.normal :
+                            color: model.id == LocationModel.selected ? FluTheme.primaryColor.normal :
                                                         FluColors.Grey110
 
                             anchors {
@@ -434,6 +434,7 @@ FluScrollablePage {
                     id: area
                     height: 40
                     width: 180
+                    property bool checked: false
                     FluRectangle {
                         id: rect_division
                         width: 6
@@ -443,15 +444,6 @@ FluScrollablePage {
                         anchors {
                             leftMargin: 5
                             verticalCenter: parent.verticalCenter
-                        }
-                    }
-
-                    Connections {
-                        target: area
-                        function onCheckedChanged() {
-                            rect_division.color = rect_department.departmentIds.indexOf(model.id) < 0 ?
-                                        FluColors.Grey110 :
-                                        FluTheme.primaryColor.normal
                         }
                     }
 
@@ -467,7 +459,6 @@ FluScrollablePage {
 
                     MouseArea {
                         id: item_mouse
-                        property bool checked: false
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: {
@@ -476,12 +467,12 @@ FluScrollablePage {
                             else
                                 rect_department.departmentIds.splice(rect_department.departmentIds.indexOf(model.id), 1)
 
-                            checked = !checked
-                            area.checkedChanged()
+                            area.checked = !area.checked
+                            rect_division.color = rect_department.departmentIds.indexOf(model.id) < 0 ?
+                                        FluColors.Grey110 :
+                                        FluTheme.primaryColor.normal
                         }
                     }
-
-                    signal checkedChanged()
 
                     Rectangle {
                         anchors.fill: parent

@@ -52,7 +52,12 @@ QHash<int, QByteArray> TypeModel::roleNames() const {
 }
 
 void TypeModel::resetModel(std::vector<EventType>&& model) {
-    beginResetModel();
-    m_data = std::move(model);
-    endResetModel();
+    QMetaObject::invokeMethod(
+        this,
+        [&]() {
+            beginResetModel();
+            m_data = std::move(model);
+            endResetModel();
+        },
+        Qt::BlockingQueuedConnection);
 }

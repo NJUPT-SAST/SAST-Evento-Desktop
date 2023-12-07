@@ -44,6 +44,7 @@ void InformationService::load_EditInfo() {
 }
 
 void InformationService::load_DepartmentInfo() {
+    DepartmentEventsController::getInstance();
     getRepo()->getDepartmentListWithSubscriptionInfo().then(
         [this](EventoResult<std::vector<Department>> result) {
             if (!result) {
