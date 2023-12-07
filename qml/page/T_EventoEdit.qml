@@ -5,49 +5,19 @@ import QtQuick.Window
 import FluentUI
 import SAST_Evento
 import "../window"
-import "../page"
 
 FluScrollablePage {
     id: page
     launchMode: FluPageType.SingleTask
-    property var locationArr: []
-    property var departmentArr: []
-
-    function parseJSON(data) {
-        var result = []
-        if (Array.isArray(data)) {
-            for (var i = 0; i < data.length; i++) {
-                var item = data[i]
-                var key = item.key
-                var name = item.label
-                var isLeaf = false
-                var children = []
-
-                if (item.children && Array.isArray(item.children))
-                    children = parseJSON(item.children)
-                else
-                    isLeaf = true
-
-                result.push(tree_view_location.createItem(name, isLeaf,
-                                                          children, {
-                                                              "id": key
-                                                          }))
-            }
-        } else {
-            result.push(tree_view_location.createItem(data.name, true, [], {
-                                                          "id": data.key
-                                                      }))
-        }
-        return result
-    }
 
     function loadEditInfo() {
         statusMode = FluStatusViewType.Loading
         EventoEditController.loadEditInfo()
     }
 
-    signal listReady
-
+    Component.onCompleted: {
+        loadEditInfo()
+    }
     onErrorClicked: {
         loadEditInfo()
     }
@@ -57,17 +27,6 @@ FluScrollablePage {
     Connections {
         target: EventoEditController
         function onLoadEditSuccessEvent() {
-            departmentArr = []
-            var json = JSON.parse(EventoEditController.departmentJson)
-            for (var ii = 0; ii < json.length; ++ii) {
-                departmentArr.push(tree_view_department.createItem(
-                                       json[ii].departmentName, true, [], {
-                                           "id": json[ii].id
-                                       }))
-            }
-            json = JSON.parse(EventoEditController.locationJson)
-            locationArr = parseJSON(json[0].children)
-            listReady()
             statusMode = FluStatusViewType.Success
         }
     }
@@ -80,14 +39,27 @@ FluScrollablePage {
         }
     }
 
+    Connections {
+        target: EventoEditController
+        function onCreateSuccessEvent() {
+            statusMode = FluStatusViewType.Success
+            showSuccess("操作成功")
+            returnPage()
+        }
+    }
+
+    Connections {
+        target: EventoEditController
+        function onCreateErrorEvent(message) {
+            statusMode = FluStatusViewType.Success
+            showError(message, 4000)
+        }
+    }
+
     Item {
         id: item_all
         Layout.fillWidth: true
         implicitHeight: 650 + textbox_description.implicitHeight
-
-        Component.onCompleted: {
-            loadEditInfo()
-        }
 
         FluArea {
             id: area1
@@ -97,6 +69,7 @@ FluScrollablePage {
                 top: parent.top
             }
         }
+
         FluArea {
             id: area2
             width: parent.width
@@ -106,6 +79,7 @@ FluScrollablePage {
                 topMargin: 10
             }
         }
+
         FluArea {
             id: area3
             width: parent.width
@@ -145,6 +119,7 @@ FluScrollablePage {
                 leftMargin: 20
             }
         }
+
         FluTextBox {
             id: textbox_title
             implicitWidth: 600
@@ -167,6 +142,7 @@ FluScrollablePage {
             font.pixelSize: 20
             font.bold: true
         }
+
         FluTextBox {
             id: textbox_tag
             implicitWidth: 600
@@ -188,6 +164,7 @@ FluScrollablePage {
                 topMargin: 15
             }
         }
+
         FluText {
             id: text_start2
             text: "开始"
@@ -197,6 +174,7 @@ FluScrollablePage {
                 top: item_event_time.top
             }
         }
+
         FluCalendarPicker {
             id: clender_picker_event_start
             width: 220
@@ -207,6 +185,7 @@ FluScrollablePage {
                 top: item_event_time.top
             }
         }
+
         FluTimePicker {
             id: time_picker_event_start
             hourFormat: FluTimePickerType.HH
@@ -218,6 +197,7 @@ FluScrollablePage {
                 top: item_event_time.top
             }
         }
+
         FluText {
             id: text_end2
             text: "结束"
@@ -228,6 +208,7 @@ FluScrollablePage {
                 topMargin: 15
             }
         }
+
         FluCalendarPicker {
             id: clender_picker_event_end
             width: 220
@@ -238,6 +219,7 @@ FluScrollablePage {
                 top: text_end2.top
             }
         }
+
         FluTimePicker {
             id: time_picker_event_end
             hourFormat: FluTimePickerType.HH
@@ -260,6 +242,7 @@ FluScrollablePage {
                 topMargin: 15
             }
         }
+
         FluText {
             id: text_start1
             text: "开始"
@@ -269,6 +252,7 @@ FluScrollablePage {
                 top: item_register_time.top
             }
         }
+
         FluCalendarPicker {
             id: clender_picker_register_start
             width: 220
@@ -280,6 +264,7 @@ FluScrollablePage {
                 top: item_register_time.top
             }
         }
+
         FluTimePicker {
             id: time_picker_register_start
             hourFormat: FluTimePickerType.HH
@@ -291,6 +276,7 @@ FluScrollablePage {
                 top: item_register_time.top
             }
         }
+
         FluText {
             id: text_end1
             text: "结束"
@@ -301,6 +287,7 @@ FluScrollablePage {
                 topMargin: 15
             }
         }
+
         FluCalendarPicker {
             id: clender_picker_register_end
             width: 220
@@ -311,6 +298,7 @@ FluScrollablePage {
                 top: text_end1.top
             }
         }
+
         FluTimePicker {
             id: time_picker_register_end
             hourFormat: FluTimePickerType.HH
@@ -342,23 +330,17 @@ FluScrollablePage {
                 top: item_location.top
                 left: textbox_title.left
             }
-            FluTreeView {
-                id: tree_view_location
-                property int locationId: 0
-                width: 200
-                height: 200
-                selectionMode: FluTreeViewType.Single
-                Connections {
-                    target: page
-                    function onListReady() {
-                        tree_view_location.updateData(locationArr)
-                    }
+            ListView {
+                id: location_view
+                anchors.fill: parent
+                model: LocationModel
+
+                delegate: FluText {
+                    text: title
                 }
-                onItemClicked: item => {
-                                   locationId = item.data.id
-                               }
             }
         }
+
         FluText {
             id: item_department
             text: "部门"
@@ -380,16 +362,12 @@ FluScrollablePage {
                 left: item_department.right
                 leftMargin: 60
             }
-            FluTreeView {
-                id: tree_view_department
-                width: 200
-                height: 200
-                selectionMode: FluTreeViewType.Multiple
-                Connections {
-                    target: page
-                    function onListReady() {
-                        tree_view_department.updateData(departmentArr)
-                    }
+            ListView {
+                anchors.fill: parent
+                model: DepartmentModel
+
+                delegate: FluText {
+                    text: title
                 }
             }
         }
@@ -405,6 +383,7 @@ FluScrollablePage {
                 topMargin: 40
             }
         }
+
         FluComboBox {
             id: combo_box_type
             width: 200
@@ -427,6 +406,7 @@ FluScrollablePage {
                 topMargin: 15
             }
         }
+
         FluMultilineTextBox {
             id: textbox_description
             width: 600
@@ -439,8 +419,6 @@ FluScrollablePage {
         }
 
         // deprecated
-
-
         /*
         Item {
             visible: false
@@ -579,29 +557,7 @@ FluScrollablePage {
         }
     }
 
-    T_Calendar {
-        id: control
-    }
-
     function returnPage() {
-        control.reload()
         MainWindow.window.pushPage("qrc:/qml/page/T_Calendar.qml")
-    }
-
-    Connections {
-        target: EventoEditController
-        function onCreateSuccessEvent() {
-            statusMode = FluStatusViewType.Success
-            showSuccess("操作成功")
-            returnPage()
-        }
-    }
-
-    Connections {
-        target: EventoEditController
-        function onCreateErrorEvent(message) {
-            statusMode = FluStatusViewType.Success
-            showError(message, 4000)
-        }
     }
 }

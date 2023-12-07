@@ -43,8 +43,7 @@ void EventoEditController::update(const DTO_Evento& event) {
 }
 
 void EventoEditController::loadEditInfo() {
-    if (property("isEditMode").toBool())
-        update(
-            EventoService::getInstance().edit(EventoHelper::getInstance()->property("id").toInt()));
+    if (m_isEditMode)
+        update(EventoService::getInstance().edit(EventoHelper::getInstance()->m_id));
     preload();
 }

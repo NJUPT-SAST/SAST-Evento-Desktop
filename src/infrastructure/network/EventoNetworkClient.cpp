@@ -748,16 +748,26 @@ EventoFuture<EventoResult<std::vector<EventType>>> EventoNetworkClient::getTypeL
         });
 }
 
-EventoFuture<EventoResult<QString>> EventoNetworkClient::getLocationList() {
+register_object_member(DTO_Location, "key", id);
+register_object_member(DTO_Location, "label", name);
+register_object_member(DTO_Location, "children", children);
+declare_object(DTO_Location, object_member(DTO_Location, id), object_member(DTO_Location, name),
+               optional_object_member(DTO_Location, children));
+
+EventoFuture<EventoResult<std::vector<DTO_Location>>> EventoNetworkClient::getLocationList() {
     auto url = endpoint(QStringLiteral("/admin/locations"));
-    return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<QString> {
-        if (result) {
-            return QString::fromUtf8(
-                QJsonDocument(result.take().toArray()).toJson(QJsonDocument::Compact));
-        } else {
-            return {result.code(), result.message()};
-        }
-    });
+    return this->get(url).then(
+        [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_Location>> {
+            if (result) {
+                auto rootValue = result.take();
+                std::vector<DTO_Location> result;
+                declare_top_deserialiser(result, deserialiser);
+                deserialiser.assign(rootValue);
+                return result;
+            } else {
+                return {result.code(), result.message()};
+            }
+        });
 }
 
 EventoFuture<EventoResult<std::vector<Department>>> EventoNetworkClient::getDepartmentList() {

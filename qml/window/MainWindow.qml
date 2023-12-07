@@ -157,7 +157,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         }
 
         Component.onCompleted: {
-            if (UserHelper.permission != 1)
+            if (UserHelper.permission !== 1)
                 createItems()
         }
     }

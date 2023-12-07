@@ -43,7 +43,7 @@ private:
 
     std::vector<EventoBlock> m_data;
     std::vector<int> pipeline;
-    std::array<std::array<int, 16>, 7> z_map = {};
+    std::array<std::array<int, 32>, 7> z_map = {};
     int all_day_line_max;
 
     enum ALL_DAY_MAP_FLAG : uint8_t {
@@ -58,27 +58,46 @@ private:
     };
     static constexpr const ALL_DAY_MAP_FLAG all_day_dict[] = {MON, TUE, WED, THU, FRI, SAT, SUN};
 
-    enum Z_MAP_FLAG : uint16_t {
-        AM_8 = 1 << 0,
-        AM_9 = 1 << 1,
-        AM_10 = 1 << 2,
-        AM_11 = 1 << 3,
-        AM_12 = 1 << 4,
-        PM_1 = 1 << 5,
-        PM_2 = 1 << 6,
-        PM_3 = 1 << 7,
-        PM_4 = 1 << 8,
-        PM_5 = 1 << 9,
-        PM_6 = 1 << 10,
-        PM_7 = 1 << 11,
-        PM_8 = 1 << 12,
-        PM_9 = 1 << 13,
-        PM_10 = 1 << 14,
+    enum Z_MAP_FLAG : uint32_t {
+        AM_8 = 1u << 0,
+        AM_8_30 = 1u << 1,
+        AM_9 = 1u << 2,
+        AM_9_30 = 1u << 3,
+        AM_10 = 1u << 4,
+        AM_10_30 = 1u << 5,
+        AM_11 = 1u << 6,
+        AM_11_30 = 1u << 7,
+        AM_12 = 1u << 8,
+        AM_12_30 = 1u << 9,
+        PM_1 = 1u << 10,
+        PM_1_30 = 1u << 11,
+        PM_2 = 1u << 12,
+        PM_2_30 = 1u << 13,
+        PM_3 = 1u << 14,
+        PM_3_30 = 1u << 15,
+        PM_4 = 1u << 16,
+        PM_4_30 = 1u << 17,
+        PM_5 = 1u << 18,
+        PM_5_30 = 1u << 19,
+        PM_6 = 1u << 20,
+        PM_6_30 = 1u << 21,
+        PM_7 = 1u << 22,
+        PM_7_30 = 1u << 23,
+        PM_8 = 1u << 24,
+        PM_8_30 = 1u << 25,
+        PM_9 = 1u << 26,
+        PM_9_30 = 1u << 27,
+        PM_10 = 1u << 28,
+        PM_10_30 = 1u << 29,
+        After_PM_11 = 1u << 30,
+        Before_AM_8 = 1u << 31,
         INIT = 0
     };
     static constexpr const Z_MAP_FLAG dict[] = {
-        AM_8, AM_9, AM_10, AM_11, AM_12, PM_1, PM_2,  PM_3,
-        PM_4, PM_5, PM_6,  PM_7,  PM_8,  PM_9, PM_10,
+        AM_8,  AM_8_30,  AM_9, AM_9_30, AM_10, AM_10_30, AM_11,       AM_11_30,
+        AM_12, AM_12_30, PM_1, PM_1_30, PM_2,  PM_2_30,  PM_3,        PM_3_30,
+        PM_4,  PM_4_30,  PM_5, PM_5_30, PM_6,  PM_6_30,  PM_7,        PM_7_30,
+        PM_8,  PM_8_30,  PM_9, PM_9_30, PM_10, PM_10_30, After_PM_11, Before_AM_8,
     };
 
 private:
