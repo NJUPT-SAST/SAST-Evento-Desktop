@@ -41,7 +41,7 @@ struct FixedPoint {
         constexpr uint32_t M_OPRAND = 0b100'00000'00000'00000'00000;
         static_assert(QSysInfo::ByteOrder == QSysInfo::LittleEndian, "Big Endian Untested!");
         if (t.out_of_range)
-            return t.major ? t.major + 0.5 : -0.5;
+            return t.major ? t.major + 0.25 : -0.25;
         if (!t.major && !t.fraction)
             return 0;
         IEEE_Float result;

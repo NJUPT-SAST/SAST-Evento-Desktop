@@ -73,7 +73,7 @@ FluScrollablePage {
     loadingText: lang.lang_loading
 
     Item {
-        width: 885
+        Layout.fillWidth: true
         height: 50
 
         FluIconButton {
@@ -105,6 +105,7 @@ FluScrollablePage {
                 load()
             }
         }
+
         FluArea {
             id: rec_date
             height: 30
@@ -239,6 +240,7 @@ FluScrollablePage {
                 top: parent.top
                 topMargin: 10
                 right: parent.right
+                rightMargin: 10
             }
 
             onClicked: {
@@ -251,11 +253,11 @@ FluScrollablePage {
     FluArea {
         id: table
         height: 765 + all_day_height
-        width: 890
+        width: parent.width > 890 ? parent.width : 890
         color: "transparent"
 
         readonly property int blockHeight: 45
-        readonly property int blockWidth: 120
+        readonly property int blockWidth: (width - 50) / 7
         readonly property int all_day_height : EventoBlockModel.all_day_line_num * blockHeight
 
         Row {
@@ -271,31 +273,24 @@ FluScrollablePage {
                 model: ListModel {
                     ListElement {
                         title: "周一\n"
-                        index: 0
                     }
                     ListElement {
                         title: "周二\n"
-                        index: 1
                     }
                     ListElement {
                         title: "周三\n"
-                        index: 2
                     }
                     ListElement {
                         title: "周四\n"
-                        index: 3
                     }
                     ListElement {
                         title: "周五\n"
-                        index: 4
                     }
                     ListElement {
                         title: "周六\n"
-                        index: 5
                     }
                     ListElement {
                         title: "周日\n"
-                        index: 6
                     }
                 }
 
@@ -365,67 +360,51 @@ FluScrollablePage {
             model: ListModel {
                 ListElement {
                     title: "8:00"
-                    index: 0
                 }
                 ListElement {
                     title: "9:00"
-                    index: 1
                 }
                 ListElement {
                     title: "10:00"
-                    index: 2
                 }
                 ListElement {
                     title: "11:00"
-                    index: 3
                 }
                 ListElement {
                     title: "12:00"
-                    index: 4
                 }
                 ListElement {
                     title: "13:00"
-                    index: 5
                 }
                 ListElement {
                     title: "14:00"
-                    index: 6
                 }
                 ListElement {
                     title: "15:00"
-                    index: 7
                 }
                 ListElement {
                     title: "16:00"
-                    index: 8
                 }
                 ListElement {
                     title: "17:00"
-                    index: 9
                 }
                 ListElement {
                     title: "18:00"
-                    index: 10
                 }
                 ListElement {
                     title: "19:00"
-                    index: 11
                 }
                 ListElement {
                     title: "20:00"
-                    index: 12
                 }
                 ListElement {
                     title: "21:00"
-                    index: 13
                 }
                 ListElement {
                     title: "22:00"
-                    index: 14
                 }
                 ListElement {
                     title: "23:00"
-                    index: 15
                 }
 
             }
