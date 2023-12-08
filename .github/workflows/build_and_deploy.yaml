@@ -133,7 +133,7 @@ jobs:
       - name: Package
         if: startsWith(github.event.ref, 'refs/tags/')
         run: |
-          macdeployqt bin/release/SAST_Evento_Desktop.app -qmldir=. -verbose=1 -dmg
+          sudo macdeployqt bin/release/SAST_Evento_Desktop.app -qmldir=. -verbose=1 -dmg
        
       - uses: actions/upload-artifact@v2
         if: startsWith(github.event.ref, 'refs/tags/')
