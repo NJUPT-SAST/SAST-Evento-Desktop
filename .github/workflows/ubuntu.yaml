@@ -1,0 +1,96 @@
+name: Ubuntu
+on:
+  push:
+    paths:
+      - "*.txt"
+      - "src/**"
+      - "!**.qml"
+      - "!**.md"
+      - "!**.cmake"
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        qt_ver: [6.5.3]
+        qt_arch: [gcc_64]
+    env:
+      targetName: sast-evento
+      QT_MODULES: "qt5compat qtwebsockets qthttpserver qtshadertools"
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: setup Ninja
+        uses: ashutoshvarma/setup-ninja@v1.1
+        with:
+          version: "1.11.1"
+
+      - name: install GL library (Ubuntu)
+        run: sudo apt-get install -y libxcb-cursor0 libgl1-mesa-dev libxcb1-dev libgtk-3-dev libxkbcommon-x11-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-sync-dev  libxcb-render-util0-dev libxcb-shm0-dev
+
+      - name: install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ matrix.qt_ver }}
+          cache: ${{ steps.cache-qt.outputs.cache-hit }}
+          arch: ${{ matrix.qt_arch }}
+          modules: ${{ env.QT_MODULES }}
+
+      - name: install Fcitx5 for Qt
+        run: |
+          sudo apt-get install -y extra-cmake-modules
+          git clone --depth 1 --branch 5.1.1 https://github.com/fcitx/fcitx5-qt
+          cmake -DBUILD_ONLY_PLUGIN=ON -DENABLE_QT4=OFF -DENABLE_QT5=OFF -DENABLE_QT6=ON -G Ninja -S ./fcitx5-qt -B ./fcitx5-qt-build -DCMAKE_PREFIX_PATH=${{ env.Qt6_DIR }} -DCMAKE_BUILD_TYPE=Release
+          cmake --build ./fcitx5-qt-build --parallel --config Release
+          cmake --install ./fcitx5-qt-build
+  
+      - name: Configure CMake
+        run: cmake -G Ninja -S ${{ github.workspace }} -B ${{ github.workspace }}/build -DCMAKE_PREFIX_PATH=${{ env.Qt6_DIR }} -DCMAKE_BUILD_TYPE=Release
+  
+      - name: Build
+        run: cmake --build ${{ github.workspace }}/build --config Release --parallel
+      
+      - name: install Qt linux deploy
+        uses: miurahr/install-linuxdeploy-action@v1
+        with:
+          plugins: qt appimage
+
+      - name: package
+        if: startsWith(github.event.ref, 'refs/tags/')
+        env: 
+          EXTRA_QT_PLUGINS: qt5compat
+        run: |
+          export QML_SOURCES_PATHS=./
+          echo "[Desktop Entry]" > sast-evento-appimage.desktop
+          echo "Categories=Utility;" >> sast-evento-appimage.desktop
+          echo "Icon=app_icon" >> sast-evento-appimage.desktop
+          echo "Name=SAST Evento" >> sast-evento-appimage.desktop
+          echo "Type=Application" >> sast-evento-appimage.desktop
+          echo "Exec=sast-evento" >> sast-evento-appimage.desktop
+          mv bin/release/SAST_Evento_Desktop bin/release/sast-evento
+          linuxdeploy-x86_64.AppImage --plugin=qt --output=appimage --desktop-file=sast-evento-appimage.desktop --icon-file=app_icon.svg --executable=bin/release/sast-evento --appdir AppDir
+          mv SAST_Evento-*.AppImage SAST_Evento.AppImage
+
+      - uses: actions/upload-artifact@v2
+        if: startsWith(github.event.ref, 'refs/tags/')
+        with:
+          name: ${{ env.targetName }}_${{ matrix.os }}
+          path: SAST_Evento.AppImage
+      
+      - name: upload release
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: SAST_Evento.AppImage
+          asset_name: ${{ env.targetName }}_appimage_x86_64.AppImage
+          tag: ${{ github.ref }}
+          overwrite: true

@@ -1,0 +1,91 @@
+name: Windows
+on:
+  push:
+    paths:
+      - "*.txt"
+      - "src/**"
+      - "!**.qml"
+      - "!**.md"
+      - "!**.cmake"
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2019]
+        include:
+          - qt_ver: 6.5.3
+            qt_arch: win64_msvc2019_64
+            msvc_arch: x64
+            qt_arch_isntall: [msvc2019_64]
+    env: 
+      targetName: SAST_Evento_Desktop.exe
+      fileName: sast-evento
+      QT_MODULES: "qt5compat qtwebsockets qthttpserver qtshadertools"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+    
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ matrix.qt_ver }}
+          arch: ${{ matrix.qt_arch }}
+          cache: ${{steps.cache-qt.outputs.cache-hit}}
+          modules: ${{env.QT_MODULES}}
+
+      - name: msvc build
+        id: build
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.msvc_arch }}
+          ninja --version
+          mkdir build
+          cd build
+          cmake -DCMAKE_MESSAGE_LOG_LEVEL=STATUS -DCMAKE_PREFIX_PATH=D:\a\FluentUI\Qt\6.5.3\msvc2019_64 -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DCMAKE_BUILD_TYPE=Release -GNinja ..
+          cmake --build . --target all --config Release --parallel
+          echo winSdkDir=%WindowsSdkDir% >> %GITHUB_ENV%
+          echo winSdkVer=%WindowsSdkVersion% >> %GITHUB_ENV%
+          echo vcToolsInstallDir=%VCToolsInstallDir% >> %GITHUB_ENV%
+          echo vcToolsRedistDir=%VCToolsRedistDir% >> %GITHUB_ENV%
+
+      - name: package
+        if: startsWith(github.event.ref, 'refs/tags/')
+        id: package      
+        env:
+          archiveName: ${{ env.fileName }}-${{ matrix.qt_arch }}
+          msvcArch: ${{ matrix.msvc_arch }}
+        shell: pwsh
+        run: |
+          & scripts\windows-publish.ps1 ${env:archiveName} ${env:targetName}
+          $name = ${env:archiveName}
+          echo "::set-output name=packageName::$name"       
+
+      - uses: actions/upload-artifact@v2
+        if: startsWith(github.event.ref, 'refs/tags/')
+        with:
+          name: ${{ steps.package.outputs.packageName }}
+          path: dist
+            
+      - name: inno setup install
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: zhuzichu520/inno-setup-action@v1.0.1
+        with: 
+          filepath: ./action-cli/InstallerScript.iss
+          
+      - name: upload release
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./action-cli/installer.exe
+          asset_name: ${{ env.fileName }}_win64.exe
+          tag: ${{ github.ref }}
+          overwrite: true 
