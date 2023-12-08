@@ -28,7 +28,7 @@ Window {
         FluTheme.primaryColor = list[settings.value("colorIndex", 5)]
         settings.colorIndex = list.indexOf(FluTheme.primaryColor)
         FluTheme.enableAnimation = settings.value("enableAnimationSet", 1)
-        FluTheme.nativeText = settings.value("nativeTextSet", 0)
+        FluTheme.nativeText = settings.value("nativeTextSet", 1)
         settings.displayMode = settings.value("displayMode",
                                               FluNavigationViewType.Auto)
         appInfo.changeLang(settings.value("langMode", "En"))
