@@ -45,6 +45,7 @@ static const auto OK_RESPONSE = QByteArrayLiteral(R"(
                         if (messages[userLanguage]) {
                             messageText.textContent = messages[userLanguage];
                         }
+                        window.close();
                     </script>
                 </body>
                 </html>
