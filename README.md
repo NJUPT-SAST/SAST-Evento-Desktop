@@ -34,13 +34,11 @@ SAST Evento 是一个 SAST 的事件管理系统，平时我们在活动过程�
 
 ## Release
 
-### alpha: extremely unstable, updated frequently
-
 [Latest version](https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest)
 
 ### beta: unstable, updated frequently
 
-COMING SOON
+- [v1.0.1208-beta](https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/tag/1.0.1208)
 
 ## Start
 
