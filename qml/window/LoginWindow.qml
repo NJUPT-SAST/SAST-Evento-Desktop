@@ -4,13 +4,12 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import FluentUI
 import SAST_Evento
-import org.wangwenx190.FramelessHelper
 
 FluWindow {
     id: window
     title: lang.lang_login
-    width: 320
-    height: 448
+    width: 278
+    height: 378
     fixSize: true
     launchMode: FluWindowType.SingleTask
     closeDestory: true
@@ -26,15 +25,13 @@ FluWindow {
 
     Connections {
         target: LoginController
-
         function onLoginProcessing() {
-            showLoading(lang.lang_loading)
+            showLoading()
         }
     }
 
     Connections {
         target: LoginController
-
         function onLoginSuccess() {
             loginSuccess = true
             LoginController.loadPermissionList()
@@ -43,7 +40,6 @@ FluWindow {
 
     Connections {
         target: LoginController
-
         function onLoadPermissionSuccessEvent() {
             hideLoading()
             FluApp.navigate("/")
@@ -53,7 +49,6 @@ FluWindow {
 
     Connections {
         target: LoginController
-
         function onLoadPermissionErrorEvent(message) {
             hideLoading()
             showError(lang.lang_error + message, 4000)
@@ -62,7 +57,6 @@ FluWindow {
 
     Connections {
         target: LoginController
-
         function onLoginFailed(reason) {
             hideLoading()
             system_tray.showMessage(lang.lang_login_failed,
@@ -91,6 +85,29 @@ FluWindow {
         }
     }
 
+    SystemTrayIcon {
+        id: system_tray
+        visible: true
+        icon.source: "qrc:/app.ico"
+        tooltip: "SAST Evento"
+        menu: Menu {
+            MenuItem {
+                text: lang.lang_exit
+                onTriggered: {
+                    window.deleteWindow()
+                    FluApp.closeApp()
+                }
+            }
+        }
+        onActivated: reason => {
+                         if (reason === SystemTrayIcon.Trigger) {
+                             window.show()
+                             window.raise()
+                             window.requestActivate()
+                         }
+                     }
+    }
+
     FluButton {
         id: btn_login
         text: lang.lang_use_link
@@ -101,7 +118,11 @@ FluWindow {
         height: 45
         normalColor: Qt.rgba(28 / 255, 31 / 255, 36 / 255, 1)
         hoverColor: Qt.rgba(38 / 255, 41 / 255, 46 / 255, 1)
-        anchors.centerIn: parent
+        anchors {
+            bottom: parent.bottom
+            bottomMargin: 110
+            horizontalCenter: parent.horizontalCenter
+        }
         focus: true
         onClicked: {
             if (loginSuccess)
@@ -122,6 +143,23 @@ FluWindow {
         }
     }
 
+    FluIconButton {
+        id: btn_visitor
+        text: lang.lang_guest_login
+        iconSource: FluentIcons.GuestUser
+        display: Button.TextBesideIcon
+        anchors {
+            top: btn_login.bottom
+            topMargin: 8
+            horizontalCenter: parent.horizontalCenter
+        }
+        onClicked: {
+            UserHelper.permission = 1
+            FluApp.navigate("/")
+            window.close()
+        }
+    }
+
     FluText {
         text: lang.lang_by_cpp + appInfo.version
         color: FluColors.Grey100
@@ -130,7 +168,7 @@ FluWindow {
         lineHeight: 1.5
         anchors {
             bottom: parent.bottom
-            bottomMargin: 15
+            bottomMargin: 10
             horizontalCenter: parent.horizontalCenter
         }
     }
