@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import FluentUI
 import SAST_Evento
+import org.wangwenx190.FramelessHelper
 
 FluWindow {
     id: window

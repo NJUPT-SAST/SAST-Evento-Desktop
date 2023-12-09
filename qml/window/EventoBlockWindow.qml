@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Window 2.2
 import FluentUI
 import SAST_Evento
 import org.wangwenx190.FramelessHelper
@@ -12,6 +13,7 @@ FluWindow {
     closeDestory: true
     fixSize: true
     launchMode: FluWindowType.SingleInstance
+    appBar: undefined
 
     Component.onCompleted: {
         if (FluTheme.dark)
@@ -33,19 +35,18 @@ FluWindow {
                 loadEventoInfo()
         }
         errorButtonText: lang.lang_reload
+        loadingText: lang.lang_loading
 
         Loader {
             id: page_loader
-            width: window.width
-            height: window.height
             sourceComponent: com_info
         }
 
         Component {
             id: com_qrCode
             Item {
-                anchors.fill: parent
-                implicitHeight: 490
+                height: window.height
+                width: window.width
 
                 function loadQRcode() {
                     page.statusMode = FluStatusViewType.Loading
@@ -81,56 +82,49 @@ FluWindow {
                         left: parent.left
                     }
                     onClicked: {
-                        var widthAnimation = Qt.createQmlObject(
-                                    'import QtQuick 2.0; PropertyAnimation {target: window; property: "width"; to: 290; easing.type: Easing.InOutQuad}',
-                                    window)
-                        var heightAnimation = Qt.createQmlObject(
-                                    'import QtQuick 2.0; PropertyAnimation {target: window; property: "height"; to: 380; easing.type: Easing.InOutQuad}',
-                                    window)
-                        widthAnimation.runningChanged.connect(function () {
-                            if (!widthAnimation.running)
-                                page_loader.sourceComponent = com_info
-                        })
-                        heightAnimation.runningChanged.connect(function () {
-                            if (!heightAnimation.running)
-                                page_loader.sourceComponent = com_info
-                        })
-                        widthAnimation.start()
-                        heightAnimation.start()
+                        window.visibility = Window.Windowed
+                        page_loader.sourceComponent = com_info
                     }
                 }
 
                 FluQRCode {
                     id: qrCode
                     text: page.code
-                    size: 400
                     anchors {
                         left: parent.left
+                        leftMargin: Screen.desktopAvailableWidth / 2 - qrCode.size / 2
                         top: parent.top
                         topMargin: 35
                     }
+                    size: Screen.desktopAvailableHeight - 200
                 }
 
-                RowLayout {
+                FluCopyableText {
+                    id: code_text
+                    text: page.code
+                    font.pixelSize: 90
+                    horizontalAlignment: Text.AlignHCenter
                     anchors {
                         top: qrCode.bottom
                         topMargin: 15
                         left: parent.left
-                        leftMargin: 130
+                        leftMargin: Screen.desktopAvailableWidth / 2 - code_text.implicitWidth / 2 - 40
                     }
-                    spacing: 5
-                    FluCopyableText {
-                        id: code_text
-                        text: page.code
-                        font: FluTextStyle.Title
+                }
+
+                FluIconButton {
+                    id: btn_cpy
+                    anchors {
+                        top: code_text.top
+                        left: code_text.right
+                        leftMargin: 5
                     }
-                    FluIconButton {
-                        iconSource: FluentIcons.Copy
-                        text: lang.lang_copy
-                        onClicked: {
-                            FluTools.clipText(code_text.text)
-                            showSuccess(lang.lang_copy_success)
-                        }
+                    iconSource: FluentIcons.Copy
+                    text: lang.lang_copy
+                    iconSize: 80
+                    onClicked: {
+                        FluTools.clipText(code_text.text)
+                        showSuccess(lang.lang_copy_success)
                     }
                 }
             }
@@ -209,27 +203,26 @@ FluWindow {
                     visible: EventoInfoController.editable
 
                     FluIconButton {
+                        id: btn_back
+                        iconSource: FluentIcons.Back
+                        iconSize: 15
+                        anchors {
+                            left: parent.left
+                        }
+                        onClicked: {
+                            window.close()
+                        }
+                    }
+
+                    FluIconButton {
                         iconSource: FluentIcons.QRCode
                         iconSize: 15
                         text: lang.lang_get_qrcode
                         onClicked: {
-                            var widthAnimation = Qt.createQmlObject(
-                                        'import QtQuick 2.0; PropertyAnimation {target: window; property: "width"; to: 420; easing.type: Easing.InOutQuad}',
-                                        window)
-                            var heightAnimation = Qt.createQmlObject(
-                                        'import QtQuick 2.0; PropertyAnimation {target: window; property: "height"; to: 540; easing.type: Easing.InOutQuad}',
-                                        window)
-                            widthAnimation.runningChanged.connect(function () {
-                                if (!widthAnimation.running)
-                                    page_loader.sourceComponent = com_qrCode
-                            })
-                            heightAnimation.runningChanged.connect(function () {
-                                if (!heightAnimation.running)
-                                    page_loader.sourceComponent = com_qrCode
-                            })
-                            widthAnimation.start()
-                            heightAnimation.start()
+                            window.visibility = Window.FullScreen
+                            page_loader.sourceComponent = com_qrCode
                         }
+
                         anchors {
                             right: btn_edit.left
                         }
