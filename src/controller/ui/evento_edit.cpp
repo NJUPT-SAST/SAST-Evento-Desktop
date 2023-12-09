@@ -40,7 +40,7 @@ void EventoEditController::update(const DTO_Evento& event) {
     for (const auto& department : event.departments) {
         departmentIds += QString::number(department.id) + ",";
     }
-    *(departmentIds.end()) = u']';
+    *(departmentIds.end() - 1) = u']';
     QMetaObject::invokeMethod(
         this,
         [&]() {
