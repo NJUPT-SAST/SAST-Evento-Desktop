@@ -5,6 +5,7 @@ import QtQuick.Window
 import FluentUI
 import SAST_Evento
 import "../window"
+import "../page"
 
 FluScrollablePage {
     id: page
@@ -15,12 +16,10 @@ FluScrollablePage {
         EventoEditController.loadEditInfo()
     }
 
-    Component.onCompleted: {
-        loadEditInfo()
-    }
     onErrorClicked: {
         loadEditInfo()
     }
+
     errorButtonText: lang.lang_reload
     loadingText: lang.lang_loading
 
@@ -60,6 +59,10 @@ FluScrollablePage {
         id: item_all
         Layout.fillWidth: true
         implicitHeight: 650 + textbox_description.implicitHeight
+
+        Component.onCompleted: {
+            loadEditInfo()
+        }
 
         FluArea {
             id: area1
@@ -413,7 +416,7 @@ FluScrollablePage {
 
         FluArea {
             id: rect_department
-            property var departmentIds: EventoEditController.isEditMode ? EventoEditController.departmentIds : []
+            property var departmentIds: EventoEditController.isEditMode ? JSON.parse(EventoEditController.departmentIds) : []
             width: 200
             height: 200
             paddings: 10
@@ -435,13 +438,15 @@ FluScrollablePage {
                     id: area
                     height: 40
                     width: 180
-                    property bool checked: false
+                    property bool checked: rect_department.departmentIds.indexOf(model.id) >= 0
                     FluRectangle {
                         id: rect_division
                         width: 6
                         height: 30
                         radius: [3, 3, 3, 3]
-                        color: FluColors.Grey110
+                        color: rect_department.departmentIds.indexOf(model.id) < 0 ?
+                                   FluColors.Grey110 :
+                                   FluTheme.primaryColor.normal
                         anchors {
                             leftMargin: 5
                             verticalCenter: parent.verticalCenter
@@ -463,15 +468,16 @@ FluScrollablePage {
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: {
+                            console.log(checked)
                             if (!checked)
                                 rect_department.departmentIds.push(model.id)
                             else
                                 rect_department.departmentIds.splice(rect_department.departmentIds.indexOf(model.id), 1)
 
-                            area.checked = !area.checked
                             rect_division.color = rect_department.departmentIds.indexOf(model.id) < 0 ?
-                                        FluColors.Grey110 :
-                                        FluTheme.primaryColor.normal
+                                                               FluColors.Grey110 :
+                                                               FluTheme.primaryColor.normal
+                            area.checked = !area.checked
                         }
                     }
 
@@ -678,7 +684,12 @@ FluScrollablePage {
         }
     }
 
+    T_Calendar {
+        id: control
+    }
+
     function returnPage() {
+        control.reload()
         MainWindow.window.pushPage("qrc:/qml/page/T_Calendar.qml")
     }
 }

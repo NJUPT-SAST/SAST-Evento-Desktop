@@ -13,6 +13,10 @@ FluScrollablePage {
     property string dateString: date2String(new Date)
     property var blockWindowRegister: registerForWindowResult("/block")
 
+    function reload() {
+        load()
+    }
+
     function load() {
         statusMode = FluStatusViewType.Loading
         CalendarController.loadAllEventoInfo(dateString)
@@ -53,6 +57,7 @@ FluScrollablePage {
         function onResult(data) {
             if (data.enterPage) {
                 pushPage()
+                showInfo("注意：活动地点和类型需要重新编辑", 5000)
             }
         }
     }
