@@ -8,8 +8,14 @@ import org.wangwenx190.FramelessHelper
 
 FluWindow {
     id: window
+    property int windowWidth: 290
+    property int windowHeight: 380
     width: 290
     height: 380
+    minimumWidth: windowWidth
+    minimumHeight: windowHeight
+    maximumWidth: windowWidth
+    maximumHeight: windowHeight
     closeDestory: true
     fixSize: true
     launchMode: FluWindowType.SingleInstance
@@ -42,11 +48,39 @@ FluWindow {
             sourceComponent: com_info
         }
 
+        property int windowX
+        property int windowY
+
         Component {
             id: com_qrCode
             Item {
                 height: window.height
                 width: window.width
+
+                Shortcut {
+                    sequence: "Ctrl+C"
+                    context: Qt.WindowShortcut
+                    onActivated: {
+                        FluTools.clipText(code_text.text)
+                        showSuccess(lang.lang_copy_success)
+                    }
+                }
+
+                Shortcut {
+                    sequence: "Esc"
+                    context: Qt.WindowShortcut
+                    onActivated: {
+                        window.visibility = Window.Windowed
+                        window.x = page.windowX
+                        window.y = page.windowY
+                        minimumWidth = windowWidth
+                        minimumHeight = windowHeight
+                        maximumWidth = windowWidth
+                        maximumHeight = windowHeight
+                        page_loader.sourceComponent = com_info
+
+                    }
+                }
 
                 function loadQRcode() {
                     page.statusMode = FluStatusViewType.Loading
@@ -83,6 +117,12 @@ FluWindow {
                     }
                     onClicked: {
                         window.visibility = Window.Windowed
+                        window.x = page.windowX
+                        window.y = page.windowY
+                        minimumWidth = windowWidth
+                        minimumHeight = windowHeight
+                        maximumWidth = windowWidth
+                        maximumHeight = windowHeight
                         page_loader.sourceComponent = com_info
                     }
                 }
@@ -99,7 +139,7 @@ FluWindow {
                     size: Screen.desktopAvailableHeight - 200
                 }
 
-                FluCopyableText {
+                FluText {
                     id: code_text
                     text: page.code
                     font.pixelSize: 90
@@ -196,31 +236,39 @@ FluWindow {
                     sourceComponent: undefined
                 }
 
+                FluIconButton {
+                    id: btn_back
+                    iconSource: FluentIcons.Back
+                    iconSize: 15
+                    anchors {
+                        left: parent.left
+                    }
+                    onClicked: {
+                        window.close()
+                    }
+                }
+
                 Item {
                     z: 999
                     height: btn_delete.height
                     width: 270
                     visible: EventoInfoController.editable
 
-                    FluIconButton {
-                        id: btn_back
-                        iconSource: FluentIcons.Back
-                        iconSize: 15
-                        anchors {
-                            left: parent.left
-                        }
-                        onClicked: {
-                            window.close()
-                        }
-                    }
 
                     FluIconButton {
                         iconSource: FluentIcons.QRCode
                         iconSize: 15
                         text: lang.lang_get_qrcode
                         onClicked: {
+                            page.windowX = window.x
+                            page.windowY = window.y
+                            minimumWidth = Screen.desktopAvailableWidth
+                            minimumHeight = Screen.desktopAvailableHeight
+                            maximumWidth = Screen.desktopAvailableWidth
+                            maximumHeight = Screen.desktopAvailableHeight
                             window.visibility = Window.FullScreen
                             page_loader.sourceComponent = com_qrCode
+                            showInfo("press \"Esc\" to exit fullscreen\npress \"Ctrl+C\" to copy code", 4000)
                         }
 
                         anchors {
