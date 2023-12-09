@@ -178,8 +178,7 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_event_start
             width: 220
-            current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                           EventoEditController.eventStart) : new Date
+            current: EventoEditController.isEditMode ? new Date(EventoEditController.eventStart) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: item_event_time.top
@@ -189,8 +188,7 @@ FluScrollablePage {
         FluTimePicker {
             id: time_picker_event_start
             hourFormat: FluTimePickerType.HH
-            current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                           EventoEditController.eventStart) : new Date
+            current: EventoEditController.isEditMode ? new Date(EventoEditController.eventStart) : new Date
 
             anchors {
                 left: time_picker_register_start.left
@@ -212,8 +210,7 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_event_end
             width: 220
-            current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                           EventoEditController.eventEnd) : new Date
+            current: EventoEditController.isEditMode ? new Date(EventoEditController.eventEnd) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: text_end2.top
@@ -223,8 +220,7 @@ FluScrollablePage {
         FluTimePicker {
             id: time_picker_event_end
             hourFormat: FluTimePickerType.HH
-            current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                           EventoEditController.eventEnd) : new Date
+            current: EventoEditController.isEditMode ? new Date(EventoEditController.eventEnd) : new Date
             anchors {
                 left: time_picker_register_start.left
                 top: text_end2.top
@@ -256,8 +252,7 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_register_start
             width: 220
-            current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                           EventoEditController.registerStart) : new Date
+            current: EventoEditController.isEditMode ? new Date(EventoEditController.registerStart) : new Date
             anchors {
                 left: text_start1.right
                 leftMargin: 18
@@ -268,8 +263,7 @@ FluScrollablePage {
         FluTimePicker {
             id: time_picker_register_start
             hourFormat: FluTimePickerType.HH
-            current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                           EventoEditController.registerStart) : new Date
+            current: EventoEditController.isEditMode ? new Date(EventoEditController.registerStart) : new Date
             anchors {
                 left: clender_picker_register_start.right
                 leftMargin: 15
@@ -291,8 +285,7 @@ FluScrollablePage {
         FluCalendarPicker {
             id: clender_picker_register_end
             width: 220
-            current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                           EventoEditController.registerEnd) : new Date
+            current: EventoEditController.isEditMode ? new Date(EventoEditController.registerEnd) : new Date
             anchors {
                 left: clender_picker_register_start.left
                 top: text_end1.top
@@ -302,8 +295,7 @@ FluScrollablePage {
         FluTimePicker {
             id: time_picker_register_end
             hourFormat: FluTimePickerType.HH
-            current: EventoEditController.isEditMode ? Date.fromLocaleString(
-                                                           EventoEditController.registerEnd) : (new Date)
+            current: EventoEditController.isEditMode ? new Date(EventoEditController.registerEnd) : (new Date)
             anchors {
                 left: time_picker_register_start.left
                 top: text_end1.top
@@ -651,7 +643,7 @@ FluScrollablePage {
                 right: area3.right
             }
             onClicked: {
-                EventoEditController.index = combo_box_type.find(
+                EventoEditCoisEditModeller.index = combo_box_type.find(
                             combo_box_type.displayText)
                 if (rect_department.departmentIds.length === 0 || textbox_title.text === ""
                         || textbox_description.text === ""

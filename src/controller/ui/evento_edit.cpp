@@ -36,15 +36,16 @@ void EventoEditController::createEvento(const QString& title, const QString& des
 }
 
 void EventoEditController::update(const DTO_Evento& event) {
-    setProperty("eventStart", event.gmtEventStart.toString("yyyy年M月d日 hh:mm:ss"));
-    setProperty("eventEnd", event.gmtEventEnd.toString("yyyy年M月d日 hh:mm:ss"));
-    setProperty("registerStart", event.gmtRegistrationStart.toString("yyyy年M月d日 hh:mm:ss"));
-    setProperty("registerEnd", event.gmtRegistrationEnd.toString("yyyy年M月d日 hh:mm:ss"));
     QString departmentIds = u"["_qs;
     for (const auto& department : event.departments) {
         departmentIds += QString::number(department.id) + ",";
     }
     *(departmentIds.end() - 1) = u']';
+
+    setProperty("eventStart", event.gmtEventStart.toString("yyyy-MM-ddThh:mm:ss"));
+    setProperty("eventEnd", event.gmtEventEnd.toString("yyyy-MM-ddThh:mm:ss"));
+    setProperty("registerStart", event.gmtRegistrationStart.toString("yyyy-MM-ddThh:mm:ss"));
+    setProperty("registerEnd", event.gmtRegistrationEnd.toString("yyyy-MM-ddThh:mm:ss"));
     setProperty("departmentIds", departmentIds);
 }
 
