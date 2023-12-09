@@ -64,13 +64,12 @@ jobs:
           plugins: qt appimage
 
       - name: package
-        if: startsWith(github.event.ref, 'refs/tags/')
         env: 
           EXTRA_QT_PLUGINS: qt5compat
         run: |
           export QML_SOURCES_PATHS=./
           echo "[Desktop Entry]" > sast-evento-appimage.desktop
-          echo "Categories=Utility;" >> sast-evento-appimage.desktop
+          echo "Categories=Education;" >> sast-evento-appimage.desktop
           echo "Icon=app_icon" >> sast-evento-appimage.desktop
           echo "Name=SAST Evento" >> sast-evento-appimage.desktop
           echo "Type=Application" >> sast-evento-appimage.desktop
@@ -78,6 +77,29 @@ jobs:
           mv bin/release/SAST_Evento_Desktop bin/release/sast-evento
           linuxdeploy-x86_64.AppImage --plugin=qt --output=appimage --desktop-file=sast-evento-appimage.desktop --icon-file=app_icon.svg --executable=bin/release/sast-evento --appdir AppDir
           mv SAST_Evento-*.AppImage SAST_Evento.AppImage
+      
+      - name: Calculate SHA256
+        run: |
+          touch sast-evento.sha256
+          sha256sum SAST_Evento.AppImage > sast-evento.sha256
+          echo "SHA256 value is:"
+          cat sast-evento.sha256
+  
+      - uses: actions/upload-artifact@v2
+        if: startsWith(github.event.ref, 'refs/tags/')
+        with:
+          name: ${{ env.targetName }}_sha256_${{ matrix.os }}
+          path: sast-evento.sha256
+  
+      - name: upload SHA256
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: sast-evento.sha256
+          asset_name: sast-evento.sha256
+          tag: ${{ github.ref }}
+          overwrite: true
 
       - uses: actions/upload-artifact@v2
         if: startsWith(github.event.ref, 'refs/tags/')
@@ -94,3 +116,5 @@ jobs:
           asset_name: ${{ env.targetName }}_appimage_x86_64.AppImage
           tag: ${{ github.ref }}
           overwrite: true
+
+      
