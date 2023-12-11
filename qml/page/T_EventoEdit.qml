@@ -460,7 +460,6 @@ FluScrollablePage {
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: {
-                            console.log(checked)
                             if (!checked)
                                 rect_department.departmentIds.push(model.id)
                             else
@@ -643,7 +642,7 @@ FluScrollablePage {
                 right: area3.right
             }
             onClicked: {
-                EventoEditCoisEditModeller.index = combo_box_type.find(
+                EventoEditController.index = combo_box_type.find(
                             combo_box_type.displayText)
                 if (rect_department.departmentIds.length === 0 || textbox_title.text === ""
                         || textbox_description.text === ""
