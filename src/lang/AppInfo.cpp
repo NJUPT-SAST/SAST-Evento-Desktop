@@ -8,7 +8,7 @@
 #include <QtGlobal>
 
 AppInfo::AppInfo(QObject* parent) : QObject{parent} {
-    version("v1.0.1209-beta");
+    version("v1.0.1211-beta");
     if (QLocale::system().language() == QLocale::Chinese)
         lang(new Zh());
     else
