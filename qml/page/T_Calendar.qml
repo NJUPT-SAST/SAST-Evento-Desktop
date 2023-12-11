@@ -57,7 +57,7 @@ FluScrollablePage {
         function onResult(data) {
             if (data.enterPage) {
                 pushPage()
-                showInfo("注意：活动地点和类型需要重新编辑", 5000)
+                showInfo("注意：活动地点需要重新编辑", 4000)
             }
         }
     }

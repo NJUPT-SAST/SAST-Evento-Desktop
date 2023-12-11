@@ -20,11 +20,10 @@ class EventoEditController : public QObject {
 
 public:
     Q_INVOKABLE void loadEditInfo();
-    Q_INVOKABLE void createEvento(const QString& title, const QString& description,
-                                  const QString& eventStart, const QString& eventEnd,
-                                  const QString& registerStart, const QString& registerEnd,
-                                  int index, int locationId, const QVariantList& departmentIds,
-                                  const QString& tag);
+    Q_INVOKABLE void createEvento(QString title, QString description, QString eventStart,
+                                  QString eventEnd, QString registerStart, QString registerEnd,
+                                  int index, int locationId, QVariantList departmentIds,
+                                  QString tag);
 
 private:
     bool m_isEditMode; // true: 编辑模式 false: 创建模式

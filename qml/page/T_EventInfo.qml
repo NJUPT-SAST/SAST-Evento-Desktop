@@ -242,7 +242,7 @@ FluScrollablePage {
                 Layout.topMargin: 15
                 implicitWidth: parent.width
                 checked: EventoInfoController.isRegistrated
-                disabled: EventoHelper.state >= 2 || loading
+                disabled: EventoHelper.state != 2 || loading
                 contentItem: Row{
                     spacing: 6
                     FluText {
@@ -308,7 +308,7 @@ FluScrollablePage {
                 implicitWidth: parent.width
                 Layout.topMargin: 15
                 checked: EventoInfoController.isSubscribed
-                disabled: EventoHelper.state >= 2 || loading
+                disabled: EventoHelper.state > 2 || loading
                 contentItem: Row{
                     spacing: 6
                     FluText {

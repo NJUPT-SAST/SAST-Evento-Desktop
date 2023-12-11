@@ -29,6 +29,12 @@ public:
         return m_data[index].id;
     }
 
+    inline int getIndex(int id) {
+        return std::distance(m_data.begin(),
+                             std::find_if(m_data.begin(), m_data.end(),
+                                          [=](const EventType& type) { return type.id == id; }));
+    }
+
 private:
     TypeModel() = default;
 

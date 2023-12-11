@@ -45,6 +45,7 @@ En::En(QObject* parent) : Lang{parent} {
     // event info
     lang_undertaking("Ongoing");
     lang_not_started("Not Started");
+    lang_registering("Registering");
     lang_over("Over");
     lang_cancelled("Cancelled");
     lang_checked_in("Checked");

@@ -43,6 +43,7 @@ Zh::Zh(QObject* parent) : Lang{parent} {
 
     // event info
     lang_undertaking("进行中");
+    lang_registering("报名中");
     lang_not_started("未开始");
     lang_over("已结束");
     lang_cancelled("已取消");

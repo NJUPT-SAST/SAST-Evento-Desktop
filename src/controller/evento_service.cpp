@@ -94,7 +94,7 @@ void EventoService::load_RegisteredSchedule() {
                 auto has_feedback = getRepo()->hasFeedbacked(evento.id).takeResult();
                 if (participation &&
                     (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue)) {
-                    if (evento.gmtEventStart == evento.gmtEventEnd)
+                    if (evento.gmtEventStart.date() == evento.gmtEventEnd.date())
                         singleDayEvents.emplace_back(evento, participation.take(), has_feedback);
                     else
                         multiDayEvents.emplace_back(evento, participation.take(), has_feedback);
@@ -105,13 +105,7 @@ void EventoService::load_RegisteredSchedule() {
                 stored[evento.id] = std::move(evento);
             }
         }
-        std::sort(singleDayEvents.begin(), singleDayEvents.end(),
-                  [](const Schedule& e1, const Schedule& e2) {
-                      auto date1 = QDate::fromString(e1.date, "MM.dd");
-                      auto date2 = QDate::fromString(e2.date, "MM.dd");
-                      return date1 > date2;
-                  });
-        std::vector<Schedule> model(multiDayEvents.begin(), multiDayEvents.end());
+        std::vector<Schedule> model = std::move(multiDayEvents);
         model.insert(model.end(), singleDayEvents.begin(), singleDayEvents.end());
         std::set<QString> dateSet;
         int width = 110;
@@ -148,7 +142,7 @@ void EventoService::load_SubscribedSchedule() {
                 auto has_feedback = getRepo()->hasFeedbacked(evento.id).takeResult();
                 if (participation &&
                     (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue)) {
-                    if (evento.gmtEventStart == evento.gmtEventEnd)
+                    if (evento.gmtEventStart.date() == evento.gmtEventEnd.date())
                         singleDayEvents.emplace_back(evento, participation.take(), has_feedback);
                     else
                         multiDayEvents.emplace_back(evento, participation.take(), has_feedback);
@@ -159,13 +153,7 @@ void EventoService::load_SubscribedSchedule() {
                 stored[evento.id] = std::move(evento);
             }
         }
-        std::sort(singleDayEvents.begin(), singleDayEvents.end(),
-                  [](const Schedule& e1, const Schedule& e2) {
-                      auto date1 = QDate::fromString(e1.date, "MM.dd");
-                      auto date2 = QDate::fromString(e2.date, "MM.dd");
-                      return date1 > date2;
-                  });
-        std::vector<Schedule> model(multiDayEvents.begin(), multiDayEvents.end());
+        std::vector<Schedule> model = std::move(multiDayEvents);
         model.insert(model.end(), singleDayEvents.begin(), singleDayEvents.end());
         std::set<QString> dateSet;
         int width = 110;

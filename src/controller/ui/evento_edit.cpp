@@ -19,11 +19,10 @@ void EventoEditController::preload() {
     InformationService::getInstance().load_EditInfo();
 }
 
-void EventoEditController::createEvento(const QString& title, const QString& description,
-                                        const QString& eventStart, const QString& eventEnd,
-                                        const QString& registerStart, const QString& registerEnd,
-                                        int index, int locationId,
-                                        const QVariantList& departmentIds, const QString& tag) {
+void EventoEditController::createEvento(QString title, QString description, QString eventStart,
+                                        QString eventEnd, QString registerStart,
+                                        QString registerEnd, int index, int locationId,
+                                        QVariantList departmentIds, QString tag) {
     auto typeId = TypeModel::getInstance()->getID(index);
     if (property("isEditMode").toBool()) {
         EventoService::getInstance().edit(EventoHelper::getInstance()->property("id").toInt(),
@@ -42,6 +41,7 @@ void EventoEditController::update(const DTO_Evento& event) {
     }
     *(departmentIds.end() - 1) = u']';
 
+    setProperty("index", TypeModel::getInstance()->getIndex(event.type.id));
     setProperty("eventStart", event.gmtEventStart.toString("yyyy-MM-ddThh:mm:ss"));
     setProperty("eventEnd", event.gmtEventEnd.toString("yyyy-MM-ddThh:mm:ss"));
     setProperty("registerStart", event.gmtRegistrationStart.toString("yyyy-MM-ddThh:mm:ss"));
