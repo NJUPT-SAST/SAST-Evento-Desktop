@@ -3,15 +3,13 @@
 #include "repository.h"
 #include "schedule.h"
 
-#include <array>
-
-void UserService::checkIn(EventoID eventId, const QString& code) {
-    getRepo()->checkIn(eventId, code).then([](EventoResult<bool> result) {
+void UserService::checkIn(EventoID eventId, const QString& code, bool refreshAll) {
+    getRepo()->checkIn(eventId, code).then([=](EventoResult<bool> result) {
         if (!result) {
             ScheduleController::getInstance()->checkFailure(result.message());
             return;
         }
-        ScheduleController::getInstance()->checkFinished();
+        ScheduleController::getInstance()->checkFinished(refreshAll);
     });
 }
 

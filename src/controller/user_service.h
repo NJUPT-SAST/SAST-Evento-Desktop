@@ -16,7 +16,7 @@ public:
         return singleton;
     }
 
-    void checkIn(EventoID eventId, const QString& code);
+    void checkIn(EventoID eventId, const QString& code, bool refreshAll);
     void subscribeEvento(EventoID id, bool selection);
     void registerEvento(EventoID id, bool selection);
 };

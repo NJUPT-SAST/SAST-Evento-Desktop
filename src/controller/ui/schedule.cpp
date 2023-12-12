@@ -10,8 +10,8 @@ void ScheduleController::loadSubscribedSchedule() {
     EventoService::getInstance().load_SubscribedSchedule();
 }
 
-void ScheduleController::check(const int eventId, const QString& code) {
-    UserService::getInstance().checkIn(eventId, code);
+void ScheduleController::check(const int eventId, const QString& code, bool refreshAll) {
+    UserService::getInstance().checkIn(eventId, code, refreshAll);
 }
 
 ScheduleController* ScheduleController::getInstance() {

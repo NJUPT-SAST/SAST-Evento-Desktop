@@ -254,8 +254,10 @@ EventoFuture<EventoResult<DTO_User>> EventoNetworkClient::loginViaSastLink(const
                     return EventoException(EventoExceptionCode::JsonError,
                                            QStringLiteral("expect object or null but got other"));
                 this->tokenBytes = rootValue["token"].toString().toLatin1();
+                qDebug() << "token: \n" << tokenBytes;
                 declare_top_deserialiser(dto, deserialiser_holder);
                 deserialiser_holder.assign(rootValue["userInfo"].toObject());
+                qDebug() << "userId: \n" << dto.id;
                 return dto;
             } else {
                 return {result.code(), result.message()};

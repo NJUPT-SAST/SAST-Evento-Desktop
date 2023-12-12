@@ -72,10 +72,12 @@ FluScrollablePage {
 
     Connections {
         target: ScheduleController
-        function onCheckSuccessEvent() {
-            statusMode = FluStatusViewType.Success
-            showSuccess(lang.lang_check_success)
-            loadScheduleInfo()
+        function onCheckSuccessEvent(refreshAll) {
+            if (refreshAll) {
+                statusMode = FluStatusViewType.Success
+                showSuccess(lang.lang_check_success)
+                loadScheduleInfo()
+            }
         }
     }
 
@@ -463,7 +465,7 @@ FluScrollablePage {
                         dialog.open()
                     } else {
                         statusMode = FluStatusViewType.Loading
-                        ScheduleController.check(model.id, textbox.text)
+                        ScheduleController.check(model.id, textbox.text, true)
                     }
                 }
             }

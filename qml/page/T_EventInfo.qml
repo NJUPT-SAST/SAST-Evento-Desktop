@@ -431,17 +431,19 @@ FluScrollablePage {
                 dialog.open()
             } else {
                 statusMode = FluStatusViewType.Loading
-                ScheduleController.check(EventoHelper.id, textbox.text)
+                ScheduleController.check(EventoHelper.id, textbox.text, false)
             }
         }
     }
 
     Connections {
         target: ScheduleController
-        function onCheckSuccessEvent() {
-            statusMode = FluStatusViewType.Success
-            showSuccess(lang.lang_check_success)
-            loadEventoInfo()
+        function onCheckSuccessEvent(refreshAll) {
+            if (!refreshAll) {
+                statusMode = FluStatusViewType.Success
+                showSuccess(lang.lang_check_success)
+                loadEventoInfo()
+            }
         }
     }
 

@@ -15,7 +15,7 @@ class ScheduleController : public QObject {
 public:
     Q_INVOKABLE void loadRegisteredSchedule();
     Q_INVOKABLE void loadSubscribedSchedule();
-    Q_INVOKABLE void check(const int eventId, const QString& code);
+    Q_INVOKABLE void check(const int eventId, const QString& code, bool refreshAll = true);
 
 signals:
     void loadRegisteredScheduleSuccessEvent();
@@ -24,7 +24,7 @@ signals:
     void loadSubscribedScheduleSuccessEvent();
     void loadSubscribedScheduleErrorEvent(QString message);
 
-    void checkSuccessEvent();
+    void checkSuccessEvent(bool refreshAll);
     void checkErrorEvent(QString message);
 
 private:
@@ -45,8 +45,8 @@ public:
     void onLoadSubscribedFailure(const QString& msg) {
         emit loadSubscribedScheduleErrorEvent(msg);
     }
-    void checkFinished() {
-        emit checkSuccessEvent();
+    void checkFinished(bool refreshAll) {
+        emit checkSuccessEvent(refreshAll);
     }
     void checkFailure(const QString& msg) {
         emit checkErrorEvent(msg);
