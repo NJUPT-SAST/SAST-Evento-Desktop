@@ -236,8 +236,8 @@ void LoginController::loadPermissionList() {
             if (!result) {
                 auto message = result.message();
                 if (message.contains("No valid permission exist")) {
-                    UserHelper::getInstance()->setProperty("permission",
-                                                           UserHelper::Permission::UserPermission);
+                    UserHelper::getInstance()->setProperty(
+                        "permission", QVariant::fromValue(UserHelper::UserPermission));
                     emit loadPermissionSuccessEvent();
                 } else {
                     emit loadPermissionErrorEvent(message);
@@ -245,8 +245,8 @@ void LoginController::loadPermissionList() {
                 return;
             }
             auto permissionList = result.take();
-            UserHelper::getInstance()->setProperty("permission",
-                                                   UserHelper::Permission::AdminPermission);
+            UserHelper::getInstance()->setProperty(
+                "permission", QVariant::fromValue(UserHelper::AdminPermission));
             emit loadPermissionSuccessEvent();
         })
         .then(std::bind(&LoginController::close_tcp_listen, this));

@@ -1,9 +1,10 @@
 #ifndef FEEDBACKMODEL_H
 #define FEEDBACKMODEL_H
 
-#include "feedback.h"
 #include <QAbstractListModel>
 #include <QtQml>
+
+#include "feedback.h"
 
 class FeedbackModel : public QAbstractListModel {
     Q_OBJECT

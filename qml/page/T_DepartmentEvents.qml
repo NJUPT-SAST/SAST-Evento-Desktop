@@ -15,10 +15,10 @@ FluScrollablePage {
 
     function loadDepartmentPage() {
         subscribeButton.loading = true
-        if (UserHelper.permission == 1)
-            DepartmentEventsController.loadDepartments()
-        else
+        if (UserHelper.permission)
             DepartmentEventsController.loadDepartmentsWithSubscriptionInfo()
+        else
+            DepartmentEventsController.loadDepartments()
     }
 
     function loadDepartmentEvents(departmentId) {
@@ -89,7 +89,7 @@ FluScrollablePage {
 
     FluLoadingButton {
         id: subscribeButton
-        visible: UserHelper.permission != 1
+        visible: UserHelper.permission
         Layout.alignment: Qt.AlignRight
         state: "noSub"
         opacity: (departmentId > 0) ? 1 : 0
@@ -190,7 +190,7 @@ FluScrollablePage {
                         hoverEnabled: true
                         onClicked: {
                             departmentId = model.id
-                            if (UserHelper.permission != 1) {
+                            if (UserHelper.permission) {
                                 if (model.subscribed) {
                                     subscribeButton.state = "noSub"
                                 } else {

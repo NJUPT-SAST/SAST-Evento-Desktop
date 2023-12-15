@@ -13,6 +13,15 @@ class UserHelper : public QObject {
     QML_NAMED_ELEMENT(UserHelper)
     QML_SINGLETON
 
+public:
+    enum Permission {
+        GuestPermission,
+        UserPermission,
+        AdminPermission,
+    };
+    Q_ENUM(Permission)
+
+private:
     Q_PROPERTY(UserID userId MEMBER m_id NOTIFY idChanged);
     Q_PROPERTY(QString linkId MEMBER m_linkId NOTIFY linkIdChanged);
     Q_PROPERTY(QString studentId MEMBER m_studentId NOTIFY studentIdChanged);
@@ -22,15 +31,9 @@ class UserHelper : public QObject {
     Q_PROPERTY(QString organization MEMBER m_organization NOTIFY organizationChanged);
     Q_PROPERTY(QString biography MEMBER m_biography NOTIFY biographyChanged);
     Q_PROPERTY(QString link MEMBER m_link NOTIFY linkChanged);
-    Q_PROPERTY(int permission MEMBER m_permission NOTIFY permissionChanged);
+    Q_PROPERTY(Permission permission MEMBER m_permission NOTIFY permissionChanged);
 
 public:
-    enum Permission {
-        VisitorPermission = 1,
-        UserPermission,
-        AdminPermission,
-    };
-
     static UserHelper* getInstance();
     static UserHelper* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 
@@ -48,7 +51,7 @@ private:
     QString m_organization;
     QString m_biography;
     QString m_link;
-    int m_permission = Permission::VisitorPermission;
+    Permission m_permission = Permission::GuestPermission;
 
 signals:
     void idChanged();

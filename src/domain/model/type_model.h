@@ -1,9 +1,10 @@
 #ifndef TYPEMODEL_H
 #define TYPEMODEL_H
 
-#include "types.h"
 #include <QAbstractListModel>
 #include <QtQml>
+
+#include "types.h"
 
 class TypeModel : public QAbstractListModel {
     Q_OBJECT

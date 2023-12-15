@@ -222,13 +222,14 @@ FluScrollablePage {
             width: 4
             radius: [2, 2, 2, 2]
             color: FluTheme.primaryColor.normal
-            visible: UserHelper.permission != 1
+            visible: UserHelper.permission
         }
 
         ColumnLayout {
-            visible: UserHelper.permission != 1
             width: parent.width - 30 - info_col.width
             anchors.verticalCenter: parent.verticalCenter
+            visible: UserHelper.permission
+
             FluText {
                 id: text_evento_state
                 font: FluTextStyle.Subtitle

@@ -155,7 +155,7 @@ FluWindow {
             horizontalCenter: parent.horizontalCenter
         }
         onClicked: {
-            UserHelper.permission = 1
+            UserHelper.permission = UserHelper.GuestPermission
             FluApp.navigate("/")
             window.close()
         }

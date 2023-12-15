@@ -120,9 +120,9 @@ nav_view.push("qrc:/qml/page/T_Feedback.qml")}}', items_original)
         }
 
         Component.onCompleted: {
-            if (UserHelper.permission !== 1)
+            if (UserHelper.permission > UserHelper.GuestPermission)
                 createUserItems()
-            if (UserHelper.permission === 3)
+            if (UserHelper.permission === UserHelper.AdminPermission)
                 createAdminItems()
         }
     }
@@ -157,7 +157,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         }
 
         Component.onCompleted: {
-            if (UserHelper.permission !== 1)
+            if (UserHelper.permission > UserHelper.GuestPermission)
                 createItems()
         }
     }
@@ -174,8 +174,9 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         z: 7
     }
 
-    Component{
+    Component {
         id:com_reveal
+
         CircularReveal{
             id:reveal
             target:window.contentItem
