@@ -1,9 +1,9 @@
 #ifndef CALENDARCONTROLLER_H
 #define CALENDARCONTROLLER_H
 
-#include "types.h"
-
 #include <QtQml>
+
+#include "types.h"
 
 class CalendarController : public QObject {
     Q_OBJECT
@@ -11,11 +11,20 @@ class CalendarController : public QObject {
     QML_SINGLETON
 
 public:
+    enum DepartmentEnum {
+        SoftwareResearchAndDevelopmentDep,
+        MultiMediaDep,
+        ElectronicsDep
+    };
+    Q_ENUM(DepartmentEnum)
+
+public:
     Q_INVOKABLE void loadAllEventoInfo(QString date);
     Q_INVOKABLE void loadEventoInfo(EventoID eventId);
     Q_INVOKABLE void deleteEvento(EventoID eventId);
     Q_INVOKABLE void cancelEvento(EventoID eventId);
     Q_INVOKABLE void loadCheckCode(EventoID eventId);
+    Q_INVOKABLE void generateLessonPic(DepartmentEnum dep) {}
 
 signals:
     void loadAllEventoSuccessEvent();

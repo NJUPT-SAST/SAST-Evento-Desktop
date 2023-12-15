@@ -64,5 +64,7 @@
         <file>res/image/department/lambda_2.png</file>
         <file>res/font/MiSans-Regular.ttf</file>
         <file>app.icns</file>
+        <file>qml/page/T_LessonPic.qml</file>
+        <file>res/image/department/SRD_lesson_pic_bg.jpg</file>
     </qresource>
 </RCC>

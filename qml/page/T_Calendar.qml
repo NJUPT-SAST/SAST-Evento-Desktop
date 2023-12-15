@@ -238,6 +238,22 @@ FluScrollablePage {
             }
         }
         */
+        FluButton {
+            id: btn_SRD_lesson_pic
+            text: "本周软研课表"
+            anchors {
+                top: parent.top
+                topMargin: 10
+                right: btn_create.left
+                rightMargin: 10
+            }
+            onClicked: {
+                CalendarController.generateLessonPic(CalendarController.SoftwareResearchAndDevelopmentDep)
+                MainWindow.window.pushPage(
+                            "qrc:/qml/page/T_LessonPic.qml")
+            }
+        }
+
         FluFilledButton {
             id: btn_create
             text: "创建活动"
