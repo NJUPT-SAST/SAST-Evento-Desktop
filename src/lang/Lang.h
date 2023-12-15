@@ -82,7 +82,7 @@ class Lang : public QObject {
     Q_PROPERTY_AUTO(QString, lang_openSideBar);
     Q_PROPERTY_AUTO(QString, lang_compactSideBar);
     Q_PROPERTY_AUTO(QString, lang_minimalSideBar);
-    Q_PROPERTY_AUTO(QString, lang_automatical);
+    Q_PROPERTY_AUTO(QString, lang_automatic);
     Q_PROPERTY_AUTO(QString, lang_check_update);
     Q_PROPERTY_AUTO(QString, lang_native_text_rendering);
     Q_PROPERTY_AUTO(QString, lang_animation_effect);

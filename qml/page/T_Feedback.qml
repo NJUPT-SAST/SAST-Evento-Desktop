@@ -7,6 +7,7 @@ import SAST_Evento
 import "../window"
 
 FluScrollablePage {
+    id: control
     launchMode: FluPageType.SingleTask
     title: lang.lang_feedback
     property int page: 1
@@ -67,7 +68,7 @@ FluScrollablePage {
         id: com_item
         Item {
             Layout.topMargin: 10
-            width: parent.width
+            width: control.width
             height: 70
             FluArea {
                 radius: 8

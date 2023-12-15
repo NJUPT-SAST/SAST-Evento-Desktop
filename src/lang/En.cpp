@@ -28,7 +28,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_username_login("Username");
     lang_username("username");
     lang_password("password");
-    lang_login_hint("Use Smart Program to scan the QR-Code");
+    lang_login_hint("Use mobile side to scan the QR-Code");
 
     // Plaza
     lang_undertaking_evento("Ongoing Evento");
@@ -39,7 +39,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_subscribed_evento("Subscribed");
     lang_feedback("Feedback");
     lang_modify_feedback("modify feedback");
-    lang_check_message("Use WeChat Mini Program to scan the QR code or enter a key.");
+    lang_check_message("Use mobile side to scan the QR code or enter a key.");
     lang_check_hint("Please get the key from the instructor");
 
     // event info
@@ -60,8 +60,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_register("Register");
     lang_cancellation("Cancellation");
     lang_register_success("Register Succeed");
-    lang_subscribe_hint(
-        "After you subscribe, WeChat Mini Program will notify you before the event starts");
+    lang_subscribe_hint("After you subscribe, mobile side will notify you before the event starts");
 
     // my page
     lang_history("History");
@@ -81,7 +80,7 @@ En::En(QObject* parent) : Lang{parent} {
     lang_openSideBar("Open");
     lang_compactSideBar("Compact");
     lang_minimalSideBar("Minimal");
-    lang_automatical("Auto");
+    lang_automatic("Auto");
     lang_check_update("Check Update");
     lang_native_text_rendering("Native Text Rendering");
     lang_animation_effect("Animation Effect");

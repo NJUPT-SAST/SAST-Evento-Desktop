@@ -27,7 +27,7 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_username_login("用户名登录");
     lang_username("用户名");
     lang_password("密码");
-    lang_login_hint("使用小程序扫码登陆");
+    lang_login_hint("使用移动端扫码登陆");
 
     // Plaza
     lang_undertaking_evento("正在进行的活动");
@@ -38,7 +38,7 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_subscribed_evento("已订阅的活动");
     lang_feedback("反馈");
     lang_modify_feedback("修改反馈");
-    lang_check_message("使用小程序扫描二维码或输入密钥");
+    lang_check_message("使用移动端扫描二维码或输入密钥");
     lang_check_hint("密钥请向讲师获取哦");
 
     // event info
@@ -59,7 +59,7 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_register("报名");
     lang_cancellation("取消报名");
     lang_register_success("报名成功");
-    lang_subscribe_hint("订阅后小程序将在活动开始前通知您");
+    lang_subscribe_hint("订阅后移动端将在活动开始前通知您");
 
     // my page
     lang_history("历史活动");
@@ -79,7 +79,7 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_openSideBar("开启");
     lang_compactSideBar("紧凑");
     lang_minimalSideBar("最小化");
-    lang_automatical("自动");
+    lang_automatic("自动");
     lang_check_update("检查更新");
     lang_native_text_rendering("Native文本渲染");
     lang_animation_effect("动画效果");
