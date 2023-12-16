@@ -11,6 +11,7 @@
 #include "feedback_service.h"
 #include "image.h"
 #include "latest_evento_model.h"
+#include "lesson.h"
 #include "my_page.h"
 #include "plaza.h"
 #include "repository.h"
@@ -453,4 +454,10 @@ EventoBlock::EventoBlock(const DTO_Evento& src, const std::set<EventoID>& permit
     : id(src.id), title(src.title), gmtEventStart(src.gmtEventStart), gmtEventEnd(src.gmtEventEnd),
       editable(permitted.count(src.id)) {
     init();
+}
+
+EventoLesson::EventoLesson(const DTO_Evento& src)
+    : id(src.id), topic(src.description), time(src.gmtEventStart.toString("ddd h:m")) {
+    for (const auto& i : src.departments)
+        departments << i.name;
 }

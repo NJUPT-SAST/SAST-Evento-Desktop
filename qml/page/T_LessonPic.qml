@@ -10,7 +10,7 @@ FluScrollablePage {
     Rectangle {
         id: lesson_pic
         width: 1080
-        height: 1920 + (lesson_detail.num - 2) * 430
+        height: 1920 + (LessonModel.num - 2) * 430
         color: "#EAEAEA"
 
         Image {
@@ -84,12 +84,9 @@ FluScrollablePage {
             spacing: 100
 
             Repeater {
-                id: lesson_detail
-                property int num: 2
-                property var dep: ["C++", "软件研发中心"]
 
-                model: num
-                delegate: Rectangle {
+                model: LessonModel
+                delegate: Item {
                     height: 330
                     anchors {
                         left: parent.left
@@ -122,7 +119,7 @@ FluScrollablePage {
                                 bottom: parent.bottom
                                 bottomMargin: 5
                             }
-                            source: "qrc:/res/image/department/cpp_1.svg"
+                            source: icon
                             fillMode: Image.PreserveAspectFit
                         }
 
@@ -130,7 +127,7 @@ FluScrollablePage {
                             leftPadding: 20
                             rightPadding: 40
                             height: dep_title_block_rect.height
-                            text: lesson_detail.dep[index]
+                            text: title
                             font.pixelSize: 50
                             verticalAlignment: Text.AlignVCenter
                             font.bold: true
@@ -138,15 +135,39 @@ FluScrollablePage {
                     }
 
                     Text {
-                        id: txt
+                        id: time_txt
                         anchors {
                             top: dep_title_block_rect.bottom
                             topMargin: 20
                             left: dep_title_block_rect.left
                             right: parent.right
-                            bottom: parent.bottom
                         }
-                        text: qsTr("%1").arg(index)
+                        text: qsTr("时间：%1").arg(time)
+                        font.pixelSize: 36
+                    }
+
+                    Text {
+                        id: loc_txt
+                        anchors {
+                            top: time_txt.bottom
+                            topMargin: 10
+                            left: dep_title_block_rect.left
+                            right: parent.right
+                        }
+                        text: qsTr("地点：%1").arg(loc)
+                        font.pixelSize: 36
+                    }
+
+                    Text {
+                        id: topic_txt
+                        anchors {
+                            top: loc_txt.bottom
+                            topMargin: 10
+                            left: dep_title_block_rect.left
+                            right: parent.right
+                        }
+                        text: qsTr("主题：%1").arg(topic)
+                        font.pixelSize: 36
                     }
                 }
             }
