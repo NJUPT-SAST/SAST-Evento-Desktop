@@ -1,5 +1,7 @@
 #include "type_model.h"
 
+#include "movable_lambda.h"
+
 TypeModel* TypeModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
@@ -53,11 +55,12 @@ QHash<int, QByteArray> TypeModel::roleNames() const {
 
 void TypeModel::resetModel(std::vector<EventType>&& model) {
     QMetaObject::invokeMethod(
-        this,
-        [&]() {
+        this, MovableLambda(std::move(model), [this](std::vector<EventType>&& data) {
             beginResetModel();
-            m_data = std::move(model);
+            m_data = std::move(data);
+            for (const auto& i : m_data)
+                if (i.name == "软研授课")
+                    dep_index[0] = i.id;
             endResetModel();
-        },
-        Qt::BlockingQueuedConnection);
+        }));
 }

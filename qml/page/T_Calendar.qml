@@ -248,7 +248,7 @@ FluScrollablePage {
                 rightMargin: 10
             }
             onClicked: {
-                CalendarController.generateLessonPic(CalendarController.SoftwareResearchAndDevelopmentDep)
+                CalendarController.generateLessonPic(dateString, CalendarController.SoftwareResearchAndDevelopmentDep)
                 MainWindow.window.pushPage(
                             "qrc:/qml/page/T_LessonPic.qml")
             }

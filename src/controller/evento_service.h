@@ -35,6 +35,8 @@ public:
     void load_History();
     void load_Block(QDate date);
     void load_Event(EventoID id);
+    void load_Lesson(QDate monday, int dep);
+
     void load(EventoID id);
     DTO_Evento edit(EventoID id);
     void create(const QString& title, const QString& description, const QString& eventStart,

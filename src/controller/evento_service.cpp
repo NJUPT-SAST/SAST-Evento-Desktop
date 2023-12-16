@@ -11,7 +11,7 @@
 #include "feedback_service.h"
 #include "image.h"
 #include "latest_evento_model.h"
-#include "lesson.h"
+#include "lesson_model.h"
 #include "my_page.h"
 #include "plaza.h"
 #include "repository.h"
@@ -19,6 +19,7 @@
 #include "scheduled_evento.h"
 #include "scheduled_evento_model.h"
 #include "slide_model.h"
+#include "type_model.h"
 #include "undertaking_evento_model.h"
 #include "user_helper.h"
 
@@ -272,6 +273,34 @@ void EventoService::load_Event(EventoID id) {
         }
         EventoInfoController::getInstance()->onLoadFinished();
     });
+}
+
+void EventoService::load_Lesson(QDate monday, int dep) {
+    getRepo()->getEventListAfterTime(monday).then(
+        [=](EventoResult<std::vector<DTO_Evento>> result) {
+            if (!result)
+                return;
+            auto id = getRepo()
+                          ->getTypeList()
+                          .then([=](EventoResult<std::vector<EventType>> result) {
+                              TypeModel::getInstance()->resetModel(result.take());
+                              return TypeModel::getInstance()->getByDep(dep);
+                          })
+                          .takeResult();
+            auto data = result.take();
+            auto sunday = monday.addDays(6);
+            std::vector<EventoLesson> model;
+            {
+                std::lock_guard lock(mutex);
+                for (auto& i : data) {
+                    if (i.gmtEventStart.date() > sunday || i.type.id != id)
+                        continue;
+                    model.push_back(i);
+                    stored[i.id] = std::move(i);
+                }
+            }
+            LessonModel::getInstance()->resetModel(std::move(model));
+        });
 }
 
 void EventoService::load(EventoID id) {

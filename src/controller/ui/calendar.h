@@ -11,7 +11,11 @@ class CalendarController : public QObject {
     QML_SINGLETON
 
 public:
-    enum DepartmentEnum { SoftwareResearchAndDevelopmentDep, MultiMediaDep, ElectronicsDep };
+    enum DepartmentEnum {
+        SoftwareResearchAndDevelopmentDep,
+        MultiMediaDep,
+        ElectronicsDep,
+    };
     Q_ENUM(DepartmentEnum)
 
 public:
@@ -20,7 +24,7 @@ public:
     Q_INVOKABLE void deleteEvento(EventoID eventId);
     Q_INVOKABLE void cancelEvento(EventoID eventId);
     Q_INVOKABLE void loadCheckCode(EventoID eventId);
-    Q_INVOKABLE void generateLessonPic(DepartmentEnum dep);
+    Q_INVOKABLE void generateLessonPic(QString date, DepartmentEnum dep);
 
 signals:
     void loadAllEventoSuccessEvent();

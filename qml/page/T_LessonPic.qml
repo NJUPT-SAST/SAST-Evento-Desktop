@@ -10,7 +10,7 @@ FluScrollablePage {
     Rectangle {
         id: lesson_pic
         width: 1080
-        height: 1920 + (LessonModel.num - 2) * 430
+        height: 1060 + LessonModel.num * 430
         color: "#EAEAEA"
 
         Image {
