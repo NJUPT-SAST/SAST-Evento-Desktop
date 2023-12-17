@@ -56,7 +56,6 @@ void LessonModel::resetModel(std::vector<EventoLesson>&& model) {
         this, MovableLambda(std::move(model), [this](std::vector<EventoLesson>&& data) {
             beginResetModel();
             m_data = std::move(data);
-            emit numChanged();
             endResetModel();
         }));
 }

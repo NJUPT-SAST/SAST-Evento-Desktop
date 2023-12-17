@@ -39,6 +39,9 @@ signals:
     void loadCheckCodeSuccessEvent(QString code);
     void loadCheckCodeErrorEvent(QString message);
 
+    void loadPicSuccessEvent();
+    void loadPicErrorEvent(QString message);
+
 private:
     CalendarController();
 
@@ -66,6 +69,12 @@ public:
     }
     void onLoadCheckCodeFailure(const QString& message) {
         emit loadCheckCodeErrorEvent(message);
+    }    
+    void onLoadPicSuccess() {
+        emit loadPicSuccessEvent();
+    }
+    void onLoadPicFailure(const QString& message) {
+        emit loadPicErrorEvent(message);
     }
 
     static CalendarController* getInstance();

@@ -36,15 +36,10 @@ public:
                                           [=](const EventType& type) { return type.id == id; }));
     }
 
-    inline EventTypeID getByDep(int dep) {
-        return dep_index[dep];
-    }
-
 private:
     TypeModel() = default;
 
     std::vector<EventType> m_data;
-    std::array<EventTypeID, 3> dep_index = {-1, -1, -1};
 
 public:
     static TypeModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);

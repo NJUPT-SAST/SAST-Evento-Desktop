@@ -10,6 +10,7 @@
 #include "evento_info.h"
 #include "feedback_service.h"
 #include "image.h"
+#include "information_service.h"
 #include "latest_evento_model.h"
 #include "lesson_model.h"
 #include "my_page.h"
@@ -19,7 +20,6 @@
 #include "scheduled_evento.h"
 #include "scheduled_evento_model.h"
 #include "slide_model.h"
-#include "type_model.h"
 #include "undertaking_evento_model.h"
 #include "user_helper.h"
 
@@ -278,15 +278,11 @@ void EventoService::load_Event(EventoID id) {
 void EventoService::load_Lesson(QDate monday, int dep) {
     getRepo()->getEventListAfterTime(monday).then(
         [=](EventoResult<std::vector<DTO_Evento>> result) {
-            if (!result)
+            if (!result) {
+                CalendarController::getInstance()->onLoadPicFailure(result.message());
                 return;
-            auto id = getRepo()
-                          ->getTypeList()
-                          .then([=](EventoResult<std::vector<EventType>> result) {
-                              TypeModel::getInstance()->resetModel(result.take());
-                              return TypeModel::getInstance()->getByDep(dep);
-                          })
-                          .takeResult();
+            }
+            auto id = InformationService::getInstance().getByDep(dep);
             auto data = result.take();
             auto sunday = monday.addDays(6);
             std::vector<EventoLesson> model;
@@ -300,6 +296,7 @@ void EventoService::load_Lesson(QDate monday, int dep) {
                 }
             }
             LessonModel::getInstance()->resetModel(std::move(model));
+            CalendarController::getInstance()->onLoadPicSuccess();
         });
 }
 

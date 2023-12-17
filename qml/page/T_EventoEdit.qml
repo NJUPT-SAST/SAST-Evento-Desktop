@@ -681,7 +681,7 @@ FluScrollablePage {
     }
 
     function returnPage() {
-        control.reload()
+        control.load()
         MainWindow.window.pushPage("qrc:/qml/page/T_Calendar.qml")
     }
 }

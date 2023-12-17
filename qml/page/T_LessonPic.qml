@@ -4,13 +4,13 @@ import FluentUI
 import SAST_Evento
 
 FluScrollablePage {
-    id: calendar
+    id: page
     launchMode: FluPageType.SingleTask
 
     Rectangle {
         id: lesson_pic
+        height: 660 + LessonModel.rowCount() * 430
         width: 1080
-        height: 1060 + LessonModel.num * 430
         color: "#EAEAEA"
 
         Image {

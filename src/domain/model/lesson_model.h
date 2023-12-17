@@ -11,11 +11,6 @@ class LessonModel : public QAbstractListModel {
     QML_SINGLETON
     QML_NAMED_ELEMENT(LessonModel)
 
-    Q_PROPERTY(int num READ rowCount NOTIFY numChanged)
-
-signals:
-    void numChanged();
-
 public:
     enum Role {
         Id = Qt::UserRole + 1,

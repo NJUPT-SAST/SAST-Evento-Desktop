@@ -58,9 +58,6 @@ void TypeModel::resetModel(std::vector<EventType>&& model) {
         this, MovableLambda(std::move(model), [this](std::vector<EventType>&& data) {
             beginResetModel();
             m_data = std::move(data);
-            for (const auto& i : m_data)
-                if (i.name == "软研授课")
-                    dep_index[0] = i.id;
             endResetModel();
         }));
 }
