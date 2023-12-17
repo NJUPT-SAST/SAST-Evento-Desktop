@@ -5,6 +5,7 @@
 
 class InformationService {
     std::array<EventTypeID, 3> dep_type_id = {-1, -1, -1};
+
 private:
     InformationService() = default;
 

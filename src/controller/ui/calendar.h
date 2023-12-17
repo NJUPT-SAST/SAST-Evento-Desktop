@@ -69,7 +69,7 @@ public:
     }
     void onLoadCheckCodeFailure(const QString& message) {
         emit loadCheckCodeErrorEvent(message);
-    }    
+    }
     void onLoadPicSuccess() {
         emit loadPicSuccessEvent();
     }

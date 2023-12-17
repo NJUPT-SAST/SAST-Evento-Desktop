@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Dialogs
 import FluentUI
 import SAST_Evento
 
@@ -9,7 +10,7 @@ FluScrollablePage {
 
     Rectangle {
         id: lesson_pic
-        height: 660 + LessonModel.rowCount() * 430
+        height: 660 + LessonModel.rowCount() * 400
         width: 1080
         color: "#EAEAEA"
 
@@ -20,6 +21,8 @@ FluScrollablePage {
                 left: parent.left
                 right: parent.right
             }
+            source: "qrc:/res/image/department/SRD_lesson_pic_bg.jpg"
+            fillMode: Image.PreserveAspectFit
 
             Text {
                 id: dep_title
@@ -68,8 +71,33 @@ FluScrollablePage {
                 font.bold: true
             }
 
-            source: "qrc:/res/image/department/SRD_lesson_pic_bg.jpg"
-            fillMode: Image.PreserveAspectFit
+            Button {
+                id: save_btn
+                anchors {
+                    right:parent.right
+                }
+                height: 30
+                width: 90
+                text: "保存"
+                onClicked: {
+                    visible = false
+                    file_dialog.open()
+                }
+
+                FileDialog {
+                    id: file_dialog
+                    visible: false
+                    nameFilters: ["Image(*.png)"]
+                    fileMode: FileDialog.SaveFile
+
+                    onAccepted: {
+                        lesson_pic.grabToImage(function(result) {
+                            result.saveToFile(file_dialog.selectedFile.toString())
+                            save_btn.visible = true
+                        })
+                    }
+                }
+            }
         }
 
         Column {
@@ -81,13 +109,13 @@ FluScrollablePage {
                 right: parent.right
             }
 
-            spacing: 100
+            spacing: 80
 
             Repeater {
 
                 model: LessonModel
                 delegate: Item {
-                    height: 330
+                    height: 320
                     anchors {
                         left: parent.left
                         right: parent.right
