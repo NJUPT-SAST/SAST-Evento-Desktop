@@ -47,6 +47,7 @@ jobs:
         modules: 'qt5compat qtwebsockets qthttpserver qtshadertools'
         cache: 'true'
         cache-key-prefix: 'install-qt-action'
+        ignore: '.github|Qt|libs'
 
     - name: Configure CMake
       run: cmake -G Ninja -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_PREFIX_PATH=${{env.Qt6_DIR}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
