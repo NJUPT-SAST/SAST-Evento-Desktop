@@ -10,7 +10,9 @@
 #include "evento_info.h"
 #include "feedback_service.h"
 #include "image.h"
+#include "information_service.h"
 #include "latest_evento_model.h"
+#include "lesson_model.h"
 #include "my_page.h"
 #include "plaza.h"
 #include "repository.h"
@@ -273,6 +275,31 @@ void EventoService::load_Event(EventoID id) {
     });
 }
 
+void EventoService::load_Lesson(QDate monday, int dep) {
+    getRepo()->getEventListAfterTime(monday).then(
+        [=](EventoResult<std::vector<DTO_Evento>> result) {
+            if (!result) {
+                CalendarController::getInstance()->onLoadPicFailure(result.message());
+                return;
+            }
+            auto id = InformationService::getInstance().getByDep(dep);
+            auto data = result.take();
+            auto sunday = monday.addDays(6);
+            std::vector<EventoLesson> model;
+            {
+                std::lock_guard lock(mutex);
+                for (auto& i : data) {
+                    if (i.gmtEventStart.date() > sunday || i.type.id != id)
+                        continue;
+                    model.push_back(i);
+                    stored[i.id] = std::move(i);
+                }
+            }
+            LessonModel::getInstance()->resetModel(std::move(model));
+            CalendarController::getInstance()->onLoadPicSuccess();
+        });
+}
+
 void EventoService::load(EventoID id) {
     std::array<QFuture<bool>, 2> tasks = {
         getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
@@ -453,4 +480,10 @@ EventoBlock::EventoBlock(const DTO_Evento& src, const std::set<EventoID>& permit
     : id(src.id), title(src.title), gmtEventStart(src.gmtEventStart), gmtEventEnd(src.gmtEventEnd),
       editable(permitted.count(src.id)) {
     init();
+}
+
+EventoLesson::EventoLesson(const DTO_Evento& src)
+    : id(src.id), topic(src.description), time(src.gmtEventStart.toString("ddd h:m")) {
+    for (const auto& i : src.departments)
+        departments << i.name;
 }

@@ -72,3 +72,21 @@ void InformationService::load_SubscribedDepartmentInfo() {
             DepartmentEventsController::getInstance()->onLoadDepartmentsFinished();
         });
 }
+
+EventTypeID InformationService::getByDep(int dep) {
+    if (dep_type_id[dep] != -1)
+        return dep_type_id[dep];
+    return getRepo()
+        ->getTypeList()
+        .then([this](EventoResult<std::vector<EventType>> result) {
+            if (!result)
+                return;
+            auto type_list = result.take();
+            for (const auto& i : type_list)
+                if (i.name == "软研授课")
+                    dep_type_id[0] = i.id;
+            TypeModel::getInstance()->resetModel(std::move(type_list));
+        })
+        .then([=]() { return dep_type_id[dep]; })
+        .takeResult();
+}

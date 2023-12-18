@@ -13,10 +13,6 @@ FluScrollablePage {
     property string dateString: date2String(new Date)
     property var blockWindowRegister: registerForWindowResult("/block")
 
-    function reload() {
-        load()
-    }
-
     function load() {
         statusMode = FluStatusViewType.Loading
         CalendarController.loadAllEventoInfo(dateString)
@@ -53,17 +49,31 @@ FluScrollablePage {
     }
 
     Connections {
+        target: CalendarController
+        function onLoadPicSuccessEvent() {
+            pushPage("qrc:/qml/page/T_LessonPic.qml")
+        }
+    }
+
+    Connections {
+        target: CalendarController
+        function onLoadPicErrorEvent(message) {
+            showError("课表生成错误：" + message)
+        }
+    }
+
+    Connections {
         target: blockWindowRegister
         function onResult(data) {
             if (data.enterPage) {
-                pushPage()
+                pushPage("qrc:/qml/page/T_EventoEdit.qml")
                 showInfo("注意：活动地点需要重新编辑", 4000)
             }
         }
     }
 
-    function pushPage() {
-        MainWindow.window.pushPage("qrc:/qml/page/T_EventoEdit.qml")
+    function pushPage(url) {
+        MainWindow.window.pushPage(url)
     }
 
     Component.onCompleted: {
@@ -238,6 +248,20 @@ FluScrollablePage {
             }
         }
         */
+        FluButton {
+            id: btn_SRD_lesson_pic
+            text: "本周软研课表"
+            anchors {
+                top: parent.top
+                topMargin: 10
+                right: btn_create.left
+                rightMargin: 10
+            }
+            onClicked: {
+                CalendarController.generateLessonPic(dateString, CalendarController.SoftwareResearchAndDevelopmentDep)
+            }
+        }
+
         FluFilledButton {
             id: btn_create
             text: "创建活动"

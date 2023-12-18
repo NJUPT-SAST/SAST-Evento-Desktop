@@ -2,6 +2,10 @@
 #include "evento_block_model.h"
 #include "evento_service.h"
 
+void CalendarController::generateLessonPic(QString date, DepartmentEnum dep) {
+    EventoService::getInstance().load_Lesson(getMonday(QDate::fromString(date, "yyyy-M-d")), dep);
+}
+
 void CalendarController::loadAllEventoInfo(QString date) {
     EventoService::getInstance().load_Block(QDate::fromString(date, "yyyy-M-d"));
 }

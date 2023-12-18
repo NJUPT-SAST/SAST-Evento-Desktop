@@ -6,6 +6,7 @@
 
 using UserID = QString;
 using EventoID = int;
+using EventTypeID = int;
 using LocationID = int;
 using Image = QString;
 using Tag = QString;
@@ -26,7 +27,7 @@ enum class EventState : int {
 };
 
 struct EventType {
-    int id;
+    EventTypeID id;
     QString name;
     bool allowConflict;
 };
