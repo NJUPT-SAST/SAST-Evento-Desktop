@@ -318,7 +318,7 @@ FluScrollablePage {
                         verticalAlignment: Text.AlignVCenter
                         anchors.verticalCenter: parent.verticalCenter
                         color: {
-                            if (btn_register.disabled)
+                            if (btn_subscribe.disabled)
                                 return Qt.rgba(160/255,160/255,160/255,1)
                             else
                                 return FluTheme.dark ? FluColors.White : FluColors.Grey220
