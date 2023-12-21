@@ -11,8 +11,10 @@
 
 <p align="center">
 <img src="https://img.shields.io/badge/frame-Qt6.5-blue">
-<img src="https://img.shields.io/badge/std-C++17-yello">
-<img src="https://img.shields.io/badge/compiler-GCC11-white">
+<img src="https://img.shields.io/badge/std-C++17-yellow">
+<img src="https://img.shields.io/badge/platform-Windows-white">
+<img src="https://img.shields.io/badge/platform-Linux-green">
+<img src="https://img.shields.io/badge/platform-macOS-orange">
 </p>
 
 ## 简介
@@ -34,28 +36,26 @@ SAST Evento 是一个 SAST 的事件管理系统，平时我们在活动过程�
 
 ## Release
 
-[Latest version](https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest)
-  - [Linux: sast-evento_appimage_x86_64.AppImage](https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest/download/sast-evento_appimage_x86_64.AppImage)
-  - [macOS: sast-evento_macOS.dmg](https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest/download/sast-evento_macOS.dmg)
-  - [Windows: sast-evento_win64.exe]( https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest/download/sast-evento_win64.exe)
+[Latest version](https://github.com/NJUPT-SAST/SAST-Evento-Desktop/releases/latest)
+  - [Linux: sast-evento_appimage_x86_64.AppImage](https://github.com/NJUPT-SAST/SAST-Evento-Desktop/releases/latest/download/sast-evento_appimage_x86_64.AppImage)
+  - [macOS: sast-evento_macOS.dmg](https://github.com/NJUPT-SAST/SAST-Evento-Desktop/releases/latest/download/sast-evento_macOS.dmg)
+  - [Windows: sast-evento_win64.exe]( https://github.com/NJUPT-SAST/SAST-Evento-Desktop/releases/latest/download/sast-evento_win64.exe)
 
 ### beta: unstable, updated frequently
 
-- [v1.0.1029-beta](https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/tag/1.0.1209)
-- [v1.0.1208-beta](https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/tag/1.0.1208)
+- [v1.0.1211-beta](https://github.com/NJUPT-SAST/SAST-Evento-Desktop/releases/tag/1.0.1211)
 
 ## Start
 
 - Clone the repository
 
 ```
-git clone --recursive https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop.git
+git clone --recursive https://github.com/NJUPT-SAST/SAST-Evento-Desktop.git
 ``````
 
 - Build
 
 ```
-git clone --recursive https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop.git
 cd SAST-Evento-Desktop
 mkdir build
 cd build
