@@ -483,7 +483,8 @@ EventoBlock::EventoBlock(const DTO_Evento& src, const std::set<EventoID>& permit
 }
 
 EventoLesson::EventoLesson(const DTO_Evento& src)
-    : id(src.id), topic(src.description), time(src.gmtEventStart.toString("ddd h:m")) {
+    : id(src.id), topic(src.description), time(src.gmtEventStart.toString("ddd h:m")),
+      location(src.location) {
     for (const auto& i : src.departments)
         departments << i.name;
 }
