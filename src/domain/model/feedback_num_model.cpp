@@ -1,5 +1,7 @@
 #include "feedback_num_model.h"
 
+#include "movable_lambda.h"
+
 FeedbackNumModel* FeedbackNumModel::getInstance() {
     static FeedbackNumModel instance;
     return &instance;
@@ -53,11 +55,9 @@ QHash<int, QByteArray> FeedbackNumModel::roleNames() const {
 
 void FeedbackNumModel::resetModel(std::vector<FeedbackNum>&& model) {
     QMetaObject::invokeMethod(
-        this,
-        [&]() {
+        this, MovableLambda(std::move(model), [this](std::vector<FeedbackNum>&& data) {
             beginResetModel();
-            m_data = std::move(model);
+            m_data = std::move(data);
             endResetModel();
-        },
-        Qt::BlockingQueuedConnection);
+        }));
 }

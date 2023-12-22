@@ -33,6 +33,7 @@ void FeedbackService::load_SummaryInfo(int page) {
             {
                 std::lock_guard lock(mutex);
                 for (auto& i : data.second) {
+                    i.title = i.title.trimmed();
                     model.push_back(i);
                     feedbacks[i.eventId] = std::move(i);
                 }
@@ -79,8 +80,8 @@ void FeedbackService::load_FeedbackInfo(EventoID id) {
 FeedbackSummary::FeedbackSummary(const DTO_FeedbackSummary& feedbackSummary, const QString& title)
     : eventId(feedbackSummary.eventId), subscribedNum(feedbackSummary.subscribedNum),
       registeredNum(feedbackSummary.registeredNum), checkedNum(feedbackSummary.checkedNum),
-      aveScore(feedbackSummary.aveScore), title(title) {}
+      aveScore(feedbackSummary.aveScore), title(title.trimmed()) {}
 
 Feedback::Feedback(const DTO_Feedback& feedback)
-    : id(feedback.id), eventId(feedback.eventId), score(feedback.score), content(feedback.content) {
-}
+    : id(feedback.id), eventId(feedback.eventId), score(feedback.score),
+      content(feedback.content.trimmed()) {}
