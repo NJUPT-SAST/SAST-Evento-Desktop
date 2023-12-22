@@ -234,11 +234,9 @@ void EventoService::load_Block(QDate date) {
             getRepo()
                 ->getPermittedEvents(UserHelper::getInstance()->property("userId").toString())
                 .takeResult();
-        if (!permitted_list) {
-            CalendarController::getInstance()->onLoadAllFailure(result.message());
-            return;
-        }
-        auto permitted = permitted_list.take();
+        std::set<int> permitted;
+        if (permitted_list)
+            permitted = permitted_list.take();
         auto data = result.take();
         std::vector<EventoBlock> model;
         auto sunday = date.addDays(6);

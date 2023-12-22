@@ -249,14 +249,17 @@ FluScrollablePage {
         }
         */
         FluButton {
-            id: btn_SRD_lesson_pic
-            text: "本周软研课表"
+            id: btn_SRD_lesson_pic            
             anchors {
                 top: parent.top
                 topMargin: 10
-                right: btn_create.left
+                right: UserHelper.permission == UserHelper.AdminPermission ? btn_create.left : parent.right
                 rightMargin: 10
             }
+
+            text: "本周软研课表"
+            visible: dateString === date2String(new Date)
+
             onClicked: {
                 CalendarController.generateLessonPic(dateString, CalendarController.SoftwareResearchAndDevelopmentDep)
             }
@@ -264,13 +267,15 @@ FluScrollablePage {
 
         FluFilledButton {
             id: btn_create
-            text: "创建活动"
             anchors {
                 top: parent.top
                 topMargin: 10
                 right: parent.right
                 rightMargin: 10
             }
+
+            text: "创建活动"
+            visible: UserHelper.permission == UserHelper.AdminPermission
 
             onClicked: {
                 EventoEditController.isEditMode = false
@@ -435,7 +440,6 @@ FluScrollablePage {
                 ListElement {
                     title: "23:00"
                 }
-
             }
 
             delegate: Item {

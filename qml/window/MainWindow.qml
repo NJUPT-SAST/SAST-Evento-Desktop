@@ -73,6 +73,7 @@ FluWindow {
 
     FluObject {
         id: items_original
+
         FluPaneItem {
             id: item_home
             title: lang.lang_plaza
@@ -83,40 +84,42 @@ FluWindow {
         }
 
         FluPaneItem {
-            id: item_departmentevents
-            title: lang.lang_department_evento
-            icon: FluentIcons.GroupList
+            id: item_calendar
+            title: lang.lang_calendar
+            icon: FluentIcons.Calendar
             onTap: {
-                nav_view.push("qrc:/qml/page/T_DepartmentEvents.qml")
+                nav_view.push("qrc:/qml/page/T_Calendar.qml")
             }
         }
 
         function createUserItems() {
-            var adminItems = Qt.createQmlObject('import FluentUI;FluPaneItem {
+            var userItems1 = Qt.createQmlObject('import FluentUI;
+FluPaneItem {
+id: item_departmentevents
+title: lang.lang_department_evento
+icon: FluentIcons.GroupList
+onTap: {
+nav_view.push("qrc:/qml/page/T_DepartmentEvents.qml")}}', items_original)            
+            var userItems2 = Qt.createQmlObject('import FluentUI;
+FluPaneItem {
 id: item_schedule
 count: 9
 title: lang.lang_schedule
 icon: FluentIcons.CheckList
 onTap: {
 nav_view.push("qrc:/qml/page/T_Schedule.qml")}}', items_original)
-            children.push(adminItems)
+            children.push(userItems1)
+            children.push(userItems2)
         }
 
         function createAdminItems() {
             var adminItems1 = Qt.createQmlObject('import FluentUI;
-FluPaneItem {
-title: lang.lang_calendar
-icon: FluentIcons.Calendar
-onTap: {
-nav_view.push("qrc:/qml/page/T_Calendar.qml")}}', items_original)
-            var adminItems2 = Qt.createQmlObject('import FluentUI;
 FluPaneItem {
 title: lang.lang_user_feedback
 icon: FluentIcons.Comment
 onTap: {
 nav_view.push("qrc:/qml/page/T_Feedback.qml")}}', items_original)
             children.push(adminItems1)
-            children.push(adminItems2)
         }
 
         Component.onCompleted: {
@@ -148,12 +151,13 @@ nav_view.push("qrc:/qml/page/T_Feedback.qml")}}', items_original)
         }
 
         function createItems() {
-            var adminItems = Qt.createQmlObject('import FluentUI;FluPaneItem {
+            var items1 = Qt.createQmlObject('import FluentUI;
+FluPaneItem {
 title: lang.lang_my
 icon: FluentIcons.Contact
 onTap: {
 nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
-            children.push(adminItems)
+            children.push(items1)
         }
 
         Component.onCompleted: {

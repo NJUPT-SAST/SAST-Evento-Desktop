@@ -11,7 +11,7 @@ FluScrollablePage {
     Rectangle {
         id: lesson_pic
         height: 660 + LessonModel.rowCount() * 400
-        width: 1080
+        width: 880
         color: "#EAEAEA"
 
         Image {
@@ -28,13 +28,13 @@ FluScrollablePage {
                 id: dep_title
                 anchors {
                     top: parent.top
-                    topMargin: 196
+                    topMargin: 175
                     left: parent.left
                     leftMargin: 90
                 }
 
                 text: qsTr("%1").arg(dep_name)
-                font.pixelSize: 90
+                font.pixelSize: 78
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignTop
 
@@ -49,7 +49,7 @@ FluScrollablePage {
                 }
 
                 text: qsTr("第%1周").arg(week_num)
-                font.pixelSize: 90
+                font.pixelSize: 78
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignTop
                 font.bold: true
@@ -65,7 +65,7 @@ FluScrollablePage {
                 }
 
                 text: qsTr("授课课表")
-                font.pixelSize: 90
+                font.pixelSize: 78
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignTop
                 font.bold: true
@@ -199,6 +199,18 @@ FluScrollablePage {
                     }
                 }
             }
+        }
+
+        Text {
+            anchors {
+                top: bg_image.bottom
+                left: parent.left
+                right: parent.right
+            }
+            text: "本周暂无授课，敬请期待！"
+            font.pixelSize: 56
+            horizontalAlignment: Text.AlignHCenter
+            visible: LessonModel.rowCount() === 0
         }
     }
 }
