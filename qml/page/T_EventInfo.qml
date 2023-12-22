@@ -513,7 +513,7 @@ FluScrollablePage {
                 target: EventoInfoController
                 function onFeedbackSuccessEvent() {
                     statusMode = FluStatusViewType.Success
-                    showSuccess(lang.lang_submit_succcess)
+                    showSuccess(lang.lang_submit_success)
                     loadEventoInfo()
                 }
             }
