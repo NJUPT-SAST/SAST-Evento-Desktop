@@ -645,13 +645,10 @@ EventoFuture<EventoResult<std::pair<int, std::vector<FeedbackNum>>>>
         if (result) {
             auto rootValue = result.take();
             if (rootValue.isObject()) {
-                std::vector<FeedbackNum> dto;
-                int total;
-                declare_deserialiser("result", dto, dto_);
-                declare_deserialiser("total", total, total_);
-                JsonDeserialise::JsonDeserialiser res(dto_, total_);
-                res.deserialise(rootValue.toObject());
-                return std::make_pair(total, dto);
+                std::pair<int, std::vector<FeedbackNum>> result;
+                declare_top_pair_deserialiser("total", "result", result, deserialiser);
+                deserialiser.assign(rootValue);
+                return result;
             }
             return {EventoExceptionCode::JsonError, "Format Error!"};
         } else {

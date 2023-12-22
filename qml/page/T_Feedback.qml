@@ -16,13 +16,13 @@ FluScrollablePage {
         loadFeedbackInfo(page)
     }
 
-    function loadFeedbackInfo() {
+    function loadFeedbackInfo(new_page) {
         statusMode = FluStatusViewType.Loading
+        page = new_page
         FeedbackStatisticsController.loadSummaryInfo(page)
     }
 
     Component.onCompleted: {
-        page = 1
         loadFeedbackInfo(page)
     }
     errorButtonText: lang.lang_reload
