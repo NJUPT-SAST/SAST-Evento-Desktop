@@ -10,6 +10,7 @@
 #include "repository.h"
 
 void FeedbackService::load_UserFeedback(EventoID id) {
+    FeedbackHelper::getInstance();
     getRepo()->getFeedbackInfo(id).then([](EventoResult<DTO_Feedback> result) {
         if (!result) {
             EventoInfoController::getInstance()->onLoadFailure(result.message());
