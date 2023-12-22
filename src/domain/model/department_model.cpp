@@ -42,11 +42,12 @@ QHash<int, QByteArray> DepartmentModel::roleNames() const {
 }
 
 void DepartmentModel::resetModel(std::vector<Department>&& model) {
-    QMetaObject::invokeMethod(this, MovableLambda(std::move(model), [this](auto&& data) {
-                                  beginResetModel();
-                                  m_data = std::move(data);
-                                  endResetModel();
-                              }));
+    QMetaObject::invokeMethod(
+        this, MovableLambda(std::move(model), [this](std::vector<Department>&& data) {
+            beginResetModel();
+            m_data = std::move(data);
+            endResetModel();
+        }));
 }
 
 DepartmentModel* DepartmentModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

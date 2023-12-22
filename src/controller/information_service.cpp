@@ -2,11 +2,13 @@
 #include "department_events.h"
 #include "department_model.h"
 #include "evento_edit.h"
+#include "evento_helper.h"
+#include "evento_service.h"
 #include "location_model.h"
 #include "repository.h"
 #include "type_model.h"
 
-void InformationService::load_EditInfo() {
+void InformationService::load_EditInfo(bool isEditMode) {
     DepartmentEventsController::getInstance();
     std::array<QFuture<bool>, 3> tasks = {
         getRepo()->getTypeList().then([](EventoResult<std::vector<EventType>> result) {
@@ -36,10 +38,16 @@ void InformationService::load_EditInfo() {
             return true;
         })};
 
-    QtFuture::whenAll(tasks.begin(), tasks.end()).then([](QList<QFuture<bool>> tasks) {
+    QtFuture::whenAll(tasks.begin(), tasks.end()).then([=](QList<QFuture<bool>> tasks) {
         for (const auto& i : tasks)
             if (i.isCanceled() || !i.result())
                 return;
+        if (isEditMode)
+            EventoEditController::getInstance()->setProperty(
+                "index", TypeModel::getInstance()->getIndex(
+                             EventoService::getInstance()
+                                 .edit(EventoHelper::getInstance()->property("id").toInt())
+                                 .type.id));
         EventoEditController::getInstance()->onLoadEditFinished();
     });
 }

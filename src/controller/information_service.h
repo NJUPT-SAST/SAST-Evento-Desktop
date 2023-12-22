@@ -15,7 +15,7 @@ public:
         return singleton;
     }
 
-    void load_EditInfo();
+    void load_EditInfo(bool isEditMode);
     void load_DepartmentInfo();
     void load_SubscribedDepartmentInfo();
 

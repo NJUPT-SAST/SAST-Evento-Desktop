@@ -22,6 +22,7 @@ FluScrollablePage {
     }
 
     function loadDepartmentEvents(departmentId) {
+        statusMode = FluStatusViewType.Loading
         DepartmentEventsController.loadDepartmentEvents(departmentId)
     }
 

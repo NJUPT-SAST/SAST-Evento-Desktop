@@ -35,8 +35,6 @@ private:
     QString m_registerEnd;
     QString m_departmentIds;
 
-    void preload();
-
 signals:
     void loadEditSuccessEvent();
     void loadEditErrorEvent(QString messge);

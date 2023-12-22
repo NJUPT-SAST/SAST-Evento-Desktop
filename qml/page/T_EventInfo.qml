@@ -462,7 +462,7 @@ FluScrollablePage {
         Layout.fillWidth: true
         sourceComponent: (EventoInfoController.isParticipated
                           && EventoHelper.state === 5
-                          && UserHelper.permisson !== 1) ? com_comment : undefined
+                          && UserHelper.permission !== 1) ? com_comment : undefined
     }
 
     Component {

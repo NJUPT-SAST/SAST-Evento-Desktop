@@ -15,10 +15,6 @@ EventoEditController* EventoEditController::create(QQmlEngine* qmlEngine, QJSEng
     return instance;
 }
 
-void EventoEditController::preload() {
-    InformationService::getInstance().load_EditInfo();
-}
-
 void EventoEditController::createEvento(QString title, QString description, QString eventStart,
                                         QString eventEnd, QString registerStart,
                                         QString registerEnd, int index, int locationId,
@@ -50,7 +46,6 @@ void EventoEditController::update(const DTO_Evento& event) {
 }
 
 void EventoEditController::loadEditInfo() {
-    if (m_isEditMode)
-        update(EventoService::getInstance().edit(EventoHelper::getInstance()->m_id));
-    preload();
+    update(EventoService::getInstance().edit(EventoHelper::getInstance()->property("id").toInt()));
+    InformationService::getInstance().load_EditInfo(m_isEditMode);
 }
