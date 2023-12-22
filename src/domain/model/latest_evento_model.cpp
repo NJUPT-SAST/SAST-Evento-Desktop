@@ -1,5 +1,7 @@
 #include "latest_evento_model.h"
 
+#include "movable_lambda.h"
+
 int LatestEventoModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -51,13 +53,11 @@ QHash<int, QByteArray> LatestEventoModel::roleNames() const {
 
 void LatestEventoModel::resetModel(std::vector<LatestEvento>&& model) {
     QMetaObject::invokeMethod(
-        this,
-        [&]() {
+        this, MovableLambda(std::move(model), [this](std::vector<LatestEvento>&& data) {
             beginResetModel();
-            m_data = std::move(model);
+            m_data = std::move(data);
             endResetModel();
-        },
-        Qt::BlockingQueuedConnection);
+        }));
 }
 
 LatestEventoModel* LatestEventoModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

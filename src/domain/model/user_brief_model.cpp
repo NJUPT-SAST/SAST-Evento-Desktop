@@ -1,5 +1,7 @@
 #include "user_brief_model.h"
 
+#include "movable_lambda.h"
+
 int UserBriefModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -37,14 +39,11 @@ QHash<int, QByteArray> UserBriefModel::roleNames() const {
 }
 
 void UserBriefModel::resetModel(std::vector<UserBrief>&& model) {
-    QMetaObject::invokeMethod(
-        this,
-        [&]() {
-            beginResetModel();
-            m_data = std::move(model);
-            endResetModel();
-        },
-        Qt::BlockingQueuedConnection);
+    QMetaObject::invokeMethod(this, MovableLambda(std::move(model), [this](auto&& data) {
+                                  beginResetModel();
+                                  m_data = std::move(data);
+                                  endResetModel();
+                              }));
 }
 
 UserBriefModel* UserBriefModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

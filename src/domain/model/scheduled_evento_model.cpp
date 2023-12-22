@@ -1,5 +1,7 @@
 #include "scheduled_evento_model.h"
 
+#include "movable_lambda.h"
+
 int ScheduledEventoModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -66,14 +68,11 @@ QHash<int, QByteArray> ScheduledEventoModel::roleNames() const {
 }
 
 void ScheduledEventoModel::resetModel(std::vector<Schedule>&& model) {
-    QMetaObject::invokeMethod(
-        this,
-        [&]() {
-            beginResetModel();
-            m_data = std::move(model);
-            endResetModel();
-        },
-        Qt::BlockingQueuedConnection);
+    QMetaObject::invokeMethod(this, MovableLambda(std::move(model), [this](auto&& data) {
+                                  beginResetModel();
+                                  m_data = std::move(data);
+                                  endResetModel();
+                              }));
 }
 
 ScheduledEventoModel* ScheduledEventoModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

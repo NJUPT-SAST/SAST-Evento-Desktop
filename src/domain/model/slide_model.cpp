@@ -1,5 +1,7 @@
 #include "slide_model.h"
 
+#include "movable_lambda.h"
+
 int SlideModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -44,9 +46,11 @@ QHash<int, QByteArray> SlideModel::roleNames() const {
 }
 
 void SlideModel::resetModel(std::vector<Slide>&& model) {
-    beginResetModel();
-    m_data = std::move(model);
-    endResetModel();
+    QMetaObject::invokeMethod(this, MovableLambda(std::move(model), [this](auto&& data) {
+                                  beginResetModel();
+                                  m_data = std::move(data);
+                                  endResetModel();
+                              }));
 }
 
 void SlideModel::resetModel(const QStringList& slideList) {
