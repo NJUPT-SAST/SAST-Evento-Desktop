@@ -21,7 +21,7 @@ public:
         Date,
         StartTime,
         EndTime,
-        HasSameDate,
+        DisplayDate,
         IsChecked,
         HasFeedback,
     };

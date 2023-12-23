@@ -10,7 +10,7 @@ class ScheduleController : public QObject {
     QML_NAMED_ELEMENT(ScheduleController)
     QML_SINGLETON
 
-    Q_PROPERTY(int width MEMBER m_width NOTIFY widthChanged)
+    Q_PROPERTY(int height MEMBER m_height NOTIFY widthChanged)
 
 public:
     Q_INVOKABLE void loadRegisteredSchedule();
@@ -30,7 +30,7 @@ signals:
 private:
     ScheduleController() = default;
 
-    int m_width;
+    int m_height;
 
 public:
     void onLoadRegisteredFinished() {

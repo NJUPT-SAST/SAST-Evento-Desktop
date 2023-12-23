@@ -172,7 +172,7 @@ void EventoBlockModel::arrange_pipeline(QDate monday) {
     // Genarate Piepeline
     pipeline = std::move(all_day);
     for (auto& i : bucket)
-        std::copy(i.begin(), i.end(), std::back_inserter(pipeline));
+        std::move(i.begin(), i.end(), std::back_inserter(pipeline));
 
     // update all_day_line_num
     this->setProperty("all_day_line_num", (quint64)all_day_map.size());

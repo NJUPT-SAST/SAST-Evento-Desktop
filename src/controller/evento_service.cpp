@@ -78,50 +78,51 @@ void EventoService::load_Plaza() {
     });
 }
 
+void EventoService::handle_schedule(std::vector<DTO_Evento>&& data) {
+    std::vector<Schedule> multiDayEvents;
+    std::vector<Schedule> singleDayEvents;
+    {
+        std::lock_guard lock(mutex);
+        registered.clear();
+        for (auto& evento : data) {
+            registered.push_back(evento.id);
+            auto participation = getRepo()->getUserParticipate(evento.id).takeResult();
+            auto has_feedback = getRepo()->hasFeedbacked(evento.id).takeResult();
+            if (participation &&
+                (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue)) {
+                if (evento.gmtEventStart.date() == evento.gmtEventEnd.date())
+                    singleDayEvents.emplace_back(evento, participation.take(), has_feedback);
+                else
+                    multiDayEvents.emplace_back(evento, participation.take(), has_feedback);
+            } else {
+                auto message = participation ? has_feedback.message() : participation.message();
+                ScheduleController::getInstance()->onLoadRegisteredFailure(message);
+                return;
+            }
+            stored[evento.id] = std::move(evento);
+        }
+    }
+    std::move(singleDayEvents.begin(), singleDayEvents.end(), std::back_inserter(multiDayEvents));
+    std::set<QString> dateSet;
+    int h = 0;
+    for (auto& e : multiDayEvents) {
+        h += 90;
+        if (dateSet.insert(e.date).second) {
+            e.displayDate = true;
+            h += 25;
+        }
+    };
+    ScheduleController::getInstance()->setProperty("height", h);
+    ScheduledEventoModel::getInstance()->resetModel(std::move(multiDayEvents));
+}
+
 void EventoService::load_RegisteredSchedule() {
     getRepo()->getRegisteredList().then([this](EventoResult<std::vector<DTO_Evento>> result) {
         if (!result) {
             ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
             return;
         }
-        auto data = result.take();
-        std::vector<Schedule> multiDayEvents;
-        std::vector<Schedule> singleDayEvents;
-        {
-            std::lock_guard lock(mutex);
-            registered.clear();
-            for (auto& evento : data) {
-                registered.push_back(evento.id);
-                auto participation = getRepo()->getUserParticipate(evento.id).takeResult();
-                auto has_feedback = getRepo()->hasFeedbacked(evento.id).takeResult();
-                if (participation &&
-                    (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue)) {
-                    if (evento.gmtEventStart.date() == evento.gmtEventEnd.date())
-                        singleDayEvents.emplace_back(evento, participation.take(), has_feedback);
-                    else
-                        multiDayEvents.emplace_back(evento, participation.take(), has_feedback);
-                } else {
-                    ScheduleController::getInstance()->onLoadRegisteredFailure(result.message());
-                    return;
-                }
-                stored[evento.id] = std::move(evento);
-            }
-        }
-        std::vector<Schedule> model = std::move(multiDayEvents);
-        model.insert(model.end(), singleDayEvents.begin(), singleDayEvents.end());
-        std::set<QString> dateSet;
-        int width = 110;
-        std::for_each(model.begin(), model.end(), [&dateSet, &width](Schedule& e) {
-            auto size = dateSet.size();
-            dateSet.insert(e.date);
-            if (dateSet.size() == size) {
-                e.hasSameDate = true;
-                width += 20;
-            }
-            width += 90;
-        });
-        ScheduleController::getInstance()->setProperty("width", width);
-        ScheduledEventoModel::getInstance()->resetModel(std::move(model));
+        handle_schedule(result.take());
         ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
 }
@@ -132,44 +133,7 @@ void EventoService::load_SubscribedSchedule() {
             ScheduleController::getInstance()->onLoadSubscribedFailure(result.message());
             return;
         }
-        auto data = result.take();
-        std::vector<Schedule> multiDayEvents;
-        std::vector<Schedule> singleDayEvents;
-        {
-            std::lock_guard lock(mutex);
-            subscribed.clear();
-            for (auto& evento : data) {
-                registered.push_back(evento.id);
-                auto participation = getRepo()->getUserParticipate(evento.id).takeResult();
-                auto has_feedback = getRepo()->hasFeedbacked(evento.id).takeResult();
-                if (participation &&
-                    (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue)) {
-                    if (evento.gmtEventStart.date() == evento.gmtEventEnd.date())
-                        singleDayEvents.emplace_back(evento, participation.take(), has_feedback);
-                    else
-                        multiDayEvents.emplace_back(evento, participation.take(), has_feedback);
-                } else {
-                    ScheduleController::getInstance()->onLoadSubscribedFailure(result.message());
-                    return;
-                }
-                stored[evento.id] = std::move(evento);
-            }
-        }
-        std::vector<Schedule> model = std::move(multiDayEvents);
-        model.insert(model.end(), singleDayEvents.begin(), singleDayEvents.end());
-        std::set<QString> dateSet;
-        int width = 110;
-        std::for_each(model.begin(), model.end(), [&dateSet, &width](Schedule& e) {
-            auto size = dateSet.size();
-            dateSet.insert(e.date);
-            if (dateSet.size() == size) {
-                e.hasSameDate = true;
-                width += 90;
-            } else
-                width += 110;
-        });
-        ScheduleController::getInstance()->setProperty("width", width);
-        ScheduledEventoModel::getInstance()->resetModel(std::move(model));
+        handle_schedule(result.take());
         ScheduleController::getInstance()->onLoadSubscribedFinished();
     });
 }

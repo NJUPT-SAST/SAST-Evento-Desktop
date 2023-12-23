@@ -22,6 +22,9 @@ class EventoService {
 private:
     EventoService() = default;
 
+private:
+    void handle_schedule(std::vector<DTO_Evento>&& result);
+
 public:
     static EventoService& getInstance() {
         static EventoService singleton;
