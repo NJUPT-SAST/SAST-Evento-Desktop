@@ -41,10 +41,6 @@ SAST Evento 是一个 SAST 的事件管理系统，平时我们在活动过程�
   - [macOS: sast-evento_macOS.dmg](https://github.com/NJUPT-SAST/SAST-Evento-Desktop/releases/latest/download/sast-evento_macOS.dmg)
   - [Windows: sast-evento_win64.exe]( https://github.com/NJUPT-SAST/SAST-Evento-Desktop/releases/latest/download/sast-evento_win64.exe)
 
-### beta: unstable, updated frequently
-
-- [v1.0.1211-beta](https://github.com/NJUPT-SAST/SAST-Evento-Desktop/releases/tag/1.0.1211)
-
 ## Start
 
 - Clone the repository
