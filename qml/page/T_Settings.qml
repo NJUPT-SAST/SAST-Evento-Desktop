@@ -85,7 +85,7 @@ FluScrollablePage {
                         "title": lang.lang_minimalSideBar,
                         "mode": FluNavigationViewType.Minimal
                     }, {
-                        "title": lang.lang_automatical,
+                        "title": lang.lang_automatic,
                         "mode": FluNavigationViewType.Auto
                     }]
                 delegate: FluRadioButton {
