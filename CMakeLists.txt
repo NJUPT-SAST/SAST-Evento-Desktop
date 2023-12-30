@@ -26,13 +26,14 @@ endif()
 
 find_package(Qt6 REQUIRED COMPONENTS Quick Svg Network HttpServer Concurrent)
 
-if(QT_VERSION VERSION_GREATER_EQUAL "6.3")
+if(${Qt6_VERSION} VERSION_GREATER_EQUAL "6.3")
     qt_standard_project_setup()
 else()
     set(CMAKE_AUTOMOC ON)
-    set(CMAKE_AUTORCC ON)
     set(CMAKE_AUTOUIC ON)
 endif()
+
+set(CMAKE_AUTORCC ON)
 
 file(GLOB_RECURSE SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/*.cpp
