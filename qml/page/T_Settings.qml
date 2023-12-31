@@ -16,6 +16,7 @@ FluScrollablePage {
         location: FluTools.getApplicationDirPath() + "/config.ini"
         property string langMode
         property int displayMode
+        property string render
     }
 
     FluArea {
@@ -205,4 +206,50 @@ FluScrollablePage {
     function checkUpdate() {
         CheckUpdate.check()
     }
+
+    FluArea{
+        Layout.fillWidth: true
+        Layout.topMargin: 20
+        height: 60 + text_hint.implicitHeight
+        paddings: 10
+        FluCheckBox{
+            id: checkbox_render
+            text:"Software Render"
+            checked: SettingsHelper.getRender() === "software"
+            anchors.top: parent.top
+            anchors.topMargin: 5
+            onClicked: {
+                if(SettingsHelper.getRender() === "software"){
+                    SettingsHelper.saveRender("")
+                }else{
+                    SettingsHelper.saveRender("software")
+                }
+                dialog_restart.open()
+            }
+        }
+        FluText {
+            id: text_hint
+            anchors {
+                top: checkbox_render.bottom
+                topMargin: 10
+            }
+            text: lang.lang_software_render_hint
+            font: FluTextStyle.Caption
+            width: parent.width
+            wrapMode: Text.WordWrap
+        }
+    }
+
+    FluContentDialog{
+        id:dialog_restart
+        title: lang.lang_hint
+        message: lang.lang_restart_app_hint
+        buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
+        negativeText: lang.lang_cancel
+        positiveText: lang.lang_ok
+        onPositiveClicked:{
+            FluApp.exit(931)
+        }
+    }
+
 }

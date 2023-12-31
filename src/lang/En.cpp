@@ -85,6 +85,10 @@ En::En(QObject* parent) : Lang{parent} {
     lang_native_text_rendering("Native Text Rendering");
     lang_animation_effect("Animation Effect");
     lang_current_version("Current Version: ");
+    lang_restart_app_hint(
+        "This operation requires a restart to take effect.\nDo you want to restart?");
+    lang_software_render_hint("After opening, the memory usage can be reduced,\nbut the "
+                              "rounded corners of the picture cannot be rendered");
 
     // evento block
     lang_copy("Copy");

@@ -84,6 +84,8 @@ Zh::Zh(QObject* parent) : Lang{parent} {
     lang_native_text_rendering("Native文本渲染");
     lang_animation_effect("动画效果");
     lang_current_version("当前版本：");
+    lang_restart_app_hint("此操作需要重启才能生效，是否重新启动？");
+    lang_software_render_hint("开启后可降低内存占用，但是会导致无法渲染图片圆角");
 
     // evento block
     lang_copy("复制");

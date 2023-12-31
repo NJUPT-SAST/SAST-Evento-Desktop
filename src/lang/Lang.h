@@ -87,6 +87,8 @@ class Lang : public QObject {
     Q_PROPERTY_AUTO(QString, lang_native_text_rendering);
     Q_PROPERTY_AUTO(QString, lang_animation_effect);
     Q_PROPERTY_AUTO(QString, lang_current_version);
+    Q_PROPERTY_AUTO(QString, lang_restart_app_hint);
+    Q_PROPERTY_AUTO(QString, lang_software_render_hint);
 
     // evento block
     Q_PROPERTY_AUTO(QString, lang_copy);
