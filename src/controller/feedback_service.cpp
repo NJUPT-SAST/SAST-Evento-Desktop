@@ -17,7 +17,7 @@ void FeedbackService::load_UserFeedback(EventoID id) {
             return;
         }
         auto feedback = result.take();
-        FeedbackHelper::getInstance()->updateFeedback(feedback);
+        FeedbackHelper::getInstance()->updateFeedback(Feedback(feedback));
     });
 }
 

@@ -19,7 +19,7 @@ public:
     Q_INVOKABLE void loadEventoInfo(EventoID id);
     Q_INVOKABLE void registerEvento(EventoID id, bool selection);
     Q_INVOKABLE void subscribeEvento(EventoID id, bool selection);
-    Q_INVOKABLE void feedbackEvento(QString content, int score, EventoID id);
+    Q_INVOKABLE void feedbackEvento(int score, QString content, EventoID id);
 
 private:
     bool m_isRegistrated;

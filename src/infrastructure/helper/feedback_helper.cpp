@@ -17,5 +17,5 @@ void FeedbackHelper::updateFeedback(const Feedback& feedback) {
     setProperty("score", feedback.score);
     setProperty("content", feedback.content);
     setProperty("eventId", feedback.eventId);
-    setProperty("submitted", feedback.submitted);
+    setProperty("submitted", feedback.eventId != 0);
 }

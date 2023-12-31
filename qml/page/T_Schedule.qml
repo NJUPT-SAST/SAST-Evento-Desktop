@@ -397,8 +397,8 @@ FluScrollablePage {
                         }
                         PropertyChanges {
                             target: btn
-                            text: lang.lang_feedback
-                            disabled: false
+                            text: model.isChecked ? lang.lang_feedback : ""
+                            disabled: !model.isChecked
                             onClicked: {
                                 EventoHelper.id = model.id
                                 MainWindow.window.pushPage(

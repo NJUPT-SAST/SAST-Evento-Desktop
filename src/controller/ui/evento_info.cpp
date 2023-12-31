@@ -11,7 +11,7 @@ void EventoInfoController::registerEvento(EventoID id, bool selection) {
     UserService::getInstance().registerEvento(id, selection);
 }
 
-void EventoInfoController::feedbackEvento(QString content, int score, EventoID id) {
+void EventoInfoController::feedbackEvento(int score, QString content, EventoID id) {
     FeedbackService::getInstance().feedback(id, score, content);
 }
 
