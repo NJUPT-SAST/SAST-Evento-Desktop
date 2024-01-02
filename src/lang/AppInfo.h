@@ -1,19 +1,17 @@
 #ifndef APPINFO_H
 #define APPINFO_H
 
-#include "Lang.h"
-#include "stdafx.h"
-#include <QObject>
-#include <QQmlApplicationEngine>
+#include "Version.h"
+#include <QtQml>
 
 class AppInfo : public QObject {
     Q_OBJECT
-    Q_PROPERTY_AUTO(QString, version)
-    Q_PROPERTY_AUTO(Lang*, lang)
+    QML_NAMED_ELEMENT(AppInfo)
+    QML_SINGLETON
+
+    Q_PROPERTY(QString version MEMBER version CONSTANT)
 public:
-    explicit AppInfo(QObject* parent = nullptr);
-    void init(QQmlApplicationEngine* engine);
-    Q_INVOKABLE void changeLang(const QString& locale);
+    inline static QString version = QStringLiteral(APPLICATION_VERSION);
 };
 
 #endif // APPINFO_H

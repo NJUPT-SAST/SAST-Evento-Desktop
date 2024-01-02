@@ -1,17 +1,11 @@
 #include <QFontDatabase>
 #include <QGuiApplication>
 #include <QIcon>
+#include <QNetworkProxy>
 #include <QQmlApplicationEngine>
 
-#include "lang/AppInfo.h"
-
 int main(int argc, char* argv[]) {
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(
-        Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
-#endif
+    QNetworkProxy::setApplicationProxy(QNetworkProxy::NoProxy);
     qputenv("QT_QUICK_CONTROLS_STYLE", "Basic");
     QGuiApplication::setOrganizationName("NJUPT-SAST-C++");
     QGuiApplication::setOrganizationDomain("https://github.com/NJUPT-SAST-Cpp");
@@ -24,13 +18,10 @@ int main(int argc, char* argv[]) {
     if (!fontFamilies.empty())
         QGuiApplication::setFont(QFont(fontFamilies[0]));
 
-    auto* appInfo = new AppInfo();
     QQmlApplicationEngine engine;
-    appInfo->init(&engine);
-
     const QUrl url(QStringLiteral("qrc:/qml/App.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
     engine.load(url);
+    QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
 
     return app.exec();
 }

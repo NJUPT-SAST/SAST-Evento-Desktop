@@ -123,13 +123,13 @@ FluScrollablePage {
                 spacing: 5
                 Repeater {
                     id: langSetting
-                    model: ["Zh", "En"]
+                    model: ["System", "Zh", "En"]
                     delegate: FluRadioButton {
-                        checked: appInfo.lang.objectName === modelData
-                        text: modelData === "En" ? lang.lang_en : lang.lang_zh
+                        checked: settings.langMode === modelData
+                        text: lang_text
                         clickListener: function () {
-                            settings.langMode = modelData
-                            appInfo.changeLang(settings.langMode)
+                            settings.langMode = langSetting[index]
+                            Lang.changeLangMode(index)
                         }
                     }
                 }

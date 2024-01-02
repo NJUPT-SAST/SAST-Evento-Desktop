@@ -219,9 +219,9 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
     }
 
     function changeDark(){
-        if(FluTheme.dark){
+        if (FluTheme.dark) {
             FluTheme.darkMode = FluThemeType.Light
-        }else{
+        } else{
             FluTheme.darkMode = FluThemeType.Dark
         }
     }
@@ -266,7 +266,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
         id: dialog_update
         title: "更新提示"
         message: "SAST Evento目前最新版本 " + newVersion + "\n当前应用版本 "
-                 + appInfo.version + " \n现在是否去下载新版本？\n\n更新内容：\n" + body
+                 + AppInfo.version + " \n现在是否去下载新版本？\n\n更新内容：\n" + body
         buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
         negativeText: lang.lang_cancel
         positiveText: lang.lang_ok
@@ -284,7 +284,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer)
     Connections {
         target: CheckUpdate
         function onCheckSuccessEvent(version, description) {
-            if (version !== appInfo.version) {
+            if (version !== AppInfo.version) {
                 dialog_update.newVersion = version
                 dialog_update.body = description
                 dialog_update.open()

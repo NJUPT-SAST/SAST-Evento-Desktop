@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/.cmake/)
 include(GetGitRevisionDescription)
+configure_file(${CMAKE_SOURCE_DIR}/.cmake/Version.h.in ${CMAKE_SOURCE_DIR}/src/lang/Version.h)
 
 project(SAST_Evento_Desktop VERSION 1.0 LANGUAGES CXX)
 
@@ -47,6 +48,8 @@ file(GLOB_RECURSE SOURCE_IMPORT_PATHS
     ${CMAKE_SOURCE_DIR}/src/controller/ui/*.cpp
     ${CMAKE_SOURCE_DIR}/src/domain/model/*.h
     ${CMAKE_SOURCE_DIR}/src/domain/model/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/lang/*.h
+    ${CMAKE_SOURCE_DIR}/src/lang/*.cpp
 )
 
 foreach(filepath ${SOURCE_IMPORT_PATHS})
@@ -109,6 +112,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY
 target_include_directories(SAST_Evento_Desktop
     PRIVATE
     ${CMAKE_SOURCE_DIR}/src/include
+    ${CMAKE_SOURCE_DIR}/src/lang
     ${CMAKE_SOURCE_DIR}/src/controller
     ${CMAKE_SOURCE_DIR}/src/controller/ui
     ${CMAKE_SOURCE_DIR}/src/domain/entity

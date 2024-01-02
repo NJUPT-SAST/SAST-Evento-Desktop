@@ -4,6 +4,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtCore
 import FluentUI
+import SAST_Evento
 
 Window {
     id: app
@@ -29,9 +30,8 @@ Window {
         settings.colorIndex = list.indexOf(FluTheme.primaryColor)
         FluTheme.enableAnimation = settings.value("enableAnimationSet", 1)
         FluTheme.nativeText = settings.value("nativeTextSet", 1)
-        settings.displayMode = settings.value("displayMode",
-                                              FluNavigationViewType.Auto)
-        appInfo.changeLang(settings.value("langMode", "En"))
+        settings.displayMode = settings.value("displayMode", FluNavigationViewType.Auto)
+        Lang.changeLangMode(settings.value("langMode", "System"))
         FluApp.routes = {
             "/": "qrc:/qml/window/MainWindow.qml",
             "/login": "qrc:/qml/window/LoginWindow.qml",
