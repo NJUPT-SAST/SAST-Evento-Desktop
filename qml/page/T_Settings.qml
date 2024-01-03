@@ -127,8 +127,8 @@ FluScrollablePage {
                     delegate: FluRadioButton {
                         checked: settings.langMode === modelData
                         text: lang_text
-                        clickListener: function () {
-                            settings.langMode = langSetting[index]
+                        clickListener:function () {
+                            settings.langMode = langSetting.model[index]
                             Lang.changeLangMode(index)
                         }
                     }
@@ -178,7 +178,7 @@ FluScrollablePage {
                 target: CheckUpdate
                 function onCheckSuccessEvent(version, description) {
                     btn_progress.progress = 1
-                    if (version === appInfo.version)
+                    if (version === AppInfo.version)
                         showInfo(lang.lang_is_currently_latest_version, 4000)
                 }
             }

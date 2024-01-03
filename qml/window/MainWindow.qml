@@ -61,7 +61,7 @@ FluWindow {
                      | FluContentDialogType.PositiveButton
         onNegativeClicked: {
             window.hide()
-            system_tray.showMessage(lang.lang_hint, lang.lang_hint_info)
+            system_tray.showMessage(qsTr("提示"), qsTr("SAST Evento已隐藏至托盘，点击图标可再次激活窗口。"))
         }
         positiveText: lang.lang_exit
         neutralText: lang.lang_cancel

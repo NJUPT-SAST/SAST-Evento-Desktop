@@ -66,5 +66,6 @@
         <file>app.icns</file>
         <file>qml/page/T_LessonPic.qml</file>
         <file>res/image/department/SRD_lesson_pic_bg.jpg</file>
+        <file>translations/SAST_Evento_en.qm</file>
     </qresource>
 </RCC>

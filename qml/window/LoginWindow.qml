@@ -8,7 +8,7 @@ import org.wangwenx190.FramelessHelper
 
 FluWindow {
     id: window
-    title: lang.lang_login
+    title: qsTr("登录")
     width: 278
     height: 378
     fixSize: true
@@ -52,7 +52,7 @@ FluWindow {
         target: LoginController
         function onLoadPermissionErrorEvent(message) {
             hideLoading()
-            showError(lang.lang_error + message, 4000)
+            showError(qsTr("登录失败：") + message, 4000)
         }
     }
 
@@ -60,10 +60,9 @@ FluWindow {
         target: LoginController
         function onLoginFailed(reason) {
             hideLoading()
-            system_tray.showMessage(lang.lang_login_failed,
-                                    lang.lang_error + reason)
+            system_tray.showMessage(qsTr("登录失败"), qsTr("错误：") + reason)
             window.requestActivate()
-            showError(lang.lang_login_failed, 4000)
+            showError(qsTr("登录失败"), 4000)
         }
     }
 
@@ -93,7 +92,7 @@ FluWindow {
         tooltip: "SAST Evento"
         menu: Menu {
             MenuItem {
-                text: lang.lang_exit
+                text: qsTr("退出")
                 onTriggered: {
                     window.deleteWindow()
                     FluApp.closeApp()
@@ -111,7 +110,7 @@ FluWindow {
 
     FluButton {
         id: btn_login
-        text: lang.lang_use_link
+        text: qsTr("       使用 Link 登入")
         font.pixelSize: 16
         font.bold: true
         textColor: Qt.rgba(250 / 255, 250 / 255, 250 / 255, 1)
@@ -146,7 +145,7 @@ FluWindow {
 
     FluIconButton {
         id: btn_visitor
-        text: lang.lang_guest_login
+        text: qsTr("访客登录")
         iconSource: FluentIcons.GuestUser
         display: Button.TextBesideIcon
         anchors {
@@ -162,7 +161,7 @@ FluWindow {
     }
 
     FluText {
-        text: lang.lang_by_cpp + appInfo.version
+        text: qsTr("NJUPT SAST C++组开发\n") + AppInfo.version
         color: FluColors.Grey100
         font: FluTextStyle.Caption
         horizontalAlignment: Text.AlignHCenter
