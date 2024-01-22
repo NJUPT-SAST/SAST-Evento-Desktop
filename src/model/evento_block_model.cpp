@@ -1,7 +1,6 @@
 #include "evento_block_model.h"
 
 #include "convertor.h"
-#include "movable_lambda.h"
 
 int EventoBlockModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
@@ -66,13 +65,12 @@ QHash<int, QByteArray> EventoBlockModel::roleNames() const {
 }
 
 void EventoBlockModel::resetModel(QDate monday, std::vector<EventoBlock>&& model) {
-    QMetaObject::invokeMethod(this,
-                              MovableLambda(std::move(model), [=](std::vector<EventoBlock>&& data) {
-                                  beginResetModel();
-                                  m_data = std::move(data);
-                                  arrange_pipeline(monday);
-                                  endResetModel();
-                              }));
+    QMetaObject::invokeMethod(this, [=, data = std::move(model)]() {
+        beginResetModel();
+        m_data = std::move(data);
+        arrange_pipeline(monday);
+        endResetModel();
+    });
 }
 
 EventoBlockModel* EventoBlockModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

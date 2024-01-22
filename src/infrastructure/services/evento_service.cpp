@@ -20,7 +20,7 @@
 #include "scheduled_evento.h"
 #include "scheduled_evento_model.h"
 #include "slide_model.h"
-#include "undertaking_evento_model.h"
+#include "in_progress_evento_model.h"
 #include "user_helper.h"
 
 #include <QDateTime>
@@ -38,17 +38,17 @@ void EventoService::load_Plaza() {
                 return false;
             }
             auto data = result.take();
-            std::vector<UndertakingEvento> model;
+            std::vector<EventoInProgress> model;
             {
                 std::lock_guard lock(mutex);
                 undertaking.clear();
                 for (auto& i : data) {
                     undertaking.push_back(i.id);
-                    model.push_back(UndertakingEvento(i));
+                    model.push_back(EventoInProgress(i));
                     stored[i.id] = std::move(i);
                 }
             }
-            UndertakingEventoModel::getInstance()->resetModel(std::move(model));
+            InProgressEventoModel::getInstance()->resetModel(std::move(model));
             return true;
         }),
         getRepo()->getLatestList().then([this](EventoResult<std::vector<DTO_Evento>> result) {
@@ -414,7 +414,7 @@ Schedule::Schedule(const DTO_Evento& src, const ParticipationStatus& participate
     }
 }
 
-UndertakingEvento::UndertakingEvento(const DTO_Evento& src)
+EventoInProgress::EventoInProgress(const DTO_Evento& src)
     : id(src.id), title(src.title), location(src.location) {
 
     this->time = periodConvertor(src.gmtEventStart, src.gmtEventEnd);

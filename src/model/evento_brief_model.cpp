@@ -1,7 +1,5 @@
 #include "evento_brief_model.h"
 
-#include "movable_lambda.h"
-
 int EventoBriefModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -55,12 +53,11 @@ QHash<int, QByteArray> EventoBriefModel::roleNames() const {
 }
 
 void EventoBriefModel::resetModel(std::vector<EventoBrief>&& model) {
-    QMetaObject::invokeMethod(
-        this, MovableLambda(std::move(model), [this](std::vector<EventoBrief>&& data) {
-            beginResetModel();
-            m_data = std::move(data);
-            endResetModel();
-        }));
+    QMetaObject::invokeMethod(this, [this, data = std::move(model)]() {
+        beginResetModel();
+        m_data = std::move(data);
+        endResetModel();
+    });
 }
 
 EventoBriefModel* EventoBriefModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

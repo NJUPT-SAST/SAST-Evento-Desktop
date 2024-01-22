@@ -1,8 +1,6 @@
-#include "undertaking_evento_model.h"
+#include "latest_evento_model.h"
 
-#include "movable_lambda.h"
-
-int UndertakingEventoModel::rowCount(const QModelIndex& parent) const {
+int LatestEventoModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
@@ -11,7 +9,7 @@ int UndertakingEventoModel::rowCount(const QModelIndex& parent) const {
     return m_data.size();
 }
 
-QVariant UndertakingEventoModel::data(const QModelIndex& index, int role) const {
+QVariant LatestEventoModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || index.row() >= m_data.size())
         return QVariant();
 
@@ -24,11 +22,11 @@ QVariant UndertakingEventoModel::data(const QModelIndex& index, int role) const 
         return element.title;
     case Role::Time:
         return element.time;
-    case Role::Location:
-        return element.location;
+    case Role::Description:
+        return element.description;
     case Role::Department:
         return element.department;
-    case Role::Image:
+    case Role::Url:
         return element.image;
     default:
         break;
@@ -37,35 +35,35 @@ QVariant UndertakingEventoModel::data(const QModelIndex& index, int role) const 
     return QVariant();
 }
 
-QHash<int, QByteArray> UndertakingEventoModel::roleNames() const {
+QHash<int, QByteArray> LatestEventoModel::roleNames() const {
     static QHash<int, QByteArray> roles;
 
     if (roles.isEmpty()) {
         roles.insert(Id, "id");
         roles.insert(Title, "title");
         roles.insert(Time, "time");
-        roles.insert(Location, "location");
+        roles.insert(Description, "description");
         roles.insert(Department, "department");
-        roles.insert(Image, "image");
+        roles.insert(Url, "url");
     }
     return roles;
 }
 
-void UndertakingEventoModel::resetModel(std::vector<UndertakingEvento>&& model) {
-    QMetaObject::invokeMethod(this, MovableLambda(std::move(model), [this](auto&& data) {
-                                  beginResetModel();
-                                  m_data = std::move(data);
-                                  endResetModel();
-                              }));
+void LatestEventoModel::resetModel(std::vector<LatestEvento>&& model) {
+    QMetaObject::invokeMethod(this, [this, data = std::move(model)]() {
+        beginResetModel();
+        m_data = std::move(data);
+        endResetModel();
+    });
 }
 
-UndertakingEventoModel* UndertakingEventoModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+LatestEventoModel* LatestEventoModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
     auto pInstance = getInstance();
     QJSEngine::setObjectOwnership(pInstance, QQmlEngine::CppOwnership);
     return pInstance;
 }
 
-UndertakingEventoModel* UndertakingEventoModel::getInstance() {
-    static UndertakingEventoModel singleton;
+LatestEventoModel* LatestEventoModel::getInstance() {
+    static LatestEventoModel singleton;
     return &singleton;
 }

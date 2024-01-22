@@ -2,25 +2,25 @@
 #include "future.h"
 #include "user_helper.h"
 
-#include <json_deserialise.hpp>
+#include <json_deserialise.h>
 
 static auto API_GATEWAY = QStringLiteral("https://evento.sast.fun/api");
-constexpr const char USER_AGENT[] = "SAST-Evento-Desktop/1";
-constexpr const char MIME_FORM_URL_ENCODED[] = "application/x-www-form-urlencoded";
-constexpr const char MIME_JSON[] = "application/json";
+static auto USER_AGENT = QByteArrayLiteral("SAST-Evento-Desktop/1");
+static auto MIME_FORM_URL_ENCODED = QByteArrayLiteral("application/x-www-form-urlencoded");
+static auto MIME_JSON = QByteArrayLiteral("application/json");
 
 static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply) {
     auto content = reply->readAll();
     auto networkError = reply->error();
 
     if (networkError != QNetworkReply::NoError) {
-        return EventoException(EventoExceptionCode::NetworkError, "network error");
+        return EventoException(EventoExceptionCode::NetworkError, QStringLiteral("network error"));
     }
     QJsonParseError jsonError;
     auto result = QJsonDocument::fromJson(content, &jsonError);
     if (jsonError.error != QJsonParseError::NoError) {
         return EventoException(EventoExceptionCode::JsonError,
-                               QString("json error: %1 (offset = %2)")
+                               QStringLiteral("json error: %1 (offset = %2)")
                                    .arg(jsonError.errorString())
                                    .arg(jsonError.offset));
     }
@@ -30,18 +30,18 @@ static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply) {
                                QStringLiteral("expect object but got other"));
     }
     QJsonObject jsonObject = result.object();
-    auto successItem = jsonObject.constFind("success");
+    auto successItem = jsonObject.constFind(QStringLiteral("success"));
     if (successItem != jsonObject.constEnd() && successItem.value().toBool()) {
         // successful
-        auto dataItem = jsonObject.constFind("data");
+        auto dataItem = jsonObject.constFind(QStringLiteral("data"));
         if (dataItem != jsonObject.constEnd()) {
             return QJsonValue(dataItem.value());
         }
         return QJsonValue{};
     } else {
         // error
-        auto errCodeItem = jsonObject.constFind("errCode");
-        auto errMsgItem = jsonObject.constFind("errMsg");
+        auto errCodeItem = jsonObject.constFind(QStringLiteral("errCode"));
+        auto errMsgItem = jsonObject.constFind(QStringLiteral("errMsg"));
         EventoExceptionCode errCode = EventoExceptionCode::UnexpectedError;
         QString errMsg = QStringLiteral("no error message");
         if (errCodeItem != jsonObject.constEnd()) {
@@ -407,7 +407,7 @@ static QString date2str(const QDateTime& time) {
 };
 declare_global_extension(QDateTime, QString, str2date, date2str);
 
-declare_non_trivial_as(EventState, int);
+declare_enum_as(EventState, int);
 
 register_object_member(DTO_Evento, "id", id);
 register_object_member(DTO_Evento, "title", title);
@@ -938,7 +938,7 @@ struct Request_Evento {
         declare_serialiser("typeId", typeId, typeId_);
         declare_serialiser("locationId", locationId, locationId_);
         declare_serialiser("tag", tag, tag_);
-        auto convertor = [](const QVariantList& src) -> QJsonValue {
+        static auto convertor = [](const QVariantList& src) -> QJsonValue {
             QJsonArray arr;
             for (const auto& i : src) {
                 QJsonObject obj;
@@ -949,9 +949,9 @@ struct Request_Evento {
         };
         declare_one_direction_extension_serialiser("departments", departmentIds, departmentIds_,
                                                    convertor);
-        JsonDeserialise::JsonSerialiser serialiser(title_, description_, eventStart_, eventEnd_,
-                                                   registerStart_, registerEnd_, typeId_,
-                                                   locationId_, tag_, departmentIds_);
+        const JsonDeserialise::JsonDeserialiser serialiser(
+            title_, description_, eventStart_, eventEnd_, registerStart_, registerEnd_, typeId_,
+            locationId_, tag_, departmentIds_);
         return serialiser.serialise_to_json();
     }
 };
@@ -1098,7 +1098,7 @@ EventoFuture<EventoResult<std::set<EventoID>>>
                         result.insert(i.toInt());
                     return result;
                 }
-                return {EventoExceptionCode::JsonError, "Format Error!"};
+                return {EventoExceptionCode::JsonError, QStringLiteral("Format Error!")};
             } else {
                 return {result.code(), result.message()};
             }
@@ -1129,7 +1129,7 @@ EventoFuture<EventoResult<std::pair<QString, QString>>> EventoNetworkClient::che
             auto result = QJsonDocument::fromJson(content, &jsonError);
             if (jsonError.error != QJsonParseError::NoError) {
                 return EventoException(EventoExceptionCode::JsonError,
-                                       QString("json error: %1 (offest = %2)")
+                                       QStringLiteral("json error: %1 (offest = %2)")
                                            .arg(jsonError.errorString())
                                            .arg(jsonError.offset));
             }

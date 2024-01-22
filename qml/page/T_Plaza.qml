@@ -153,7 +153,7 @@ FluScrollablePage {
         cellHeight: 150
         cellWidth: 292
         delegate: com_item
-        model: UndertakingEventoModel
+        model: InProgressEventoModel
     }
 
     FluText {

@@ -1,7 +1,5 @@
 #include "location_model.h"
 
-#include "movable_lambda.h"
-
 decltype(std::bind(std::declval<int (DTO_Location::*)() const>(),
                    std::placeholders::_1)) DTO_Location::functor =
     std::bind(&DTO_Location::count, std::placeholders::_1);
@@ -71,13 +69,12 @@ QHash<int, QByteArray> LocationModel::roleNames() const {
 }
 
 void LocationModel::resetModel(std::vector<DTO_Location>&& model) {
-    QMetaObject::invokeMethod(
-        this, MovableLambda(std::move(model), [this](std::vector<DTO_Location>&& model) {
-            beginResetModel();
-            m_data = std::move(model);
-            update_depth();
-            endResetModel();
-        }));
+    QMetaObject::invokeMethod(this, [this, data = std::move(model)]() {
+        beginResetModel();
+        m_data = std::move(data);
+        update_depth();
+        endResetModel();
+    });
 }
 
 LocationModel* LocationModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

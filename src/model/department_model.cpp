@@ -1,7 +1,5 @@
 #include "department_model.h"
 
-#include "movable_lambda.h"
-
 int DepartmentModel::rowCount(const QModelIndex& parent) const {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -42,12 +40,11 @@ QHash<int, QByteArray> DepartmentModel::roleNames() const {
 }
 
 void DepartmentModel::resetModel(std::vector<Department>&& model) {
-    QMetaObject::invokeMethod(
-        this, MovableLambda(std::move(model), [this](std::vector<Department>&& data) {
-            beginResetModel();
-            m_data = std::move(data);
-            endResetModel();
-        }));
+    QMetaObject::invokeMethod(this, [this, data = std::move(model)]() {
+        beginResetModel();
+        m_data = std::move(data);
+        endResetModel();
+    });
 }
 
 DepartmentModel* DepartmentModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {

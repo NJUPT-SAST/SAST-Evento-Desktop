@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/.cmake/)
 include(GetGitRevisionDescription)
-configure_file(${CMAKE_SOURCE_DIR}/.cmake/Version.h.in ${CMAKE_SOURCE_DIR}/src/lang/Version.h)
+configure_file(${CMAKE_SOURCE_DIR}/.cmake/Version.h.in ${CMAKE_SOURCE_DIR}/src/common/Version.h)
 
 project(SAST_Evento_Desktop VERSION 1.0 LANGUAGES CXX)
 
@@ -107,9 +107,9 @@ qt_add_qml_module(SAST_Evento_Desktop
 )
 
 # 多语言配置
-list(APPEND TS_FILES ${CMAKE_SOURCE_DIR}/translations/SAST_Evento_en.ts)
+list(APPEND TS_FILES ${CMAKE_SOURCE_DIR}/locale/SAST_Evento_en.ts)
 set_source_files_properties(${TS_FILES}
-    PROPERTIES OUTPUT_LOCATION "${CMAKE_SOURCE_DIR}/translations")
+    PROPERTIES OUTPUT_LOCATION "${CMAKE_SOURCE_DIR}/locale")
 file(GLOB_RECURSE QML_FILES
     ${CMAKE_SOURCE_DIR}/qml/*.qml
 )
@@ -127,15 +127,16 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY
 
 target_include_directories(SAST_Evento_Desktop
     PRIVATE
-    ${CMAKE_SOURCE_DIR}/src/include
-    ${CMAKE_SOURCE_DIR}/src/lang
+    ${CMAKE_SOURCE_DIR}/src/common/
+    ${CMAKE_SOURCE_DIR}/src/common/utils
     ${CMAKE_SOURCE_DIR}/src/controller
     ${CMAKE_SOURCE_DIR}/src/controller/ui
-    ${CMAKE_SOURCE_DIR}/src/domain/entity
-    ${CMAKE_SOURCE_DIR}/src/domain/model
+    ${CMAKE_SOURCE_DIR}/src/model/entity
+    ${CMAKE_SOURCE_DIR}/src/model/
     ${CMAKE_SOURCE_DIR}/src/domain/exception
+    ${CMAKE_SOURCE_DIR}/src/infrastructure/network
+    ${CMAKE_SOURCE_DIR}/src/infrastructure/services
     ${CMAKE_SOURCE_DIR}/src/infrastructure
-    ${CMAKE_SOURCE_DIR}/src/infrastructure/helper
     ${CMAKE_SOURCE_DIR}/libs/Qt-Based-JsonDeserialiser
 )
 
