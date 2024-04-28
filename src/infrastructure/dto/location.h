@@ -2,6 +2,7 @@
 #define DTO_LOCATION_H
 
 #include <vector>
+#include <stdexcept>
 
 #include "types.h"
 
@@ -43,6 +44,7 @@ struct DTO_Location {
                 return i.at(index);
             index -= count;
         }
+        throw std::out_of_range("Index out of range");
     }
 };
 
