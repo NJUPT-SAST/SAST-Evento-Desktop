@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import SAST_Evento
-import org.wangwenx190.FramelessHelper
 
 FluWindow {
     id: window
@@ -16,12 +15,7 @@ FluWindow {
     height: 378
     fixSize: true
     launchMode: FluWindowType.SingleTask
-    closeDestory: true
     Component.onCompleted: {
-        if (FluTheme.dark)
-            FramelessUtils.systemTheme = FramelessHelperConstants.Dark;
-        else
-            FramelessUtils.systemTheme = FramelessHelperConstants.Light;
     }
 
     Connections {
@@ -44,7 +38,7 @@ FluWindow {
     Connections {
         function onLoadPermissionSuccessEvent() {
             hideLoading();
-            FluApp.navigate("/");
+            FluRouter.navigate("/");
             window.close();
         }
 
@@ -166,7 +160,7 @@ FluWindow {
         display: Button.TextBesideIcon
         onClicked: {
             UserHelper.permission = UserHelper.GuestPermission;
-            FluApp.navigate("/");
+            FluRouter.navigate("/");
             window.close();
         }
 

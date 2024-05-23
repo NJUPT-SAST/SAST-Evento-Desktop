@@ -1,3 +1,4 @@
+import "../component"
 import "../page"
 import "../window"
 import FluentUI
@@ -7,11 +8,11 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     id: page
 
     function loadEditInfo() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         EventoEditController.loadEditInfo();
     }
 
@@ -29,7 +30,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadEditSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: EventoEditController
@@ -38,7 +39,7 @@ FluScrollablePage {
     Connections {
         function onLoadEditErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: EventoEditController
@@ -46,7 +47,7 @@ FluScrollablePage {
 
     Connections {
         function onCreateSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             showSuccess("操作成功");
             returnPage();
         }
@@ -56,7 +57,7 @@ FluScrollablePage {
 
     Connections {
         function onCreateErrorEvent(message) {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             showError(message, 4000);
         }
 
@@ -64,6 +65,80 @@ FluScrollablePage {
     }
 
     Item {
+        // deprecated
+        //        Item {
+        //            visible: false
+        //            FluText {
+        //                id: item_slide
+        //                text: "图片"
+        //                font.pixelSize: 20
+        //                font.bold: true
+        //                anchors {
+        //                    left: item_title.left
+        //                    top: textbox_description.bottom
+        //                    topMargin: 40
+        //                }
+        //            }
+        //            FluFilledButton {
+        //                id: btn_open_gallery
+        //                text: "打开图库"
+        //                implicitWidth: 200
+        //                anchors {
+        //                    left: textbox_title.left
+        //                    top: item_slide.top
+        //                }
+        //                onClicked: {
+        //                    GalleryHelper.maxNum = 3
+        //                    MainWindow.window.pushPage(
+        //                                "qrc:/qml/page/T_PictureSelection.qml")
+        //                }
+        //            }
+        //            FluText {
+        //                text: "请选择1~3张\n右键图片可删除"
+        //                font: FluTextStyle.Caption
+        //                color: FluColors.Grey110
+        //                anchors {
+        //                    left: item_title.left
+        //                    top: list_view_slide.top
+        //                }
+        //            }
+        //            ListView {
+        //                id: list_view_slide
+        //                width: 600
+        //                height: 150
+        //                orientation: ListView.Horizontal
+        //                spacing: 5
+        //                anchors {
+        //                    left: textbox_title.left
+        //                    top: item_slide.bottom
+        //                    topMargin: 15
+        //                }
+        //                model: GalleryHelper.urlList
+        //                delegate: Component {
+        //                    FluImage {
+        //                        width: 200
+        //                        height: 150
+        //                        source: model.modelData
+        //                        fillMode: Image.PreserveAspectCrop
+        //                        MouseArea {
+        //                            anchors.fill: parent
+        //                            acceptedButtons: Qt.RightButton
+        //                            onClicked: menu.popup()
+        //                        }
+        //                        FluMenu {
+        //                            id: menu
+        //                            FluMenuItem {
+        //                                text: "删除"
+        //                                onClicked: {
+        //                                    GalleryHelper.removeByIndex(model.index)
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+
         id: item_all
 
         Layout.fillWidth: true
@@ -72,7 +147,7 @@ FluScrollablePage {
             loadEditInfo();
         }
 
-        FluArea {
+        FluFrame {
             id: area1
 
             width: parent.width
@@ -84,7 +159,7 @@ FluScrollablePage {
 
         }
 
-        FluArea {
+        FluFrame {
             id: area2
 
             width: parent.width
@@ -97,7 +172,7 @@ FluScrollablePage {
 
         }
 
-        FluArea {
+        FluFrame {
             id: area3
 
             width: parent.width
@@ -113,7 +188,7 @@ FluScrollablePage {
         /*
         Item {
             visible: false
-            FluArea {
+            FluFrame {
                 id: area4
                 width: parent.width
                 height: 230
@@ -387,12 +462,12 @@ FluScrollablePage {
 
         }
 
-        FluArea {
+        FluFrame {
             id: rect_location
 
             width: 200
             height: 200
-            paddings: 10
+            padding: 10
 
             anchors {
                 top: item_location.top
@@ -422,7 +497,7 @@ FluScrollablePage {
                             width: 6
                             height: 30
                             radius: [3, 3, 3, 3]
-                            color: model.id == LocationModel.selected ? FluTheme.primaryColor.normal : FluColors.Grey110
+                            color: model.id == LocationModel.selected ? FluTheme.primaryColor : FluColors.Grey110
 
                             anchors {
                                 left: parent.left
@@ -495,14 +570,14 @@ FluScrollablePage {
 
         }
 
-        FluArea {
+        FluFrame {
             id: rect_department
 
             property var departmentIds: EventoEditController.isEditMode ? JSON.parse(EventoEditController.departmentIds) : []
 
             width: 200
             height: 200
-            paddings: 10
+            padding: 10
 
             anchors {
                 top: item_department.top
@@ -534,7 +609,7 @@ FluScrollablePage {
                         width: 6
                         height: 30
                         radius: [3, 3, 3, 3]
-                        color: rect_department.departmentIds.indexOf(model.id) < 0 ? FluColors.Grey110 : FluTheme.primaryColor.normal
+                        color: rect_department.departmentIds.indexOf(model.id) < 0 ? FluColors.Grey110 : FluTheme.primaryColor
 
                         anchors {
                             leftMargin: 5
@@ -565,7 +640,7 @@ FluScrollablePage {
                                 rect_department.departmentIds.push(model.id);
                             else
                                 rect_department.departmentIds.splice(rect_department.departmentIds.indexOf(model.id), 1);
-                            rect_division.color = rect_department.departmentIds.indexOf(model.id) < 0 ? FluColors.Grey110 : FluTheme.primaryColor.normal;
+                            rect_division.color = rect_department.departmentIds.indexOf(model.id) < 0 ? FluColors.Grey110 : FluTheme.primaryColor;
                             area.checked = !area.checked;
                         }
                     }
@@ -653,84 +728,6 @@ FluScrollablePage {
 
         }
 
-        // deprecated
-        //
-        //        Item {
-        //            visible: false
-        //
-        //            FluText {
-        //                id: item_slide
-        //                text: "图片"
-        //                font.pixelSize: 20
-        //                font.bold: true
-        //                anchors {
-        //                    left: item_title.left
-        //                    top: textbox_description.bottom
-        //                    topMargin: 40
-        //                }
-        //            }
-        //            FluFilledButton {
-        //                id: btn_open_gallery
-        //                text: "打开图库"
-        //                implicitWidth: 200
-        //                anchors {
-        //                    left: textbox_title.left
-        //                    top: item_slide.top
-        //                }
-        //                onClicked: {
-        //                    GalleryHelper.maxNum = 3
-        //                    MainWindow.window.pushPage(
-        //                                "qrc:/qml/page/T_PictureSelection.qml")
-        //                }
-        //            }
-        //
-        //            FluText {
-        //                text: "请选择1~3张\n右键图片可删除"
-        //                font: FluTextStyle.Caption
-        //                color: FluColors.Grey110
-        //                anchors {
-        //                    left: item_title.left
-        //                    top: list_view_slide.top
-        //                }
-        //            }
-        //
-        //            ListView {
-        //                id: list_view_slide
-        //                width: 600
-        //                height: 150
-        //                orientation: ListView.Horizontal
-        //                spacing: 5
-        //                anchors {
-        //                    left: textbox_title.left
-        //                    top: item_slide.bottom
-        //                    topMargin: 15
-        //                }
-        //                model: GalleryHelper.urlList
-        //                delegate: Component {
-        //                    FluImage {
-        //                        width: 200
-        //                        height: 150
-        //                        source: model.modelData
-        //                        fillMode: Image.PreserveAspectCrop
-        //                        MouseArea {
-        //                            anchors.fill: parent
-        //                            acceptedButtons: Qt.RightButton
-        //                            onClicked: menu.popup()
-        //                        }
-        //                        FluMenu {
-        //                            id: menu
-        //                            FluMenuItem {
-        //                                text: "删除"
-        //                                onClicked: {
-        //                                    GalleryHelper.removeByIndex(model.index)
-        //                                }
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //
         FluButton {
             text: "取消"
             implicitWidth: 100
@@ -749,6 +746,10 @@ FluScrollablePage {
         }
 
         FluFilledButton {
+            function format(date, time) {
+                return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + time.getHours() + ":" + time.getMinutes();
+            }
+
             text: EventoEditController.isEditMode ? "完成修改" : "创建"
             implicitWidth: 100
             implicitHeight: 35
@@ -758,12 +759,8 @@ FluScrollablePage {
                     showInfo("有信息未填写");
                     return ;
                 }
-                statusMode = FluStatusViewType.Loading;
+                statusMode = FluStatusLayoutType.Loading;
                 EventoEditController.createEvento(textbox_title.text, textbox_description.text, format(clender_picker_event_start.current, time_picker_event_start.current), format(clender_picker_event_end.current, time_picker_event_end.current), format(clender_picker_register_start.current, time_picker_register_start.current), format(clender_picker_register_end.current, time_picker_register_end.current), EventoEditController.index, LocationModel.selected, rect_department.departmentIds, textbox_tag.text);
-            }
-
-            function format(date, time) {
-                return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + time.getHours() + ":" + time.getMinutes();
             }
 
             anchors {

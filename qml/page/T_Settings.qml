@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtCore
@@ -7,7 +8,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     function checkUpdate() {
         CheckUpdate.check();
     }
@@ -25,11 +26,10 @@ FluScrollablePage {
         location: FluTools.getApplicationDirPath() + "/config.ini"
     }
 
-    FluArea {
+    FluFrame {
         Layout.fillWidth: true
         Layout.topMargin: 20
-        height: 128
-        paddings: 10
+        padding: 10
 
         ColumnLayout {
             spacing: 5
@@ -71,11 +71,10 @@ FluScrollablePage {
 
     }
 
-    FluArea {
+    FluFrame {
         Layout.fillWidth: true
         Layout.topMargin: 20
-        height: 160
-        paddings: 10
+        padding: 10
 
         ColumnLayout {
             spacing: 5
@@ -121,11 +120,10 @@ FluScrollablePage {
 
     }
 
-    FluArea {
+    FluFrame {
         Layout.fillWidth: true
         Layout.topMargin: 20
-        height: 80
-        paddings: 10
+        padding: 10
 
         ColumnLayout {
             spacing: 10
@@ -166,11 +164,10 @@ FluScrollablePage {
 
     }
 
-    FluArea {
+    FluFrame {
         Layout.fillWidth: true
         Layout.topMargin: 20
-        height: 95
-        paddings: 10
+        padding: 10
 
         ColumnLayout {
             spacing: 5
@@ -238,39 +235,40 @@ FluScrollablePage {
 
     }
 
-    FluArea {
+    FluFrame {
         Layout.fillWidth: true
         Layout.topMargin: 20
-        height: 60 + text_hint.implicitHeight
-        paddings: 10
+        padding: 10
 
-        FluCheckBox {
-            id: checkbox_render
-
-            text: "Software Render"
-            checked: SettingsHelper.getRender() === "software"
-            anchors.top: parent.top
-            anchors.topMargin: 5
-            onClicked: {
-                if (SettingsHelper.getRender() === "software")
-                    SettingsHelper.saveRender("");
-                else
-                    SettingsHelper.saveRender("software");
-                dialog_restart.open();
-            }
-        }
-
-        FluText {
-            id: text_hint
-
-            text: lang.lang_software_render_hint
-            font: FluTextStyle.Caption
-            width: parent.width
-            wrapMode: Text.WordWrap
+        ColumnLayout {
+            spacing: 5
 
             anchors {
-                top: checkbox_render.bottom
-                topMargin: 10
+                top: parent.top
+                left: parent.left
+            }
+
+            FluCheckBox {
+                id: checkbox_render
+
+                text: "Software Render"
+                checked: SettingsHelper.getRender() === "software"
+                onClicked: {
+                    if (SettingsHelper.getRender() === "software")
+                        SettingsHelper.saveRender("");
+                    else
+                        SettingsHelper.saveRender("software");
+                    dialog_restart.open();
+                }
+            }
+
+            FluText {
+                id: text_hint
+
+                text: lang.lang_software_render_hint
+                font: FluTextStyle.Caption
+                width: parent.width
+                wrapMode: Text.WordWrap
             }
 
         }

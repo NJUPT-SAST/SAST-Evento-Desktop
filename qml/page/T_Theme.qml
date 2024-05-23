@@ -1,3 +1,5 @@
+import "../component"
+import "../window"
 import FluentUI
 import QtCore
 import QtQuick
@@ -5,7 +7,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 
-FluScrollablePage {
+FluScrollableStatusPage {
     launchMode: FluPageType.SingleTask
     title: lang.lang_theming
 
@@ -17,11 +19,11 @@ FluScrollablePage {
         location: FluTools.getApplicationDirPath() + "/config.ini"
     }
 
-    FluArea {
+    FluFrame {
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 270
-        paddings: 10
+        padding: 10
 
         ColumnLayout {
             spacing: 0
@@ -48,7 +50,7 @@ FluScrollablePage {
                             anchors.centerIn: parent
                             iconSource: FluentIcons.AcceptMedium
                             iconSize: 15
-                            visible: modelData === FluTheme.primaryColor
+                            visible: modelData === FluTheme.accentColor
                             color: FluTheme.dark ? Qt.rgba(0, 0, 0, 1) : Qt.rgba(1, 1, 1, 1)
                         }
 
@@ -58,7 +60,7 @@ FluScrollablePage {
                             anchors.fill: parent
                             hoverEnabled: true
                             onClicked: {
-                                FluTheme.primaryColor = modelData;
+                                FluTheme.accentColor = modelData;
                                 settings.colorIndex = model.index;
                             }
                         }
@@ -108,10 +110,10 @@ FluScrollablePage {
             FluToggleSwitch {
                 Layout.topMargin: 5
                 onClicked: {
-                    FluTheme.enableAnimation = !FluTheme.enableAnimation;
+                    FluTheme.animationEnabled = !FluTheme.animationEnabled;
                 }
                 Component.onCompleted: {
-                    checked = FluTheme.enableAnimation;
+                    checked = FluTheme.animationEnabled;
                 }
             }
 

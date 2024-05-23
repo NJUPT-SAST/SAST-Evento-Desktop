@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -7,7 +8,7 @@ import QtQuick.Window
 import SAST_Evento
 
 //This qml is same to T_Gallery.qml. Use Gallery_controller Together
-FluScrollablePage {
+FluScrollableStatusPage {
     id: galleryPage
 
     property bool isSelectedDir: false
@@ -22,7 +23,7 @@ FluScrollablePage {
     }
 
     function loadGalleryUrlListInfo() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         GalleryController.loadGalleryDirJson();
         galleryDirJson = GalleryHelper.dirJson;
         tree_view.updateData(createDir());
@@ -47,7 +48,7 @@ FluScrollablePage {
 
     function trySwitchImgPage(dirName, pageNumber) {
         inside_page.visible = true;
-        inside_page.statusMode = FluStatusViewType.Loading;
+        inside_page.statusMode = FluStatusLayoutType.Loading;
         GalleryController.loadGalleryDirImgInfo(dirName, pageNumber);
         var dirJson = JSON.parse(GalleryHelper.dirImgInfo);
         img_pagination.itemCount = dirJson.count;
@@ -68,7 +69,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadGalleryUrlListSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: GalleryController
@@ -77,7 +78,7 @@ FluScrollablePage {
     Connections {
         function onLoadGalleryUrlListErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: GalleryController
@@ -86,7 +87,7 @@ FluScrollablePage {
     Connections {
         function onLoadGalleryDirImgInfoSuccessEvent() {
             img_pagination.visible = true;
-            inside_page.statusMode = FluStatusViewType.Success;
+            inside_page.statusMode = FluStatusLayoutType.Success;
         }
 
         target: GalleryController
@@ -95,7 +96,7 @@ FluScrollablePage {
     Connections {
         function onLoadGalleryDirImgInfoErrorEvent(message) {
             inside_page.errorText = message;
-            inside_page.statusMode = FluStatusViewType.Error;
+            inside_page.statusMode = FluStatusLayoutType.Error;
         }
 
         target: GalleryController
@@ -110,7 +111,7 @@ FluScrollablePage {
         padding: 0
     }
 
-    FluArea {
+    FluFrame {
         id: top_area
 
         height: 38
@@ -136,11 +137,11 @@ FluScrollablePage {
         Layout.fillHeight: true
         spacing: 20
 
-        FluArea {
+        FluFrame {
             //color: Qt.rgba(0,0,0,0)
             id: first_area
 
-            paddings: 10
+            padding: 10
             width: 200
             Layout.alignment: Qt.AlignTop
             height: galleryPage.height - galleryPage.topPadding - galleryPage.bottomPadding - top_area.Layout.topMargin - top_area.Layout.bottomMargin - top_area.height - text_title.height
@@ -170,7 +171,7 @@ FluScrollablePage {
 
         }
 
-        FluArea {
+        FluFrame {
             id: second_area
 
             color: Qt.rgba(0, 0, 0, 0)
@@ -178,7 +179,7 @@ FluScrollablePage {
             width: galleryPage.width - galleryPage.rightPadding - galleryPage.leftPadding - first_area.width - parent.spacing
             height: galleryPage.height - galleryPage.topPadding - galleryPage.bottomPadding - top_area.Layout.topMargin - top_area.Layout.bottomMargin - top_area.height - text_title.height
 
-            FluArea {
+            FluFrame {
                 id: second_area_head
 
                 color: Qt.rgba(0, 0, 0, 0)
@@ -187,11 +188,11 @@ FluScrollablePage {
                 width: parent.width
                 height: parent.height - 60
 
-                FluScrollablePage {
+                FluScrollableStatusPage {
                     id: inside_page
 
                     emptyText: "请打开左侧目录获取信息"
-                    statusMode: FluStatusViewType.Empty
+                    statusMode: FluStatusLayoutType.Empty
                     anchors.fill: parent
                     leftPadding: 0
                     rightPadding: 0
@@ -220,7 +221,7 @@ FluScrollablePage {
 
             }
 
-            FluArea {
+            FluFrame {
                 anchors.bottom: parent.bottom
                 width: parent.width
                 height: 50
@@ -304,15 +305,15 @@ FluScrollablePage {
                         hoverColor: (selectedUrlList.length >= maxSelectionNumber) && !img_checkbox.checked ? Qt.rgba(0, 0, 0, 0.6) : Qt.rgba(0, 0, 0, 0.3)
                         anchors.right: parent.right
                         onClicked: {
+                            //console.log(selectedUrlList)
+
                             if ((selectedUrlList.length >= maxSelectionNumber) && (!img_checkbox.checked)) {
                                 showError("抱歉，只能选择" + maxSelectionNumber + "张图片哦");
                             } else {
-                                //console.log(selectedUrlList)
-
                                 if (img_checkbox.checked)
                                     selectedUrlList = selectedUrlList.filter(function(item) {
-                                        return item !== item_img_url;
-                                    });
+                                    return item !== item_img_url;
+                                });
                                 else
                                     selectedUrlList.push(item_img_url);
                                 refreshPageSelection();

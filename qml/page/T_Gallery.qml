@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,17 +7,17 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     /*
     FluStatusView{
         id: loading_cover
         visible: false
         anchors.fill: parent
         color: FluTheme.dark ? Qt.rgba(0,0,0,0.5) : Qt.rgba(1,1,1,0.5)
-        statusMode: FluStatusViewType.Loading
+        statusMode: FluStatusLayoutType.Loading
         Rectangle{
             anchors.fill: parent
-            color:FluTheme.primaryColor.dark
+            color:FluTheme.primaryColor
         }
     }
     MouseArea{
@@ -34,7 +35,7 @@ FluScrollablePage {
     property string galleryDirJson
 
     function loadGalleryUrlListInfo() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         GalleryController.loadGalleryDirJson();
         galleryDirJson = GalleryHelper.dirJson;
         tree_view.updateData(createDir());
@@ -59,7 +60,7 @@ FluScrollablePage {
 
     function trySwitchImgPage(dirName, pageNumber) {
         inside_page.visible = true;
-        inside_page.statusMode = FluStatusViewType.Loading;
+        inside_page.statusMode = FluStatusLayoutType.Loading;
         GalleryController.loadGalleryDirImgInfo(dirName, pageNumber);
         var dirJson = JSON.parse(GalleryHelper.dirImgInfo);
         img_pagination.itemCount = dirJson.count;
@@ -76,7 +77,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadGalleryUrlListSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: GalleryController
@@ -85,7 +86,7 @@ FluScrollablePage {
     Connections {
         function onLoadGalleryUrlListErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: GalleryController
@@ -94,7 +95,7 @@ FluScrollablePage {
     Connections {
         function onLoadGalleryDirImgInfoSuccessEvent() {
             img_pagination.visible = true;
-            inside_page.statusMode = FluStatusViewType.Success;
+            inside_page.statusMode = FluStatusLayoutType.Success;
         }
 
         target: GalleryController
@@ -103,7 +104,7 @@ FluScrollablePage {
     Connections {
         function onLoadGalleryDirImgInfoErrorEvent(message) {
             inside_page.errorText = message;
-            inside_page.statusMode = FluStatusViewType.Error;
+            inside_page.statusMode = FluStatusLayoutType.Error;
         }
 
         target: GalleryController
@@ -115,7 +116,7 @@ FluScrollablePage {
 
         function onDeleteImgRequestSuccessEvent() {
             showSuccess("删除成功");
-            galleryPage.statusMode = FluStatusViewType.Success;
+            galleryPage.statusMode = FluStatusLayoutType.Success;
             trySwitchImgPage(tree_view.currentName, img_pagination.pageCurrent);
         }
 
@@ -128,7 +129,7 @@ FluScrollablePage {
 
         function onDeleteImgRequestErrorEvent(message) {
             showError(message);
-            galleryPage.statusMode = FluStatusViewType.Success;
+            galleryPage.statusMode = FluStatusLayoutType.Success;
         }
 
         target: GalleryController
@@ -143,7 +144,7 @@ FluScrollablePage {
         padding: 0
     }
 
-    FluArea {
+    FluFrame {
         id: top_area
 
         height: 38
@@ -195,11 +196,11 @@ FluScrollablePage {
         Layout.fillHeight: true
         spacing: 20
 
-        FluArea {
+        FluFrame {
             //color: Qt.rgba(0,0,0,0)
             id: first_area
 
-            paddings: 10
+            padding: 10
             width: 200
             Layout.alignment: Qt.AlignTop
             height: galleryPage.height - galleryPage.topPadding - galleryPage.bottomPadding - top_area.Layout.topMargin - top_area.Layout.bottomMargin - top_area.height - text_title.height
@@ -229,7 +230,7 @@ FluScrollablePage {
 
         }
 
-        FluArea {
+        FluFrame {
             id: second_area
 
             color: Qt.rgba(0, 0, 0, 0)
@@ -237,7 +238,7 @@ FluScrollablePage {
             width: galleryPage.width - galleryPage.rightPadding - galleryPage.leftPadding - first_area.width - parent.spacing
             height: galleryPage.height - galleryPage.topPadding - galleryPage.bottomPadding - top_area.Layout.topMargin - top_area.Layout.bottomMargin - top_area.height - text_title.height
 
-            FluArea {
+            FluFrame {
                 id: second_area_head
 
                 color: Qt.rgba(0, 0, 0, 0)
@@ -246,11 +247,11 @@ FluScrollablePage {
                 width: parent.width
                 height: parent.height - 60
 
-                FluScrollablePage {
+                FluScrollableStatusPage {
                     id: inside_page
 
                     emptyText: "请打开左侧目录获取信息"
-                    statusMode: FluStatusViewType.Empty
+                    statusMode: FluStatusLayoutType.Empty
                     anchors.fill: parent
                     leftPadding: 0
                     rightPadding: 0
@@ -279,7 +280,7 @@ FluScrollablePage {
 
             }
 
-            FluArea {
+            FluFrame {
                 anchors.bottom: parent.bottom
                 width: parent.width
                 height: 50
@@ -358,7 +359,7 @@ FluScrollablePage {
                     //showSuccess("TODO:触发向后端发送删除图片 url: " + model.modelData)
                     //loading_cover.visible = true
                     //loading_mouse_cover.visible = true
-                    galleryPage.statusMode = FluStatusViewType.Loading;
+                    galleryPage.statusMode = FluStatusLayoutType.Loading;
                     GalleryController.deleteImgRequest(model.modelData);
                 }
             }

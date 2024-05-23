@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,16 +7,16 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     id: page
 
     function loadRegisteredScheduleInfo() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         ScheduleController.loadRegisteredSchedule();
     }
 
     function loadSubscribedScheduleInfo() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         ScheduleController.loadSubscribedSchedule();
     }
 
@@ -38,7 +39,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadRegisteredScheduleSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: ScheduleController
@@ -47,7 +48,7 @@ FluScrollablePage {
     Connections {
         function onLoadRegisteredScheduleErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: ScheduleController
@@ -55,7 +56,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadSubscribedScheduleSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: ScheduleController
@@ -64,7 +65,7 @@ FluScrollablePage {
     Connections {
         function onLoadSubscribedScheduleErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: ScheduleController
@@ -73,7 +74,7 @@ FluScrollablePage {
     Connections {
         function onCheckSuccessEvent(refreshAll) {
             if (refreshAll) {
-                statusMode = FluStatusViewType.Success;
+                statusMode = FluStatusLayoutType.Success;
                 showSuccess(lang.lang_check_success);
                 loadScheduleInfo();
             }
@@ -296,7 +297,7 @@ FluScrollablePage {
 
                 }
 
-                FluArea {
+                FluFrame {
                     id: area_content
 
                     width: page.width - 105
@@ -313,7 +314,7 @@ FluScrollablePage {
                         width: 6
                         height: 60
                         radius: [3, 3, 3, 3]
-                        color: FluTheme.primaryColor.normal
+                        color: FluTheme.primaryColor
 
                         anchors {
                             left: parent.left
@@ -495,7 +496,7 @@ FluScrollablePage {
                             showError(lang.lang_input_is_empty);
                             dialog.open();
                         } else {
-                            statusMode = FluStatusViewType.Loading;
+                            statusMode = FluStatusLayoutType.Loading;
                             ScheduleController.check(model.id, textbox.text, true);
                         }
                     }

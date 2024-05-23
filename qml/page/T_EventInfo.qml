@@ -1,3 +1,4 @@
+import "../component"
 import FluentUI
 import QtQuick
 import QtQuick.Controls
@@ -5,7 +6,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     id: page
 
     property var arr: []
@@ -55,11 +56,11 @@ FluScrollablePage {
 
     launchMode: FluPageType.SingleTask
     Component.onCompleted: {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         loadEventoInfo();
     }
     onErrorClicked: {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         loadEventoInfo();
     }
     errorButtonText: lang.lang_reload
@@ -70,7 +71,7 @@ FluScrollablePage {
             arr = [];
             loader_slide.sourceComponent = slide_com;
             page.listReady();
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             btn_subscribe.loading = false;
             btn_register.loading = false;
         }
@@ -81,7 +82,7 @@ FluScrollablePage {
     Connections {
         function onLoadEventoErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: EventoInfoController
@@ -298,7 +299,7 @@ FluScrollablePage {
             height: parent.height
             width: 4
             radius: [2, 2, 2, 2]
-            color: FluTheme.primaryColor.normal
+            color: FluTheme.primaryColor
             visible: UserHelper.permission
         }
 
@@ -361,7 +362,7 @@ FluScrollablePage {
                         }
 
                         Behavior on width {
-                            enabled: FluTheme.enableAnimation
+                            enabled: FluTheme.animationEnabled
 
                             NumberAnimation {
                                 duration: 167
@@ -378,7 +379,7 @@ FluScrollablePage {
 
             Connections {
                 function onRegisterSuccessEvent() {
-                    statusMode = FluStatusViewType.Success;
+                    statusMode = FluStatusLayoutType.Success;
                     showSuccess((EventoInfoController.isRegistrated ? lang.lang_register_success : lang.lang_cancelled));
                     loadEventoInfo();
                 }
@@ -441,7 +442,7 @@ FluScrollablePage {
                         }
 
                         Behavior on width {
-                            enabled: FluTheme.enableAnimation
+                            enabled: FluTheme.animationEnabled
 
                             NumberAnimation {
                                 duration: 167
@@ -525,7 +526,7 @@ FluScrollablePage {
                 showError(lang.lang_input_is_empty);
                 dialog.open();
             } else {
-                statusMode = FluStatusViewType.Loading;
+                statusMode = FluStatusLayoutType.Loading;
                 ScheduleController.check(EventoHelper.id, textbox.text, false);
             }
         }
@@ -552,7 +553,7 @@ FluScrollablePage {
     Connections {
         function onCheckSuccessEvent(refreshAll) {
             if (!refreshAll) {
-                statusMode = FluStatusViewType.Success;
+                statusMode = FluStatusLayoutType.Success;
                 showSuccess(lang.lang_check_success);
                 loadEventoInfo();
             }
@@ -620,14 +621,14 @@ FluScrollablePage {
                 onClicked: {
                     score_value = rating.value;
                     feedback_content = textbox_content.text;
-                    statusMode = FluStatusViewType.Loading;
+                    statusMode = FluStatusLayoutType.Loading;
                     EventoInfoController.feedbackEvento(score_value, feedback_content, EventoHelper.id);
                 }
             }
 
             Connections {
                 function onFeedbackSuccessEvent() {
-                    statusMode = FluStatusViewType.Success;
+                    statusMode = FluStatusLayoutType.Success;
                     showSuccess(lang.lang_submit_success);
                     loadEventoInfo();
                 }

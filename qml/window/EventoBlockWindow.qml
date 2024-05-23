@@ -1,10 +1,10 @@
+import "../component"
 import FluentUI
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window 2.2
 import SAST_Evento
-import org.wangwenx190.FramelessHelper
 
 FluWindow {
     id: window
@@ -18,18 +18,10 @@ FluWindow {
     minimumHeight: windowHeight
     maximumWidth: windowWidth
     maximumHeight: windowHeight
-    closeDestory: true
     fixSize: true
     launchMode: FluWindowType.SingleInstance
-    appBar: undefined
-    Component.onCompleted: {
-        if (FluTheme.dark)
-            FramelessUtils.systemTheme = FramelessHelperConstants.Dark;
-        else
-            FramelessUtils.systemTheme = FramelessHelperConstants.Light;
-    }
 
-    FluScrollablePage {
+    FluScrollableStatusPage {
         id: page
 
         property string code: ""
@@ -44,8 +36,6 @@ FluWindow {
             else
                 loadEventoInfo();
         }
-        errorButtonText: lang.lang_reload
-        loadingText: lang.lang_loading
 
         Loader {
             id: page_loader
@@ -58,7 +48,7 @@ FluWindow {
 
             Item {
                 function loadQRcode() {
-                    page.statusMode = FluStatusViewType.Loading;
+                    page.statusMode = FluStatusLayoutType.Loading;
                     CalendarController.loadCheckCode(EventoHelper.id);
                 }
 
@@ -95,7 +85,7 @@ FluWindow {
                 Connections {
                     function onLoadCheckCodeSuccessEvent(code) {
                         page.code = code;
-                        page.statusMode = FluStatusViewType.Success;
+                        page.statusMode = FluStatusLayoutType.Success;
                     }
 
                     target: CalendarController
@@ -104,7 +94,7 @@ FluWindow {
                 Connections {
                     function onLoadCheckCodeErrorEvent(message) {
                         page.errorText = message;
-                        page.statusMode = FluStatusViewType.Error;
+                        page.statusMode = FluStatusLayoutType.Error;
                     }
 
                     target: CalendarController
@@ -195,7 +185,7 @@ FluWindow {
                 signal listReady()
 
                 function loadEventoInfo() {
-                    page.statusMode = FluStatusViewType.Loading;
+                    page.statusMode = FluStatusLayoutType.Loading;
                     CalendarController.loadEventoInfo(EventoHelper.id);
                 }
 
@@ -230,7 +220,7 @@ FluWindow {
                         page.arr = [];
                         loader.sourceComponent = slide_com;
                         item_all.listReady();
-                        page.statusMode = FluStatusViewType.Success;
+                        page.statusMode = FluStatusLayoutType.Success;
                     }
 
                     target: EventoInfoController
@@ -238,7 +228,7 @@ FluWindow {
 
                 Connections {
                     function onLoadEventoErrorEvent(message) {
-                        page.statusMode = FluStatusViewType.Error;
+                        page.statusMode = FluStatusLayoutType.Error;
                         window.showError(message);
                         window.close();
                     }
@@ -312,7 +302,7 @@ FluWindow {
                         text: lang.lang_edit_event
                         onClicked: {
                             EventoEditController.isEditMode = true;
-                            onResult({
+                            setResult({
                                 "enterPage": true
                             });
                             window.close();
@@ -368,7 +358,7 @@ FluWindow {
                     negativeText: lang.lang_cancel
                     positiveText: lang.lang_ok
                     onPositiveClicked: {
-                        page.statusMode = FluStatusViewType.Loading;
+                        page.statusMode = FluStatusLayoutType.Loading;
                         CalendarController.deleteEvento(EventoHelper.id);
                     }
                 }
@@ -382,14 +372,14 @@ FluWindow {
                     negativeText: lang.lang_cancel
                     positiveText: lang.lang_ok
                     onPositiveClicked: {
-                        page.statusMode = FluStatusViewType.Loading;
+                        page.statusMode = FluStatusLayoutType.Loading;
                         CalendarController.cancelEvento(EventoHelper.id);
                     }
                 }
 
                 Connections {
                     function onDeleteSuccessEvent() {
-                        page.statusMode = FluStatusViewType.Success;
+                        page.statusMode = FluStatusLayoutType.Success;
                         window.close();
                     }
 
@@ -398,7 +388,7 @@ FluWindow {
 
                 Connections {
                     function onDeleteErrorEvent(message) {
-                        page.statusMode = FluStatusViewType.Success;
+                        page.statusMode = FluStatusLayoutType.Success;
                     }
 
                     target: CalendarController
@@ -588,6 +578,10 @@ FluWindow {
 
         }
 
+    }
+
+    appBar: FluAppBar {
+        height: 0
     }
 
 }

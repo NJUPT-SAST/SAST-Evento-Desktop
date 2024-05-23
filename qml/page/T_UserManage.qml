@@ -1,3 +1,4 @@
+import "../component"
 import "../imports"
 import "../window"
 import FluentUI
@@ -7,16 +8,16 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     // 加载某一页的制定数目用户条数
     function loadData(page, count) {
         const dataSource = [];
         for (var i = 0; i < count; i++) {
             if (page === 2)
                 dataSource.push({
-                    "id": "B12345678",
-                    "permission": 1
-                });
+                "id": "B12345678",
+                "permission": 1
+            });
             else
                 dataSource.push({
                 "id": "B12345666",
@@ -73,7 +74,7 @@ FluScrollablePage {
                 width: parent.width
                 height: 80
 
-                FluArea {
+                FluFrame {
                     radius: 8
                     width: parent.width
                     height: 70

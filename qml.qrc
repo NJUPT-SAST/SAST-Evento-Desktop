@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/App.qml</file>
+        <file>qml/component/FluContentStatusPage.qml</file>
+        <file>qml/component/FluScrollableStatusPage.qml</file>
         <file>qml/window/LoginWindow.qml</file>
         <file>qml/window/MainWindow.qml</file>
         <file>qml/page/T_DepartmentEvents.qml</file>

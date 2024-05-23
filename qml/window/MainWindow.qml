@@ -18,7 +18,7 @@ FluWindow {
     }
 
     function handleDarkChanged(button) {
-        if (FluTools.isMacos() || !FluTheme.enableAnimation) {
+        if (FluTools.isMacos() || !FluTheme.animationEnabled) {
             changeDark();
         } else {
             loader_reveal.sourceComponent = com_reveal;
@@ -50,11 +50,10 @@ FluWindow {
     title: "SAST Evento"
     width: 1110
     height: 640
-    closeDestory: false
     minimumWidth: 520
     minimumHeight: 200
     launchMode: FluWindowType.SingleTask
-    appBar: undefined
+    fitsAppBarWindows: true
     closeListener: function(event) {
         dialog_close.open();
         event.accepted = false;
@@ -82,8 +81,7 @@ FluWindow {
             MenuItem {
                 text: lang.lang_exit
                 onTriggered: {
-                    window.deleteWindow();
-                    FluApp.closeApp();
+                    FluRouter.exit();
                 }
             }
 
@@ -106,7 +104,7 @@ FluWindow {
         neutralText: lang.lang_cancel
         onPositiveClicked: {
             window.close();
-            FluApp.exit();
+            FluRouter.exit();
         }
     }
 
@@ -214,22 +212,6 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer);
 
     }
 
-    FluAppBar {
-        darkText: lang.lang_dark_mode
-        showDark: true
-        darkClickListener: (button) => {
-            return handleDarkChanged(button);
-        }
-        z: 7
-
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
-
-    }
-
     Component {
         id: com_reveal
 
@@ -269,6 +251,9 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer);
         logo: "qrc:/app.ico"
         title: "SAST Evento"
         Component.onCompleted: {
+            window.setHitTestVisible(nav_view.buttonMenu);
+            window.setHitTestVisible(nav_view.buttonBack);
+            window.setHitTestVisible(nav_view.imageLogo);
             setCurrentIndex(0);
         }
     }
@@ -298,7 +283,7 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer);
         positiveText: lang.lang_ok
         onPositiveClicked: {
             Qt.openUrlExternally("https://github.com/NJUPT-SAST-Cpp/SAST-Evento-Desktop/releases/latest");
-            FluApp.exit();
+            FluRouter.exit();
         }
     }
 
@@ -320,6 +305,22 @@ nav_view.push("qrc:/qml/page/T_My.qml")}}', items_footer);
         }
 
         target: CheckUpdate
+    }
+
+    appBar: FluAppBar {
+        darkText: lang.lang_dark_mode
+        showDark: true
+        darkClickListener: (button) => {
+            return handleDarkChanged(button);
+        }
+        z: 7
+
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+
     }
 
 }

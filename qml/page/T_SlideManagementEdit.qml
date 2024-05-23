@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,9 +7,9 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     function loadSlideInfo() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         SlideManagementEditController.loadEditInfo(SlideHelper.id, SlideHelper.isEdit);
     }
 
@@ -18,13 +19,13 @@ FluScrollablePage {
 
     launchMode: FluPageType.SingleTask
     Component.onCompleted: {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         loadSlideInfo();
     }
 
     Connections {
         function onLoadEditSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: SlideManagementEditController
@@ -33,7 +34,7 @@ FluScrollablePage {
     Connections {
         function onLoadEditErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: SlideManagementEditController
@@ -73,11 +74,11 @@ FluScrollablePage {
         target: SlideManagementEditController
     }
 
-    FluArea {
+    FluFrame {
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 520
-        paddings: 10
+        padding: 10
         color: Qt.rgba(0, 0, 0, 0)
 
         ColumnLayout {
@@ -220,7 +221,7 @@ FluScrollablePage {
                             showInfo("有信息未填写");
                             return ;
                         }
-                        statusMode = FluStatusViewType.Loading;
+                        statusMode = FluStatusLayoutType.Loading;
                         SlideManagementEditController.onClickSubmit(titleTextbox.text, linkTextbox.text, SlideHelper.url, SlideHelper.isEdit);
                     }
 

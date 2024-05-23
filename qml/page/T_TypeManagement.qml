@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,7 +7,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     id: typePage
 
     property int deleteTypeId: -1
@@ -24,14 +25,14 @@ FluScrollablePage {
     }
 
     function loadAllType() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         typeListJson = JSON.parse(TypeManagementController.loadAllType());
         typeListModel.clear();
         loadModel();
     }
 
     function deleteType() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         TypeManagementController.deleteType(deleteTypeId);
     }
 
@@ -50,7 +51,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadAllTypeSuccess() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: TypeManagementController
@@ -59,7 +60,7 @@ FluScrollablePage {
     Connections {
         function onLoadAllTypeError(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: TypeManagementController
@@ -76,7 +77,7 @@ FluScrollablePage {
 
     Connections {
         function onDeleteTypeError(message) {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             showError("删除失败(错误信息: " + message + ")");
         }
 
@@ -129,7 +130,7 @@ FluScrollablePage {
             width: listView.width
             height: 90
 
-            FluArea {
+            FluFrame {
                 radius: 8
                 width: parent.width
                 height: 80

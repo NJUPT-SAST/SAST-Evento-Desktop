@@ -5,28 +5,26 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 
-Window {
+FluLauncher {
     id: app
 
-    flags: Qt.SplashScreen
     Component.onCompleted: {
         FluApp.init(app);
         var list = [FluColors.Yellow, FluColors.Orange, FluColors.Red, FluColors.Magenta, FluColors.Purple, FluColors.Blue, FluColors.Teal, FluColors.Green];
         FluTheme.darkMode = settings.value("darkMode", FluThemeType.System);
         settings.darkMode = FluTheme.darkMode;
-        FluTheme.primaryColor = list[settings.value("colorIndex", 5)];
-        settings.colorIndex = list.indexOf(FluTheme.primaryColor);
-        FluTheme.enableAnimation = settings.value("enableAnimationSet", 1);
+        FluTheme.accentColor = list[settings.value("colorIndex", 5)] || FluColors.Blue;
+        settings.colorIndex = list.indexOf(FluTheme.accentColor);
+        FluTheme.animationEnabled = settings.value("enableAnimationSet", 1);
         FluTheme.nativeText = settings.value("nativeTextSet", 1);
         settings.displayMode = settings.value("displayMode", FluNavigationViewType.Auto);
         appInfo.changeLang(settings.value("langMode", "En"));
-        FluApp.routes = {
+        FluRouter.routes = {
             "/": "qrc:/qml/window/MainWindow.qml",
             "/login": "qrc:/qml/window/LoginWindow.qml",
             "/block": "qrc:/qml/window/EventoBlockWindow.qml"
         };
-        FluApp.initialRoute = "/login";
-        FluApp.run();
+        FluRouter.navigate("/login");
     }
 
     Settings {
@@ -51,8 +49,8 @@ Window {
     }
 
     Connections {
-        function onEnableAnimationChanged() {
-            settings.enableAnimationSet = FluTheme.enableAnimation;
+        function onAnimationEnabledChanged() {
+            settings.enableAnimationSet = FluTheme.animationEnabled;
         }
 
         target: FluTheme
