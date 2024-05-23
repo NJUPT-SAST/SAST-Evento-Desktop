@@ -39,7 +39,8 @@ file(GLOB_RECURSE SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/*.cpp
     ${CMAKE_SOURCE_DIR}/src/*.h
     ${CMAKE_SOURCE_DIR}/src/*.hpp
-    SAST_Evento.qrc
+    qml.qrc
+    res.qrc
 )
 
 file(GLOB_RECURSE SOURCE_IMPORT_PATHS

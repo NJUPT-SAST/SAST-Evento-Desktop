@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/App.qml</file>
+        <file>qml/window/LoginWindow.qml</file>
+        <file>qml/window/MainWindow.qml</file>
+        <file>qml/page/T_DepartmentEvents.qml</file>
+        <file>qml/page/T_EventInfo.qml</file>
+        <file>qml/page/T_Feedback.qml</file>
+        <file>qml/page/T_My.qml</file>
+        <file>qml/page/T_Plaza.qml</file>
+        <file>qml/page/T_Profile.qml</file>
+        <file>qml/page/T_Schedule.qml</file>
+        <file>qml/page/T_Settings.qml</file>
+        <file>qml/page/T_SouvenirCard.qml</file>
+        <file>qml/page/T_Theme.qml</file>
+        <file>qml/page/T_Calendar.qml</file>
+        <file>qml/page/T_UserManage.qml</file>
+        <file>qml/page/T_SlideManagement.qml</file>
+        <file>qml/page/T_SlideManagementEdit.qml</file>
+        <file>qml/page/T_EventoEdit.qml</file>
+        <file>qml/page/T_UserPermission.qml</file>
+        <file>qml/page/T_FeedbackInfo.qml</file>
+        <file>qml/page/T_Gallery.qml</file>
+        <file>qml/page/T_PictureSelection.qml</file>
+        <file>qml/window/EventoBlockWindow.qml</file>
+        <file>qml/page/T_TypeManagement.qml</file>
+        <file>qml/page/T_DepartmentManagement.qml</file>
+        <file>qml/page/T_LocationManagement.qml</file>
+        <file>qml/page/T_LessonPic.qml</file>
+    </qresource>
+</RCC>
