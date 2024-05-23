@@ -1,82 +1,86 @@
-import QtQuick
-import Qt.labs.platform
-import QtQuick.Layouts
-import QtQuick.Controls
 import FluentUI
+import Qt.labs.platform
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 import SAST_Evento
 import org.wangwenx190.FramelessHelper
 
 FluWindow {
     id: window
+
+    property bool loginSuccess: false
+
     title: lang.lang_login
     width: 278
     height: 378
     fixSize: true
     launchMode: FluWindowType.SingleTask
     closeDestory: true
-    property bool loginSuccess: false
-
     Component.onCompleted: {
-        if (FluTheme.dark) {
-            FramelessUtils.systemTheme = FramelessHelperConstants.Dark
-        }
+        if (FluTheme.dark)
+            FramelessUtils.systemTheme = FramelessHelperConstants.Dark;
         else
-            FramelessUtils.systemTheme = FramelessHelperConstants.Light
+            FramelessUtils.systemTheme = FramelessHelperConstants.Light;
     }
 
     Connections {
-        target: LoginController
         function onLoginProcessing() {
-            showLoading()
+            showLoading();
         }
+
+        target: LoginController
     }
 
     Connections {
-        target: LoginController
         function onLoginSuccess() {
-            loginSuccess = true
-            LoginController.loadPermissionList()
+            loginSuccess = true;
+            LoginController.loadPermissionList();
         }
+
+        target: LoginController
     }
 
     Connections {
-        target: LoginController
         function onLoadPermissionSuccessEvent() {
-            hideLoading()
-            FluApp.navigate("/")
-            window.close()
+            hideLoading();
+            FluApp.navigate("/");
+            window.close();
         }
+
+        target: LoginController
     }
 
     Connections {
-        target: LoginController
         function onLoadPermissionErrorEvent(message) {
-            hideLoading()
-            showError(lang.lang_error + message, 4000)
+            hideLoading();
+            showError(lang.lang_error + message, 4000);
         }
+
+        target: LoginController
     }
 
     Connections {
-        target: LoginController
         function onLoginFailed(reason) {
-            hideLoading()
-            system_tray.showMessage(lang.lang_login_failed,
-                                    lang.lang_error + reason)
-            window.requestActivate()
-            showError(lang.lang_login_failed, 4000)
+            hideLoading();
+            system_tray.showMessage(lang.lang_login_failed, lang.lang_error + reason);
+            window.requestActivate();
+            showError(lang.lang_login_failed, 4000);
         }
+
+        target: LoginController
     }
 
     Image {
         id: logo
+
         height: 80
         fillMode: Image.PreserveAspectFit
         source: {
-            if (FluTheme.dark) {
-                return "qrc:/res/image/evento_white.png"
-            } else {
-                return "qrc:/res/image/evento_black.png"
-            }
+            if (FluTheme.dark)
+                return "qrc:/res/image/evento_white.png";
+            else
+                return "qrc:/res/image/evento_black.png";
         }
 
         anchors {
@@ -84,33 +88,39 @@ FluWindow {
             topMargin: 25
             horizontalCenter: parent.horizontalCenter
         }
+
     }
 
     SystemTrayIcon {
         id: system_tray
+
         visible: true
         icon.source: "qrc:/app.ico"
         tooltip: "SAST Evento"
+        onActivated: (reason) => {
+            if (reason === SystemTrayIcon.Trigger) {
+                window.show();
+                window.raise();
+                window.requestActivate();
+            }
+        }
+
         menu: Menu {
             MenuItem {
                 text: lang.lang_exit
                 onTriggered: {
-                    window.deleteWindow()
-                    FluApp.closeApp()
+                    window.deleteWindow();
+                    FluApp.closeApp();
                 }
             }
+
         }
-        onActivated: reason => {
-                         if (reason === SystemTrayIcon.Trigger) {
-                             window.show()
-                             window.raise()
-                             window.requestActivate()
-                         }
-                     }
+
     }
 
     FluButton {
         id: btn_login
+
         text: lang.lang_use_link
         font.pixelSize: 16
         font.bold: true
@@ -119,46 +129,53 @@ FluWindow {
         height: 45
         normalColor: Qt.rgba(28 / 255, 31 / 255, 36 / 255, 1)
         hoverColor: Qt.rgba(38 / 255, 41 / 255, 46 / 255, 1)
+        focus: true
+        onClicked: {
+            if (loginSuccess)
+                LoginController.loadPermissionList();
+            else
+                LoginController.beginLoginViaSastLink();
+        }
+
         anchors {
             bottom: parent.bottom
             bottomMargin: 110
             horizontalCenter: parent.horizontalCenter
         }
-        focus: true
-        onClicked: {
-            if (loginSuccess)
-                LoginController.loadPermissionList()
-            else
-                LoginController.beginLoginViaSastLink()
-        }
+
     }
 
     Image {
         width: implicitWidth
         height: implicitHeight
         source: "qrc:/res/svg/sast_link.svg"
+
         anchors {
             verticalCenter: btn_login.verticalCenter
             left: btn_login.left
             leftMargin: 20
         }
+
     }
 
     FluIconButton {
         id: btn_visitor
+
         text: lang.lang_guest_login
         iconSource: FluentIcons.GuestUser
         display: Button.TextBesideIcon
+        onClicked: {
+            UserHelper.permission = UserHelper.GuestPermission;
+            FluApp.navigate("/");
+            window.close();
+        }
+
         anchors {
             top: btn_login.bottom
             topMargin: 8
             horizontalCenter: parent.horizontalCenter
         }
-        onClicked: {
-            UserHelper.permission = UserHelper.GuestPermission
-            FluApp.navigate("/")
-            window.close()
-        }
+
     }
 
     FluText {
@@ -167,10 +184,13 @@ FluWindow {
         font: FluTextStyle.Caption
         horizontalAlignment: Text.AlignHCenter
         lineHeight: 1.5
+
         anchors {
             bottom: parent.bottom
             bottomMargin: 10
             horizontalCenter: parent.horizontalCenter
         }
+
     }
+
 }

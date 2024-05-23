@@ -1,22 +1,28 @@
+import "../window"
+import FluentUI
+import QtCore
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
-import QtQuick.Controls
-import QtCore
-import FluentUI
 import SAST_Evento
-import "../window"
 
 FluScrollablePage {
+    function checkUpdate() {
+        CheckUpdate.check();
+    }
+
     launchMode: FluPageType.SingleTask
     title: lang.lang_settings
 
     Settings {
         id: settings
-        location: FluTools.getApplicationDirPath() + "/config.ini"
+
         property string langMode
         property int displayMode
         property string render
+
+        location: FluTools.getApplicationDirPath() + "/config.ini"
     }
 
     FluArea {
@@ -27,35 +33,42 @@ FluScrollablePage {
 
         ColumnLayout {
             spacing: 5
+
             anchors {
                 top: parent.top
                 left: parent.left
             }
+
             FluText {
                 text: lang.lang_dark_mode
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
+
             Repeater {
                 model: [{
-                        "title": lang.lang_followSystem,
-                        "mode": FluThemeType.System
-                    }, {
-                        "title": lang.lang_light,
-                        "mode": FluThemeType.Light
-                    }, {
-                        "title": lang.lang_dark,
-                        "mode": FluThemeType.Dark
-                    }]
+                    "title": lang.lang_followSystem,
+                    "mode": FluThemeType.System
+                }, {
+                    "title": lang.lang_light,
+                    "mode": FluThemeType.Light
+                }, {
+                    "title": lang.lang_dark,
+                    "mode": FluThemeType.Dark
+                }]
+
                 delegate: FluRadioButton {
                     checked: FluTheme.darkMode === modelData.mode
                     text: modelData.title
-                    clickListener: function () {
-                        FluTheme.darkMode = modelData.mode
+                    clickListener: function() {
+                        FluTheme.darkMode = modelData.mode;
                     }
                 }
+
             }
+
         }
+
     }
 
     FluArea {
@@ -66,39 +79,46 @@ FluScrollablePage {
 
         ColumnLayout {
             spacing: 5
+
             anchors {
                 top: parent.top
                 left: parent.left
             }
+
             FluText {
                 text: lang.lang_navigation_view_display_mode
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
+
             Repeater {
                 model: [{
-                        "title": lang.lang_openSideBar,
-                        "mode": FluNavigationViewType.Open
-                    }, {
-                        "title": lang.lang_compactSideBar,
-                        "mode": FluNavigationViewType.Compact
-                    }, {
-                        "title": lang.lang_minimalSideBar,
-                        "mode": FluNavigationViewType.Minimal
-                    }, {
-                        "title": lang.lang_automatic,
-                        "mode": FluNavigationViewType.Auto
-                    }]
+                    "title": lang.lang_openSideBar,
+                    "mode": FluNavigationViewType.Open
+                }, {
+                    "title": lang.lang_compactSideBar,
+                    "mode": FluNavigationViewType.Compact
+                }, {
+                    "title": lang.lang_minimalSideBar,
+                    "mode": FluNavigationViewType.Minimal
+                }, {
+                    "title": lang.lang_automatic,
+                    "mode": FluNavigationViewType.Auto
+                }]
+
                 delegate: FluRadioButton {
                     checked: settings.displayMode === modelData.mode
                     text: modelData.title
-                    clickListener: function () {
-                        settings.displayMode = modelData.mode
-                        MainWindow.window.displayMode = modelData.mode
+                    clickListener: function() {
+                        settings.displayMode = modelData.mode;
+                        MainWindow.window.displayMode = modelData.mode;
                     }
                 }
+
             }
+
         }
+
     }
 
     FluArea {
@@ -109,6 +129,7 @@ FluScrollablePage {
 
         ColumnLayout {
             spacing: 10
+
             anchors {
                 top: parent.top
                 left: parent.left
@@ -122,20 +143,27 @@ FluScrollablePage {
 
             Flow {
                 spacing: 5
+
                 Repeater {
                     id: langSetting
+
                     model: ["Zh", "En"]
+
                     delegate: FluRadioButton {
                         checked: appInfo.lang.objectName === modelData
                         text: modelData === "En" ? lang.lang_en : lang.lang_zh
-                        clickListener: function () {
-                            settings.langMode = modelData
-                            appInfo.changeLang(settings.langMode)
+                        clickListener: function() {
+                            settings.langMode = modelData;
+                            appInfo.changeLang(settings.langMode);
                         }
                     }
+
                 }
+
             }
+
         }
+
     }
 
     FluArea {
@@ -146,6 +174,7 @@ FluScrollablePage {
 
         ColumnLayout {
             spacing: 5
+
             anchors {
                 top: parent.top
                 left: parent.left
@@ -156,6 +185,7 @@ FluScrollablePage {
                 font: FluTextStyle.BodyStrong
                 Layout.bottomMargin: 4
             }
+
             FluText {
                 text: lang.lang_current_version + appInfo.version
                 font: FluTextStyle.Caption
@@ -163,92 +193,100 @@ FluScrollablePage {
 
             Timer {
                 id: timer_progress
+
                 interval: 200
                 onTriggered: {
-                    btn_progress.progress = (btn_progress.progress + 0.1).toFixed(
-                                0.8)
-                    if (btn_progress.progress == 1) {
-                        timer_progress.stop()
-                    } else {
-                        timer_progress.start()
-                    }
+                    btn_progress.progress = (btn_progress.progress + 0.1).toFixed(0.8);
+                    if (btn_progress.progress == 1)
+                        timer_progress.stop();
+                    else
+                        timer_progress.start();
                 }
             }
 
             Connections {
-                target: CheckUpdate
                 function onCheckSuccessEvent(version, description) {
-                    btn_progress.progress = 1
+                    btn_progress.progress = 1;
                     if (version === appInfo.version)
-                        showInfo(lang.lang_is_currently_latest_version, 4000)
+                        showInfo(lang.lang_is_currently_latest_version, 4000);
+
                 }
+
+                target: CheckUpdate
             }
 
             Connections {
-                target: CheckUpdate
                 function onCheckErrorEvent(message) {
-                    btn_progress.progress = 1
+                    btn_progress.progress = 1;
                 }
+
+                target: CheckUpdate
             }
 
             FluProgressButton {
                 id: btn_progress
+
                 text: lang.lang_check_update
                 onClicked: {
-                    btn_progress.progress = 0
-                    timer_progress.restart()
-                    checkUpdate()
+                    btn_progress.progress = 0;
+                    timer_progress.restart();
+                    checkUpdate();
                 }
             }
+
         }
+
     }
 
-    function checkUpdate() {
-        CheckUpdate.check()
-    }
-
-    FluArea{
+    FluArea {
         Layout.fillWidth: true
         Layout.topMargin: 20
         height: 60 + text_hint.implicitHeight
         paddings: 10
-        FluCheckBox{
+
+        FluCheckBox {
             id: checkbox_render
-            text:"Software Render"
+
+            text: "Software Render"
             checked: SettingsHelper.getRender() === "software"
             anchors.top: parent.top
             anchors.topMargin: 5
             onClicked: {
-                if(SettingsHelper.getRender() === "software"){
-                    SettingsHelper.saveRender("")
-                }else{
-                    SettingsHelper.saveRender("software")
-                }
-                dialog_restart.open()
+                if (SettingsHelper.getRender() === "software")
+                    SettingsHelper.saveRender("");
+                else
+                    SettingsHelper.saveRender("software");
+                dialog_restart.open();
             }
         }
+
         FluText {
             id: text_hint
-            anchors {
-                top: checkbox_render.bottom
-                topMargin: 10
-            }
+
             text: lang.lang_software_render_hint
             font: FluTextStyle.Caption
             width: parent.width
             wrapMode: Text.WordWrap
+
+            anchors {
+                top: checkbox_render.bottom
+                topMargin: 10
+            }
+
         }
+
     }
 
-    FluContentDialog{
-        id:dialog_restart
+    FluContentDialog {
+        id: dialog_restart
+
         title: lang.lang_hint
         message: lang.lang_restart_app_hint
         buttonFlags: FluContentDialogType.NegativeButton | FluContentDialogType.PositiveButton
         negativeText: lang.lang_cancel
         positiveText: lang.lang_ok
-        onPositiveClicked:{
-            FluApp.exit(931)
+        onPositiveClicked: {
+            FluApp.exit(931);
         }
     }
 

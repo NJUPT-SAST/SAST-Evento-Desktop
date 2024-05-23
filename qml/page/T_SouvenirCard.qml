@@ -1,8 +1,8 @@
+import FluentUI
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
-import QtQuick.Controls
-import FluentUI
 
 FluScrollablePage {
     launchMode: FluPageType.SingleTask

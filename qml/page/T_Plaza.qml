@@ -1,98 +1,110 @@
+import "../window"
+import FluentUI
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
-import QtQuick.Controls
-import FluentUI
 import SAST_Evento
-import "../window"
 
 FluScrollablePage {
     id: page
-    launchMode: FluPageType.SingleTask
+
     property var arr: []
 
-    onErrorClicked: {
-        loadPlazaInfo()
-    }
-    errorButtonText: lang.lang_reload
-    loadingText: lang.lang_loading
+    signal listReady()
 
     function loadPlazaInfo() {
-        statusMode = FluStatusViewType.Loading
-        PlazaController.loadPlazaInfo()
+        statusMode = FluStatusViewType.Loading;
+        PlazaController.loadPlazaInfo();
     }
 
     function loadHomeSlide() {
-        PlazaController.loadHomeSlide()
+        PlazaController.loadHomeSlide();
     }
 
+    launchMode: FluPageType.SingleTask
+    onErrorClicked: {
+        loadPlazaInfo();
+    }
+    errorButtonText: lang.lang_reload
+    loadingText: lang.lang_loading
     Component.onCompleted: {
-        loadPlazaInfo()
-        loadHomeSlide()
+        loadPlazaInfo();
+        loadHomeSlide();
     }
 
     Connections {
-        target: PlazaController
         function onLoadPlazaSuccessEvent() {
-            statusMode = FluStatusViewType.Success
+            statusMode = FluStatusViewType.Success;
         }
+
+        target: PlazaController
     }
 
     Connections {
-        target: PlazaController
         function onLoadPlazaErrorEvent(message) {
-            errorText = message
-            statusMode = FluStatusViewType.Error
+            errorText = message;
+            statusMode = FluStatusViewType.Error;
         }
+
+        target: PlazaController
     }
 
     Loader {
         id: loader
+
         sourceComponent: undefined
     }
-    Connections {
-        target: PlazaController
-        function onLoadHomeSlideSuccessEvent() {
-            arr = []
-            loader.sourceComponent = rep_com
-            page.listReady()
-        }
-    }
 
-    signal listReady
+    Connections {
+        function onLoadHomeSlideSuccessEvent() {
+            arr = [];
+            loader.sourceComponent = rep_com;
+            page.listReady();
+        }
+
+        target: PlazaController
+    }
 
     Component {
         id: rep_com
+
         Repeater {
             id: rep
+
             model: SlideModel
+
             Item {
                 Component.onCompleted: {
                     arr.push({
-                                 "url": url,
-                                 "link": link,
-                                 "title": title
-                             })
+                        "url": url,
+                        "link": link,
+                        "title": title
+                    });
                 }
             }
+
         }
+
     }
 
     FluCarousel {
         id: carousel
+
         Layout.topMargin: 10
         Layout.fillWidth: true
         height: width * 0.36
         implicitHeight: height
-        indicatorGravity : Qt.AlignTop | Qt.AlignHCenter
+        indicatorGravity: Qt.AlignTop | Qt.AlignHCenter
         loopTime: 4000
 
         Connections {
-            target: page
             function onListReady() {
-                carousel.model = arr
-                loader.sourceComponent = undefined
+                carousel.model = arr;
+                loader.sourceComponent = undefined;
             }
+
+            target: page
         }
 
         delegate: Item {
@@ -110,6 +122,7 @@ FluScrollablePage {
                     cache: true
                     fillMode: Image.PreserveAspectCrop
                 }
+
             }
 
             Rectangle {
@@ -127,16 +140,19 @@ FluScrollablePage {
                     color: FluColors.Grey10
                     font.pixelSize: 15
                 }
+
             }
 
             MouseArea {
                 anchors.fill: parent
                 anchors.topMargin: 30
                 onClicked: {
-                    PlazaController.openUrl(model.link)
+                    PlazaController.openUrl(model.link);
                 }
             }
+
         }
+
     }
 
     FluText {
@@ -175,6 +191,7 @@ FluScrollablePage {
 
     Component {
         id: com_item
+
         Item {
             Layout.topMargin: 10
             width: 280
@@ -191,42 +208,48 @@ FluScrollablePage {
                     radius: 8
                     color: {
                         if (FluTheme.dark) {
-                            if (item_mouse.containsMouse) {
-                                return Qt.rgba(1, 1, 1, 0.03)
-                            }
-                            return Qt.rgba(0, 0, 0, 0)
+                            if (item_mouse.containsMouse)
+                                return Qt.rgba(1, 1, 1, 0.03);
+
+                            return Qt.rgba(0, 0, 0, 0);
                         } else {
-                            if (item_mouse.containsMouse) {
-                                return Qt.rgba(0, 0, 0, 0.03)
-                            }
-                            return Qt.rgba(0, 0, 0, 0)
+                            if (item_mouse.containsMouse)
+                                return Qt.rgba(0, 0, 0, 0.03);
+
+                            return Qt.rgba(0, 0, 0, 0);
                         }
                     }
                 }
 
                 FluClip {
                     id: item_icon
+
                     height: 115
                     width: 115
                     radius: [6, 6, 6, 6]
+
                     anchors {
                         left: parent.left
                         leftMargin: 10
                         verticalCenter: parent.verticalCenter
                     }
+
                     FluImage {
                         anchors.fill: parent
                         source: image
                         fillMode: Image.PreserveAspectCrop
                     }
+
                 }
 
                 FluText {
                     id: item_title
+
                     text: title
                     font: FluTextStyle.Subtitle
                     elide: Text.ElideRight
                     maximumLineCount: 1
+
                     anchors {
                         left: item_icon.right
                         leftMargin: 12
@@ -234,11 +257,14 @@ FluScrollablePage {
                         right: parent.right
                         rightMargin: 5
                     }
+
                 }
 
                 Row {
                     id: item_time
+
                     spacing: 5
+
                     anchors {
                         left: item_title.left
                         right: parent.right
@@ -261,11 +287,14 @@ FluScrollablePage {
                         maximumLineCount: 2
                         anchors.verticalCenter: parent.verticalCenter
                     }
+
                 }
 
                 Row {
                     id: item_location
+
                     spacing: 5
+
                     anchors {
                         left: item_title.left
                         right: parent.right
@@ -287,11 +316,14 @@ FluScrollablePage {
                         maximumLineCount: 1
                         anchors.verticalCenter: parent.verticalCenter
                     }
+
                 }
 
                 Row {
                     id: item_department
+
                     spacing: 5
+
                     anchors {
                         left: item_title.left
                         right: parent.right
@@ -313,25 +345,30 @@ FluScrollablePage {
                         maximumLineCount: 1
                         anchors.verticalCenter: parent.verticalCenter
                     }
+
                 }
 
                 MouseArea {
                     id: item_mouse
+
                     anchors.fill: parent
                     hoverEnabled: true
                     propagateComposedEvents: true
                     onClicked: {
-                        EventoHelper.id = id
-                        MainWindow.window.pushPage(
-                                    "qrc:/qml/page/T_EventInfo.qml")
+                        EventoHelper.id = id;
+                        MainWindow.window.pushPage("qrc:/qml/page/T_EventInfo.qml");
                     }
                 }
+
             }
+
         }
+
     }
 
     Component {
         id: com_item2
+
         Item {
             Layout.topMargin: 10
             width: 280
@@ -348,24 +385,26 @@ FluScrollablePage {
                     radius: 8
                     color: {
                         if (FluTheme.dark) {
-                            if (item_mouse.containsMouse) {
-                                return Qt.rgba(1, 1, 1, 0.03)
-                            }
-                            return Qt.rgba(0, 0, 0, 0)
+                            if (item_mouse.containsMouse)
+                                return Qt.rgba(1, 1, 1, 0.03);
+
+                            return Qt.rgba(0, 0, 0, 0);
                         } else {
-                            if (item_mouse.containsMouse) {
-                                return Qt.rgba(0, 0, 0, 0.03)
-                            }
-                            return Qt.rgba(0, 0, 0, 0)
+                            if (item_mouse.containsMouse)
+                                return Qt.rgba(0, 0, 0, 0.03);
+
+                            return Qt.rgba(0, 0, 0, 0);
                         }
                     }
                 }
 
                 FluClip {
                     id: item_icon
+
                     height: 115
                     width: 115
                     radius: [6, 6, 6, 6]
+
                     anchors {
                         left: parent.left
                         leftMargin: 10
@@ -377,10 +416,17 @@ FluScrollablePage {
                         source: url
                         fillMode: Image.PreserveAspectCrop
                     }
+
                 }
 
                 FluText {
                     id: item_title
+
+                    text: title
+                    font: FluTextStyle.Subtitle
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
+
                     anchors {
                         left: item_icon.right
                         leftMargin: 12
@@ -388,14 +434,19 @@ FluScrollablePage {
                         right: parent.right
                         rightMargin: 5
                     }
-                    text: title
-                    font: FluTextStyle.Subtitle
-                    elide: Text.ElideRight
-                    maximumLineCount: 1
+
                 }
 
                 FluText {
                     id: item_time
+
+                    text: time
+                    color: FluColors.Grey120
+                    width: 110
+                    wrapMode: Text.WordWrap
+                    font: FluTextStyle.Caption
+                    maximumLineCount: 2
+
                     anchors {
                         left: item_title.left
                         top: item_title.bottom
@@ -403,16 +454,18 @@ FluScrollablePage {
                         rightMargin: 20
                         topMargin: 10
                     }
-                    text: time
-                    color: FluColors.Grey120
-                    width: 110
-                    wrapMode: Text.WordWrap
-                    font: FluTextStyle.Caption
-                    maximumLineCount: 2
+
                 }
 
                 FluText {
                     id: item_department
+
+                    text: department
+                    color: FluColors.Grey120
+                    elide: Text.ElideRight
+                    font: FluTextStyle.Caption
+                    maximumLineCount: 1
+
                     anchors {
                         left: item_title.left
                         right: parent.right
@@ -420,15 +473,19 @@ FluScrollablePage {
                         top: item_time.bottom
                         topMargin: 5
                     }
-                    text: department
-                    color: FluColors.Grey120
-                    elide: Text.ElideRight
-                    font: FluTextStyle.Caption
-                    maximumLineCount: 1
+
                 }
 
                 FluText {
                     id: item_desc
+
+                    text: description
+                    color: FluColors.Grey120
+                    wrapMode: Text.WordWrap
+                    elide: Text.ElideRight
+                    font: FluTextStyle.Caption
+                    maximumLineCount: 2
+
                     anchors {
                         left: item_title.left
                         right: parent.right
@@ -436,25 +493,24 @@ FluScrollablePage {
                         top: item_department.bottom
                         topMargin: 8
                     }
-                    text: description
-                    color: FluColors.Grey120
-                    wrapMode: Text.WordWrap
-                    elide: Text.ElideRight
-                    font: FluTextStyle.Caption
-                    maximumLineCount: 2
+
                 }
 
                 MouseArea {
                     id: item_mouse
+
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        EventoHelper.id = id
-                        MainWindow.window.pushPage(
-                                    "qrc:/qml/page/T_EventInfo.qml")
+                        EventoHelper.id = id;
+                        MainWindow.window.pushPage("qrc:/qml/page/T_EventInfo.qml");
                     }
                 }
+
             }
+
         }
+
     }
+
 }
