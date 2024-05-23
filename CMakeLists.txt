@@ -24,7 +24,7 @@ else()
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/release)
 endif()
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Svg Network HttpServer Concurrent)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Quick Svg Network HttpServer Concurrent)
 
 if(${Qt6_VERSION} VERSION_GREATER_EQUAL "6.3")
     qt_standard_project_setup()
@@ -129,6 +129,7 @@ set_target_properties(SAST_Evento_Desktop PROPERTIES
 
 # 链接库
 target_link_libraries(SAST_Evento_Desktop PRIVATE
+    Qt6::Widgets # See #138
     Qt6::Quick
     Qt6::Svg
     Qt6::Network
