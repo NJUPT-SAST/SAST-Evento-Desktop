@@ -14,6 +14,7 @@ struct Schedule {
     QString date;
     QString startTime;
     QString endTime;
+    bool oneDay;
     bool displayDate = false;
     bool isChecked;
     bool hasFeedback;

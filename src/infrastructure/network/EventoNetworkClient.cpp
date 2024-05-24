@@ -1,5 +1,4 @@
 #include "EventoNetworkClient.h"
-#include "future.h"
 #include "user_helper.h"
 
 #include <json_deserialise.hpp>
@@ -55,7 +54,7 @@ static EventoResult<QJsonValue> handleNetworkReply(QNetworkReply* reply) {
     }
 }
 
-EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::get(const QUrl& url) {
+EventoPromise<EventoResult<QJsonValue>> EventoNetworkClient::get(const QUrl& url) {
     QNetworkRequest request;
     request.setUrl(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, USER_AGENT);
@@ -72,8 +71,10 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::get(const QUrl& url)
 
     reply->ignoreSslErrors();
 
-    return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
-        .then(std::bind(handleNetworkReply, reply));
+    auto [promise, resolver] = EventoPromise<EventoResult<QJsonValue>>::deferred();
+    QObject::connect(reply, &QNetworkReply::finished,
+                     [reply, resolver]() { resolver.resolve(handleNetworkReply(reply)); });
+    return promise;
 }
 
 QUrl EventoNetworkClient::endpoint(const QString& endpoint) {
@@ -86,9 +87,9 @@ QUrl EventoNetworkClient::endpoint(const QString& endpoint, const QUrlQuery& par
     return r;
 }
 
-EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl& url,
-                                                                 const QString& contentType,
-                                                                 const QByteArray& requestData) {
+EventoPromise<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl& url,
+                                                                  const QString& contentType,
+                                                                  const QByteArray& requestData) {
     QNetworkRequest request;
     request.setUrl(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, USER_AGENT);
@@ -107,23 +108,25 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl& url
 
     reply->ignoreSslErrors();
 
-    return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
-        .then(std::bind(handleNetworkReply, reply));
+    auto [promise, resolver] = EventoPromise<EventoResult<QJsonValue>>::deferred();
+    QObject::connect(reply, &QNetworkReply::finished,
+                     [reply, resolver]() { resolver.resolve(handleNetworkReply(reply)); });
+    return promise;
 }
 
-EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl& url,
-                                                                 const QUrlQuery& requestData) {
+EventoPromise<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl& url,
+                                                                  const QUrlQuery& requestData) {
     return this->post(url, MIME_FORM_URL_ENCODED, requestData.toString().toUtf8());
 }
 
-EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::post(const QUrl& url,
-                                                                 const QJsonDocument& requestData) {
+EventoPromise<EventoResult<QJsonValue>>
+    EventoNetworkClient::post(const QUrl& url, const QJsonDocument& requestData) {
     return this->post(url, MIME_JSON, requestData.toJson(QJsonDocument::Compact));
 }
 
-EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl& url,
-                                                                const QString& contentType,
-                                                                const QByteArray& requestData) {
+EventoPromise<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl& url,
+                                                                 const QString& contentType,
+                                                                 const QByteArray& requestData) {
     QNetworkRequest request;
     request.setUrl(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, USER_AGENT);
@@ -142,23 +145,25 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl& url,
 
     reply->ignoreSslErrors();
 
-    return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
-        .then(std::bind(handleNetworkReply, reply));
+    auto [promise, resolver] = EventoPromise<EventoResult<QJsonValue>>::deferred();
+    QObject::connect(reply, &QNetworkReply::finished,
+                     [reply, resolver]() { resolver.resolve(handleNetworkReply(reply)); });
+    return promise;
 }
 
-EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl& url,
-                                                                const QUrlQuery& requestData) {
+EventoPromise<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl& url,
+                                                                 const QUrlQuery& requestData) {
     return this->put(url, MIME_FORM_URL_ENCODED, requestData.toString().toUtf8());
 }
 
-EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl& url,
-                                                                const QJsonDocument& requestData) {
+EventoPromise<EventoResult<QJsonValue>> EventoNetworkClient::put(const QUrl& url,
+                                                                 const QJsonDocument& requestData) {
     return this->put(url, MIME_JSON, requestData.toJson(QJsonDocument::Compact));
 }
 
-EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::patch(const QUrl& url,
-                                                                  const QString& contentType,
-                                                                  const QByteArray& requestData) {
+EventoPromise<EventoResult<QJsonValue>> EventoNetworkClient::patch(const QUrl& url,
+                                                                   const QString& contentType,
+                                                                   const QByteArray& requestData) {
     QNetworkRequest request;
     request.setUrl(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, USER_AGENT);
@@ -177,21 +182,23 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::patch(const QUrl& ur
 
     reply->ignoreSslErrors();
 
-    return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
-        .then(std::bind(handleNetworkReply, reply));
+    auto [promise, resolver] = EventoPromise<EventoResult<QJsonValue>>::deferred();
+    QObject::connect(reply, &QNetworkReply::finished,
+                     [reply, resolver]() { resolver.resolve(handleNetworkReply(reply)); });
+    return promise;
 }
 
-EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::patch(const QUrl& url,
-                                                                  const QUrlQuery& requestData) {
+EventoPromise<EventoResult<QJsonValue>> EventoNetworkClient::patch(const QUrl& url,
+                                                                   const QUrlQuery& requestData) {
     return this->patch(url, MIME_FORM_URL_ENCODED, requestData.toString().toUtf8());
 }
 
-EventoFuture<EventoResult<QJsonValue>>
+EventoPromise<EventoResult<QJsonValue>>
     EventoNetworkClient::patch(const QUrl& url, const QJsonDocument& requestData) {
     return this->patch(url, MIME_JSON, requestData.toJson(QJsonDocument::Compact));
 }
 
-EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::deleteResource(const QUrl& url) {
+EventoPromise<EventoResult<QJsonValue>> EventoNetworkClient::deleteResource(const QUrl& url) {
     QNetworkRequest request;
     request.setUrl(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, USER_AGENT);
@@ -209,8 +216,10 @@ EventoFuture<EventoResult<QJsonValue>> EventoNetworkClient::deleteResource(const
 
     reply->ignoreSslErrors();
 
-    return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
-        .then(std::bind(handleNetworkReply, reply));
+    auto [promise, resolver] = EventoPromise<EventoResult<QJsonValue>>::deferred();
+    QObject::connect(reply, &QNetworkReply::finished,
+                     [reply, resolver]() { resolver.resolve(handleNetworkReply(reply)); });
+    return promise;
 }
 
 static QStringList asStringList(const QJsonValue& value) {
@@ -239,7 +248,7 @@ declare_object(DTO_User, object_member(DTO_User, id), object_member(DTO_User, li
                object_member(DTO_User, organization), object_member(DTO_User, biography),
                object_member(DTO_User, link));
 
-EventoFuture<EventoResult<DTO_User>> EventoNetworkClient::loginViaSastLink(const QString& code) {
+EventoPromise<EventoResult<DTO_User>> EventoNetworkClient::loginViaSastLink(const QString& code) {
     UserHelper::getInstance();
     auto url = endpoint(QStringLiteral("/user/login/link"));
     QUrlQuery params;
@@ -265,7 +274,7 @@ EventoFuture<EventoResult<DTO_User>> EventoNetworkClient::loginViaSastLink(const
         });
 }
 
-EventoFuture<EventoResult<QStringList>> EventoNetworkClient::getAdminPermission() {
+EventoPromise<EventoResult<QStringList>> EventoNetworkClient::getAdminPermission() {
     auto url = endpoint(QStringLiteral("/permission/admin/self"));
     return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<QStringList> {
         if (result) {
@@ -276,7 +285,7 @@ EventoFuture<EventoResult<QStringList>> EventoNetworkClient::getAdminPermission(
     });
 }
 
-EventoFuture<EventoResult<QStringList>>
+EventoPromise<EventoResult<QStringList>>
     EventoNetworkClient::getManagerPermission(EventoID eventId) {
     auto url = endpoint(QStringLiteral("/permission/event/manager/self"));
     return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<QStringList> {
@@ -288,7 +297,7 @@ EventoFuture<EventoResult<QStringList>>
     });
 }
 
-EventoFuture<EventoResult<QStringList>> EventoNetworkClient::getPermittedEvent() {
+EventoPromise<EventoResult<QStringList>> EventoNetworkClient::getPermittedEvent() {
     auto url = endpoint(QStringLiteral("/permission/manager/events"));
     return this->get(url).then([](EventoResult<QJsonValue> result) -> EventoResult<QStringList> {
         if (result) {
@@ -299,12 +308,13 @@ EventoFuture<EventoResult<QStringList>> EventoNetworkClient::getPermittedEvent()
     });
 }
 
-EventoFuture<EventoResult<DTO_Permission>> EventoNetworkClient::getEventPermission(EventoID event) {
+EventoPromise<EventoResult<DTO_Permission>>
+    EventoNetworkClient::getEventPermission(EventoID event) {
     // TODO: implement
     return {};
 }
 
-EventoFuture<EventoResult<DTO_User>> EventoNetworkClient::getUserInfo(const UserID& id) {
+EventoPromise<EventoResult<DTO_User>> EventoNetworkClient::getUserInfo(const UserID& id) {
     QUrlQuery params;
     params.addQueryItem("userId", id);
     auto url = endpoint(QStringLiteral("/user/info"), params);
@@ -325,7 +335,7 @@ declare_object(ParticipationStatus, object_member(ParticipationStatus, isRegistr
                object_member(ParticipationStatus, isParticipated),
                object_member(ParticipationStatus, isSubscribed));
 
-EventoFuture<EventoResult<ParticipationStatus>>
+EventoPromise<EventoResult<ParticipationStatus>>
     EventoNetworkClient::getUserParticipate(EventoID event) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(event));
@@ -358,7 +368,7 @@ register_object_member(DTO_Feedback, "eventId", eventId);
 declare_object(DTO_Feedback, object_member(DTO_Feedback, id), object_member(DTO_Feedback, content),
                object_member(DTO_Feedback, score), object_member(DTO_Feedback, eventId));
 
-EventoFuture<EventoResult<DTO_Feedback>> EventoNetworkClient::getFeedbackInfo(EventoID eventoId) {
+EventoPromise<EventoResult<DTO_Feedback>> EventoNetworkClient::getFeedbackInfo(EventoID eventoId) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(eventoId));
     auto url = endpoint(QStringLiteral("/feedback/user/info"), params);
@@ -377,8 +387,8 @@ EventoFuture<EventoResult<DTO_Feedback>> EventoNetworkClient::getFeedbackInfo(Ev
     });
 }
 
-EventoFuture<EventoResult<bool>> EventoNetworkClient::subscribeDepartment(int departmentId,
-                                                                          bool unsubscribe) {
+EventoPromise<EventoResult<bool>> EventoNetworkClient::subscribeDepartment(int departmentId,
+                                                                           bool unsubscribe) {
     QUrlQuery params;
     params.addQueryItem("departmentId", QString::number(departmentId));
     params.addQueryItem("isSubscribe", unsubscribe ? "true" : "false");
@@ -440,7 +450,7 @@ std::vector<DTO_Evento> asEventoDTOArray(const QJsonValue& rootValue) {
 }
 
 // eventFetch
-EventoFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getUndertakingList() {
+EventoPromise<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getUndertakingList() {
     auto url = endpoint(QStringLiteral("/event/conducting"));
     return this->get(url).then(
         [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_Evento>> {
@@ -452,7 +462,7 @@ EventoFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getUnde
         });
 }
 
-EventoFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getLatestList() {
+EventoPromise<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getLatestList() {
     auto url = endpoint(QStringLiteral("/event/newest"));
     return this->get(url).then(
         [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_Evento>> {
@@ -464,7 +474,7 @@ EventoFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getLate
         });
 }
 
-EventoFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getRegisteredList() {
+EventoPromise<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getRegisteredList() {
     auto url = endpoint(QStringLiteral("/user/registered"));
     return this->get(url).then(
         [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_Evento>> {
@@ -476,7 +486,7 @@ EventoFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getRegi
         });
 }
 
-EventoFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getSubscribedList() {
+EventoPromise<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getSubscribedList() {
     auto url = endpoint(QStringLiteral("/user/subscribed"));
     return this->get(url).then(
         [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_Evento>> {
@@ -488,7 +498,7 @@ EventoFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getSubs
         });
 }
 
-EventoFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getHistoryList() {
+EventoPromise<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getHistoryList() {
     auto url = endpoint(QStringLiteral("/event/history"));
     return this->get(url).then(
         [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_Evento>> {
@@ -500,7 +510,7 @@ EventoFuture<EventoResult<std::vector<DTO_Evento>>> EventoNetworkClient::getHist
         });
 }
 
-EventoFuture<EventoResult<std::vector<DTO_Evento>>>
+EventoPromise<EventoResult<std::vector<DTO_Evento>>>
     EventoNetworkClient::getEventListInPage(int page, int size) {
     QUrlQuery params;
     params.addQueryItem("page", QString::number(page));
@@ -516,7 +526,7 @@ EventoFuture<EventoResult<std::vector<DTO_Evento>>>
         });
 }
 
-EventoFuture<EventoResult<std::vector<DTO_Evento>>>
+EventoPromise<EventoResult<std::vector<DTO_Evento>>>
     EventoNetworkClient::getDepartmentEventList(int departmentId) {
     QUrlQuery params;
     params.addQueryItem("departmentId", QString::number(departmentId));
@@ -533,7 +543,7 @@ EventoFuture<EventoResult<std::vector<DTO_Evento>>>
         });
 }
 
-EventoFuture<EventoResult<std::vector<DTO_Evento>>>
+EventoPromise<EventoResult<std::vector<DTO_Evento>>>
     EventoNetworkClient::getEventListAfterTime(QDate time) {
     QUrlQuery params;
     params.addQueryItem("time", time.toString("yyyy-MM-dd"));
@@ -550,7 +560,7 @@ EventoFuture<EventoResult<std::vector<DTO_Evento>>>
         });
 }
 
-EventoFuture<EventoResult<DTO_Evento>> EventoNetworkClient::getEventById(EventoID event) {
+EventoPromise<EventoResult<DTO_Evento>> EventoNetworkClient::getEventById(EventoID event) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(event));
     auto url = endpoint(QStringLiteral("/event/info"), params);
@@ -570,7 +580,7 @@ EventoFuture<EventoResult<DTO_Evento>> EventoNetworkClient::getEventById(EventoI
     });
 }
 
-EventoFuture<EventoResult<std::vector<DTO_Feedback>>>
+EventoPromise<EventoResult<std::vector<DTO_Feedback>>>
     EventoNetworkClient::getFeedbackList(EventoID eventoId) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(eventoId));
@@ -606,7 +616,7 @@ declare_object(DTO_FeedbackSummary, object_member(DTO_FeedbackSummary, eventId),
                object_member(DTO_FeedbackSummary, checkedNum),
                object_member(DTO_FeedbackSummary, feedbacks));
 
-EventoFuture<EventoResult<DTO_FeedbackSummary>>
+EventoPromise<EventoResult<DTO_FeedbackSummary>>
     EventoNetworkClient::getFeedbackSummary(EventoID eventoId) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(eventoId));
@@ -634,7 +644,7 @@ register_object_member(FeedbackNum, "feedbackCount", feedbackCount);
 declare_object(FeedbackNum, object_member(FeedbackNum, eventId), object_member(FeedbackNum, title),
                object_member(FeedbackNum, feedbackCount));
 
-EventoFuture<EventoResult<std::pair<int, std::vector<FeedbackNum>>>>
+EventoPromise<EventoResult<std::pair<int, std::vector<FeedbackNum>>>>
     EventoNetworkClient::getFeedbackSummaryListInPage(int page) {
     QUrlQuery params;
     params.addQueryItem("page", QString::number(page));
@@ -664,12 +674,12 @@ register_object_member(DTO_Slide, "url", url);
 declare_object(DTO_Slide, object_member(DTO_Slide, id), object_member(DTO_Slide, title),
                object_member(DTO_Slide, link), object_member(DTO_Slide, url));
 
-EventoFuture<EventoResult<std::vector<DTO_Slide>>> EventoNetworkClient::getSlideList() {
+EventoPromise<EventoResult<std::vector<DTO_Slide>>> EventoNetworkClient::getSlideList() {
     // TODO: implement
     return {};
 }
 
-EventoFuture<EventoResult<std::vector<DTO_Slide>>>
+EventoPromise<EventoResult<std::vector<DTO_Slide>>>
     EventoNetworkClient::getEventSlideList(EventoID id) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(id));
@@ -692,7 +702,8 @@ EventoFuture<EventoResult<std::vector<DTO_Slide>>>
         });
 }
 
-EventoFuture<EventoResult<std::vector<DTO_Slide>>> EventoNetworkClient::getHomeSlideList(int size) {
+EventoPromise<EventoResult<std::vector<DTO_Slide>>>
+    EventoNetworkClient::getHomeSlideList(int size) {
     QUrlQuery params;
     params.addQueryItem("size", QString::number(size));
     auto url = endpoint(QStringLiteral("/slide/home/list"), params);
@@ -714,7 +725,7 @@ EventoFuture<EventoResult<std::vector<DTO_Slide>>> EventoNetworkClient::getHomeS
         });
 }
 
-EventoFuture<EventoResult<std::vector<EventType>>> EventoNetworkClient::getTypeList() {
+EventoPromise<EventoResult<std::vector<EventType>>> EventoNetworkClient::getTypeList() {
     auto url = endpoint(QStringLiteral("/admin/types"));
     return this->get(url).then(
         [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<EventType>> {
@@ -740,7 +751,7 @@ register_object_member(DTO_Location, "children", children);
 declare_object(DTO_Location, object_member(DTO_Location, id), object_member(DTO_Location, name),
                optional_object_member(DTO_Location, children));
 
-EventoFuture<EventoResult<std::vector<DTO_Location>>> EventoNetworkClient::getLocationList() {
+EventoPromise<EventoResult<std::vector<DTO_Location>>> EventoNetworkClient::getLocationList() {
     auto url = endpoint(QStringLiteral("/admin/locations"));
     return this->get(url).then(
         [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_Location>> {
@@ -756,7 +767,7 @@ EventoFuture<EventoResult<std::vector<DTO_Location>>> EventoNetworkClient::getLo
         });
 }
 
-EventoFuture<EventoResult<std::vector<Department>>> EventoNetworkClient::getDepartmentList() {
+EventoPromise<EventoResult<std::vector<Department>>> EventoNetworkClient::getDepartmentList() {
     auto url = endpoint(QStringLiteral("/event/departments"));
     return this->get(url).then(
         [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<Department>> {
@@ -776,46 +787,48 @@ EventoFuture<EventoResult<std::vector<Department>>> EventoNetworkClient::getDepa
         });
 }
 
-EventoFuture<EventoResult<std::vector<Department>>>
+EventoPromise<EventoResult<std::vector<Department>>>
     EventoNetworkClient::getDepartmentListWithSubscriptionInfo() {
     auto url = endpoint("/user/subscribe/departments");
-    return getDepartmentList().then(
-        [=](EventoResult<std::vector<Department>> result) -> EventoResult<std::vector<Department>> {
-            if (!result)
-                return result;
-            auto filter_result =
-                this->get(url)
-                    .then([](EventoResult<QJsonValue> result) -> EventoResult<std::set<int>> {
-                        if (result) {
-                            auto rootValue = result.take();
-                            std::set<int> result;
-                            std::vector<Department> infos;
-                            if (rootValue.isArray()) {
-                                declare_top_deserialiser(infos, deserialiser);
-                                deserialiser.assign(rootValue);
-                                for (const auto& i : infos)
-                                    result.insert(i.id);
-                                return result;
-                            } else if (rootValue.isNull())
-                                return result;
-                            return {EventoExceptionCode::JsonError, "Format Error!"};
-                        } else {
-                            return {result.code(), result.message()};
-                        };
-                    })
-                    .takeResult();
-            if (!filter_result)
-                return {filter_result.code(), filter_result.message()};
-            auto data = result.take();
-            auto filter = filter_result.take();
-            for (auto& i : data)
-                if (filter.count(i.id))
-                    i.subscribed = true;
-            return data;
-        });
+    return getDepartmentList().then([=](EventoResult<std::vector<Department>> result)
+                                        -> EventoPromise<EventoResult<std::vector<Department>>> {
+        if (!result)
+            return EventoPromise<EventoResult<std::vector<Department>>>::resolve(std::move(result));
+        auto data = result.take();
+        return this->get(url)
+            .then([](EventoResult<QJsonValue> result) -> EventoResult<std::set<int>> {
+                if (result) {
+                    auto rootValue = result.take();
+                    std::set<int> result;
+                    std::vector<Department> infos;
+                    if (rootValue.isArray()) {
+                        declare_top_deserialiser(infos, deserialiser);
+                        deserialiser.assign(rootValue);
+                        for (const auto& i : infos)
+                            result.insert(i.id);
+                        return result;
+                    } else if (rootValue.isNull())
+                        return result;
+                    return {EventoExceptionCode::JsonError, "Format Error!"};
+                } else {
+                    return {result.code(), result.message()};
+                };
+            })
+            .then([data = std::move(data)](EventoResult<std::set<int>> filter_result)
+                      -> EventoResult<std::vector<Department>> {
+                if (!filter_result)
+                    return {filter_result.code(), filter_result.message()};
+                auto new_data = data;
+                auto filter = filter_result.take();
+                for (auto& i : new_data)
+                    if (filter.count(i.id))
+                        i.subscribed = true;
+                return new_data;
+            });
+    });
 }
 
-EventoFuture<EventoResult<QString>> EventoNetworkClient::getQRCode(EventoID eventId) {
+EventoPromise<EventoResult<QString>> EventoNetworkClient::getQRCode(EventoID eventId) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(eventId));
     auto url = endpoint(QStringLiteral("/event/authcode"), params);
@@ -829,7 +842,8 @@ EventoFuture<EventoResult<QString>> EventoNetworkClient::getQRCode(EventoID even
 }
 
 // eventUpload
-EventoFuture<EventoResult<bool>> EventoNetworkClient::checkIn(EventoID event, const QString& code) {
+EventoPromise<EventoResult<bool>> EventoNetworkClient::checkIn(EventoID event,
+                                                               const QString& code) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(event));
     params.addQueryItem("code", code);
@@ -843,7 +857,7 @@ EventoFuture<EventoResult<bool>> EventoNetworkClient::checkIn(EventoID event, co
     });
 }
 
-EventoFuture<EventoResult<bool>> EventoNetworkClient::feedbackEvent(const DTO_Feedback& feedback) {
+EventoPromise<EventoResult<bool>> EventoNetworkClient::feedbackEvent(const DTO_Feedback& feedback) {
     QUrlQuery params;
     params.addQueryItem("content", feedback.content);
     params.addQueryItem("score", QString::number(feedback.score));
@@ -858,8 +872,8 @@ EventoFuture<EventoResult<bool>> EventoNetworkClient::feedbackEvent(const DTO_Fe
     });
 }
 
-EventoFuture<EventoResult<bool>> EventoNetworkClient::registerEvent(EventoID event,
-                                                                    bool selection) {
+EventoPromise<EventoResult<bool>> EventoNetworkClient::registerEvent(EventoID event,
+                                                                     bool selection) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(event));
     params.addQueryItem("isRegister", selection ? QStringLiteral("true") : QStringLiteral("false"));
@@ -873,8 +887,8 @@ EventoFuture<EventoResult<bool>> EventoNetworkClient::registerEvent(EventoID eve
     });
 }
 
-EventoFuture<EventoResult<bool>> EventoNetworkClient::subscribeEvent(EventoID event,
-                                                                     bool selection) {
+EventoPromise<EventoResult<bool>> EventoNetworkClient::subscribeEvent(EventoID event,
+                                                                      bool selection) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(event));
     params.addQueryItem("isSubscribe",
@@ -889,7 +903,7 @@ EventoFuture<EventoResult<bool>> EventoNetworkClient::subscribeEvent(EventoID ev
     });
 }
 
-EventoFuture<EventoResult<bool>> EventoNetworkClient::hasFeedbacked(EventoID event) {
+EventoPromise<EventoResult<bool>> EventoNetworkClient::hasFeedbacked(EventoID event) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(event));
     auto url = endpoint(QStringLiteral("/feedback/user/info"), params);
@@ -902,7 +916,7 @@ EventoFuture<EventoResult<bool>> EventoNetworkClient::hasFeedbacked(EventoID eve
     });
 }
 
-EventoFuture<EventoResult<bool>> EventoNetworkClient::deleteEvent(EventoID event) {
+EventoPromise<EventoResult<bool>> EventoNetworkClient::deleteEvent(EventoID event) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(event));
     auto url = endpoint(QStringLiteral("/event/info"), params);
@@ -956,7 +970,7 @@ struct Request_Evento {
     }
 };
 
-EventoFuture<EventoResult<bool>> EventoNetworkClient::createEvent(
+EventoPromise<EventoResult<bool>> EventoNetworkClient::createEvent(
     const QString& title, const QString& description, const QString& eventStart,
     const QString& eventEnd, const QString& registerStart, const QString& registerEnd, int typeId,
     int locationId, const QVariantList& departmentIds, const QString& tag) {
@@ -987,7 +1001,7 @@ struct Request_EventoPatch : public Request_Evento {
     }
 };
 
-EventoFuture<EventoResult<bool>> EventoNetworkClient::editEvent(
+EventoPromise<EventoResult<bool>> EventoNetworkClient::editEvent(
     EventoID event, const QString& title, const QString& description, const QString& eventStart,
     const QString& eventEnd, const QString& registerStart, const QString& registerEnd, int typeId,
     int locationId, const QVariantList& departmentIds, const QString& tag) {
@@ -1009,7 +1023,7 @@ EventoFuture<EventoResult<bool>> EventoNetworkClient::editEvent(
         });
 }
 
-EventoFuture<EventoResult<bool>> EventoNetworkClient::cancelEvent(EventoID event) {
+EventoPromise<EventoResult<bool>> EventoNetworkClient::cancelEvent(EventoID event) {
     QUrlQuery url_params;
     url_params.addQueryItem("eventId", QString::number(event));
     auto url = endpoint(QStringLiteral("/event/info"), url_params);
@@ -1030,7 +1044,7 @@ register_object_member(DTO_UserBrief, "email", email);
 declare_object(DTO_UserBrief, object_member(DTO_UserBrief, userId),
                object_member(DTO_UserBrief, email));
 
-EventoFuture<EventoResult<std::vector<DTO_UserBrief>>>
+EventoPromise<EventoResult<std::vector<DTO_UserBrief>>>
     EventoNetworkClient::getEventManagerList(EventoID eventoId) {
     QUrlQuery params;
     params.addQueryItem("eventId", QString::number(eventoId));
@@ -1053,7 +1067,7 @@ EventoFuture<EventoResult<std::vector<DTO_UserBrief>>>
         });
 }
 
-EventoFuture<EventoResult<std::vector<DTO_UserBrief>>> EventoNetworkClient::getAdminUserList() {
+EventoPromise<EventoResult<std::vector<DTO_UserBrief>>> EventoNetworkClient::getAdminUserList() {
     auto url = endpoint(QStringLiteral("/permission/admins"));
     return this->get(url).then(
         [](EventoResult<QJsonValue> result) -> EventoResult<std::vector<DTO_UserBrief>> {
@@ -1073,17 +1087,17 @@ EventoFuture<EventoResult<std::vector<DTO_UserBrief>>> EventoNetworkClient::getA
         });
 }
 
-EventoFuture<EventoResult<QString>> EventoNetworkClient::getAdminPermissionTreeData() {
+EventoPromise<EventoResult<QString>> EventoNetworkClient::getAdminPermissionTreeData() {
     // TODO: implement
     return {};
 }
 
-EventoFuture<EventoResult<QString>> EventoNetworkClient::getManagerPermissionTreeData() {
+EventoPromise<EventoResult<QString>> EventoNetworkClient::getManagerPermissionTreeData() {
     // TODO: implement
     return {};
 }
 
-EventoFuture<EventoResult<std::set<EventoID>>>
+EventoPromise<EventoResult<std::set<EventoID>>>
     EventoNetworkClient::getPermittedEvents(const QString& userId) {
     QUrlQuery params;
     params.addQueryItem("userId", userId);
@@ -1105,7 +1119,7 @@ EventoFuture<EventoResult<std::set<EventoID>>>
         });
 }
 
-EventoFuture<EventoResult<std::pair<QString, QString>>> EventoNetworkClient::checkUpdate() {
+EventoPromise<EventoResult<std::pair<QString, QString>>> EventoNetworkClient::checkUpdate() {
     auto url = QUrl("https://api.github.com/repos/NJUPT-SAST-Cpp/"
                     "SAST-Evento-Desktop/releases/latest");
     QNetworkRequest request;
@@ -1113,34 +1127,38 @@ EventoFuture<EventoResult<std::pair<QString, QString>>> EventoNetworkClient::che
     request.setRawHeader("Accept", "application/vnd.github+json");
     auto reply = manager.get(request);
     reply->ignoreSslErrors();
+    auto [promise, resolver] = EventoPromise<EventoResult<std::pair<QString, QString>>>::deferred();
+    QObject::connect(reply, &QNetworkReply::finished, [reply, resolver]() {
+        auto content = reply->readAll();
+        auto networkError = reply->error();
 
-    return EventoFuture(QtFuture::connect(reply, &QNetworkReply::finished))
-        .then([=]() -> EventoResult<std::pair<QString, QString>> {
-            auto content = reply->readAll();
-            auto networkError = reply->error();
-
-            if (networkError == QNetworkReply::ContentNotFoundError) {
-                return EventoException(EventoExceptionCode::NetworkError, "not found");
-            }
-            if (networkError != QNetworkReply::NoError) {
-                return EventoException(EventoExceptionCode::NetworkError, "network error");
-            }
-            QJsonParseError jsonError;
-            auto result = QJsonDocument::fromJson(content, &jsonError);
-            if (jsonError.error != QJsonParseError::NoError) {
-                return EventoException(EventoExceptionCode::JsonError,
-                                       QString("json error: %1 (offest = %2)")
-                                           .arg(jsonError.errorString())
-                                           .arg(jsonError.offset));
-            }
-            reply->deleteLater();
-            if (!result.isObject()) {
-                return EventoException(EventoExceptionCode::JsonError,
-                                       QStringLiteral("expect object but got other"));
-            }
-            QJsonObject jsonObject = result.object();
-            QString name = jsonObject.value("name").toString();
-            QString description = jsonObject.value("body").toString();
-            return std::make_pair(name, description);
-        });
+        if (networkError == QNetworkReply::ContentNotFoundError) {
+            resolver.resolve(EventoException(EventoExceptionCode::NetworkError, "not found"));
+            return;
+        }
+        if (networkError != QNetworkReply::NoError) {
+            resolver.resolve(EventoException(EventoExceptionCode::NetworkError, "network error"));
+            return;
+        }
+        QJsonParseError jsonError;
+        auto result = QJsonDocument::fromJson(content, &jsonError);
+        if (jsonError.error != QJsonParseError::NoError) {
+            resolver.resolve(EventoException(EventoExceptionCode::JsonError,
+                                             QString("json error: %1 (offest = %2)")
+                                                 .arg(jsonError.errorString())
+                                                 .arg(jsonError.offset)));
+            return;
+        }
+        reply->deleteLater();
+        if (!result.isObject()) {
+            resolver.resolve(EventoException(EventoExceptionCode::JsonError,
+                                             QStringLiteral("expect object but got other")));
+            return;
+        }
+        QJsonObject jsonObject = result.object();
+        QString name = jsonObject.value("name").toString();
+        QString description = jsonObject.value("body").toString();
+        resolver.resolve(std::make_pair(name, description));
+    });
+    return promise;
 }

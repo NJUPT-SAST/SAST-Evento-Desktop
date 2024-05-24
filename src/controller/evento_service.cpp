@@ -31,7 +31,7 @@
 #include <vector>
 
 void EventoService::load_Plaza() {
-    std::array<QFuture<bool>, 2> tasks = {
+    std::array<EventoPromise<bool>, 2> tasks = {
         getRepo()->getUndertakingList().then([this](EventoResult<std::vector<DTO_Evento>> result) {
             if (!result) {
                 PlazaController::getInstance()->onPlazaLoadFailure(result);
@@ -70,50 +70,73 @@ void EventoService::load_Plaza() {
             LatestEventoModel::getInstance()->resetModel(std::move(model));
             return true;
         })};
-    QtFuture::whenAll(tasks.begin(), tasks.end()).then([](QList<QFuture<bool>> jobs) {
-        for (auto& i : jobs)
-            if (i.isCanceled() || !i.takeResult())
+    EventoPromise<bool>::all(tasks.begin(), tasks.end()).then([](std::vector<bool> jobs) {
+        for (auto i : jobs)
+            if (!i)
                 return;
         PlazaController::getInstance()->onPlazaLoadFinished();
     });
 }
 
 void EventoService::handle_schedule(std::vector<DTO_Evento>&& data) {
-    std::vector<Schedule> multiDayEvents;
-    std::vector<Schedule> singleDayEvents;
+    std::vector<EventoPromise<std::optional<Schedule>>> fetchEventPromises;
     {
         std::lock_guard lock(mutex);
         registered.clear();
         for (auto& evento : data) {
             registered.push_back(evento.id);
-            auto participation = getRepo()->getUserParticipate(evento.id).takeResult();
-            auto has_feedback = getRepo()->hasFeedbacked(evento.id).takeResult();
-            if (participation &&
-                (has_feedback || has_feedback.code() == EventoExceptionCode::FalseValue)) {
-                if (evento.gmtEventStart.date() == evento.gmtEventEnd.date())
-                    singleDayEvents.emplace_back(evento, participation.take(), has_feedback);
-                else
-                    multiDayEvents.emplace_back(evento, participation.take(), has_feedback);
-            } else {
-                auto message = participation ? has_feedback.message() : participation.message();
-                ScheduleController::getInstance()->onLoadRegisteredFailure(message);
-                return;
-            }
-            stored[evento.id] = std::move(evento);
+            stored[evento.id] = evento;
+            auto promise = getRepo()->getUserParticipate(evento.id).then(
+                [evento](EventoResult<ParticipationStatus> participation)
+                    -> EventoPromise<std::optional<Schedule>> {
+                    if (!participation) {
+                        ScheduleController::getInstance()->onLoadRegisteredFailure(
+                            participation.message());
+                        return EventoPromise<std::optional<Schedule>>::resolve(std::nullopt);
+                    }
+                    return getRepo()->hasFeedbacked(evento.id).then(
+                        [participation = participation.take(), evento = std::move(evento)](
+                            EventoResult<bool> has_feedback) -> std::optional<Schedule> {
+                            if (!has_feedback &&
+                                has_feedback.code() != EventoExceptionCode::FalseValue) {
+                                ScheduleController::getInstance()->onLoadRegisteredFailure(
+                                    has_feedback.message());
+                                return std::nullopt;
+                            }
+                            return Schedule{evento, participation, has_feedback};
+                        });
+                });
+            fetchEventPromises.emplace_back(std::move(promise));
         }
     }
-    std::move(singleDayEvents.begin(), singleDayEvents.end(), std::back_inserter(multiDayEvents));
-    std::set<QString> dateSet;
-    int h = 0;
-    for (auto& e : multiDayEvents) {
-        h += 90;
-        if (dateSet.insert(e.date).second) {
-            e.displayDate = true;
-            h += 25;
-        }
-    };
-    ScheduleController::getInstance()->setProperty("height", h);
-    ScheduledEventoModel::getInstance()->resetModel(std::move(multiDayEvents));
+
+    EventoPromise<std::optional<Schedule>>::all(fetchEventPromises.begin(),
+                                                fetchEventPromises.end())
+        .then([](std::vector<std::optional<Schedule>> schedules) {
+            std::vector<Schedule> multiDayEvents;
+            std::vector<Schedule> singleDayEvents;
+            for (auto& schedule : schedules) {
+                if (!schedule)
+                    return; // Something failed
+                if (schedule->oneDay)
+                    singleDayEvents.push_back(std::move(*schedule));
+                else
+                    multiDayEvents.push_back(std::move(*schedule));
+            }
+            std::move(singleDayEvents.begin(), singleDayEvents.end(),
+                      std::back_inserter(multiDayEvents));
+            std::set<QString> dateSet;
+            int h = 0;
+            for (auto& e : multiDayEvents) {
+                h += 90;
+                if (dateSet.insert(e.date).second) {
+                    e.displayDate = true;
+                    h += 25;
+                }
+            };
+            ScheduleController::getInstance()->setProperty("height", h);
+            ScheduledEventoModel::getInstance()->resetModel(std::move(multiDayEvents));
+        });
 }
 
 void EventoService::load_RegisteredSchedule() {
@@ -194,29 +217,30 @@ void EventoService::load_Block(QDate date) {
             CalendarController::getInstance()->onLoadAllFailure(result.message());
             return;
         }
-        auto permitted_list =
-            getRepo()
-                ->getPermittedEvents(UserHelper::getInstance()->property("userId").toString())
-                .takeResult();
-        std::set<int> permitted;
-        if (permitted_list)
-            permitted = permitted_list.take();
         auto data = result.take();
-        std::vector<EventoBlock> model;
-        auto sunday = date.addDays(6);
-        {
-            std::lock_guard lock(mutex);
-            blocks.clear();
-            for (auto& i : data) {
-                if (i.gmtEventStart.date() > sunday)
-                    continue;
-                blocks.push_back(i.id);
-                model.emplace_back(i, permitted);
-                stored[i.id] = std::move(i);
-            }
-        }
-        EventoBlockModel::getInstance()->resetModel(date, std::move(model));
-        CalendarController::getInstance()->onLoadAllFinished();
+        getRepo()
+            ->getPermittedEvents(UserHelper::getInstance()->property("userId").toString())
+            .then([data = std::move(data), date,
+                   this](EventoResult<std::set<EventoID>> permitted_list) {
+                std::set<int> permitted;
+                if (permitted_list)
+                    permitted = permitted_list.take();
+                std::vector<EventoBlock> model;
+                auto sunday = date.addDays(6);
+                {
+                    std::lock_guard lock(mutex);
+                    blocks.clear();
+                    for (auto& i : data) {
+                        if (i.gmtEventStart.date() > sunday)
+                            continue;
+                        blocks.push_back(i.id);
+                        model.emplace_back(i, permitted);
+                        stored[i.id] = std::move(i);
+                    }
+                }
+                EventoBlockModel::getInstance()->resetModel(date, std::move(model));
+                CalendarController::getInstance()->onLoadAllFinished();
+            });
     });
 }
 
@@ -244,26 +268,28 @@ void EventoService::load_Lesson(QDate monday, int dep) {
                 CalendarController::getInstance()->onLoadPicFailure(result.message());
                 return;
             }
-            auto id = InformationService::getInstance().getByDep(dep);
             auto data = result.take();
-            auto sunday = monday.addDays(6);
-            std::vector<EventoLesson> model;
-            {
-                std::lock_guard lock(mutex);
-                for (auto& i : data) {
-                    if (i.gmtEventStart.date() > sunday || i.type.id != id)
-                        continue;
-                    model.push_back(i);
-                    stored[i.id] = std::move(i);
-                }
-            }
-            LessonModel::getInstance()->resetModel(std::move(model));
-            CalendarController::getInstance()->onLoadPicSuccess();
+            InformationService::getInstance().getByDep(dep).then(
+                [data = std::move(data), monday, this](EventTypeID id) {
+                    auto sunday = monday.addDays(6);
+                    std::vector<EventoLesson> model;
+                    {
+                        std::lock_guard lock(mutex);
+                        for (auto& i : data) {
+                            if (i.gmtEventStart.date() > sunday || i.type.id != id)
+                                continue;
+                            model.push_back(i);
+                            stored[i.id] = std::move(i);
+                        }
+                    }
+                    LessonModel::getInstance()->resetModel(std::move(model));
+                    CalendarController::getInstance()->onLoadPicSuccess();
+                });
         });
 }
 
 void EventoService::load(EventoID id) {
-    std::array<QFuture<bool>, 2> tasks = {
+    std::array<EventoPromise<bool>, 2> tasks = {
         getRepo()->getEventById(id).then([=](EventoResult<DTO_Evento> result) {
             if (!result) {
                 EventoInfoController::getInstance()->onLoadFailure(result.message());
@@ -298,9 +324,9 @@ void EventoService::load(EventoID id) {
             }
             return true;
         })};
-    QtFuture::whenAll(tasks.begin(), tasks.end()).then([](QList<QFuture<bool>> tasks) {
-        for (auto& i : tasks)
-            if (i.isCanceled() || !i.takeResult())
+    EventoPromise<bool>::all(tasks.begin(), tasks.end()).then([](std::vector<bool> jobs) {
+        for (auto i : jobs)
+            if (!i)
                 return;
         EventoInfoController::getInstance()->onLoadFinished();
     });
@@ -404,10 +430,12 @@ Schedule::Schedule(const DTO_Evento& src, const ParticipationStatus& participate
     this->department = departmentConvertor(src.departments);
 
     if (src.gmtEventStart.date() == src.gmtEventEnd.date()) {
+        this->oneDay = true;
         this->date = src.gmtEventStart.toString(QStringLiteral("MM.dd"));
         this->startTime = src.gmtEventStart.toString(QStringLiteral("hh:mm"));
         this->endTime = src.gmtEventEnd.toString(QStringLiteral("hh:mm"));
     } else {
+        this->oneDay = false;
         this->date = "Multi-day";
         this->startTime = "Many";
         this->endTime = "Days";

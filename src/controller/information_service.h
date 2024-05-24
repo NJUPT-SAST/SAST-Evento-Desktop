@@ -1,6 +1,7 @@
 #ifndef INFORMATIONSERVICE_H
 #define INFORMATIONSERVICE_H
 
+#include "promise.h"
 #include "types.h"
 
 class InformationService {
@@ -19,7 +20,7 @@ public:
     void load_DepartmentInfo();
     void load_SubscribedDepartmentInfo();
 
-    EventTypeID getByDep(int dep);
+    EventoPromise<EventTypeID> getByDep(int dep);
 };
 
 #endif // INFORMATIONSERVICE_H

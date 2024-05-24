@@ -10,7 +10,7 @@
 
 void InformationService::load_EditInfo(bool isEditMode) {
     DepartmentEventsController::getInstance();
-    std::array<QFuture<bool>, 3> tasks = {
+    std::array<EventoPromise<bool>, 3> tasks = {
         getRepo()->getTypeList().then([](EventoResult<std::vector<EventType>> result) {
             if (!result) {
                 EventoEditController::getInstance()->onLoadEditFailure(result.message());
@@ -38,9 +38,9 @@ void InformationService::load_EditInfo(bool isEditMode) {
             return true;
         })};
 
-    QtFuture::whenAll(tasks.begin(), tasks.end()).then([=](QList<QFuture<bool>> tasks) {
-        for (const auto& i : tasks)
-            if (i.isCanceled() || !i.result())
+    EventoPromise<bool>::all(tasks.begin(), tasks.end()).then([=](std::vector<bool> jobs) {
+        for (auto i : jobs)
+            if (!i)
                 return;
         if (isEditMode)
             EventoEditController::getInstance()->setProperty(
@@ -81,9 +81,9 @@ void InformationService::load_SubscribedDepartmentInfo() {
         });
 }
 
-EventTypeID InformationService::getByDep(int dep) {
+EventoPromise<EventTypeID> InformationService::getByDep(int dep) {
     if (dep_type_id[dep] != -1)
-        return dep_type_id[dep];
+        return EventoPromise<EventTypeID>::resolve(dep_type_id[dep]);
     return getRepo()
         ->getTypeList()
         .then([this](EventoResult<std::vector<EventType>> result) {
@@ -95,6 +95,5 @@ EventTypeID InformationService::getByDep(int dep) {
                     dep_type_id[0] = i.id;
             TypeModel::getInstance()->resetModel(std::move(type_list));
         })
-        .then([=]() { return dep_type_id[dep]; })
-        .takeResult();
+        .then([=]() { return dep_type_id[dep]; });
 }

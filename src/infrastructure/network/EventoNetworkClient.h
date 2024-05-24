@@ -18,7 +18,7 @@
 #include <dto/user.h>
 #include <dto/user_brief.h>
 
-#include "future.h"
+#include "promise.h"
 #include "result.h"
 #include "types.h"
 
@@ -33,92 +33,92 @@ protected:
     QUrl endpoint(const QString& endpoint);
     QUrl endpoint(const QString& endpoint, const QUrlQuery& params);
 
-    EventoFuture<EventoResult<QJsonValue>> get(const QUrl& url);
+    EventoPromise<EventoResult<QJsonValue>> get(const QUrl& url);
 
-    EventoFuture<EventoResult<QJsonValue>> post(const QUrl& url, const QString& contentType,
-                                                const QByteArray& requestData);
-    EventoFuture<EventoResult<QJsonValue>> post(const QUrl& url, const QUrlQuery& requestData);
-    EventoFuture<EventoResult<QJsonValue>> post(const QUrl& url, const QJsonDocument& requestData);
-
-    EventoFuture<EventoResult<QJsonValue>> put(const QUrl& url, const QString& contentType,
-                                               const QByteArray& requestData);
-    EventoFuture<EventoResult<QJsonValue>> put(const QUrl& url, const QUrlQuery& requestData);
-    EventoFuture<EventoResult<QJsonValue>> put(const QUrl& url, const QJsonDocument& requestData);
-
-    EventoFuture<EventoResult<QJsonValue>> patch(const QUrl& url, const QString& contentType,
+    EventoPromise<EventoResult<QJsonValue>> post(const QUrl& url, const QString& contentType,
                                                  const QByteArray& requestData);
-    EventoFuture<EventoResult<QJsonValue>> patch(const QUrl& url, const QUrlQuery& requestData);
-    EventoFuture<EventoResult<QJsonValue>> patch(const QUrl& url, const QJsonDocument& requestData);
+    EventoPromise<EventoResult<QJsonValue>> post(const QUrl& url, const QUrlQuery& requestData);
+    EventoPromise<EventoResult<QJsonValue>> post(const QUrl& url, const QJsonDocument& requestData);
 
-    EventoFuture<EventoResult<QJsonValue>> deleteResource(const QUrl& url);
+    EventoPromise<EventoResult<QJsonValue>> put(const QUrl& url, const QString& contentType,
+                                                const QByteArray& requestData);
+    EventoPromise<EventoResult<QJsonValue>> put(const QUrl& url, const QUrlQuery& requestData);
+    EventoPromise<EventoResult<QJsonValue>> put(const QUrl& url, const QJsonDocument& requestData);
+
+    EventoPromise<EventoResult<QJsonValue>> patch(const QUrl& url, const QString& contentType,
+                                                  const QByteArray& requestData);
+    EventoPromise<EventoResult<QJsonValue>> patch(const QUrl& url, const QUrlQuery& requestData);
+    EventoPromise<EventoResult<QJsonValue>> patch(const QUrl& url,
+                                                  const QJsonDocument& requestData);
+
+    EventoPromise<EventoResult<QJsonValue>> deleteResource(const QUrl& url);
 
 public:
     // userFetch
-    EventoFuture<EventoResult<DTO_User>> loginViaSastLink(const QString& code);
-    EventoFuture<EventoResult<QStringList>> getAdminPermission();
-    EventoFuture<EventoResult<QStringList>> getManagerPermission(EventoID event);
-    EventoFuture<EventoResult<QStringList>> getPermittedEvent();
-    [[maybe_unused]] EventoFuture<EventoResult<DTO_Permission>> getEventPermission(EventoID event);
-    EventoFuture<EventoResult<DTO_User>> getUserInfo(const UserID& id);
-    EventoFuture<EventoResult<ParticipationStatus>> getUserParticipate(EventoID event);
+    EventoPromise<EventoResult<DTO_User>> loginViaSastLink(const QString& code);
+    EventoPromise<EventoResult<QStringList>> getAdminPermission();
+    EventoPromise<EventoResult<QStringList>> getManagerPermission(EventoID event);
+    EventoPromise<EventoResult<QStringList>> getPermittedEvent();
+    [[maybe_unused]] EventoPromise<EventoResult<DTO_Permission>> getEventPermission(EventoID event);
+    EventoPromise<EventoResult<DTO_User>> getUserInfo(const UserID& id);
+    EventoPromise<EventoResult<ParticipationStatus>> getUserParticipate(EventoID event);
 
     // eventFetch
-    EventoFuture<EventoResult<std::vector<DTO_Evento>>> getUndertakingList();
-    EventoFuture<EventoResult<std::vector<DTO_Evento>>> getLatestList();
-    EventoFuture<EventoResult<std::vector<DTO_Evento>>> getRegisteredList();
-    EventoFuture<EventoResult<std::vector<DTO_Evento>>> getSubscribedList();
-    EventoFuture<EventoResult<std::vector<DTO_Evento>>> getHistoryList();
-    EventoFuture<EventoResult<std::vector<DTO_Evento>>> getEventListInPage(int page, int size);
-    EventoFuture<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId);
-    EventoFuture<EventoResult<std::vector<DTO_Evento>>> getEventListAfterTime(QDate time);
-    EventoFuture<EventoResult<DTO_Evento>> getEventById(EventoID event);
+    EventoPromise<EventoResult<std::vector<DTO_Evento>>> getUndertakingList();
+    EventoPromise<EventoResult<std::vector<DTO_Evento>>> getLatestList();
+    EventoPromise<EventoResult<std::vector<DTO_Evento>>> getRegisteredList();
+    EventoPromise<EventoResult<std::vector<DTO_Evento>>> getSubscribedList();
+    EventoPromise<EventoResult<std::vector<DTO_Evento>>> getHistoryList();
+    EventoPromise<EventoResult<std::vector<DTO_Evento>>> getEventListInPage(int page, int size);
+    EventoPromise<EventoResult<std::vector<DTO_Evento>>> getDepartmentEventList(int departmentId);
+    EventoPromise<EventoResult<std::vector<DTO_Evento>>> getEventListAfterTime(QDate time);
+    EventoPromise<EventoResult<DTO_Evento>> getEventById(EventoID event);
 
     // othersFetch
-    EventoFuture<EventoResult<std::vector<DTO_Slide>>> getSlideList();
-    EventoFuture<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id);
-    EventoFuture<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(int size);
-    EventoFuture<EventoResult<std::vector<EventType>>> getTypeList();
-    EventoFuture<EventoResult<std::vector<DTO_Location>>> getLocationList();
-    EventoFuture<EventoResult<std::vector<Department>>> getDepartmentList();
-    EventoFuture<EventoResult<std::vector<Department>>> getDepartmentListWithSubscriptionInfo();
-    EventoFuture<EventoResult<QString>> getQRCode(EventoID eventId);
+    EventoPromise<EventoResult<std::vector<DTO_Slide>>> getSlideList();
+    EventoPromise<EventoResult<std::vector<DTO_Slide>>> getEventSlideList(EventoID id);
+    EventoPromise<EventoResult<std::vector<DTO_Slide>>> getHomeSlideList(int size);
+    EventoPromise<EventoResult<std::vector<EventType>>> getTypeList();
+    EventoPromise<EventoResult<std::vector<DTO_Location>>> getLocationList();
+    EventoPromise<EventoResult<std::vector<Department>>> getDepartmentList();
+    EventoPromise<EventoResult<std::vector<Department>>> getDepartmentListWithSubscriptionInfo();
+    EventoPromise<EventoResult<QString>> getQRCode(EventoID eventId);
 
     // eventUpload
-    EventoFuture<EventoResult<bool>> checkIn(EventoID event, const QString& code);
-    EventoFuture<EventoResult<bool>> subscribeEvent(EventoID event, bool selection);
-    EventoFuture<EventoResult<bool>> registerEvent(EventoID event, bool selection);
-    EventoFuture<EventoResult<bool>> cancelEvent(EventoID event);
-    EventoFuture<EventoResult<bool>> deleteEvent(EventoID event);
-    EventoFuture<EventoResult<bool>> createEvent(const QString& title, const QString& description,
-                                                 const QString& eventStart, const QString& eventEnd,
-                                                 const QString& registerStart,
-                                                 const QString& registerEnd, int typeId,
-                                                 int locationId, const QVariantList& departmentIds,
-                                                 const QString& tag);
-    EventoFuture<EventoResult<bool>>
+    EventoPromise<EventoResult<bool>> checkIn(EventoID event, const QString& code);
+    EventoPromise<EventoResult<bool>> subscribeEvent(EventoID event, bool selection);
+    EventoPromise<EventoResult<bool>> registerEvent(EventoID event, bool selection);
+    EventoPromise<EventoResult<bool>> cancelEvent(EventoID event);
+    EventoPromise<EventoResult<bool>> deleteEvent(EventoID event);
+    EventoPromise<EventoResult<bool>>
+        createEvent(const QString& title, const QString& description, const QString& eventStart,
+                    const QString& eventEnd, const QString& registerStart,
+                    const QString& registerEnd, int typeId, int locationId,
+                    const QVariantList& departmentIds, const QString& tag);
+    EventoPromise<EventoResult<bool>>
         editEvent(EventoID event, const QString& title, const QString& description,
                   const QString& eventStart, const QString& eventEnd, const QString& registerStart,
                   const QString& registerEnd, int typeId, int locationId,
                   const QVariantList& departmentIds, const QString& tag);
-    EventoFuture<EventoResult<bool>> subscribeDepartment(int departmentId, bool unsubscribe);
+    EventoPromise<EventoResult<bool>> subscribeDepartment(int departmentId, bool unsubscribe);
 
     // feedback
-    EventoFuture<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId);
-    EventoFuture<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId);
-    EventoFuture<EventoResult<std::pair<int, std::vector<FeedbackNum>>>>
+    EventoPromise<EventoResult<std::vector<DTO_Feedback>>> getFeedbackList(EventoID eventoId);
+    EventoPromise<EventoResult<DTO_FeedbackSummary>> getFeedbackSummary(EventoID eventoId);
+    EventoPromise<EventoResult<std::pair<int, std::vector<FeedbackNum>>>>
         getFeedbackSummaryListInPage(int page);
-    EventoFuture<EventoResult<bool>> hasFeedbacked(EventoID event);
-    EventoFuture<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback);
-    EventoFuture<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event);
+    EventoPromise<EventoResult<bool>> hasFeedbacked(EventoID event);
+    EventoPromise<EventoResult<bool>> feedbackEvent(const DTO_Feedback& feedback);
+    EventoPromise<EventoResult<DTO_Feedback>> getFeedbackInfo(EventoID event);
 
     // adminFetch
-    EventoFuture<EventoResult<std::vector<DTO_UserBrief>>> getEventManagerList(EventoID eventoId);
-    EventoFuture<EventoResult<std::vector<DTO_UserBrief>>> getAdminUserList();
-    EventoFuture<EventoResult<QString>> getAdminPermissionTreeData();
-    EventoFuture<EventoResult<QString>> getManagerPermissionTreeData();
-    EventoFuture<EventoResult<std::set<EventoID>>> getPermittedEvents(const QString& userId);
+    EventoPromise<EventoResult<std::vector<DTO_UserBrief>>> getEventManagerList(EventoID eventoId);
+    EventoPromise<EventoResult<std::vector<DTO_UserBrief>>> getAdminUserList();
+    EventoPromise<EventoResult<QString>> getAdminPermissionTreeData();
+    EventoPromise<EventoResult<QString>> getManagerPermissionTreeData();
+    EventoPromise<EventoResult<std::set<EventoID>>> getPermittedEvents(const QString& userId);
 
-    EventoFuture<EventoResult<std::pair<QString, QString>>> checkUpdate();
+    EventoPromise<EventoResult<std::pair<QString, QString>>> checkUpdate();
 
 private:
     EventoNetworkClient() = default;
