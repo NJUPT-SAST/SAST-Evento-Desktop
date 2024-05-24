@@ -117,6 +117,9 @@ target_include_directories(SAST_Evento_Desktop
     ${CMAKE_SOURCE_DIR}/src/domain/exception
     ${CMAKE_SOURCE_DIR}/src/infrastructure
     ${CMAKE_SOURCE_DIR}/src/infrastructure/helper
+)
+
+target_include_directories(SAST_Evento_Desktop SYSTEM PRIVATE
     ${CMAKE_SOURCE_DIR}/libs/Qt-Based-JsonDeserialiser
 )
 
