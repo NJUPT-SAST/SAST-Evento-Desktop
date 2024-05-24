@@ -68,29 +68,37 @@ public:
         auto remaining = std::make_shared<size_t>(count);
         auto mtx = std::make_shared<std::mutex>();
         if constexpr (std::is_void_v<R>) {
-            for (auto it = first; it != last; ++it) {
-                (*it).then([remaining, resolver, mtx]() {
-                    std::unique_lock<std::mutex> lock(*mtx);
-                    if (--*remaining == 0) {
-                        lock.unlock();
-                        resolver.resolve();
-                    }
-                });
+            if (count == 0) {
+                resolver.resolve();
+            } else {
+                for (auto it = first; it != last; ++it) {
+                    (*it).then([remaining, resolver, mtx]() {
+                        std::unique_lock<std::mutex> lock(*mtx);
+                        if (--*remaining == 0) {
+                            lock.unlock();
+                            resolver.resolve();
+                        }
+                    });
+                }
             }
         } else {
             size_t index = 0;
             auto result = std::make_shared<std::vector<R>>();
-            result->resize(count);
-            for (auto it = first; it != last; ++it) {
-                (*it).then([result, resolver, remaining, mtx, index](R value) {
-                    std::unique_lock<std::mutex> lock(*mtx);
-                    (*result)[index] = std::move(value);
-                    if (--*remaining == 0) {
-                        lock.unlock();
-                        resolver.resolve(std::move(*result));
-                    }
-                });
-                index++;
+            if (count == 0) {
+                resolver.resolve(std::move(*result));
+            } else {
+                result->resize(count);
+                for (auto it = first; it != last; ++it) {
+                    (*it).then([result, resolver, remaining, mtx, index](R value) {
+                        std::unique_lock<std::mutex> lock(*mtx);
+                        (*result)[index] = std::move(value);
+                        if (--*remaining == 0) {
+                            lock.unlock();
+                            resolver.resolve(std::move(*result));
+                        }
+                    });
+                    index++;
+                }
             }
         }
         return promise;
