@@ -34,8 +34,10 @@ public:
 private:
     void setup_server();
     inline void close_tcp_listen() {
-        login_redirect_server->deleteLater();
-        login_redirect_server = nullptr;
+        if (login_redirect_server) {
+            login_redirect_server->deleteLater();
+            login_redirect_server = nullptr;
+        }
     }
 
     LoginController() = default;
