@@ -1,10 +1,11 @@
+import "../component"
 import FluentUI
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     id: page
 
     launchMode: FluPageType.SingleTask

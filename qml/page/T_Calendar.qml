@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,15 +7,21 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluContentPage {
+FluContentStatusPage {
     id: calendar
 
-    property string dateString: date2String(new Date)
-    property var blockWindowRegister: registerForWindowResult("/block")
+    function getStartOfWeek_Monday(date) {
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+        const startOfWeek = new Date(date);
+        startOfWeek.setDate(diff);
+        startOfWeek.setHours(0, 0, 0, 0);
+        return startOfWeek;
+    }
 
     function load() {
-        statusMode = FluStatusViewType.Loading;
-        CalendarController.loadAllEventoInfo(dateString);
+        statusMode = FluStatusLayoutType.Loading;
+        CalendarController.loadAllEventoInfo(date2String(date_picker.current));
     }
 
     function pushPage(url) {
@@ -48,9 +55,21 @@ FluContentPage {
     errorButtonText: lang.lang_reload
     loadingText: lang.lang_loading
 
+    FluWindowResultLauncher {
+        id: blockWindowLauncher
+
+        path: "/block"
+        onResult: (data) => {
+            if (data.enterPage) {
+                pushPage("qrc:/qml/page/T_EventoEdit.qml");
+                showInfo("注意：活动地点需要重新编辑", 4000);
+            }
+        }
+    }
+
     Connections {
         function onLoadAllEventoSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: CalendarController
@@ -59,7 +78,7 @@ FluContentPage {
     Connections {
         function onLoadAllEventoErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: CalendarController
@@ -98,17 +117,6 @@ FluContentPage {
         target: CalendarController
     }
 
-    Connections {
-        function onResult(data) {
-            if (data.enterPage) {
-                pushPage("qrc:/qml/page/T_EventoEdit.qml");
-                showInfo("注意：活动地点需要重新编辑", 4000);
-            }
-        }
-
-        target: blockWindowRegister
-    }
-
     Item {
         // deprecated
 
@@ -123,7 +131,6 @@ FluContentPage {
                 let date = new Date(date_picker.current);
                 date.setDate(date_picker.current.getDate() - 7);
                 date_picker.current = date;
-                dateString = date2String(date_picker.current);
                 load();
             }
 
@@ -140,69 +147,12 @@ FluContentPage {
 
             current: new Date
             onAccepted: {
-                dateString = date2String(date_picker.current);
                 load();
             }
 
             anchors {
                 left: btn_left.right
                 verticalCenter: parent.verticalCenter
-            }
-
-        }
-
-        FluArea {
-            id: rec_date
-
-            height: 30
-            width: 120
-            radius: [4, 4, 4, 4]
-
-            anchors {
-                left: btn_left.right
-                verticalCenter: parent.verticalCenter
-            }
-
-            FluText {
-                id: text_date
-
-                text: dateString
-                anchors.centerIn: parent
-            }
-
-            Rectangle {
-                anchors.fill: parent
-                radius: 8
-                color: {
-                    if (FluTheme.dark) {
-                        if (item_mouse.containsMouse)
-                            return Qt.rgba(1, 1, 1, 0.03);
-
-                        return Qt.rgba(0, 0, 0, 0);
-                    } else {
-                        if (item_mouse.containsMouse)
-                            return Qt.rgba(0, 0, 0, 0.03);
-
-                        return Qt.rgba(0, 0, 0, 0);
-                    }
-                }
-            }
-
-            MouseArea {
-                id: item_mouse
-
-                anchors.fill: parent
-                hoverEnabled: true
-                propagateComposedEvents: true
-                onClicked: function(mouse) {
-                    mouse.accepted = false;
-                }
-                onPressed: function(mouse) {
-                    mouse.accepted = false;
-                }
-                onReleased: function(mouse) {
-                    mouse.accepted = false;
-                }
             }
 
         }
@@ -215,7 +165,6 @@ FluContentPage {
                 let date = new Date(date_picker.current);
                 date.setDate(date_picker.current.getDate() + 7);
                 date_picker.current = date;
-                dateString = date2String(date_picker.current);
                 load();
             }
 
@@ -292,9 +241,9 @@ FluContentPage {
             id: btn_SRD_lesson_pic
 
             text: "本周软研课表"
-            visible: dateString === date2String(new Date)
+            visible: getStartOfWeek_Monday(date_picker.current).getTime() === getStartOfWeek_Monday(new Date).getTime()
             onClicked: {
-                CalendarController.generateLessonPic(dateString, CalendarController.SoftwareResearchAndDevelopmentDep);
+                CalendarController.generateLessonPic(date2String(date_picker.current), CalendarController.SoftwareResearchAndDevelopmentDep);
             }
 
             anchors {
@@ -342,7 +291,7 @@ FluContentPage {
             bottomMargin: 5
         }
 
-        FluArea {
+        FluFrame {
             id: table
 
             readonly property int blockHeight: 45
@@ -582,7 +531,7 @@ FluContentPage {
             Repeater {
                 model: EventoBlockModel
 
-                delegate: FluArea {
+                delegate: FluFrame {
                     readonly property double width_min: table.blockWidth / (depth_max + 1)
 
                     height: is_all_day ? table.blockHeight : table.blockHeight * (end - start)
@@ -656,7 +605,7 @@ FluContentPage {
                             if (mouse.button === Qt.LeftButton) {
                                 EventoHelper.id = id;
                                 EventoInfoController.editable = editable;
-                                blockWindowRegister.launch();
+                                blockWindowLauncher.launch();
                             }
                         }
                     }

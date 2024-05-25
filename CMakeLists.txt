@@ -56,7 +56,7 @@ foreach(filepath ${SOURCE_IMPORT_PATHS})
 endforeach(filepath)
 
 if(QT_KNOWN_POLICY_QTP0001)
-    qt_policy(SET QTP0001 OLD)
+    qt_policy(SET QTP0001 NEW)
 endif()
 
 set(VERSION_RC_PATH "")

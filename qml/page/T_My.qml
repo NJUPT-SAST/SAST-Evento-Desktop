@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,9 +7,9 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     function loadMyPageInfo() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         MyPageController.loadMyPageInfo();
     }
 
@@ -24,7 +25,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadMyPageSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: MyPageController
@@ -33,7 +34,7 @@ FluScrollablePage {
     Connections {
         function onLoadMyPageErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: MyPageController
@@ -42,58 +43,62 @@ FluScrollablePage {
     ColumnLayout {
         Layout.fillWidth: true
 
-        FluArea {
+        FluFrame {
             Layout.fillWidth: true
             Layout.topMargin: 20
             height: 70
-            paddings: 10
+            padding: 10
             border.width: 0
             color: "transparent"
 
-            FluClip {
-                id: img
-
-                width: 70
-                height: 70
-                radius: [35, 35, 35, 35]
-
-                Image {
-                    id: img_avatar
-
-                    asynchronous: true
-                    anchors.fill: parent
-                    sourceSize: Qt.size(width, height)
-                    source: UserHelper.avatar
-                    cache: true
-                }
-
-            }
-
-            Column {
-                anchors.left: img.right
-                anchors.leftMargin: 15
+            RowLayout {
                 spacing: 10
 
-                FluText {
-                    text: lang.lang_welcome
-                    font: FluTextStyle.Subtitle
-                }
+                FluClip {
+                    id: img
 
-                Row {
-                    FluText {
-                        id: text_name
+                    width: 70
+                    height: 70
+                    radius: [35, 35, 35, 35]
 
-                        font.pixelSize: 24
-                        text: UserHelper.nickname
+                    Image {
+                        id: img_avatar
+
+                        asynchronous: true
+                        anchors.fill: parent
+                        sourceSize: Qt.size(width, height)
+                        source: UserHelper.avatar
+                        cache: true
                     }
 
-                    FluText {
-                        id: text_bio
+                }
 
-                        anchors.bottom: parent.bottom
-                        font.pixelSize: 20
-                        color: FluColors.Grey110
-                        text: " | " + UserHelper.biography
+                Column {
+                    spacing: 10
+
+                    FluText {
+                        text: lang.lang_welcome
+                        font: FluTextStyle.Subtitle
+                    }
+
+                    Row {
+                        FluText {
+                            id: text_name
+
+                            font.pixelSize: 24
+                            text: UserHelper.nickname
+                        }
+
+                        FluText {
+                            id: text_bio
+
+                            anchors.bottom: parent.bottom
+                            font.pixelSize: 20
+                            color: FluColors.Grey110
+                            text: " | " + UserHelper.biography
+                            visible: UserHelper.biography != ""
+                        }
+
                     }
 
                 }
@@ -102,82 +107,81 @@ FluScrollablePage {
 
         }
 
-        FluArea {
+        FluFrame {
             Layout.fillWidth: true
             Layout.topMargin: 10
-            height: 110
-            paddings: 20
+            padding: 20
             border.width: 0
             color: "transparent"
 
-            Column {
-                id: button_profile
+            RowLayout {
+                spacing: 20
+                width: parent.width
 
-                anchors.leftMargin: 50
+                Column {
+                    id: button_profile
 
-                FluIconButton {
-                    width: 50
-                    height: 50
-                    scale: 1.8
-                    iconSource: FluentIcons.PersonalFolder
-                    onClicked: {
-                        Qt.openUrlExternally("https://link.sast.fun/home");
+                    Layout.alignment: Qt.AlignHCenter
+
+                    FluIconButton {
+                        width: 50
+                        height: 50
+                        scale: 1.8
+                        iconSource: FluentIcons.PersonalFolder
+                        onClicked: {
+                            Qt.openUrlExternally("https://link.sast.fun/home");
+                        }
                     }
-                }
 
-                FluText {
-                    text: lang.lang_profile
-                    width: 50
-                    horizontalAlignment: Text.AlignHCenter
-                }
-
-            }
-
-            Column {
-                id: button_souvenirCard
-
-                anchors {
-                    left: button_profile.right
-                    leftMargin: parent.width / 3
-                }
-
-                FluIconButton {
-                    width: 50
-                    height: 50
-                    scale: 1.8
-                    iconSource: FluentIcons.Smartcard
-                    onClicked: {
-                        MainWindow.window.pushPage("qrc:/qml/page/T_SouvenirCard.qml");
+                    FluText {
+                        text: lang.lang_profile
+                        width: 50
+                        horizontalAlignment: Text.AlignHCenter
                     }
+
                 }
 
-                FluText {
-                    text: lang.lang_souvenir_card
-                    width: 50
-                    horizontalAlignment: Text.AlignHCenter
+                Column {
+                    id: button_souvenirCard
+
+                    Layout.alignment: Qt.AlignHCenter
+
+                    FluIconButton {
+                        width: 50
+                        height: 50
+                        scale: 1.8
+                        iconSource: FluentIcons.Smartcard
+                        onClicked: {
+                            MainWindow.window.pushPage("qrc:/qml/page/T_SouvenirCard.qml");
+                        }
+                    }
+
+                    FluText {
+                        text: lang.lang_souvenir_card
+                        width: 50
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+
                 }
 
-            }
+                Column {
+                    id: button_stayTuned
 
-            Column {
-                id: button_subscribe
+                    Layout.alignment: Qt.AlignHCenter
 
-                anchors {
-                    left: button_souvenirCard.right
-                    leftMargin: parent.width / 3
-                }
+                    FluIconButton {
+                        width: 50
+                        height: 50
+                        scale: 1.8
+                        iconSource: FluentIcons.More
+                    }
 
-                FluIconButton {
-                    width: 50
-                    height: 50
-                    scale: 1.8
-                    iconSource: FluentIcons.More
-                }
+                    FluText {
+                        text: lang.lang_stay_tuned
+                        width: 50
+                        horizontalAlignment: Text.AlignHCenter
+                    }
 
-                FluText {
-                    text: lang.lang_stay_tuned
-                    width: 50
-                    horizontalAlignment: Text.AlignHCenter
                 }
 
             }
@@ -211,7 +215,7 @@ FluScrollablePage {
             width: 280
             height: 140
 
-            FluArea {
+            FluFrame {
                 radius: 8
                 width: 280
                 height: 140

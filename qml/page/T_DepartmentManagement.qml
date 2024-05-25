@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,7 +7,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     id: departmentPage
 
     property int deleteDepartmentId: -1
@@ -24,14 +25,14 @@ FluScrollablePage {
     }
 
     function loadAllDepartment() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         departmentListJson = JSON.parse(DepartmentManagementController.loadAllDepartment());
         departmentListModel.clear();
         loadModel();
     }
 
     function deleteDepartment() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         DepartmentManagementController.deleteDepartment(deleteDepartmentId);
     }
 
@@ -50,7 +51,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadAllDepartmentSuccess() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: DepartmentManagementController
@@ -59,7 +60,7 @@ FluScrollablePage {
     Connections {
         function onLoadAllDepartmentError(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: DepartmentManagementController
@@ -76,7 +77,7 @@ FluScrollablePage {
 
     Connections {
         function onDeleteDepartmentError(message) {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             showError("删除失败(错误信息: " + message + ")");
         }
 
@@ -129,7 +130,7 @@ FluScrollablePage {
             width: listView.width
             height: 90
 
-            FluArea {
+            FluFrame {
                 radius: 8
                 width: parent.width
                 height: 80

@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,7 +7,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     // title: "Location Management"
 
     id: locationPage
@@ -60,14 +61,14 @@ FluScrollablePage {
     }
 
     function loadAllLocation() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         locationSelectData = [];
         locationListData = [];
         loadLocationInfo(JSON.parse(LocationManagementController.loadAllLocation()));
     }
 
     function submitLoactionChange(id, name, parentId, isAdd) {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         if (isAdd)
             LocationManagementController.addLocation(name, parentId);
         else
@@ -75,7 +76,7 @@ FluScrollablePage {
     }
 
     function deleteLocation(id) {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         LocationManagementController.deleteLocation(id);
     }
 
@@ -86,7 +87,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadAllLocationSuccess() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: LocationManagementController
@@ -95,7 +96,7 @@ FluScrollablePage {
     Connections {
         function onLoadAllLocationError(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: LocationManagementController
@@ -112,7 +113,7 @@ FluScrollablePage {
 
     Connections {
         function onDeleteLocationError(message) {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             showError("删除失败(错误信息: " + message + ")");
         }
 
@@ -130,7 +131,7 @@ FluScrollablePage {
 
     Connections {
         function onChangeLocationNameError(message) {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             showError("更改失败(错误信息: " + message + ")");
         }
 
@@ -148,21 +149,21 @@ FluScrollablePage {
 
     Connections {
         function onAddLocationError(message) {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             showError("添加失败(错误信息: " + message + ")");
         }
 
         target: LocationManagementController
     }
 
-    FluArea {
+    FluFrame {
         id: locationArea
 
         width: locationPage.width - locationPage.rightPadding - locationPage.leftPadding
         height: locationPage.height - locationPage.topPadding - locationPage.bottomPadding
         color: Qt.rgba(0, 0, 0, 0)
 
-        FluArea {
+        FluFrame {
             id: editArea
 
             color: Qt.rgba(0, 0, 0, 0)
@@ -329,7 +330,7 @@ FluScrollablePage {
 
         }
 
-        FluArea {
+        FluFrame {
             id: locationTreeArea
 
             border.width: 1
@@ -416,7 +417,7 @@ FluScrollablePage {
 
         }
 
-        FluArea {
+        FluFrame {
             id: newLocationParentSelectBox
 
             visible: isNewLocation
@@ -468,7 +469,7 @@ FluScrollablePage {
 
             }
 
-            FluArea {
+            FluFrame {
                 border.width: 1
                 border.color: "black"
                 color: Qt.rgba(1, 1, 1, 0.4)

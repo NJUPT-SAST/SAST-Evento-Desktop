@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,7 +7,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     id: page
 
     property var arr: []
@@ -14,7 +15,7 @@ FluScrollablePage {
     signal listReady()
 
     function loadPlazaInfo() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         PlazaController.loadPlazaInfo();
     }
 
@@ -35,7 +36,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadPlazaSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: PlazaController
@@ -44,7 +45,7 @@ FluScrollablePage {
     Connections {
         function onLoadPlazaErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: PlazaController
@@ -197,7 +198,7 @@ FluScrollablePage {
             width: 280
             height: 135
 
-            FluArea {
+            FluFrame {
                 radius: 8
                 width: 280
                 height: 135
@@ -374,7 +375,7 @@ FluScrollablePage {
             width: 280
             height: 140
 
-            FluArea {
+            FluFrame {
                 radius: 8
                 width: 280
                 height: 140

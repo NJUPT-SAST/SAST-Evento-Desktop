@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,18 +7,18 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     id: slidePage
 
     property int deleteSlideId: 0
 
     function loadAllSlide() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         SlideManagementController.loadAllSlide();
     }
 
     function deleteSlide() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         SlideManagementController.deleteSlide(deleteSlideId);
     }
 
@@ -29,7 +30,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadAllSlideSuccess() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: SlideManagementController
@@ -38,7 +39,7 @@ FluScrollablePage {
     Connections {
         function onLoadAllSlideError(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: SlideManagementController
@@ -46,7 +47,7 @@ FluScrollablePage {
 
     Connections {
         function onDeleteSlideSuccess() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             showSuccess("删除幻灯片成功");
         }
 
@@ -55,7 +56,7 @@ FluScrollablePage {
 
     Connections {
         function onDeleteSlideError(message) {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             showError("删除失败(错误信息: " + message + ")");
         }
 
@@ -70,7 +71,7 @@ FluScrollablePage {
             width: listView.width
             height: 90
 
-            FluArea {
+            FluFrame {
                 radius: 8
                 width: parent.width
                 height: 80

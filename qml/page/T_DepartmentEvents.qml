@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,7 +7,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     id: control
 
     property int departmentId: -1
@@ -20,7 +21,7 @@ FluScrollablePage {
     }
 
     function loadDepartmentEvents(departmentId) {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         DepartmentEventsController.loadDepartmentEvents(departmentId);
     }
 
@@ -32,20 +33,20 @@ FluScrollablePage {
     launchMode: FluPageType.SingleTask
     title: lang.lang_department_evento
     onErrorClicked: {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         loadDepartmentPage();
     }
     errorButtonText: lang.lang_reload
     loadingText: lang.lang_loading
     Component.onCompleted: {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         loadDepartmentPage();
     }
 
     Connections {
         function onLoadDepartmentsErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: DepartmentEventsController
@@ -53,7 +54,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadDepartmentEventSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: DepartmentEventsController
@@ -62,7 +63,7 @@ FluScrollablePage {
     Connections {
         function onLoadDepartmentEventErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: DepartmentEventsController
@@ -71,7 +72,7 @@ FluScrollablePage {
     Connections {
         function onLoadDepartmentsSuccessEvent() {
             subscribeButton.loading = false;
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: DepartmentEventsController
@@ -131,17 +132,15 @@ FluScrollablePage {
         Layout.fillHeight: true
         spacing: 20
 
-        FluArea {
-            paddings: 10
-            width: 200
+        FluFrame {
+            padding: 10
+            implicitWidth: 200
+            implicitHeight: 500
             Layout.alignment: Qt.AlignTop
-            height: 500
 
             ListView {
                 id: department_view
 
-                width: 200
-                height: 500
                 clip: true
                 anchors.fill: parent
                 model: DepartmentModel
@@ -151,9 +150,9 @@ FluScrollablePage {
             Component {
                 id: com_rect
 
-                FluArea {
-                    height: 40
-                    width: 180
+                FluFrame {
+                    implicitHeight: 40
+                    implicitWidth: 180
                     border.width: 0
 
                     Rectangle {
@@ -180,7 +179,7 @@ FluScrollablePage {
                         width: 6
                         height: 30
                         radius: [3, 3, 3, 3]
-                        color: FluTheme.primaryColor.normal
+                        color: FluTheme.primaryColor
 
                         anchors {
                             leftMargin: 5
@@ -250,10 +249,10 @@ FluScrollablePage {
             width: 280
             height: 135
 
-            FluArea {
+            FluFrame {
                 radius: 8
-                width: 280
-                height: 135
+                implicitWidth: 280
+                implicitHeight: 135
                 anchors.centerIn: parent
 
                 Rectangle {

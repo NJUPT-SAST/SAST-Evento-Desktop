@@ -1,3 +1,4 @@
+import "../component"
 import "../window"
 import FluentUI
 import QtQuick
@@ -6,9 +7,9 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     function loadFeedbackInfo() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         FeedbackStatisticsController.loadFeedbackInfo(EventoHelper.id);
     }
 
@@ -24,7 +25,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadFeedbackSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: FeedbackStatisticsController
@@ -33,13 +34,13 @@ FluScrollablePage {
     Connections {
         function onLoadFeedbackErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: FeedbackStatisticsController
     }
 
-    FluArea {
+    FluFrame {
         Layout.fillWidth: true
         height: 90
 
@@ -157,7 +158,7 @@ FluScrollablePage {
             width: parent.width
             height: 50 + item_content.lineCount * 16
 
-            FluArea {
+            FluFrame {
                 radius: 8
                 width: parent.width
                 height: 42 + item_content.lineCount * 16

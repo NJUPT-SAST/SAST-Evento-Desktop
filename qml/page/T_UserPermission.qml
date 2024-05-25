@@ -1,3 +1,4 @@
+import "../component"
 import "../imports"
 import "../window"
 import FluentUI
@@ -8,7 +9,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 import SAST_Evento
 
-FluScrollablePage {
+FluScrollableStatusPage {
     id: page
 
     property var permissionArr: []
@@ -41,7 +42,7 @@ FluScrollablePage {
     }
 
     function loadPermissionInfo() {
-        statusMode = FluStatusViewType.Loading;
+        statusMode = FluStatusLayoutType.Loading;
         var permission = UserManagementController.loadPermissionInfo();
         permissionArr = JSON.parse(permission);
         createPermissionArr = parseJSON(JSON.parse(permission));
@@ -59,7 +60,7 @@ FluScrollablePage {
 
     Connections {
         function onLoadPermissionSuccessEvent() {
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: UserManagementController
@@ -68,7 +69,7 @@ FluScrollablePage {
     Connections {
         function onLoadPermissionErrorEvent(message) {
             errorText = message;
-            statusMode = FluStatusViewType.Error;
+            statusMode = FluStatusLayoutType.Error;
         }
 
         target: UserManagementController
@@ -138,7 +139,7 @@ FluScrollablePage {
 
         }
 
-        FluArea {
+        FluFrame {
             id: check_area
 
             width: parent.width
@@ -150,7 +151,7 @@ FluScrollablePage {
                 left: parent.left
             }
 
-            FluScrollablePage {
+            FluScrollableStatusPage {
                 anchors.fill: parent
                 implicitHeight: permission_col.implicitHeight
 
@@ -228,7 +229,7 @@ FluScrollablePage {
             disabled: false
             text: "确定"
             onClicked: {
-                statusMode = FluStatusViewType.Loading;
+                statusMode = FluStatusLayoutType.Loading;
                 allStateArr = [];
                 // 遍历复选框，检查勾选状态，并将文本和勾选状态添加到数组
                 for (var i = 0; i < outer_check_rep.count; i++) {
@@ -254,7 +255,7 @@ FluScrollablePage {
             disabled: false
             text: "取消"
             onClicked: {
-                statusMode = FluStatusViewType.Loading;
+                statusMode = FluStatusLayoutType.Loading;
                 returnPage();
             }
 
@@ -271,7 +272,7 @@ FluScrollablePage {
     Connections {
         function onCreateSuccessEvent() {
             showSuccess("操作成功");
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
             returnPage();
         }
 
@@ -281,7 +282,7 @@ FluScrollablePage {
     Connections {
         function onCreateErrorEvent(message) {
             showError("错误：" + message);
-            statusMode = FluStatusViewType.Success;
+            statusMode = FluStatusLayoutType.Success;
         }
 
         target: UserManagementController
