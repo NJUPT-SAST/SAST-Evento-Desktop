@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/.cmake/)
 include(GetGitRevisionDescription)
 
-project(SAST_Evento_Desktop VERSION 1.0 LANGUAGES CXX)
+project(SAST_Evento_Desktop VERSION 1.1 LANGUAGES CXX)
 
 set(FLUENTUI_BUILD_EXAMPLES OFF)
 
