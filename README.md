@@ -17,6 +17,11 @@
 <img src="https://img.shields.io/badge/platform-macOS-orange">
 </p>
 
+> [!IMPORTANT]
+> 本仓库 C++组 已不再维护，请移步 [SAST Evento 2.0](https://github.com/NJUPT-SAST/sast-evento)
+> 
+> 您依然可以 fork 后对本仓库代码进行修改以向后兼容
+
 ## 简介
 
 SAST Evento 是一个 SAST 的事件管理系统，平时我们在活动过程中一般都会遇到下面的问题：
