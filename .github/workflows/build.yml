@@ -49,7 +49,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         submodules: recursive
         # Fetch all history for version generation
@@ -235,12 +235,12 @@ jobs:
           msvc_arch: x64
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
           submodules: false
 
     - name: Download artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v5
       with:
         name: files-${{ matrix.rid }}
 
@@ -263,7 +263,7 @@ jobs:
         Copy-Item -Path $env:VCToolsRedistDir\vc_redist.$msvcArch.exe -Destination ./deploy/vcredist.exe
 
     - name: Inno Setup
-      uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
+      uses: Minionguyjpro/Inno-Setup-Action@v1.2.7
       with:
         path: ./deploy/win-installer.iss
         options: /O+ /dMyAppVersion=${{ steps.extract.outputs.version }}
@@ -284,12 +284,12 @@ jobs:
         rid: [linux-x64]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
           submodules: false
 
     - name: Download artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v5
       with:
         name: files-${{ matrix.rid }}
 
@@ -320,12 +320,12 @@ jobs:
         rid: [linux-x64]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
           submodules: false
 
     - name: Download artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v5
       with:
         name: files-${{ matrix.rid }}
 
@@ -360,7 +360,7 @@ jobs:
         rid: [linux-x64]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
             submodules: false
 
@@ -380,7 +380,7 @@ jobs:
           cmake --install ./fcitx5-qt-build
 
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: files-${{ matrix.rid }}
 
@@ -417,12 +417,12 @@ jobs:
         rid: [macos-arm64, macos-x64]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
           submodules: false
 
     - name: Download artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v5
       with:
         name: files-${{ matrix.rid }}
 
@@ -460,7 +460,7 @@ jobs:
       - package-macos
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: ./artifacts
 
