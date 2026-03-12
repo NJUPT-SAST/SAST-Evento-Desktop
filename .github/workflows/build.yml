@@ -217,7 +217,7 @@ jobs:
         }
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: files-${{ matrix.rid }}
         path: ${{ runner.os != 'Windows' && './files.tar.gz' || './files.zip' }}
@@ -269,7 +269,7 @@ jobs:
         options: /O+ /dMyAppVersion=${{ steps.extract.outputs.version }}
 
     - name: Upload installer
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: installer-${{ matrix.rid }}
         path: ./deploy/installer.exe
@@ -305,7 +305,7 @@ jobs:
         bash ./deploy/create-deb.sh ./files
 
     - name: Upload package
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: deb-${{ matrix.rid }}
         path: ./sast-evento.deb
@@ -345,7 +345,7 @@ jobs:
         sudo rm ./deploy/pacman/*-debug-*.pkg.tar.zst
 
     - name: Upload package
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: pacman-${{ matrix.rid }}
         path: ./deploy/pacman/*.pkg.tar.zst
@@ -402,7 +402,7 @@ jobs:
           python ./deploy/create-appimage --app-dir ./appdir --executables ./appdir/opt/sast-evento/sast-evento:./appdir/opt/sast-evento/sast-evento-tray --target ./sast-evento.AppImage
 
       - name: Upload package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: appimage-${{ matrix.rid }}
           path: ./*.AppImage
@@ -444,7 +444,7 @@ jobs:
         src_dir: './sast-evento.app'
 
     - name: Upload package
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: dmg-${{ matrix.rid }}
         path: ./sast-evento.dmg
